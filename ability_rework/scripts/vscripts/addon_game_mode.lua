@@ -1,0 +1,540 @@
+local RADIANT_TEAM_MAX_PLAYERS = 1
+local DIRE_TEAM_MAX_PLAYERS = 8
+
+if VGMAR == nil then
+	VGMAR = class({})
+end
+
+function Precache( ctx )
+
+end
+
+function Activate()
+	GameRules.VGMAR = VGMAR()
+	GameRules.VGMAR:Init()
+end
+
+function VGMAR:Init()
+	self.n_players_radiant = 0
+	self.n_players_dire = 0
+	self.istimescalereset = 0
+
+	self.mode = GameRules:GetGameModeEntity()
+	GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_GOODGUYS, RADIANT_TEAM_MAX_PLAYERS)
+    GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_BADGUYS, DIRE_TEAM_MAX_PLAYERS)
+	GameRules:SetStrategyTime( 0.0 )
+	GameRules:SetShowcaseTime( 0.0 )
+	GameRules:GetGameModeEntity():SetBotThinkingEnabled(true)
+	--mode:SetBotThinkingEnabled( true )
+	
+	--GameRules:SetCustomGameSetupTimeout( 30 )
+	--GameRules:SetCustomGameSetupAutoLaunchDelay( 0 )
+	--GameRules:EnableCustomGameSetupAutoLaunch( false )
+	--GameRules:SetPreGameTime( 30 )
+	--GameRules:SetHeroSelectionTime( 30 )
+	--GameRules:SetStrategyTime( 30 )
+	--GameRules:SetCustomGameEndDelay( 0 )
+	--GameRules:SetCustomVictoryMessageDuration( 20 )
+
+	ListenToGameEvent( "npc_spawned", Dynamic_Wrap( VGMAR, "OnNPCSpawned" ), self )
+	ListenToGameEvent( "dota_player_learned_ability", Dynamic_Wrap( VGMAR, "OnPlayerLearnedAbility" ), self)
+	ListenToGameEvent( "game_rules_state_change", Dynamic_Wrap( VGMAR, 'OnGameStateChanged' ), self )
+	
+	GameRules:GetGameModeEntity():SetThink( "OnThink", self, 0.25 )
+end
+
+function VGMAR:OnThink()
+	if GameRules:State_Get() == DOTA_GAMERULES_STATE_GAME_IN_PROGRESS then
+		--///////////////////////////
+		--Bot Rune Fix
+		--///////////////////////////
+		local playersum = HeroList:GetHeroCount()
+		
+		for i=0,HeroList:GetHeroCount() do
+			local heroent = HeroList:GetHero(i)
+			if heroent then
+				local heroplayerid = heroent:GetPlayerID()
+				local closestrune = Entities:FindByClassnameNearest("dota_item_rune", heroent:GetOrigin(), 250.0)
+				if closestrune then
+					if PlayerResource:GetConnectionState(heroplayerid) == 1 then
+						heroent:PickupRune(closestrune)
+					end
+				end
+			end
+		end
+	end
+	if GameRules:State_Get() >= DOTA_GAMERULES_STATE_PRE_GAME then
+		
+		--///////////////////////////
+		--RealTime Hero Modifications
+		--///////////////////////////
+		
+		--Building a list of heroes
+		local herolistnightstalker = Entities:FindAllByClassname( "npc_dota_hero_night_stalker" )
+		local herolistluna = Entities:FindAllByClassname( "npc_dota_hero_luna" )
+		local herolistwinterwyvern = Entities:FindAllByClassname( "npc_dota_hero_winter_wyvern" )
+		local herolistdrow = Entities:FindAllByClassname( "npc_dota_hero_drow_ranger" )
+		local herolistriki = Entities:FindAllByClassname( "npc_dota_hero_riki" )
+		
+		--Nightstalker
+		for i, hero in ipairs(herolistnightstalker) do
+			local nsvoid = hero:FindAbilityByName( "night_stalker_void" )
+			local nshunterinthenight = hero:FindAbilityByName( "night_stalker_hunter_in_the_night" )
+			local nsdarkeness = hero:FindAbilityByName( "night_stalker_darkness" )
+			if (hero:GetLevel() >= 20 or hero:HasScepter()) and nshunterinthenight:GetLevel()==4 then
+				nshunterinthenight:SetLevel( 5 )
+			elseif nshunterinthenight:GetLevel()==5 and (hero:GetLevel() < 20 and not hero:HasScepter()) then
+				nshunterinthenight:SetLevel( 4 )
+			elseif nshunterinthenight:GetLevel() == 5 and hero:GetLevel() >= 20 and hero:HasScepter() then
+				nshunterinthenight:SetLevel( 6 )
+			elseif nshunterinthenight:GetLevel() == 6 and (hero:GetLevel() < 20 or not hero:HasScepter()) then
+				nshunterinthenight:SetLevel( 5 )
+			end
+			if nsdarkeness:GetLevel() == 3 and hero:HasScepter() then
+				nsdarkeness:SetLevel( 4 )
+			elseif nsdarkeness:GetLevel() == 4 and not hero:HasScepter() then
+				nsdarkeness:SetLevel( 3 )
+			end
+			if nsvoid and nsvoid:GetLevel() == 4 and GameRules:IsNightstalkerNight() then
+				nsvoid:SetLevel( 5 )
+			elseif nsvoid and nsvoid:GetLevel() == 5 and not GameRules:IsNightstalkerNight() then
+				nsvoid:SetLevel( 4 )
+			end
+		end
+		
+		--Luna
+		for i, hero in ipairs(herolistluna) do
+			local lunaglaive = hero:FindAbilityByName( "luna_moon_glaive" )
+			local lunabeam = hero:FindAbilityByName( "luna_lucent_beam" )
+			local lunablessing = hero:FindAbilityByName( "luna_lunar_blessing" )
+			local lunault = hero:FindAbilityByName( "luna_eclipse" )
+			if hero:GetLevel() >= 15 and lunablessing:GetLevel() == 4 then
+				lunablessing:SetLevel( 5 )
+			end
+			if hero:GetLevel() >= 20 and lunaglaive:GetLevel() == 4 then
+				lunaglaive:SetLevel( 5 )
+			end
+			if lunabeam:GetLevel() == 4 and lunault:GetLevel() >= 3 then
+				lunabeam:SetLevel( 5 )
+			end
+			if lunault:GetLevel() == 3 and (hero:HasScepter() or hero:GetLevel() == 25) then
+				lunault:SetLevel( 4 )
+			elseif lunault:GetLevel() == 4 and hero:GetLevel() < 25 and not hero:HasScepter() then
+				lunault:SetLevel( 3 )
+			elseif lunault:GetLevel() >= 4 and hero:HasScepter() and hero:GetLevel() == 25 then
+				lunault:SetLevel( 5 )
+			elseif lunault:GetLevel() == 5 and hero:GetLevel() == 25 and not hero:HasScepter() then
+				lunault:SetLevel( 4 )
+			end
+		end
+		
+		--WinterWyvern
+		for i, hero in ipairs(herolistwinterwyvern) do
+			local wwarcticburn = hero:FindAbilityByName( "winter_wyvern_arctic_burn" )
+			local wwsplinterblast = hero:FindAbilityByName( "winter_wyvern_splinter_blast" )
+			local wwcoldembrace = hero:FindAbilityByName( "winter_wyvern_cold_embrace" )
+			local wwwinterscurse = hero:FindAbilityByName( "winter_wyvern_winters_curse" )
+			if hero:GetLevel() >= 15 and wwcoldembrace:GetLevel() == 4 then
+				wwcoldembrace:SetLevel( 5 )
+			end
+			if hero:GetLevel() >= 20 and wwarcticburn:GetLevel() == 4 then
+				wwarcticburn:SetLevel( 5 )
+			end
+			if hero:GetLevel() >= 22 and wwsplinterblast:GetLevel() == 4 then
+				wwsplinterblast:SetLevel( 5 )
+			end
+			if hero:GetLevel() == 25 and wwwinterscurse:GetLevel() == 3 then
+				wwwinterscurse:SetLevel( 4 )
+			end
+		end
+		
+		--DrowRanger
+		for i, hero in ipairs(herolistdrow) do
+			local drowsilence = hero:FindAbilityByName( "drow_ranger_wave_of_silence" )
+			local drowaura = hero:FindAbilityByName( "drow_ranger_trueshot" )
+			local drowult = hero:FindAbilityByName( "drow_ranger_marksmanship" )
+			if hero:GetLevel() >= 15 and drowsilence:GetLevel() == 4 then
+				drowsilence:SetLevel( 5 )
+			end
+			if hero:GetLevel() >= 20 and drowaura:GetLevel() == 4 then
+				drowaura:SetLevel( 5 )
+			end
+			if drowult:GetLevel() >= 3 then
+				if hero:GetLevel() >= 20 and drowult:GetLevel() == 3 then
+					drowult:SetLevel( 4 )
+				elseif hero:GetLevel() >= 22 and drowult:GetLevel() == 4 then
+					drowult:SetLevel( 5 )
+				elseif hero:GetLevel() >= 24 and drowult:GetLevel() == 5 then
+					drowult:SetLevel( 6 )
+				elseif hero:GetLevel() == 25 and drowult:GetLevel() == 6 then
+					drowult:SetLevel( 7 )
+				end
+			end
+		end
+		
+		--Riki
+		for i, hero in ipairs(herolistriki) do
+			local rikismoke = hero:FindAbilityByName( "riki_smoke_screen" )
+			local rikiblink = hero:FindAbilityByName( "riki_blink_strike" )
+			local rikiinvis = hero:FindAbilityByName( "riki_permanent_invisibility" )
+			local rikiult = hero:FindAbilityByName( "riki_tricks_of_the_trade" )
+			if rikiinvis:GetLevel() == 4 and (hero:GetLevel() >= 15 or hero:HasScepter()) then
+				rikiinvis:SetLevel( 5 )
+			elseif rikiinvis:GetLevel() == 5 and hero:GetLevel() < 15 and not hero:HasScepter() then
+				rikiinvis:SetLevel( 4 )
+			elseif rikiinvis:GetLevel() == 5 and hero:HasScepter() and hero:GetLevel() >= 15 then
+				rikiinvis:SetLevel( 6 )
+			elseif rikiinvis:GetLevel() == 6 and hero:GetLevel() >= 15 and not hero:HasScepter() then
+				rikiinvis:SetLevel( 5 )
+			end
+			if hero:GetLevel() >= 20 and rikiblink:GetLevel() == 4 then
+				rikiblink:SetLevel( 5 )
+			end
+			if hero:GetLevel() >= 22 and rikismoke:GetLevel() >= 4 then
+				rikismoke:SetLevel( 5 )
+			end
+			if rikiult:GetLevel() == 3 and (hero:HasScepter() or hero:GetLevel() == 25) then
+				rikiult:SetLevel( 4 )
+			elseif rikiult:GetLevel() == 4 and hero:GetLevel() < 25 and not hero:HasScepter() then
+				rikiult:SetLevel( 3 )
+			elseif rikiult:GetLevel() >= 4 and hero:HasScepter() and hero:GetLevel() == 25 then
+				rikiult:SetLevel( 5 )
+			elseif rikiult:GetLevel() == 5 and hero:GetLevel() == 25 and not hero:HasScepter() then
+				rikiult:SetLevel( 4 )
+			end
+		end
+		--///////////////////////////
+		--END
+		--///////////////////////////
+	elseif GameRules:State_Get() >= DOTA_GAMERULES_STATE_POST_GAME then		-- Safe guard catching any state that may exist beyond DOTA_GAMERULES_STATE_POST_GAME
+		return nil
+	end
+	return 1
+end
+
+function VGMAR:OnNPCSpawned( event )
+	local spawnedUnit = EntIndexToHScript( event.entindex )
+	if not spawnedUnit or spawnedUnit:GetClassname() == "npc_dota_thinker" or spawnedUnit:IsPhantom() then
+		return
+	end
+	
+	if spawnedUnit:GetClassname() == "npc_dota_venomancer_plagueward" then
+		local destroySpell = spawnedUnit:FindAbilityByName( "broodmother_spin_web_destroy" )
+		if destroySpell then
+			destroySpell:SetLevel( 1 )
+		end
+	end
+end
+
+function VGMAR:OnPlayerLearnedAbility( keys )
+	local player = EntIndexToHScript(keys.player)
+	local abilityname = keys.abilityname
+	
+	local playerhero = player:GetAssignedHero()
+	
+	local zeuscloud = playerhero:FindAbilityByName( "zuus_cloud" )
+	local nshunterinthenight = playerhero:FindAbilityByName( "night_stalker_hunter_in_the_night" )
+	local nsdarkeness = playerhero:FindAbilityByName( "night_stalker_darkness" )
+	local nsvoid = playerhero:FindAbilityByName( "night_stalker_void" )
+	local lunaglaive = playerhero:FindAbilityByName( "luna_moon_glaive" )
+	local lunabeam = playerhero:FindAbilityByName( "luna_lucent_beam" )
+	local lunablessing = playerhero:FindAbilityByName( "luna_lunar_blessing" )
+	local lunault = playerhero:FindAbilityByName( "luna_eclipse" )
+	local wwarcticburn = playerhero:FindAbilityByName( "winter_wyvern_arctic_burn" )
+	local wwsplinterblast = playerhero:FindAbilityByName( "winter_wyvern_splinter_blast" )
+	local wwcoldembrace = playerhero:FindAbilityByName( "winter_wyvern_cold_embrace" )
+	local wwwinterscurse = playerhero:FindAbilityByName( "winter_wyvern_winters_curse" )
+	local drowsilence = playerhero:FindAbilityByName( "drow_ranger_wave_of_silence" )
+	local drowaura = playerhero:FindAbilityByName( "drow_ranger_trueshot" )
+	local drowult = playerhero:FindAbilityByName( "drow_ranger_marksmanship" )
+	local rikismoke = playerhero:FindAbilityByName( "riki_smoke_screen" )
+	local rikiblink = playerhero:FindAbilityByName( "riki_blink_strike" )
+	local rikiinvis = playerhero:FindAbilityByName( "riki_permanent_invisibility" )
+	local rikiult = playerhero:FindAbilityByName( "riki_tricks_of_the_trade" )
+	if zeuscloud then
+		local zeusult = playerhero:FindAbilityByName( "zuus_thundergods_wrath" )
+		if zeusult and not (playerhero:GetLevel() == 25) then
+			if zeusult:GetLevel() == 0 then
+				zeuscloud:SetLevel( 1 )
+			else
+				zeuscloud:SetLevel( zeusult:GetLevel())
+			end
+		elseif (playerhero:GetLevel()==25) and zeusult:GetLevel()==3 then
+			zeuscloud:SetLevel( 4 )
+		else
+			zeuscloud:SetLevel( 1 )
+		end
+	end
+	--///////////////////////////////////
+	--Preventing manual ability upgrading
+	--///////////////////////////////////
+
+	--Nightstalker
+	if abilityname == "night_stalker_hunter_in_the_night" then
+		if nshunterinthenight:GetLevel() >= 5 then
+			playerhero:SetAbilityPoints(playerhero:GetAbilityPoints() + 1)
+			nshunterinthenight:SetLevel( nshunterinthenight:GetLevel() - 1 )
+		end
+	elseif abilityname == "night_stalker_darkness" then
+		if nsdarkeness:GetLevel() == 4 then
+			playerhero:SetAbilityPoints(playerhero:GetAbilityPoints() + 1)
+			nsdarkeness:SetLevel( nsdarkeness:GetLevel() - 1)
+		end
+	elseif abilityname == "night_stalker_void" then
+		if nsvoid:GetLevel() >= 5 then
+			playerhero:SetAbilityPoints(playerhero:GetAbilityPoints() + 1)
+			nsvoid:SetLevel( nsvoid:GetLevel() - 1)
+		end
+	end
+	--Luna
+	if abilityname == "luna_moon_glaive" then
+		if lunaglaive:GetLevel() >= 5 then
+			playerhero:SetAbilityPoints(playerhero:GetAbilityPoints() + 1)
+			lunaglaive:SetLevel( lunaglaive:GetLevel() - 1 )
+		end
+	elseif abilityname == "luna_lucent_beam" then
+		if lunabeam:GetLevel() >= 5 then
+			playerhero:SetAbilityPoints(playerhero:GetAbilityPoints() + 1)
+			lunabeam:SetLevel( lunabeam:GetLevel() - 1 )
+		end
+	elseif abilityname == "luna_lunar_blessing" then
+		if lunablessing:GetLevel() >= 5 then
+			playerhero:SetAbilityPoints(playerhero:GetAbilityPoints() + 1)
+			lunablessing:SetLevel( lunablessing:GetLevel() - 1 )
+		end
+	elseif abilityname == "luna_eclipse" then
+		if lunault:GetLevel() >= 4 then
+			playerhero:SetAbilityPoints(playerhero:GetAbilityPoints() + 1)
+			lunault:SetLevel( lunault:GetLevel() - 1)
+		end
+	end
+	--WinterWyvern
+	if abilityname == "winter_wyvern_arctic_burn" then
+		if wwarcticburn:GetLevel() >= 5 then
+			playerhero:SetAbilityPoints(playerhero:GetAbilityPoints() + 1)
+			wwarcticburn:SetLevel( wwarcticburn:GetLevel() - 1 )
+		end
+	elseif abilityname == "winter_wyvern_splinter_blast" then
+		if wwsplinterblast:GetLevel() >= 5 then
+			playerhero:SetAbilityPoints(playerhero:GetAbilityPoints() + 1)
+			wwsplinterblast:SetLevel( wwsplinterblast:GetLevel() - 1 )
+		end
+	elseif abilityname == "winter_wyvern_cold_embrace" then
+		if wwcoldembrace:GetLevel() >= 5 then
+			playerhero:SetAbilityPoints(playerhero:GetAbilityPoints() + 1)
+			wwcoldembrace:SetLevel( wwcoldembrace:GetLevel() - 1 )
+		end
+	elseif abilityname == "winter_wyvern_winters_curse" then
+		if wwwinterscurse:GetLevel() == 4 then
+			playerhero:SetAbilityPoints(playerhero:GetAbilityPoints() + 1)
+			wwwinterscurse:SetLevel( wwwinterscurse:GetLevel() - 1)
+		end
+	end
+	--DrowRanger
+	if abilityname == "drow_ranger_wave_of_silence" then
+		if drowsilence:GetLevel() >= 5 then
+			playerhero:SetAbilityPoints(playerhero:GetAbilityPoints() + 1)
+			drowsilence:SetLevel( drowsilence:GetLevel() - 1 )
+		end
+	elseif abilityname == "drow_ranger_trueshot" then
+		if drowaura:GetLevel() >= 5 then
+			playerhero:SetAbilityPoints(playerhero:GetAbilityPoints() + 1)
+			drowaura:SetLevel( drowaura:GetLevel() - 1 )
+		end
+	elseif abilityname == "drow_ranger_marksmanship" then
+		if drowult:GetLevel() >= 4 then
+			playerhero:SetAbilityPoints(playerhero:GetAbilityPoints() + 1)
+			drowult:SetLevel( drowult:GetLevel() - 1)
+		end
+	end
+	--Riki
+	if abilityname == "riki_smoke_screen" then
+		if rikismoke:GetLevel() >= 5 then
+			playerhero:SetAbilityPoints(playerhero:GetAbilityPoints() + 1)
+			rikismoke:SetLevel( rikismoke:GetLevel() - 1 )
+		end
+	elseif abilityname == "riki_blink_strike" then
+		if rikiblink:GetLevel() >= 5 then
+			playerhero:SetAbilityPoints(playerhero:GetAbilityPoints() + 1)
+			rikiblink:SetLevel( rikiblink:GetLevel() - 1 )
+		end
+	elseif abilityname == "riki_permanent_invisibility" then
+		if rikiinvis:GetLevel() >= 5 then
+			playerhero:SetAbilityPoints(playerhero:GetAbilityPoints() + 1)
+			rikiinvis:SetLevel( rikiinvis:GetLevel() - 1 )
+		end
+	elseif abilityname == "riki_tricks_of_the_trade" then
+		if rikiult:GetLevel() >= 4 then
+			playerhero:SetAbilityPoints(playerhero:GetAbilityPoints() + 1)
+			rikiult:SetLevel( rikiult:GetLevel() - 1)
+		end
+	end
+end
+
+function VGMAR:OnGameStateChanged( keys )
+	local state = GameRules:State_Get()
+	
+	if state == DOTA_GAMERULES_STATE_HERO_SELECTION then
+		if IsServer() then
+			SendToServerConsole("sv_cheats 1")
+			SendToServerConsole("dota_bot_populate")
+			SendToServerConsole("dota_bot_set_difficulty 2")
+			SendToServerConsole("sv_cheats 0")
+			GameRules:GetGameModeEntity():SetBotThinkingEnabled(true)
+		end
+	elseif state == DOTA_GAMERULES_STATE_STRATEGY_TIME then
+		local used_hero_name = "npc_dota_hero_dragon_knight"
+		print("Checking players...")
+		
+		for playerID=0, DOTA_MAX_TEAM_PLAYERS do
+			if PlayerResource:IsValidPlayer(playerID) then
+				print("PlayedID:", playerID)
+				
+				if PlayerResource:GetTeam(playerID) == DOTA_TEAM_GOODGUYS then
+					self.n_players_radiant = self.n_players_radiant + 1
+				elseif PlayerResource:GetTeam(playerID) == DOTA_TEAM_BADGUYS then
+					self.n_players_dire = self.n_players_dire + 1
+				end
+
+				-- Random heroes for people who have not picked
+				if PlayerResource:HasSelectedHero(playerID) == false then
+					print("Randoming hero for:", playerID)
+					PlayerResource:GetPlayer(playerID):MakeRandomHeroSelection()
+					print("Randomed:", PlayerResource:GetSelectedHeroName(playerID))
+				end
+				
+				used_hero_name = PlayerResource:GetSelectedHeroName(playerID)
+			end
+		end
+		
+		print("Number of players:", self.n_players_radiant + self.n_players_dire)
+		print("Radiant:", self.n_players_radiant)
+		print("Radiant:", self.n_players_dire)
+		
+	elseif state == DOTA_GAMERULES_STATE_PRE_GAME then
+		local gm = GameRules:GetGameModeEntity()
+		if IsServer() then
+			gm:SetThink(function()
+				SendToServerConsole("sv_cheats 1")
+				SendToServerConsole("dota_bot_disable 0")
+				GameRules:GetGameModeEntity():SetBotThinkingEnabled(true)
+				SendToServerConsole("host_timescale 4")
+			end, DoUniqueString('enablebots'), 6)
+		end
+		--////////////////////////////////////
+		--STOP FUCKING SPLIT PUSHING CATAPULTS
+		--////////////////////////////////////		
+		--///////////////////////////////
+		--New Implementation of defskills
+		--///////////////////////////////
+		local buildingstobufflist = {
+			{bn = "dota_goodguys_fort", priority = 4, istower = 0},
+			{bn = "good_rax_melee_bot", priority = 3, istower = 0},
+			{bn = "good_rax_melee_mid", priority = 3, istower = 0},
+			{bn = "good_rax_melee_top", priority = 3, istower = 0},
+			{bn = "good_rax_range_top", priority = 2, istower = 0},
+			{bn = "good_rax_range_mid", priority = 2, istower = 0},
+			{bn = "good_rax_range_bot", priority = 2, istower = 0},
+			{bn = "dota_goodguys_tower4_bot", priority = 1, istower = 1},
+			{bn = "dota_goodguys_tower4_top", priority = 1, istower = 1},
+			{bn = "dota_goodguys_tower3_top", priority = 0, istower = 1},
+			{bn = "dota_goodguys_tower3_mid", priority = 0, istower = 1},
+			{bn = "dota_goodguys_tower3_bot", priority = 0, istower = 1}
+		}
+		
+		local defskills = {
+			{skill = "dragon_knight_dragon_blood", agressive = 0, p0 = 0, p1 = 2, p2 = 0, p3 = 0, p4 = 4},
+			{skill = "viper_corrosive_skin", agressive = 0, p0 = 1, p1 = 3, p2 = 3, p3 = 3, p4 = 4},
+			{skill = "centaur_return", agressive = 0, p0 = 1, p1 = 3, p2 = 3, p3 = 3, p4 = 4},
+			{skill = "spectre_dispersion", agressive = 0, p0 = 1, p1 = 4, p2 = 3, p3 = 3, p4 = 4},
+			{skill = "sandking_caustic_finale", agressive = 1, p0 = 2, p1 = 4, p2 = 0, p3 = 0, p4 = 0},
+			{skill = "templar_assassin_psi_blades", agressive = 1, p0 = 1, p1 = 4, p2 = 0, p3 = 0, p4 = 0},
+			{skill = "kunkka_tidebringer", agressive = 1, p0 = 1, p1 = 3, p2 = 0, p3 = 0, p4 = 0}
+		}
+		
+		local defitems = {
+			--VG, HEART, CUIRASS, SHIVA
+			{item = "item_vanguard", agressive = 0, p0 = 1, p1 = 1, p2 = 1, p3 = 1, p4 = 1},
+			{item = "item_shivas_guard", agressive = 0, p0 = 0, p1 = 0, p2 = 0, p3 = 1, p4 = 1},
+			{item = "item_assault", agressive = 0, p0 = 0, p1 = 0, p2 = 0, p3 = 1, p4 = 1},
+			{item = "item_radiance", agressive = 1, p0 = 1, p1 = 1, p2 = 0, p3 = 0, p4 = 0},
+			{item = "item_vladmir", agressive = 0, p0 = 0, p1 = 0, p2 = 1, p3 = 0, p4 = 0},
+			{item = "item_mjollnir", agressive = 1, p0 = 0, p1 = 1, p2 = 0, p3 = 0, p4 = 0},
+			{item = "item_dragon_lance", agressive = 1, p0 = 0, p1 = 1, p2 = 0, p3 = 0, p4 = 0},
+			{item = "item_solar_crest", agressive = 0, p0 = 1, p1 = 1, p2 = 1, p3 = 1, p4 = 1}
+		}
+		
+		for k=1,#buildingstobufflist do
+			local building = Entities:FindByName(nil, buildingstobufflist[k].bn)
+			if building then
+				for i=1,#defskills do
+					--Applying Spells(only towers get agressive spells)
+					if buildingstobufflist[k].istower == 1 and defskills[i].agressive == 1 then
+						building:AddAbility(defskills[i].skill)
+					elseif defskills[i].agressive == 0 then
+						building:AddAbility(defskills[i].skill)
+					end
+					--Leveling Spells
+					local processedskill = building:FindAbilityByName(defskills[i].skill)
+					if processedskill then
+						if buildingstobufflist[k].priority == 0 then
+							processedskill:SetLevel(defskills[i].p0)
+						elseif buildingstobufflist[k].priority == 1 then
+							processedskill:SetLevel(defskills[i].p1)
+						elseif buildingstobufflist[k].priority == 2 then
+							processedskill:SetLevel(defskills[i].p2)
+						elseif buildingstobufflist[k].priority == 3 then
+							processedskill:SetLevel(defskills[i].p3)
+						elseif buildingstobufflist[k].priority == 4 then
+							processedskill:SetLevel(defskills[i].p4)
+						else
+							print("Error in defspells assigning mechanism, UNEXPECTED_PRIORITY_FOUND")
+						end
+						if processedskill:GetLevel() == 0 then
+							building:RemoveAbility(defskills[i].skill)
+						end
+					end
+				end
+				for j=1,#defitems do
+					if buildingstobufflist[k].priority == 0 and defitems[j].p0 == 1 then
+						if defitems[j].agressive == 1 and buildingstobufflist[k].istower == 1 then
+							building:AddItemByName(defitems[j].item)
+						elseif defitems[j].agressive == 0 then
+							building:AddItemByName(defitems[j].item)
+						end
+					elseif buildingstobufflist[k].priority == 1 and defitems[j].p1 == 1 then
+						if defitems[j].agressive == 1 and buildingstobufflist[k].istower == 1 then
+							building:AddItemByName(defitems[j].item)
+						elseif defitems[j].agressive == 0 then
+							building:AddItemByName(defitems[j].item)
+						end
+					elseif buildingstobufflist[k].priority == 2 and defitems[j].p2 == 1 then
+						if defitems[j].agressive == 1 and buildingstobufflist[k].istower == 1 then
+							building:AddItemByName(defitems[j].item)
+						elseif defitems[j].agressive == 0 then
+							building:AddItemByName(defitems[j].item)
+						end
+					elseif buildingstobufflist[k].priority == 3 and defitems[j].p3 == 1 then
+						if defitems[j].agressive == 1 and buildingstobufflist[k].istower == 1 then
+							building:AddItemByName(defitems[j].item)
+						elseif defitems[j].agressive == 0 then
+							building:AddItemByName(defitems[j].item)
+						end
+					elseif buildingstobufflist[k].priority == 4 and defitems[j].p4 == 1 then
+						if defitems[j].agressive == 1 and buildingstobufflist[k].istower == 1 then
+							building:AddItemByName(defitems[j].item)
+						elseif defitems[j].agressive == 0 then
+							building:AddItemByName(defitems[j].item)
+						end
+					end
+				end
+			end
+		end
+		--////////////////////////////////////////
+	elseif state == DOTA_GAMERULES_STATE_GAME_IN_PROGRESS then
+		if IsServer() and self.istimescalereset == 0 then
+			SendToServerConsole("host_timescale 1")
+			self.istimescalereset = 1
+		end
+	end
+end
