@@ -1,5 +1,6 @@
 local RADIANT_TEAM_MAX_PLAYERS = 1
 local DIRE_TEAM_MAX_PLAYERS = 8
+local RUNE_SPAWN_TIME = 120
 
 if VGMAR == nil then
 	VGMAR = class({})
@@ -18,14 +19,26 @@ function VGMAR:Init()
 	self.n_players_radiant = 0
 	self.n_players_dire = 0
 	self.istimescalereset = 0
+	self.lastrunetype = -1
+	self.currunenum = 1
+	self.removedrunenum = math.random(1,2)
 
 	self.mode = GameRules:GetGameModeEntity()
 	GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_GOODGUYS, RADIANT_TEAM_MAX_PLAYERS)
     GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_BADGUYS, DIRE_TEAM_MAX_PLAYERS)
 	GameRules:SetStrategyTime( 0.0 )
 	GameRules:SetShowcaseTime( 0.0 )
+	GameRules:SetRuneSpawnTime(RUNE_SPAWN_TIME)
+	GameRules:SetRuneMinimapIconScale( 1 )
 	GameRules:GetGameModeEntity():SetBotThinkingEnabled(true)
-	--mode:SetBotThinkingEnabled( true )
+	self.mode:SetRuneEnabled( DOTA_RUNE_DOUBLEDAMAGE, true )
+	self.mode:SetRuneEnabled( DOTA_RUNE_HASTE, true )
+	self.mode:SetRuneEnabled( DOTA_RUNE_ILLUSION, true )
+	self.mode:SetRuneEnabled( DOTA_RUNE_INVISIBILITY, true )
+	self.mode:SetRuneEnabled( DOTA_RUNE_REGENERATION, true )
+	self.mode:SetRuneEnabled( DOTA_RUNE_ARCANE, true )
+	self.mode:SetRuneEnabled( DOTA_RUNE_BOUNTY, true )
+	self.mode:SetRuneSpawnFilter( Dynamic_Wrap( VGMAR, "FilterRuneSpawn" ), self )
 	
 	--GameRules:SetCustomGameSetupTimeout( 30 )
 	--GameRules:SetCustomGameSetupAutoLaunchDelay( 0 )
@@ -43,7 +56,126 @@ function VGMAR:Init()
 	GameRules:GetGameModeEntity():SetThink( "OnThink", self, 0.25 )
 end
 
+function VGMAR:FilterRuneSpawn( filterTable )
+	local function GetRandomRune( notrune )
+		local runeslist = {
+			0,
+			1,
+			2,
+			3,
+			4,
+			6
+		}
+		
+		local rune = notrune
+		
+		while rune == notrune do
+			rune = runeslist[math.random(#runeslist)]
+		end
+		return rune
+	end
+	filterTable.rune_type = GetRandomRune( -1 )
+	if self.currunenum > 2 then
+		self.currunenum = 1
+		self.removedrunenum = math.random(1,2)
+	end
+
+	if filterTable.rune_type == self.lastrunetype then
+		filterTable.rune_type = GetRandomRune( self.lastrunetype )
+	end
+	if GameRules:GetDOTATime(false, false) < 10 then
+		filterTable.rune_type = DOTA_RUNE_INVALID
+	end
+	if GameRules:GetDOTATime(false, false) < 2400 then
+		if self.currunenum == self.removedrunenum then
+			filterTable.rune_type = DOTA_RUNE_INVALID
+		end
+	end
+
+	if filterTable.rune_type ~= -1 then
+		self.lastrunetype = filterTable.rune_type
+	end
+	self.currunenum = self.currunenum + 1
+	return true
+end
+
 function VGMAR:OnThink()
+	local function HeroHasUsableItemInInventory( hero, item, mutedallowed, backpackallowed )
+		if not hero:HasItemInInventory(item) then
+			return false
+		end
+		for i = 0, 8, 1 do
+			local slotitem = hero:GetItemInSlot(i);
+			if slotitem then
+				if slotitem:GetName() == item then
+					if slotitem:IsMuted() and mutedallowed == true then
+						if i <= 5 then
+							return true
+						elseif i >= 6 and backpackallowed == true then
+							return true
+						else 
+							return false
+						end
+					elseif not slotitem:IsMuted() then
+						if i <= 5 then
+							return true
+						elseif i >= 6 and backpackallowed == true then
+							return true
+						else 
+							return false
+						end
+					else
+						return false
+					end
+				end
+			end
+		end
+	end
+	local function CountUsableItemsInHeroInventory( hero, item, mutedallowed, backpackallowed )
+		if not hero:HasItemInInventory(item) then
+			return 0
+		end
+		local itemcount = 0
+		for i = 0, 8, 1 do
+			local slotitem = hero:GetItemInSlot(i);
+			if slotitem then
+				if slotitem:GetName() == item then
+					if slotitem:IsMuted() and mutedallowed == true then
+						if i <= 5 then
+							itemcount = itemcount + 1
+						elseif i >= 6 and backpackallowed == true then
+							itemcount = itemcount + 1
+						end
+					elseif not slotitem:IsMuted() then
+						if i <= 5 then
+							itemcount = itemcount + 1
+						elseif i >= 6 and backpackallowed == true then
+							itemcount = itemcount + 1
+						end
+					end
+				end
+			end
+		end
+		return itemcount
+	end
+	local function RemoveNItemsInInventory( hero, item, num )
+		if not hero:HasItemInInventory(item) then
+			return
+		end
+		local removeditemsnum = 0
+		for i = 0, 8, 1 do
+			local slotitem = hero:GetItemInSlot(i);
+			if slotitem then
+				if slotitem:GetName() == item and removeditemsnum < num then
+					hero:RemoveItem(slotitem)
+					removeditemsnum = removeditemsnum + 1
+				elseif removeditemsnum >= num then
+					break
+				end
+			end
+		end
+		return
+	end
 	if GameRules:State_Get() == DOTA_GAMERULES_STATE_GAME_IN_PROGRESS then
 		--///////////////////////////
 		--Bot Rune Fix
@@ -60,6 +192,14 @@ function VGMAR:OnThink()
 						heroent:PickupRune(closestrune)
 					end
 				end
+				--//////////////////////////////
+				--Consumable Items System Rework
+				--//////////////////////////////
+				--Alchemist-less Scepter consumption
+				if CountUsableItemsInHeroInventory( heroent, "item_ultimate_scepter", false, true) >= 2 and not heroent:FindModifierByName("modifier_item_ultimate_scepter_consumed") then
+					RemoveNItemsInInventory(heroent, "item_ultimate_scepter", 2)
+					heroent:AddNewModifier(heroent, nil, 'modifier_item_ultimate_scepter_consumed', { bonus_all_stats = 10, bonus_health = 175, bonus_mana = 175 })
+				end
 			end
 		end
 	end
@@ -75,7 +215,9 @@ function VGMAR:OnThink()
 		local herolistwinterwyvern = Entities:FindAllByClassname( "npc_dota_hero_winter_wyvern" )
 		local herolistdrow = Entities:FindAllByClassname( "npc_dota_hero_drow_ranger" )
 		local herolistriki = Entities:FindAllByClassname( "npc_dota_hero_riki" )
+		local herolistam = Entities:FindAllByClassname( "npc_dota_hero_antimage" )
 		
+		--Checking conditions for automatic Ability leveling 
 		--Nightstalker
 		for i, hero in ipairs(herolistnightstalker) do
 			local nsvoid = hero:FindAbilityByName( "night_stalker_void" )
@@ -203,6 +345,44 @@ function VGMAR:OnThink()
 				rikiult:SetLevel( 4 )
 			end
 		end
+		
+		--Antimage
+		for i, hero in ipairs(herolistam) do
+			local antimagemanaburn = hero:FindAbilityByName( "antimage_mana_break" )
+			local antimageshield = hero:FindAbilityByName( "antimage_spell_shield" )
+			local antimagevoid = hero:FindAbilityByName( "antimage_mana_void" )
+			if antimagemanaburn:GetLevel() == 4 and (hero:HasScepter() and HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false )) then
+				antimagemanaburn:SetLevel( 5 )
+			elseif antimagemanaburn:GetLevel() == 5 and not (hero:HasScepter() and HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false )) then
+				antimagemanaburn:SetLevel( 4 )
+			end
+			if antimageshield:GetLevel() == 4 and (hero:GetLevel() >= 15 or hero:HasScepter()) then
+				antimageshield:SetLevel( 5 )
+			elseif antimageshield:GetLevel() == 5 and hero:GetLevel() < 15 and not hero:HasScepter() then
+				antimageshield:SetLevel( 4 )
+			elseif antimageshield:GetLevel() == 5 and hero:HasScepter() and hero:GetLevel() >= 15 then
+				antimageshield:SetLevel( 6 )
+			elseif antimageshield:GetLevel() == 6 and hero:GetLevel() >= 15 and not hero:HasScepter() then
+				antimageshield:SetLevel( 5 )
+			elseif antimageshield:GetLevel() == 6 and hero:HasScepter() and hero:GetLevel() >= 20 and HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false ) then
+				antimageshield:SetLevel( 7 )
+			elseif antimageshield:GetLevel() == 7 and hero:GetLevel() >= 15 and (not hero:HasScepter() or not HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false )) then
+				antimageshield:SetLevel( 6 )
+			end
+			if antimagevoid:GetLevel() == 3 and (hero:HasScepter() or hero:GetLevel() == 25) then
+				antimagevoid:SetLevel( 4 )
+			elseif antimagevoid:GetLevel() == 4 and hero:GetLevel() < 25 and not hero:HasScepter() then
+				antimagevoid:SetLevel( 3 )
+			elseif antimagevoid:GetLevel() == 4 and hero:HasScepter() and hero:GetLevel() == 25 then
+				antimagevoid:SetLevel( 5 )
+			elseif antimagevoid:GetLevel() == 5 and hero:GetLevel() == 25 and not hero:HasScepter() then
+				antimagevoid:SetLevel( 4 )
+			elseif antimagevoid:GetLevel() == 5 and hero:HasScepter() and HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false ) then
+				antimagevoid:SetLevel( 6 )
+			elseif antimagevoid:GetLevel() == 6 and (not hero:HasScepter() or not HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false ))  then
+				antimagevoid:SetLevel( 5 )
+			end
+		end
 		--///////////////////////////
 		--END
 		--///////////////////////////
@@ -232,6 +412,10 @@ function VGMAR:OnPlayerLearnedAbility( keys )
 	
 	local playerhero = player:GetAssignedHero()
 	
+	--Building ability list for modification
+	--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	--Probably a better solution would be to build those according to existing heroes
+	--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	local zeuscloud = playerhero:FindAbilityByName( "zuus_cloud" )
 	local nshunterinthenight = playerhero:FindAbilityByName( "night_stalker_hunter_in_the_night" )
 	local nsdarkeness = playerhero:FindAbilityByName( "night_stalker_darkness" )
@@ -251,6 +435,9 @@ function VGMAR:OnPlayerLearnedAbility( keys )
 	local rikiblink = playerhero:FindAbilityByName( "riki_blink_strike" )
 	local rikiinvis = playerhero:FindAbilityByName( "riki_permanent_invisibility" )
 	local rikiult = playerhero:FindAbilityByName( "riki_tricks_of_the_trade" )
+	local antimagemanaburn = playerhero:FindAbilityByName( "antimage_mana_break" )
+	local antimageshield = playerhero:FindAbilityByName( "antimage_spell_shield" )
+	local antimagevoid = playerhero:FindAbilityByName( "antimage_mana_void" )
 	if zeuscloud then
 		local zeusult = playerhero:FindAbilityByName( "zuus_thundergods_wrath" )
 		if zeusult and not (playerhero:GetLevel() == 25) then
@@ -369,6 +556,23 @@ function VGMAR:OnPlayerLearnedAbility( keys )
 			rikiult:SetLevel( rikiult:GetLevel() - 1)
 		end
 	end
+	--Antimage
+	if abilityname == "antimage_mana_break" then
+		if antimagemanaburn:GetLevel() >= 5 then
+			playerhero:SetAbilityPoints(playerhero:GetAbilityPoints() + 1)
+			antimagemanaburn:SetLevel( antimagemanaburn:GetLevel() - 1 )
+		end
+	elseif abilityname == "antimage_spell_shield" then
+		if antimageshield:GetLevel() >= 5 then
+			playerhero:SetAbilityPoints(playerhero:GetAbilityPoints() + 1)
+			antimageshield:SetLevel( antimageshield:GetLevel() - 1 )
+		end
+	elseif abilityname == "antimage_mana_void" then
+		if antimagevoid:GetLevel() >= 4 then
+			playerhero:SetAbilityPoints(playerhero:GetAbilityPoints() + 1)
+			antimagevoid:SetLevel( antimagevoid:GetLevel() - 1)
+		end
+	end
 end
 
 function VGMAR:OnGameStateChanged( keys )
@@ -419,7 +623,7 @@ function VGMAR:OnGameStateChanged( keys )
 				SendToServerConsole("dota_bot_disable 0")
 				GameRules:GetGameModeEntity():SetBotThinkingEnabled(true)
 				SendToServerConsole("host_timescale 4")
-			end, DoUniqueString('enablebots'), 6)
+			end, DoUniqueString('enablebots'), 10)
 		end
 		--////////////////////////////////////
 		--STOP FUCKING SPLIT PUSHING CATAPULTS
@@ -428,38 +632,39 @@ function VGMAR:OnGameStateChanged( keys )
 		--New Implementation of defskills
 		--///////////////////////////////
 		local buildingstobufflist = {
-			{bn = "dota_goodguys_fort", priority = 4, istower = 0},
-			{bn = "good_rax_melee_bot", priority = 3, istower = 0},
-			{bn = "good_rax_melee_mid", priority = 3, istower = 0},
-			{bn = "good_rax_melee_top", priority = 3, istower = 0},
-			{bn = "good_rax_range_top", priority = 2, istower = 0},
-			{bn = "good_rax_range_mid", priority = 2, istower = 0},
-			{bn = "good_rax_range_bot", priority = 2, istower = 0},
-			{bn = "dota_goodguys_tower4_bot", priority = 1, istower = 1},
-			{bn = "dota_goodguys_tower4_top", priority = 1, istower = 1},
-			{bn = "dota_goodguys_tower3_top", priority = 0, istower = 1},
-			{bn = "dota_goodguys_tower3_mid", priority = 0, istower = 1},
-			{bn = "dota_goodguys_tower3_bot", priority = 0, istower = 1}
+			{bn = "dota_goodguys_fort", priority = 4, istower = 0, regnegation = 8.0},
+			{bn = "good_rax_melee_bot", priority = 3, istower = 0, regnegation = 8.0},
+			{bn = "good_rax_melee_mid", priority = 3, istower = 0, regnegation = 8.0},
+			{bn = "good_rax_melee_top", priority = 3, istower = 0, regnegation = 8.0},
+			{bn = "good_rax_range_top", priority = 2, istower = 0, regnegation = 8.0},
+			{bn = "good_rax_range_mid", priority = 2, istower = 0, regnegation = 8.0},
+			{bn = "good_rax_range_bot", priority = 2, istower = 0, regnegation = 8.0},
+			{bn = "dota_goodguys_tower4_bot", priority = 1, istower = 1, regnegation = 8.0},
+			{bn = "dota_goodguys_tower4_top", priority = 1, istower = 1, regnegation = 8.0},
+			{bn = "dota_goodguys_tower3_top", priority = 0, istower = 1, regnegation = 8.0},
+			{bn = "dota_goodguys_tower3_mid", priority = 0, istower = 1, regnegation = 8.0},
+			{bn = "dota_goodguys_tower3_bot", priority = 0, istower = 1, regnegation = 8.0}
 		}
 		
 		local defskills = {
-			{skill = "dragon_knight_dragon_blood", agressive = 0, p0 = 0, p1 = 2, p2 = 0, p3 = 0, p4 = 4},
-			{skill = "viper_corrosive_skin", agressive = 0, p0 = 1, p1 = 3, p2 = 3, p3 = 3, p4 = 4},
-			{skill = "centaur_return", agressive = 0, p0 = 1, p1 = 3, p2 = 3, p3 = 3, p4 = 4},
-			{skill = "spectre_dispersion", agressive = 0, p0 = 1, p1 = 4, p2 = 3, p3 = 3, p4 = 4},
-			{skill = "sandking_caustic_finale", agressive = 1, p0 = 2, p1 = 4, p2 = 0, p3 = 0, p4 = 0},
-			{skill = "templar_assassin_psi_blades", agressive = 1, p0 = 1, p1 = 4, p2 = 0, p3 = 0, p4 = 0},
-			{skill = "kunkka_tidebringer", agressive = 1, p0 = 1, p1 = 3, p2 = 0, p3 = 0, p4 = 0}
+			{skill = "dragon_knight_dragon_blood", agressive = 0, p0 = 0, p1 = 0, p2 = 0, p3 = 0, p4 = 1},
+			{skill = "tower_corrosive_skin", agressive = 0, p0 = 1, p1 = 3, p2 = 3, p3 = 3, p4 = 4},
+			{skill = "tower_dispersion", agressive = 0, p0 = 1, p1 = 4, p2 = 3, p3 = 3, p4 = 4},
+			{skill = "tower_atrophy_aura", agressive = 1, p0 = 1, p1 = 4, p2 = 0, p3 = 0, p4 = 0},
+			{skill = "tower_berserkers_blood", agressive = 1, p0 = 1, p1 = 4, p2 = 0, p3 = 0, p4 = 0},
+			{skill = "tower_take_aim", agressive = 1, p0 = 0, p1 = 4, p2 = 0, p3 = 0, p4 = 0},
+			{skill = "templar_assassin_psi_blades", agressive = 1, p0 = 0, p1 = 0, p2 = 0, p3 = 0, p4 = 0},
+			{skill = "tower_great_cleave", agressive = 1, p0 = 2, p1 = 4, p2 = 0, p3 = 0, p4 = 0},
+			{skill = "tower_tidebringer", agressive = 1, p0 = 2, p1 = 4, p2 = 0, p3 = 0, p4 = 0}
 		}
 		
 		local defitems = {
-			--VG, HEART, CUIRASS, SHIVA
 			{item = "item_vanguard", agressive = 0, p0 = 1, p1 = 1, p2 = 1, p3 = 1, p4 = 1},
 			{item = "item_shivas_guard", agressive = 0, p0 = 0, p1 = 0, p2 = 0, p3 = 1, p4 = 1},
 			{item = "item_assault", agressive = 0, p0 = 0, p1 = 0, p2 = 0, p3 = 1, p4 = 1},
-			{item = "item_radiance", agressive = 1, p0 = 1, p1 = 1, p2 = 0, p3 = 0, p4 = 0},
+			--{item = "item_radiance", agressive = 1, p0 = 0, p1 = 1, p2 = 0, p3 = 0, p4 = 0},
 			{item = "item_vladmir", agressive = 0, p0 = 0, p1 = 0, p2 = 1, p3 = 0, p4 = 0},
-			{item = "item_mjollnir", agressive = 1, p0 = 0, p1 = 1, p2 = 0, p3 = 0, p4 = 0},
+			{item = "item_maelstrom", agressive = 1, p0 = 0, p1 = 1, p2 = 0, p3 = 0, p4 = 0},
 			{item = "item_dragon_lance", agressive = 1, p0 = 0, p1 = 1, p2 = 0, p3 = 0, p4 = 0},
 			{item = "item_solar_crest", agressive = 0, p0 = 1, p1 = 1, p2 = 1, p3 = 1, p4 = 1}
 		}
@@ -467,6 +672,8 @@ function VGMAR:OnGameStateChanged( keys )
 		for k=1,#buildingstobufflist do
 			local building = Entities:FindByName(nil, buildingstobufflist[k].bn)
 			if building then
+				--Negating unnecessary regen
+				building:SetBaseHealthRegen(building:GetBaseHealthRegen() + (buildingstobufflist[k].regnegation * -1))
 				for i=1,#defskills do
 					--Applying Spells(only towers get agressive spells)
 					if buildingstobufflist[k].istower == 1 and defskills[i].agressive == 1 then

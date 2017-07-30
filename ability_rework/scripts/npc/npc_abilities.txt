@@ -164,6 +164,7 @@
 		"AbilityUnitDamageType"			"DAMAGE_TYPE_PHYSICAL"		
 		"SpellImmunityType"				"SPELL_IMMUNITY_ENEMIES_NO"
 		"AbilitySound"					"Hero_Antimage.ManaBreak"
+		"MaxLevel"						"5"
 
 		// Special	
 		//-------------------------------------------------------------------------------------------------------------
@@ -172,12 +173,12 @@
 			"01"
 			{
 				"var_type"				"FIELD_FLOAT"
-				"damage_per_burn"		"0.6"
+				"damage_per_burn"		"0.6 0.6 0.6 0.6 0.05"
 			}
 			"02"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"mana_per_hit"			"28 40 52 64"
+				"mana_per_hit"			"28 40 52 64 150"
 			}
 		}
 	}
@@ -233,6 +234,7 @@
 		//-------------------------------------------------------------------------------------------------------------
 		"ID"					"5005"														// unique ID number for this ability.  Do not change this once established or it will invalidate collected stats.
 		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_PASSIVE"
+		"MaxLevel"				"7"
 
 		"HasScepterUpgrade"			"1"
 
@@ -243,12 +245,12 @@
 			"01"
 			{
 				"var_type"						"FIELD_INTEGER"
-				"spell_shield_resistance"		"26 34 42 50"
+				"spell_shield_resistance"		"26 34 42 50 58 66 72"
 			}
 			"02"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"scepter_cooldown"		"12"
+				"scepter_cooldown"		"12 12 12 12 10 6 2"
 			}
 		}
 	}
@@ -271,19 +273,20 @@
 		"AbilityUnitDamageType"			"DAMAGE_TYPE_MAGICAL"		
 		"FightRecapLevel"				"2"
 		"AbilitySound"					"Hero_Antimage.ManaVoid"
+		"MaxLevel"						"6"
 
 		// Casting
 		//-------------------------------------------------------------------------------------------------------------
-		"AbilityCastRange"				"600"
-		"AbilityCastPoint"				"0.3 0.3 0.3 0.3"
+		"AbilityCastRange"				"600 600 600 600 800 1000"
+		"AbilityCastPoint"				"0.3 0.3 0.3 0.3 0.3 0.3"
 
 		// Time		
 		//-------------------------------------------------------------------------------------------------------------
-		"AbilityCooldown"				"70.0 70.0 70.0"
+		"AbilityCooldown"				"70.0 70.0 70.0 60.0 160.0 180.0"
 
 		// Cost
 		//-------------------------------------------------------------------------------------------------------------
-		"AbilityManaCost"				"125 200 275"
+		"AbilityManaCost"				"125 200 275 350 425 550"
 
 		// Stats
 		//-------------------------------------------------------------------------------------------------------------
@@ -296,19 +299,19 @@
 			"01"
 			{
 				"var_type"						"FIELD_FLOAT"
-				"mana_void_damage_per_mana"		"0.6 0.85 1.1"
+				"mana_void_damage_per_mana"		"0.6 0.85 1.1 1.25 2.0 4.0"
 			}
 			
 			"02"
 			{
 				"var_type"						"FIELD_FLOAT"
-				"mana_void_ministun"			"0.3"
+				"mana_void_ministun"			"0.3 0.3 0.3 1.0 1.5 2.0"
 			}
 			
 			"03"
 			{
 				"var_type"						"FIELD_INTEGER"
-				"mana_void_aoe_radius"			"500"
+				"mana_void_aoe_radius"			"500 500 500 650 3000 5000"
 			}
 		}
 	}
