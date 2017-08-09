@@ -196,6 +196,9 @@ function VGMAR:OnThink()
 				--Consumable Items System Rework
 				--//////////////////////////////
 				--Alchemist-less Scepter consumption
+				--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+				--Move this to "dota_item_picked_up" event for performance
+				--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 				if CountUsableItemsInHeroInventory( heroent, "item_ultimate_scepter", false, true) >= 2 and not heroent:FindModifierByName("modifier_item_ultimate_scepter_consumed") then
 					RemoveNItemsInInventory(heroent, "item_ultimate_scepter", 2)
 					heroent:AddNewModifier(heroent, nil, 'modifier_item_ultimate_scepter_consumed', { bonus_all_stats = 10, bonus_health = 175, bonus_mana = 175 })
@@ -216,6 +219,7 @@ function VGMAR:OnThink()
 		local herolistdrow = Entities:FindAllByClassname( "npc_dota_hero_drow_ranger" )
 		local herolistriki = Entities:FindAllByClassname( "npc_dota_hero_riki" )
 		local herolistam = Entities:FindAllByClassname( "npc_dota_hero_antimage" )
+		local herolistrazor = Entities:FindAllByClassname( "npc_dota_hero_razor" )
 		
 		--Checking conditions for automatic Ability leveling 
 		--Nightstalker
@@ -383,6 +387,46 @@ function VGMAR:OnThink()
 				antimagevoid:SetLevel( 5 )
 			end
 		end
+		
+		--Razor
+		for i, hero in ipairs(herolistrazor) do
+			local razorplasmafield = hero:FindAbilityByName( "razor_plasma_field" )
+			local razorstaticlink = hero:FindAbilityByName( "razor_static_link" )
+			local razorunstablecurrent = hero:FindAbilityByName( "razor_unstable_current" )
+			local razorult = hero:FindAbilityByName( "razor_eye_of_the_storm" )
+			if razorplasmafield:GetLevel() == 4 and (hero:HasScepter() and HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false )) then
+				razorplasmafield:SetLevel( 5 )
+			elseif razorplasmafield:GetLevel() == 5 and not (hero:HasScepter() and HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false )) then
+				razorplasmafield:SetLevel( 4 )
+			elseif razorplasmafield:GetLevel() == 5 and hero:HasScepter() and HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false ) and HeroHasUsableItemInInventory( hero, "item_aether_lens", false, false ) then
+				razorplasmafield:SetLevel( 6 )
+			elseif razorplasmafield:GetLevel() == 6 and (not hero:HasScepter() or not HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false ) or not HeroHasUsableItemInInventory( hero, "item_aether_lens", false, false )) then
+				razorplasmafield:SetLevel( 5 )
+			end
+			if razorstaticlink:GetLevel() == 4 and (hero:GetLevel() >= 20 and hero:HasScepter()) then
+				razorstaticlink:SetLevel( 5 )
+			elseif razorstaticlink:GetLevel() == 5 and (hero:GetLevel() < 20 or not hero:HasScepter()) then
+				razorstaticlink:SetLevel( 4 )
+			end
+			if razorunstablecurrent:GetLevel() == 4 and hero:HasScepter() and hero:GetLevel() >= 15 then
+				razorunstablecurrent:SetLevel( 5 )
+			elseif razorunstablecurrent:GetLevel() == 5 and (hero:GetLevel() < 15 or not hero:HasScepter()) then
+				razorunstablecurrent:SetLevel( 4 )
+			elseif razorunstablecurrent:GetLevel() == 5 and hero:HasScepter() and HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false ) then
+				razorunstablecurrent:SetLevel( 6 )
+			elseif razorunstablecurrent:GetLevel() == 6 and (not hero:HasScepter() or not HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false ))  then
+				razorunstablecurrent:SetLevel( 5 )
+			end
+			if razorult:GetLevel() == 3 and hero:HasScepter() and HeroHasUsableItemInInventory( hero, "item_refresher", false, false ) then
+				razorult:SetLevel( 4 )
+			elseif razorult:GetLevel() == 4 and (not hero:HasScepter() or not HeroHasUsableItemInInventory( hero, "item_refresher", false, false )) then
+				razorult:SetLevel( 3 )
+			elseif razorult:GetLevel() == 4 and hero:HasScepter() and HeroHasUsableItemInInventory( hero, "item_refresher", false, false ) and HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false ) then
+				razorult:SetLevel( 5 )
+			elseif razorult:GetLevel() == 5 and (not hero:HasScepter() or not HeroHasUsableItemInInventory( hero, "item_refresher", false, false ) or not HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false )) then
+				razorult:SetLevel( 4 )
+			end
+		end
 		--///////////////////////////
 		--END
 		--///////////////////////////
@@ -438,6 +482,10 @@ function VGMAR:OnPlayerLearnedAbility( keys )
 	local antimagemanaburn = playerhero:FindAbilityByName( "antimage_mana_break" )
 	local antimageshield = playerhero:FindAbilityByName( "antimage_spell_shield" )
 	local antimagevoid = playerhero:FindAbilityByName( "antimage_mana_void" )
+	local razorplasmafield = playerhero:FindAbilityByName( "razor_plasma_field" )
+	local razorstaticlink = playerhero:FindAbilityByName( "razor_static_link" )
+	local razorunstablecurrent = playerhero:FindAbilityByName( "razor_unstable_current" )
+	local razorult = playerhero:FindAbilityByName( "razor_eye_of_the_storm" )
 	if zeuscloud then
 		local zeusult = playerhero:FindAbilityByName( "zuus_thundergods_wrath" )
 		if zeusult and not (playerhero:GetLevel() == 25) then
@@ -573,6 +621,28 @@ function VGMAR:OnPlayerLearnedAbility( keys )
 			antimagevoid:SetLevel( antimagevoid:GetLevel() - 1)
 		end
 	end
+	--Razor
+	if abilityname == "razor_plasma_field" then
+		if razorplasmafield:GetLevel() >= 5 then
+			playerhero:SetAbilityPoints(playerhero:GetAbilityPoints() + 1)
+			razorplasmafield:SetLevel( razorplasmafield:GetLevel() - 1 )
+		end
+	elseif abilityname == "razor_static_link" then
+		if razorstaticlink:GetLevel() >= 5 then
+			playerhero:SetAbilityPoints(playerhero:GetAbilityPoints() + 1)
+			razorstaticlink:SetLevel( razorstaticlink:GetLevel() - 1 )
+		end
+	elseif abilityname == "razor_unstable_current" then
+		if razorunstablecurrent:GetLevel() >= 5 then
+			playerhero:SetAbilityPoints(playerhero:GetAbilityPoints() + 1)
+			razorunstablecurrent:SetLevel( razorunstablecurrent:GetLevel() - 1 )
+		end
+	elseif abilityname == "razor_eye_of_the_storm" then
+		if razorult:GetLevel() >= 4 then
+			playerhero:SetAbilityPoints(playerhero:GetAbilityPoints() + 1)
+			razorult:SetLevel( razorult:GetLevel() - 1)
+		end
+	end
 end
 
 function VGMAR:OnGameStateChanged( keys )
@@ -647,15 +717,15 @@ function VGMAR:OnGameStateChanged( keys )
 		}
 		
 		local defskills = {
-			{skill = "dragon_knight_dragon_blood", agressive = 0, p0 = 0, p1 = 0, p2 = 0, p3 = 0, p4 = 1},
-			{skill = "tower_corrosive_skin", agressive = 0, p0 = 1, p1 = 3, p2 = 3, p3 = 3, p4 = 4},
-			{skill = "tower_dispersion", agressive = 0, p0 = 1, p1 = 4, p2 = 3, p3 = 3, p4 = 4},
-			{skill = "tower_atrophy_aura", agressive = 1, p0 = 1, p1 = 4, p2 = 0, p3 = 0, p4 = 0},
-			{skill = "tower_berserkers_blood", agressive = 1, p0 = 1, p1 = 4, p2 = 0, p3 = 0, p4 = 0},
-			{skill = "tower_take_aim", agressive = 1, p0 = 0, p1 = 4, p2 = 0, p3 = 0, p4 = 0},
-			{skill = "templar_assassin_psi_blades", agressive = 1, p0 = 0, p1 = 0, p2 = 0, p3 = 0, p4 = 0},
-			{skill = "tower_great_cleave", agressive = 1, p0 = 2, p1 = 4, p2 = 0, p3 = 0, p4 = 0},
-			{skill = "tower_tidebringer", agressive = 1, p0 = 2, p1 = 4, p2 = 0, p3 = 0, p4 = 0}
+			{skill = "dragon_knight_dragon_blood", agressive = 0, p0 = 0, p1 = 0, p2 = 0, p3 = 0, p4 = 1, autocast = 0},
+			{skill = "tower_corrosive_skin", agressive = 0, p0 = 1, p1 = 3, p2 = 3, p3 = 3, p4 = 4, autocast = 0},
+			{skill = "tower_dispersion", agressive = 0, p0 = 1, p1 = 4, p2 = 3, p3 = 3, p4 = 4, autocast = 0},
+			{skill = "tower_atrophy_aura", agressive = 1, p0 = 1, p1 = 4, p2 = 0, p3 = 0, p4 = 0, autocast = 0},
+			{skill = "tower_berserkers_blood", agressive = 1, p0 = 1, p1 = 4, p2 = 0, p3 = 0, p4 = 0, autocast = 0},
+			{skill = "tower_take_aim", agressive = 1, p0 = 0, p1 = 4, p2 = 0, p3 = 0, p4 = 0, autocast = 0},
+			{skill = "tower_walrus_punch", agressive = 1, p0 = 2, p1 = 4, p2 = 0, p3 = 0, p4 = 0, autocast = 1},
+			{skill = "tower_great_cleave", agressive = 1, p0 = 2, p1 = 4, p2 = 0, p3 = 0, p4 = 0, autocast = 0},
+			{skill = "tower_tidebringer", agressive = 1, p0 = 2, p1 = 4, p2 = 0, p3 = 0, p4 = 0, autocast = 0}
 		}
 		
 		local defitems = {
@@ -699,6 +769,9 @@ function VGMAR:OnGameStateChanged( keys )
 						end
 						if processedskill:GetLevel() == 0 then
 							building:RemoveAbility(defskills[i].skill)
+						end
+						if defskills[i].autocast == 1 then
+							processedskill:ToggleAutoCast()
 						end
 					end
 				end

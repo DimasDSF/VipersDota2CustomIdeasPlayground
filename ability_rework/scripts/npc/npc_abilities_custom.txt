@@ -277,4 +277,56 @@
 			}
 		}
 	}
+	
+	//=================================================================================================================
+	// VGMAR: Tower: Tusk: Walrus Punch
+	//=================================================================================================================
+	"tower_walrus_punch"
+	{
+		// General
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_UNIT_TARGET | DOTA_ABILITY_BEHAVIOR_AUTOCAST | DOTA_ABILITY_BEHAVIOR_ATTACK"
+		"AbilityUnitTargetTeam"			"DOTA_UNIT_TARGET_TEAM_ENEMY"
+		"AbilityUnitTargetType"			"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
+		"AbilityUnitTargetFlags"		"DOTA_UNIT_TARGET_FLAG_MAGIC_IMMUNE_ENEMIES"
+		"SpellImmunityType"				"SPELL_IMMUNITY_ENEMIES_YES"
+		"SpellDispellableType"			"SPELL_DISPELLABLE_YES"
+		"AbilitySound"					"Hero_Tusk.WalrusPunch.Target"
+		"BaseClass"						"tusk_walrus_punch"
+		"MaxLevel"						"4"
+		
+		"AbilityCooldown"				"26.0"
+		"AbilityManaCost"				"0"
+		
+		// Special
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"					"FIELD_INTEGER"
+				"crit_multiplier"			"250 350 450 550"
+			}
+			"02"
+			{
+				"var_type"					"FIELD_FLOAT"
+				"air_time"					"1.0"
+			}
+			"03"
+			{
+				"var_type"					"FIELD_FLOAT"
+				"slow_duration"				"0.0"
+			}
+			"04"
+			{
+				"var_type"					"FIELD_INTEGER"
+				"move_slow"					"0"
+			}
+			"05"
+			{
+				"var_type"					"FIELD_INTEGER"
+				"push_length"				"1000"
+			}
+		}
+	}
 }
