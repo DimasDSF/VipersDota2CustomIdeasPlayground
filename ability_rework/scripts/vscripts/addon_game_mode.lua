@@ -52,6 +52,7 @@ function VGMAR:Init()
 	ListenToGameEvent( "npc_spawned", Dynamic_Wrap( VGMAR, "OnNPCSpawned" ), self )
 	ListenToGameEvent( "dota_player_learned_ability", Dynamic_Wrap( VGMAR, "OnPlayerLearnedAbility" ), self)
 	ListenToGameEvent( "game_rules_state_change", Dynamic_Wrap( VGMAR, 'OnGameStateChanged' ), self )
+	ListenToGameEvent( "dota_item_picked_up", Dynamic_Wrap( VGMAR, 'OnItemPickedUp' ), self )
 	
 	GameRules:GetGameModeEntity():SetThink( "OnThink", self, 0.25 )
 end
@@ -99,92 +100,176 @@ function VGMAR:FilterRuneSpawn( filterTable )
 	return true
 end
 
-function VGMAR:OnThink()
-	local function HeroHasUsableItemInInventory( hero, item, mutedallowed, backpackallowed )
-		if not hero:HasItemInInventory(item) then
-			return false
-		end
-		for i = 0, 8, 1 do
-			local slotitem = hero:GetItemInSlot(i);
-			if slotitem then
-				if slotitem:GetName() == item then
-					if slotitem:IsMuted() and mutedallowed == true then
-						if i <= 5 then
-							return true
-						elseif i >= 6 and backpackallowed == true then
-							return true
-						else 
-							return false
-						end
-					elseif not slotitem:IsMuted() then
-						if i <= 5 then
-							return true
-						elseif i >= 6 and backpackallowed == true then
-							return true
-						else 
-							return false
-						end
-					else
+function VGMAR:HeroHasUsableItemInInventory( hero, item, mutedallowed, backpackallowed )
+	if not hero:HasItemInInventory(item) then
+		return false
+	end
+	for i = 0, 8, 1 do
+		local slotitem = hero:GetItemInSlot(i);
+		if slotitem then
+			if slotitem:GetName() == item then
+				if slotitem:IsMuted() and mutedallowed == true then
+					if i <= 5 then
+						return true
+					elseif i >= 6 and backpackallowed == true then
+						return true
+					else 
 						return false
 					end
+				elseif not slotitem:IsMuted() then
+					if i <= 5 then
+						return true
+					elseif i >= 6 and backpackallowed == true then
+						return true
+					else 
+						return false
+					end
+				else
+					return false
 				end
 			end
 		end
 	end
-	local function CountUsableItemsInHeroInventory( hero, item, mutedallowed, backpackallowed )
-		if not hero:HasItemInInventory(item) then
-			return 0
+end
+
+function VGMAR:GetItemFromInventoryByName( hero, item, mutedallowed, backpackallowed )
+	if not hero:HasItemInInventory(item) then
+		return nil
+	end
+	for i = 0, 8, 1 do
+		local slotitem = hero:GetItemInSlot(i);
+		if slotitem then
+			if slotitem:GetName() == item then
+				if slotitem:IsMuted() and mutedallowed == true then
+					if i <= 5 then
+						return slotitem
+					elseif i >= 6 and backpackallowed == true then
+						return slotitem
+					else 
+						return nil
+					end
+				elseif not slotitem:IsMuted() then
+					if i <= 5 then
+						return slotitem
+					elseif i >= 6 and backpackallowed == true then
+						return slotitem
+					else 
+						return nil
+					end
+				else
+					return nil
+				end
+			end
 		end
-		local itemcount = 0
-		for i = 0, 8, 1 do
-			local slotitem = hero:GetItemInSlot(i);
-			if slotitem then
-				if slotitem:GetName() == item then
-					if slotitem:IsMuted() and mutedallowed == true then
-						if i <= 5 then
-							itemcount = itemcount + 1
-						elseif i >= 6 and backpackallowed == true then
-							itemcount = itemcount + 1
-						end
-					elseif not slotitem:IsMuted() then
-						if i <= 5 then
-							itemcount = itemcount + 1
-						elseif i >= 6 and backpackallowed == true then
-							itemcount = itemcount + 1
-						end
+	end
+end
+
+function VGMAR:CountUsableItemsInHeroInventory( hero, item, mutedallowed, backpackallowed )
+	if not hero:HasItemInInventory(item) then
+		return 0
+	end
+	local itemcount = 0
+	for i = 0, 8, 1 do
+		local slotitem = hero:GetItemInSlot(i);
+		if slotitem then
+			if slotitem:GetName() == item then
+				if slotitem:IsMuted() and mutedallowed == true then
+					if i <= 5 then
+						itemcount = itemcount + 1
+					elseif i >= 6 and backpackallowed == true then
+						itemcount = itemcount + 1
+					end
+				elseif not slotitem:IsMuted() then
+					if i <= 5 then
+						itemcount = itemcount + 1
+					elseif i >= 6 and backpackallowed == true then
+						itemcount = itemcount + 1
 					end
 				end
 			end
 		end
-		return itemcount
 	end
-	local function RemoveNItemsInInventory( hero, item, num )
-		if not hero:HasItemInInventory(item) then
-			return
-		end
-		local removeditemsnum = 0
-		for i = 0, 8, 1 do
-			local slotitem = hero:GetItemInSlot(i);
-			if slotitem then
-				if slotitem:GetName() == item and removeditemsnum < num then
-					hero:RemoveItem(slotitem)
-					removeditemsnum = removeditemsnum + 1
-				elseif removeditemsnum >= num then
-					break
-				end
-			end
-		end
+	return itemcount
+end
+
+function VGMAR:RemoveNItemsInInventory( hero, item, num )
+	if not hero:HasItemInInventory(item) then
 		return
 	end
-	if GameRules:State_Get() == DOTA_GAMERULES_STATE_GAME_IN_PROGRESS then
-		--///////////////////////////
-		--Bot Rune Fix
-		--///////////////////////////
-		local playersum = HeroList:GetHeroCount()
-		
+	local removeditemsnum = 0
+	for i = 0, 8, 1 do
+		local slotitem = hero:GetItemInSlot(i);
+		if slotitem then
+			if slotitem:GetName() == item and removeditemsnum < num then
+				hero:RemoveItem(slotitem)
+				removeditemsnum = removeditemsnum + 1
+			elseif removeditemsnum >= num then
+				break
+			end
+		end
+	end
+	return
+end
+
+function VGMAR:HeroHasAllItemsFromListWMultiple( hero, itemlist, backpack )
+	for i=1,#itemlist.itemnames do
+		if self:CountUsableItemsInHeroInventory( hero, itemlist.itemnames[i], false, backpack) < itemlist.itemnum[i] then
+			return false
+		end
+	end
+	return true
+end
+
+function VGMAR:TimeIsLaterThan( minute, second )
+	local num = minute * 60 + second
+	if GameRules:GetDOTATime(false, false) > num then
+		return true
+	else
+		return false
+	end
+end
+
+function VGMAR:OnItemPickedUp(keys)
+	local heroEntity = EntIndexToHScript(keys.HeroEntityIndex)
+	local itemEntity = EntIndexToHScript(keys.ItemEntityIndex)
+	local player = PlayerResource:GetPlayer(keys.PlayerID)
+	local itemname = keys.itemname
+	
+	--//////////////////////////////
+	--Consumable Items System
+	--//////////////////////////////
+	--Alchemist-less Scepter consumption
+	if self:CountUsableItemsInHeroInventory( heroEntity, "item_ultimate_scepter", false, true) >= 2 and not heroEntity:FindModifierByName("modifier_item_ultimate_scepter_consumed") then
+		self:RemoveNItemsInInventory(heroEntity, "item_ultimate_scepter", 2)
+		heroEntity:AddNewModifier(heroEntity, nil, 'modifier_item_ultimate_scepter_consumed', { bonus_all_stats = 10, bonus_health = 175, bonus_mana = 175 })
+	end
+	--Diffusal Blade 2+ Upgrade
+	if self:HeroHasUsableItemInInventory( heroEntity, "item_recipe_diffusal_blade", false, false) and self:HeroHasUsableItemInInventory( heroEntity, "item_diffusal_blade_2", false, false)  then
+		local diffbladeitem = self:GetItemFromInventoryByName( heroEntity, "item_diffusal_blade_2", false, false )
+		local diffbladerecipe = self:GetItemFromInventoryByName( heroEntity, "item_recipe_diffusal_blade", false, false )
+		if diffbladeitem ~= nil and diffbladeitem:GetCurrentCharges() < diffbladeitem:GetInitialCharges() then
+			heroEntity:RemoveItem(diffbladerecipe)
+			diffbladeitem:SetCurrentCharges(diffbladeitem:GetInitialCharges())
+		end
+	end
+	--Bloodstone recharge
+	if self:HeroHasUsableItemInInventory(heroEntity, "item_bloodstone", false, false) and self:CountUsableItemsInHeroInventory(heroEntity, "item_recipe_bloodstone", false, true) >= 3 then
+		self:RemoveNItemsInInventory(heroEntity, "item_recipe_bloodstone", 3)
+		local bloodstone = self:GetItemFromInventoryByName( heroEntity, "item_bloodstone" )
+		if bloodstone ~= nil then
+			bloodstone:SetCurrentCharges(bloodstone:GetCurrentCharges() + 24)
+		end
+	end
+end
+
+function VGMAR:OnThink()
+	if GameRules:State_Get() == DOTA_GAMERULES_STATE_GAME_IN_PROGRESS then		
 		for i=0,HeroList:GetHeroCount() do
 			local heroent = HeroList:GetHero(i)
 			if heroent then
+			--///////////////////////////
+			--Bot Rune Fix
+			--///////////////////////////
 				local heroplayerid = heroent:GetPlayerID()
 				local closestrune = Entities:FindByClassnameNearest("dota_item_rune", heroent:GetOrigin(), 250.0)
 				if closestrune then
@@ -192,16 +277,104 @@ function VGMAR:OnThink()
 						heroent:PickupRune(closestrune)
 					end
 				end
-				--//////////////////////////////
-				--Consumable Items System Rework
-				--//////////////////////////////
-				--Alchemist-less Scepter consumption
-				--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-				--Move this to "dota_item_picked_up" event for performance
-				--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-				if CountUsableItemsInHeroInventory( heroent, "item_ultimate_scepter", false, true) >= 2 and not heroent:FindModifierByName("modifier_item_ultimate_scepter_consumed") then
-					RemoveNItemsInInventory(heroent, "item_ultimate_scepter", 2)
-					heroent:AddNewModifier(heroent, nil, 'modifier_item_ultimate_scepter_consumed', { bonus_all_stats = 10, bonus_health = 175, bonus_mana = 175 })
+			--//////////////////////
+			--Passive Item Abilities
+			--//////////////////////
+			--Items For Spells Table
+				local itemlistforspell = {
+			{spell = "midas_goblins_greed",
+				items = {itemnames = {"item_hand_of_midas"}, itemnum = {1}},
+				isconsumable = false,
+				usesmultiple = false,
+				backpack = self:TimeIsLaterThan( 30, 0 ) or heroent:GetLevel() >= 25,
+				preventedhero = "npc_dota_hero_alchemist"},
+			{spell = "silver_essense_shift",
+				items = {itemnames = {"item_silver_edge"}, itemnum = {1}},
+				isconsumable = false,
+				usesmultiple = false,
+				backpack = false,
+				preventedhero = "npc_dota_hero_slark"},
+			{spell = "gem_thirst",
+				items = {itemnames = {"item_gem", "item_phase_boots"}, itemnum = {2, 1}},
+				isconsumable = true,
+				usesmultiple = true,
+				backpack = true,
+				preventedhero = "npc_dota_hero_bloodseeker"},
+			{spell = "urn_pulse",
+				items = {itemnames = {"item_urn_of_shadows"}, itemnum = {2}},
+				isconsumable = true,
+				usesmultiple = true,
+				backpack = true,
+				preventedhero = "npc_dota_hero_necrolyte"},
+			{spell = "sabre_fervor",
+				items = {itemnames = {"item_echo_sabre"}, itemnum = {2}},
+				isconsumable = self:TimeIsLaterThan( 30, 0 ),
+				usesmultiple = true,
+				backpack = (self:TimeIsLaterThan( 20, 0 ) or heroent:GetLevel() >= 25) and not self:TimeIsLaterThan( 30, 0 ),
+				preventedhero = "npc_dota_hero_troll_warlord"},
+			{spell = "aegis_king_reincarnation",
+				items = {itemnames = {"item_stout_shield", "item_poor_mans_shield", "item_vanguard", "item_aegis"}, itemnum = {1, 1, 1, 1}},
+				isconsumable = true,
+				usesmultiple = false,
+				backpack = true,
+				preventedhero = "npc_dota_hero_skeleton_king"},
+			{spell = "satanicdominator_atrophy",
+				items = {itemnames = {"item_helm_of_the_dominator", "item_satanic"}, itemnum = {2, 1}},
+				isconsumable = true,
+				usesmultiple = true,
+				backpack = true,
+				preventedhero = "npc_dota_hero_abyssal_underlord"}
+			}
+			--TableEND
+			
+				for k=1,#itemlistforspell do
+					if heroent:GetClassname() ~= itemlistforspell[k].preventedhero then
+						if itemlistforspell[k].isconsumable == true then
+							if self:HeroHasAllItemsFromListWMultiple( heroent, itemlistforspell[k].items, itemlistforspell[k].backpack) and not heroent:FindAbilityByName(itemlistforspell[k].spell) then
+								local itemability = heroent:FindAbilityByName(itemlistforspell[k].spell)
+								if itemability == nil then
+									for j=1,#itemlistforspell[k].items.itemnames do
+										self:RemoveNItemsInInventory( heroent, itemlistforspell[k].items.itemnames[j], itemlistforspell[k].items.itemnum[j])
+									end
+									itemability = heroent:AddAbility(itemlistforspell[k].spell)
+									itemability:SetLevel(1)
+								end
+							end
+						else
+							if self:HeroHasAllItemsFromListWMultiple( heroent, itemlistforspell[k].items, itemlistforspell[k].backpack) then
+								local itemability = heroent:FindAbilityByName(itemlistforspell[k].spell)
+								if itemability == nil then
+									itemability = heroent:AddAbility(itemlistforspell[k].spell)
+									itemability:SetLevel(1)
+								end
+							else
+								local itemability = heroent:FindAbilityByName(itemlistforspell[k].spell)
+								if itemability ~= nil then
+									heroent:RemoveAbility(itemlistforspell[k].spell)
+								end
+							end
+						end
+					end
+				end
+				if heroent:FindAbilityByName("aegis_king_reincarnation") ~= nil and heroent:IsAlive() then
+					local reincarnationability = heroent:FindAbilityByName("aegis_king_reincarnation")
+					local reincarnationcooldown = reincarnationability:GetCooldownTime()
+					if reincarnationcooldown ~= 0 then
+						if not heroent:HasModifier("modifier_skeleton_king_mortal_strike_drain_buff") then
+							heroent:AddNewModifier(heroent, heroent, "modifier_skeleton_king_mortal_strike_drain_buff", {hp_drain = 0, drain_duration = 99999})
+						end
+						if heroent:HasModifier("modifier_skeleton_king_mortal_strike_drain_debuff") then
+							heroent:RemoveModifierByName("modifier_skeleton_king_mortal_strike_drain_debuff")
+						end
+						heroent:SetModifierStackCount("modifier_skeleton_king_mortal_strike_drain_buff", heroent, reincarnationcooldown)
+					else
+						if not heroent:HasModifier("modifier_skeleton_king_mortal_strike_drain_debuff") then
+							heroent:AddNewModifier(heroent, heroent, "modifier_skeleton_king_mortal_strike_drain_debuff", {hp_drain = 0, drain_duration = 99999})
+						end
+						if heroent:HasModifier("modifier_skeleton_king_mortal_strike_drain_buff") then
+							heroent:RemoveModifierByName("modifier_skeleton_king_mortal_strike_drain_buff")
+						end
+					end
 				end
 			end
 		end
@@ -220,8 +393,9 @@ function VGMAR:OnThink()
 		local herolistriki = Entities:FindAllByClassname( "npc_dota_hero_riki" )
 		local herolistam = Entities:FindAllByClassname( "npc_dota_hero_antimage" )
 		local herolistrazor = Entities:FindAllByClassname( "npc_dota_hero_razor" )
+		local herolistphantomlancer = Entities:FindAllByClassname( "npc_dota_hero_phantom_lancer" )
 		
-		--Checking conditions for automatic Ability leveling 
+		--Checking conditions for automatic Ability leveling
 		--Nightstalker
 		for i, hero in ipairs(herolistnightstalker) do
 			local nsvoid = hero:FindAbilityByName( "night_stalker_void" )
@@ -355,9 +529,9 @@ function VGMAR:OnThink()
 			local antimagemanaburn = hero:FindAbilityByName( "antimage_mana_break" )
 			local antimageshield = hero:FindAbilityByName( "antimage_spell_shield" )
 			local antimagevoid = hero:FindAbilityByName( "antimage_mana_void" )
-			if antimagemanaburn:GetLevel() == 4 and (hero:HasScepter() and HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false )) then
+			if antimagemanaburn:GetLevel() == 4 and (hero:HasScepter() and self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false )) then
 				antimagemanaburn:SetLevel( 5 )
-			elseif antimagemanaburn:GetLevel() == 5 and not (hero:HasScepter() and HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false )) then
+			elseif antimagemanaburn:GetLevel() == 5 and not (hero:HasScepter() and self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false )) then
 				antimagemanaburn:SetLevel( 4 )
 			end
 			if antimageshield:GetLevel() == 4 and (hero:GetLevel() >= 15 or hero:HasScepter()) then
@@ -368,9 +542,9 @@ function VGMAR:OnThink()
 				antimageshield:SetLevel( 6 )
 			elseif antimageshield:GetLevel() == 6 and hero:GetLevel() >= 15 and not hero:HasScepter() then
 				antimageshield:SetLevel( 5 )
-			elseif antimageshield:GetLevel() == 6 and hero:HasScepter() and hero:GetLevel() >= 20 and HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false ) then
+			elseif antimageshield:GetLevel() == 6 and hero:HasScepter() and hero:GetLevel() >= 20 and self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false ) then
 				antimageshield:SetLevel( 7 )
-			elseif antimageshield:GetLevel() == 7 and hero:GetLevel() >= 15 and (not hero:HasScepter() or not HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false )) then
+			elseif antimageshield:GetLevel() == 7 and hero:GetLevel() >= 15 and (not hero:HasScepter() or not self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false )) then
 				antimageshield:SetLevel( 6 )
 			end
 			if antimagevoid:GetLevel() == 3 and (hero:HasScepter() or hero:GetLevel() == 25) then
@@ -381,9 +555,9 @@ function VGMAR:OnThink()
 				antimagevoid:SetLevel( 5 )
 			elseif antimagevoid:GetLevel() == 5 and hero:GetLevel() == 25 and not hero:HasScepter() then
 				antimagevoid:SetLevel( 4 )
-			elseif antimagevoid:GetLevel() == 5 and hero:HasScepter() and HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false ) then
+			elseif antimagevoid:GetLevel() == 5 and hero:HasScepter() and self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false ) then
 				antimagevoid:SetLevel( 6 )
-			elseif antimagevoid:GetLevel() == 6 and (not hero:HasScepter() or not HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false ))  then
+			elseif antimagevoid:GetLevel() == 6 and (not hero:HasScepter() or not self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false ))  then
 				antimagevoid:SetLevel( 5 )
 			end
 		end
@@ -394,13 +568,13 @@ function VGMAR:OnThink()
 			local razorstaticlink = hero:FindAbilityByName( "razor_static_link" )
 			local razorunstablecurrent = hero:FindAbilityByName( "razor_unstable_current" )
 			local razorult = hero:FindAbilityByName( "razor_eye_of_the_storm" )
-			if razorplasmafield:GetLevel() == 4 and (hero:HasScepter() and HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false )) then
+			if razorplasmafield:GetLevel() == 4 and (hero:HasScepter() and self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false )) then
 				razorplasmafield:SetLevel( 5 )
-			elseif razorplasmafield:GetLevel() == 5 and not (hero:HasScepter() and HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false )) then
+			elseif razorplasmafield:GetLevel() == 5 and not (hero:HasScepter() and self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false )) then
 				razorplasmafield:SetLevel( 4 )
-			elseif razorplasmafield:GetLevel() == 5 and hero:HasScepter() and HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false ) and HeroHasUsableItemInInventory( hero, "item_aether_lens", false, false ) then
+			elseif razorplasmafield:GetLevel() == 5 and hero:HasScepter() and self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false ) and self:HeroHasUsableItemInInventory( hero, "item_aether_lens", false, false ) then
 				razorplasmafield:SetLevel( 6 )
-			elseif razorplasmafield:GetLevel() == 6 and (not hero:HasScepter() or not HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false ) or not HeroHasUsableItemInInventory( hero, "item_aether_lens", false, false )) then
+			elseif razorplasmafield:GetLevel() == 6 and (not hero:HasScepter() or not self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false ) or not self:HeroHasUsableItemInInventory( hero, "item_aether_lens", false, false )) then
 				razorplasmafield:SetLevel( 5 )
 			end
 			if razorstaticlink:GetLevel() == 4 and (hero:GetLevel() >= 20 and hero:HasScepter()) then
@@ -412,19 +586,67 @@ function VGMAR:OnThink()
 				razorunstablecurrent:SetLevel( 5 )
 			elseif razorunstablecurrent:GetLevel() == 5 and (hero:GetLevel() < 15 or not hero:HasScepter()) then
 				razorunstablecurrent:SetLevel( 4 )
-			elseif razorunstablecurrent:GetLevel() == 5 and hero:HasScepter() and HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false ) then
+			elseif razorunstablecurrent:GetLevel() == 5 and hero:HasScepter() and self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false ) then
 				razorunstablecurrent:SetLevel( 6 )
-			elseif razorunstablecurrent:GetLevel() == 6 and (not hero:HasScepter() or not HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false ))  then
+			elseif razorunstablecurrent:GetLevel() == 6 and (not hero:HasScepter() or not self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false ))  then
 				razorunstablecurrent:SetLevel( 5 )
 			end
-			if razorult:GetLevel() == 3 and hero:HasScepter() and HeroHasUsableItemInInventory( hero, "item_refresher", false, false ) then
+			if razorult:GetLevel() == 3 and hero:HasScepter() and self:HeroHasUsableItemInInventory( hero, "item_refresher", false, false ) then
 				razorult:SetLevel( 4 )
-			elseif razorult:GetLevel() == 4 and (not hero:HasScepter() or not HeroHasUsableItemInInventory( hero, "item_refresher", false, false )) then
+			elseif razorult:GetLevel() == 4 and (not hero:HasScepter() or not self:HeroHasUsableItemInInventory( hero, "item_refresher", false, false )) then
 				razorult:SetLevel( 3 )
-			elseif razorult:GetLevel() == 4 and hero:HasScepter() and HeroHasUsableItemInInventory( hero, "item_refresher", false, false ) and HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false ) then
+			elseif razorult:GetLevel() == 4 and hero:HasScepter() and self:HeroHasUsableItemInInventory( hero, "item_refresher", false, false ) and self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false ) then
 				razorult:SetLevel( 5 )
-			elseif razorult:GetLevel() == 5 and (not hero:HasScepter() or not HeroHasUsableItemInInventory( hero, "item_refresher", false, false ) or not HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false )) then
+			elseif razorult:GetLevel() == 5 and (not hero:HasScepter() or not self:HeroHasUsableItemInInventory( hero, "item_refresher", false, false ) or not self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false )) then
 				razorult:SetLevel( 4 )
+			end
+		end
+		
+		--Phantom Lancer
+		for i, hero in ipairs(herolistphantomlancer) do
+			local plspiritlance = hero:FindAbilityByName( "phantom_lancer_spirit_lance" )
+			local pldoppelwalk = hero:FindAbilityByName( "phantom_lancer_doppelwalk" )
+			local plphantomedge = hero:FindAbilityByName( "phantom_lancer_phantom_edge" )
+			local pljuxtapose = hero:FindAbilityByName( "phantom_lancer_juxtapose" )
+			if plspiritlance:GetLevel() == 4 and (hero:GetLevel() >= 15 or hero:HasScepter()) then
+				plspiritlance:SetLevel( 5 )
+			elseif plspiritlance:GetLevel() == 5 and hero:GetLevel() < 15 and not hero:HasScepter() then
+				plspiritlance:SetLevel( 4 )
+			elseif plspiritlance:GetLevel() == 5 and hero:HasScepter() and hero:GetLevel() >= 18 then
+				plspiritlance:SetLevel( 6 )
+			elseif plspiritlance:GetLevel() == 6 and (hero:GetLevel() < 18 or not hero:HasScepter()) then
+				plspiritlance:SetLevel( 5 )
+			elseif plspiritlance:GetLevel() == 6 and hero:HasScepter() and hero:GetLevel() >= 20 and self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false ) and self:HeroHasUsableItemInInventory( hero, "item_aether_lens", false, false ) then
+				plspiritlance:SetLevel( 7 )
+			elseif plspiritlance:GetLevel() == 7 and not (hero:HasScepter() and self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false ) and self:HeroHasUsableItemInInventory( hero, "item_aether_lens", false, false )) then
+				plspiritlance:SetLevel( 6 )
+			end
+			if pljuxtapose:GetLevel() == 3 and hero:GetLevel() >= 22 and (hero:HasScepter() or self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false )) then
+				pljuxtapose:SetLevel( 4 )
+			elseif pljuxtapose:GetLevel() == 4 and not (hero:HasScepter() or self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false )) then
+				pljuxtapose:SetLevel( 3 )
+			elseif pljuxtapose:GetLevel() == 4 and hero:GetLevel() == 25 and (hero:HasScepter() and self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false )) then
+				pljuxtapose:SetLevel( 5 )
+			elseif pljuxtapose:GetLevel() == 5 and not (hero:HasScepter() and hero:GetLevel() == 25 and self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false )) then
+				pljuxtapose:SetLevel( 4 )
+			elseif pljuxtapose:GetLevel() == 5 and hero:HasScepter() and hero:GetLevel() == 25 and self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false ) and self:CountUsableItemsInHeroInventory( hero, "item_heart", false, false) >= 2 then
+				pljuxtapose:SetLevel( 6 )
+			elseif pljuxtapose:GetLevel() == 6 and not (hero:HasScepter() and hero:GetLevel() == 25 and self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false ) and (self:CountUsableItemsInHeroInventory( hero, "item_heart", true, false) >= 2)) then
+				pljuxtapose:SetLevel( 5 )
+			end
+			if pldoppelwalk:GetLevel() == 4 and hero:GetLevel() >= 15 then
+				pldoppelwalk:SetLevel( 5 )
+			elseif pldoppelwalk:GetLevel() == 5 and hero:GetLevel() >= 20 or self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false ) then
+				pldoppelwalk:SetLevel( 6 )
+			elseif pldoppelwalk:GetLevel() == 6 and (not hero:GetLevel() >= 20 and not self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false )) then
+				pldoppelwalk:SetLevel( 5 )
+			end
+			if plphantomedge:GetLevel() == 4 and hero:GetLevel() >= 20 then
+				plphantomedge:SetLevel( 5 )
+			elseif plphantomedge:GetLevel() == 5 and hero:GetLevel() >= 20 and self:HeroHasUsableItemInInventory( hero, "item_aether_lens", false, false ) then
+				plphantomedge:SetLevel( 6 )
+			elseif plphantomedge:GetLevel() == 6 and hero:GetLevel() >= 20 and not self:HeroHasUsableItemInInventory( hero, "item_aether_lens", false, false ) then
+				plphantomedge:SetLevel( 5 )
 			end
 		end
 		--///////////////////////////
@@ -486,6 +708,10 @@ function VGMAR:OnPlayerLearnedAbility( keys )
 	local razorstaticlink = playerhero:FindAbilityByName( "razor_static_link" )
 	local razorunstablecurrent = playerhero:FindAbilityByName( "razor_unstable_current" )
 	local razorult = playerhero:FindAbilityByName( "razor_eye_of_the_storm" )
+	local plspiritlance = playerhero:FindAbilityByName( "phantom_lancer_spirit_lance" )
+	local pldoppelwalk = playerhero:FindAbilityByName( "phantom_lancer_doppelwalk" )
+	local plphantomedge = playerhero:FindAbilityByName( "phantom_lancer_phantom_edge" )
+	local plult = playerhero:FindAbilityByName( "phantom_lancer_juxtapose" )
 	if zeuscloud then
 		local zeusult = playerhero:FindAbilityByName( "zuus_thundergods_wrath" )
 		if zeusult and not (playerhero:GetLevel() == 25) then
@@ -643,6 +869,28 @@ function VGMAR:OnPlayerLearnedAbility( keys )
 			razorult:SetLevel( razorult:GetLevel() - 1)
 		end
 	end
+	--PhantomLancer
+	if abilityname == "phantom_lancer_spirit_lance" then
+		if plspiritlance:GetLevel() >= 5 then
+			playerhero:SetAbilityPoints(playerhero:GetAbilityPoints() + 1)
+			plspiritlance:SetLevel( plspiritlance:GetLevel() - 1 )
+		end
+	elseif abilityname == "phantom_lancer_doppelwalk" then
+		if pldoppelwalk:GetLevel() >= 5 then
+			playerhero:SetAbilityPoints(playerhero:GetAbilityPoints() + 1)
+			pldoppelwalk:SetLevel( pldoppelwalk:GetLevel() - 1 )
+		end
+	elseif abilityname == "phantom_lancer_phantom_edge" then
+		if plphantomedge:GetLevel() >= 5 then
+			playerhero:SetAbilityPoints(playerhero:GetAbilityPoints() + 1)
+			plphantomedge:SetLevel( plphantomedge:GetLevel() - 1 )
+		end
+	elseif abilityname == "phantom_lancer_juxtapose" then
+		if plult:GetLevel() >= 4 then
+			playerhero:SetAbilityPoints(playerhero:GetAbilityPoints() + 1)
+			plult:SetLevel( plult:GetLevel() - 1)
+		end
+	end
 end
 
 function VGMAR:OnGameStateChanged( keys )
@@ -724,7 +972,7 @@ function VGMAR:OnGameStateChanged( keys )
 			{skill = "tower_berserkers_blood", agressive = 1, p0 = 1, p1 = 4, p2 = 0, p3 = 0, p4 = 0, autocast = 0},
 			{skill = "tower_take_aim", agressive = 1, p0 = 0, p1 = 4, p2 = 0, p3 = 0, p4 = 0, autocast = 0},
 			{skill = "tower_walrus_punch", agressive = 1, p0 = 2, p1 = 4, p2 = 0, p3 = 0, p4 = 0, autocast = 1},
-			{skill = "tower_great_cleave", agressive = 1, p0 = 2, p1 = 4, p2 = 0, p3 = 0, p4 = 0, autocast = 0},
+			{skill = "tower_great_cleave", agressive = 1, p0 = 0, p1 = 4, p2 = 0, p3 = 0, p4 = 0, autocast = 0},
 			{skill = "tower_tidebringer", agressive = 1, p0 = 2, p1 = 4, p2 = 0, p3 = 0, p4 = 0, autocast = 0}
 		}
 		
