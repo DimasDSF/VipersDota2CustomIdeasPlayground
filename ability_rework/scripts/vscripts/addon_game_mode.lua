@@ -1,6 +1,7 @@
 local RADIANT_TEAM_MAX_PLAYERS = 1
 local DIRE_TEAM_MAX_PLAYERS = 8
 local RUNE_SPAWN_TIME = 120
+local VGMAR_DEBUG = true
 
 if VGMAR == nil then
 	VGMAR = class({})
@@ -13,6 +14,12 @@ end
 function Activate()
 	GameRules.VGMAR = VGMAR()
 	GameRules.VGMAR:Init()
+end
+
+function dprint(...)
+	if VGMAR_DEBUG == true then
+		print(...)
+	end
 end
 
 function VGMAR:Init()
@@ -28,6 +35,7 @@ function VGMAR:Init()
     GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_BADGUYS, DIRE_TEAM_MAX_PLAYERS)
 	GameRules:SetStrategyTime( 0.0 )
 	GameRules:SetShowcaseTime( 0.0 )
+	GameRules:SetCustomGameSetupAutoLaunchDelay( 5 )
 	GameRules:SetRuneSpawnTime(RUNE_SPAWN_TIME)
 	GameRules:SetRuneMinimapIconScale( 1 )
 	GameRules:GetGameModeEntity():SetBotThinkingEnabled(true)
@@ -262,7 +270,21 @@ function VGMAR:OnItemPickedUp(keys)
 	end
 end
 
-function VGMAR:OnThink()
+function VGMAR:OnThink()	
+	if GameRules:State_Get() == DOTA_GAMERULES_STATE_CUSTOM_GAME_SETUP then
+		GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_GOODGUYS, PlayerResource:GetPlayerCount())
+		for playerID=0,PlayerResource:GetPlayerCount() do
+			if PlayerResource:IsValidPlayer(playerID) and PlayerResource:GetConnectionState(playerID) == 2 then
+				dprint("Valid Player found on slot:", playerID)
+				dprint("Player Team is:", PlayerResource:GetTeam(playerID))
+				if PlayerResource:GetTeam(playerID) ~= 2 then
+					PlayerResource:SetCustomTeamAssignment(playerID, DOTA_TEAM_GOODGUYS)
+				end
+			end
+		end
+		GameRules:LockCustomGameSetupTeamAssignment(true)
+	end
+
 	if GameRules:State_Get() == DOTA_GAMERULES_STATE_GAME_IN_PROGRESS then		
 		for i=0,HeroList:GetHeroCount() do
 			local heroent = HeroList:GetHero(i)
@@ -906,11 +928,11 @@ function VGMAR:OnGameStateChanged( keys )
 		end
 	elseif state == DOTA_GAMERULES_STATE_STRATEGY_TIME then
 		local used_hero_name = "npc_dota_hero_dragon_knight"
-		print("Checking players...")
+		dprint("Checking players...")
 		
 		for playerID=0, DOTA_MAX_TEAM_PLAYERS do
 			if PlayerResource:IsValidPlayer(playerID) then
-				print("PlayedID:", playerID)
+				dprint("PlayedID:", playerID)
 				
 				if PlayerResource:GetTeam(playerID) == DOTA_TEAM_GOODGUYS then
 					self.n_players_radiant = self.n_players_radiant + 1
@@ -920,18 +942,18 @@ function VGMAR:OnGameStateChanged( keys )
 
 				-- Random heroes for people who have not picked
 				if PlayerResource:HasSelectedHero(playerID) == false then
-					print("Randoming hero for:", playerID)
+					dprint("Randoming hero for:", playerID)
 					PlayerResource:GetPlayer(playerID):MakeRandomHeroSelection()
-					print("Randomed:", PlayerResource:GetSelectedHeroName(playerID))
+					dprint("Randomed:", PlayerResource:GetSelectedHeroName(playerID))
 				end
 				
 				used_hero_name = PlayerResource:GetSelectedHeroName(playerID)
 			end
 		end
 		
-		print("Number of players:", self.n_players_radiant + self.n_players_dire)
-		print("Radiant:", self.n_players_radiant)
-		print("Radiant:", self.n_players_dire)
+		dprint("Number of players:", self.n_players_radiant + self.n_players_dire)
+		dprint("Radiant:", self.n_players_radiant)
+		dprint("Radiant:", self.n_players_dire)
 		
 	elseif state == DOTA_GAMERULES_STATE_PRE_GAME then
 		local gm = GameRules:GetGameModeEntity()
@@ -1013,7 +1035,7 @@ function VGMAR:OnGameStateChanged( keys )
 						elseif buildingstobufflist[k].priority == 4 then
 							processedskill:SetLevel(defskills[i].p4)
 						else
-							print("Error in defspells assigning mechanism, UNEXPECTED_PRIORITY_FOUND")
+							dprint("Error in defspells assigning mechanism, UNEXPECTED_PRIORITY_FOUND")
 						end
 						if processedskill:GetLevel() == 0 then
 							building:RemoveAbility(defskills[i].skill)
