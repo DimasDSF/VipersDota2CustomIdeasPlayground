@@ -2,6 +2,11 @@ local RADIANT_TEAM_MAX_PLAYERS = 1
 local DIRE_TEAM_MAX_PLAYERS = 8
 local RUNE_SPAWN_TIME = 120
 local VGMAR_DEBUG = true
+--///////////////////////////////////////////
+--/////////////WORKSHOP_FUCKOVER/////////////
+--Change to true before releasing to workshop
+--///////////////////////////////////////////
+local WORKSHOP_FUCKOVER = true
 
 if VGMAR == nil then
 	VGMAR = class({})
@@ -923,7 +928,9 @@ function VGMAR:OnGameStateChanged( keys )
 			SendToServerConsole("sv_cheats 1")
 			SendToServerConsole("dota_bot_populate")
 			SendToServerConsole("dota_bot_set_difficulty 2")
-			SendToServerConsole("sv_cheats 0")
+			if WORKSHOP_FUCKOVER == false then
+				SendToServerConsole("sv_cheats 0")
+			end
 			GameRules:GetGameModeEntity():SetBotThinkingEnabled(true)
 		end
 	elseif state == DOTA_GAMERULES_STATE_STRATEGY_TIME then
@@ -960,6 +967,11 @@ function VGMAR:OnGameStateChanged( keys )
 		if IsServer() then
 			gm:SetThink(function()
 				SendToServerConsole("sv_cheats 1")
+				if WORKSHOP_FUCKOVER == true then
+					for f=0,100 do
+						SendToServerConsole("dota_bot_populate")
+					end
+				end
 				SendToServerConsole("dota_bot_disable 0")
 				GameRules:GetGameModeEntity():SetBotThinkingEnabled(true)
 				SendToServerConsole("host_timescale 4")
