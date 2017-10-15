@@ -34,6 +34,7 @@ function VGMAR:Init()
 	self.lastrunetype = -1
 	self.currunenum = 1
 	self.removedrunenum = math.random(1,2)
+	self.botsInLateGameMode = false
 
 	self.mode = GameRules:GetGameModeEntity()
 	GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_GOODGUYS, RADIANT_TEAM_MAX_PLAYERS)
@@ -52,6 +53,7 @@ function VGMAR:Init()
 	self.mode:SetRuneEnabled( DOTA_RUNE_ARCANE, true )
 	self.mode:SetRuneEnabled( DOTA_RUNE_BOUNTY, true )
 	self.mode:SetRuneSpawnFilter( Dynamic_Wrap( VGMAR, "FilterRuneSpawn" ), self )
+	self.mode:SetExecuteOrderFilter( Dynamic_Wrap( VGMAR, "ExecuteOrderFilter" ), self )
 	
 	--GameRules:SetCustomGameSetupTimeout( 30 )
 	--GameRules:SetCustomGameSetupAutoLaunchDelay( 0 )
@@ -66,6 +68,7 @@ function VGMAR:Init()
 	ListenToGameEvent( "dota_player_learned_ability", Dynamic_Wrap( VGMAR, "OnPlayerLearnedAbility" ), self)
 	ListenToGameEvent( "game_rules_state_change", Dynamic_Wrap( VGMAR, 'OnGameStateChanged' ), self )
 	ListenToGameEvent( "dota_item_picked_up", Dynamic_Wrap( VGMAR, 'OnItemPickedUp' ), self )
+	ListenToGameEvent( "dota_tower_kill", Dynamic_Wrap( VGMAR, 'OnTowerKilled' ), self )
 	
 	GameRules:GetGameModeEntity():SetThink( "OnThink", self, 0.25 )
 end
@@ -275,6 +278,21 @@ function VGMAR:OnItemPickedUp(keys)
 	end
 end
 
+function VGMAR:OnTowerKilled( keys )
+	local switchAI = (RandomInt(1,3))
+	if switchAI == 1 then
+		self.botsInLateGameMode = false
+		GameRules:GetGameModeEntity():SetBotsInLateGame(self.botsInLateGameMode)
+		GameRules:GetGameModeEntity():SetThink(function()
+			self.botsInLateGameMode = true
+			GameRules:GetGameModeEntity():SetBotsInLateGame(self.botsInLateGameMode)
+		end, DoUniqueString('makesBotsLateGameAgain'), 180)
+	else
+		self.botsInLateGameMode = true
+		GameRules:GetGameModeEntity():SetBotsInLateGame(self.botsInLateGameMode)
+	end
+end
+
 function VGMAR:OnThink()	
 	if GameRules:State_Get() == DOTA_GAMERULES_STATE_CUSTOM_GAME_SETUP then
 		GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_GOODGUYS, PlayerResource:GetPlayerCount())
@@ -290,7 +308,7 @@ function VGMAR:OnThink()
 		GameRules:LockCustomGameSetupTeamAssignment(true)
 	end
 
-	if GameRules:State_Get() == DOTA_GAMERULES_STATE_GAME_IN_PROGRESS then		
+	if GameRules:State_Get() == DOTA_GAMERULES_STATE_GAME_IN_PROGRESS then
 		for i=0,HeroList:GetHeroCount() do
 			local heroent = HeroList:GetHero(i)
 			if heroent then
@@ -299,8 +317,10 @@ function VGMAR:OnThink()
 			--///////////////////////////
 				local heroplayerid = heroent:GetPlayerID()
 				local closestrune = Entities:FindByClassnameNearest("dota_item_rune", heroent:GetOrigin(), 250.0)
-				if closestrune then
-					if PlayerResource:GetConnectionState(heroplayerid) == 1 then
+				
+				if PlayerResource:GetConnectionState(heroplayerid) == 1 then
+					heroent:SetBotDifficulty(3)
+					if closestrune then
 						heroent:PickupRune(closestrune)
 					end
 				end
@@ -920,17 +940,112 @@ function VGMAR:OnPlayerLearnedAbility( keys )
 	end
 end
 
+function VGMAR:ExecuteOrderFilter( filterTable )
+	local order_type = filterTable.order_type
+    local units = filterTable["units"]
+    local issuer = filterTable["issuer_player_id_const"]
+    local unit = EntIndexToHScript(units["0"])
+    local ability = EntIndexToHScript(filterTable.entindex_ability)
+    local target = EntIndexToHScript(filterTable.entindex_target)
+	
+	if unit then
+        if unit:IsRealHero() then
+            local unitPlayerID = unit:GetPlayerID()
+
+            -- BOT STUCK FIX
+            -- How It Works: Every time bot creates an order, this checks their position, if they are in the same last position as last order,
+            -- increase counter. If counter gets too high, it means they have been stuck in same position for a long time, do action to help them.
+            if PlayerResource:GetConnectionState(unitPlayerID) == 1 then
+                -- Bot Armlet Fix: Bots do not know how to use armlets so return false if they attempt to and put on cooldown
+                if ability and ability:GetName() == "item_armlet" then
+                    ability:StartCooldown(200)
+                    return false
+                end
+
+                if not unit.OldPosition then
+                    unit.OldPosition = unit:GetAbsOrigin()
+                    unit.StuckCounter = 0
+                elseif unit:GetAbsOrigin() == unit.OldPosition then
+                    unit.StuckCounter = unit.StuckCounter + 1
+
+                    -- Stuck at observer ward fix
+                    if unit.StuckCounter > 50 then
+                        for i=0,11 do
+                            local item = unit:GetItemInSlot(i)
+                            if item and item:GetName() == "item_ward_observer" then
+                                unit:ModifyGold(item:GetCost() * item:GetCurrentCharges(), true, 0)
+                                unit:RemoveItem(item)
+                                return true
+                            end
+                        end
+                    end
+
+                    -- Stuck at shop trying to get stash items, remove stash items. THIS IS A BAND-AID FIX. IMPROVE AT SOME POINT
+                    if unit.StuckCounter > 150 and fixed == false then
+                        for slot =  DOTA_STASH_SLOT_1, DOTA_STASH_SLOT_6 do
+                            item = unit:GetItemInSlot(slot)
+                            if item ~= nil then
+                                item:RemoveSelf()
+                                return true
+                            end
+                        end
+                    end
+
+                    -- Its well and truly borked, kill it and hope for the best.
+                    if unit.StuckCounter > 300 and fixed == false then
+                        unit:Kill(nil, nil)
+                        return true
+                    end
+
+                else
+                   unit.OldPosition = unit:GetAbsOrigin()
+                   unit.StuckCounter = 0
+                end
+            end
+		end
+	end
+	
+	--Bot Control Prevention
+	if unit then
+		if unit:IsRealHero() then
+			local unitPlayerID = unit:GetPlayerID()
+			local player = PlayerResource:GetPlayer(issuer)
+			if PlayerResource:GetConnectionState(unitPlayerID) == 1 and unitPlayerID ~= issuer then
+				dprint("Blocking a command to a unit not owned by player UnitPlayerID: ", unitPlayerID, "PlayerID: ", issuer)
+				if player then
+					dprint("Trying to call panorama to reset players unit selection")
+					CustomGameEventManager:Send_ServerToPlayer(player, "selection_reset", {})
+				end
+				return false
+			end
+		end
+		if unit:GetClassname() == "npc_dota_courier" or unit:GetClassname() == "npc_dota_flying_courier" then
+			if unit:GetTeamNumber() ~= PlayerResource:GetTeam(issuer) then
+				dprint("Blocking enemy team Courier usage CourierTeamID: ", unit:GetTeamNumber(), "PlayerTeamID: ", PlayerResource:GetTeam(issuer))
+				return false
+			end
+		end
+	end
+	
+	return true
+end
+
 function VGMAR:OnGameStateChanged( keys )
 	local state = GameRules:State_Get()
 	
 	if state == DOTA_GAMERULES_STATE_HERO_SELECTION then
 		if IsServer() then
-			SendToServerConsole("sv_cheats 1")
+			Convars:SetBool("sv_cheats", true)
+			dprint("Instant:Enabling Cheats")
 			SendToServerConsole("dota_bot_populate")
-			SendToServerConsole("dota_bot_set_difficulty 2")
-			if WORKSHOP_FUCKOVER == false then
-				SendToServerConsole("sv_cheats 0")
-			end
+			GameRules:GetGameModeEntity():SetThink(function()
+				Convars:SetBool("sv_cheats", true)
+				dprint("Times:Enabling Cheats")
+				SendToServerConsole("dota_bot_set_difficulty 3")
+				GameRules:GetGameModeEntity():SetBotThinkingEnabled(true)
+				end, DoUniqueString('setbotdiff'), 3)
+			SendToServerConsole("dota_bot_set_difficulty 3")
+			Convars:SetBool("sv_cheats", false)
 			GameRules:GetGameModeEntity():SetBotThinkingEnabled(true)
 		end
 	elseif state == DOTA_GAMERULES_STATE_STRATEGY_TIME then
@@ -958,6 +1073,13 @@ function VGMAR:OnGameStateChanged( keys )
 			end
 		end
 		
+		Convars:SetBool("sv_cheats", true)
+		for f=0,100 do
+			SendToServerConsole("dota_bot_populate")
+			SendToServerConsole("dota_bot_set_difficulty 3")
+		end
+		Convars:SetBool("dota_bot_disable", false)
+		
 		dprint("Number of players:", self.n_players_radiant + self.n_players_dire)
 		dprint("Radiant:", self.n_players_radiant)
 		dprint("Radiant:", self.n_players_dire)
@@ -966,16 +1088,12 @@ function VGMAR:OnGameStateChanged( keys )
 		local gm = GameRules:GetGameModeEntity()
 		if IsServer() then
 			gm:SetThink(function()
-				SendToServerConsole("sv_cheats 1")
-				if WORKSHOP_FUCKOVER == true then
-					for f=0,100 do
-						SendToServerConsole("dota_bot_populate")
-					end
-				end
-				SendToServerConsole("dota_bot_disable 0")
+				Convars:SetBool("sv_cheats", true)
+				Convars:SetBool("dota_bot_disable", false)
 				GameRules:GetGameModeEntity():SetBotThinkingEnabled(true)
-				SendToServerConsole("host_timescale 4")
-			end, DoUniqueString('enablebots'), 10)
+				GameRules:GetGameModeEntity():SetBotsInLateGame(self.botsInLateGameMode)
+				Convars:SetFloat("host_timescale", 3.0)
+			end, DoUniqueString('botsettings'), 10)
 		end
 		--////////////////////////////////////
 		--STOP FUCKING SPLIT PUSHING CATAPULTS
@@ -1095,7 +1213,7 @@ function VGMAR:OnGameStateChanged( keys )
 		--////////////////////////////////////////
 	elseif state == DOTA_GAMERULES_STATE_GAME_IN_PROGRESS then
 		if IsServer() and self.istimescalereset == 0 then
-			SendToServerConsole("host_timescale 1")
+			Convars:SetFloat("host_timescale", 1.0)
 			self.istimescalereset = 1
 		end
 	end
