@@ -1,0 +1,12 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/dotastyles.vcss_c" />
+		<include src="file://{resources}/styles/custom_game/scoreboard_timer.vcss_c" />
+	</styles>
+	<scripts>
+		<include src="file://{resources}/scripts/custom_game/scoreboard_timer.vjs_c" />
+	</scripts>
+	<Panel class="TimerContainer">
+		<Label id="Timer" text="--:--" />
+	</Panel>
+</root>
