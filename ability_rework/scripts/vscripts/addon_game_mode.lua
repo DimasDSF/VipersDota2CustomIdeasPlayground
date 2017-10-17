@@ -685,7 +685,7 @@ function VGMAR:OnThink()
 				pldoppelwalk:SetLevel( 5 )
 			elseif pldoppelwalk:GetLevel() == 5 and hero:GetLevel() >= 20 or self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false ) then
 				pldoppelwalk:SetLevel( 6 )
-			elseif pldoppelwalk:GetLevel() == 6 and (not hero:GetLevel() >= 20 and not self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false )) then
+			elseif pldoppelwalk:GetLevel() == 6 and (hero:GetLevel() < 20 and not self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false )) then
 				pldoppelwalk:SetLevel( 5 )
 			end
 			if plphantomedge:GetLevel() == 4 and hero:GetLevel() >= 20 then
@@ -1022,6 +1022,7 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 		if unit:GetClassname() == "npc_dota_courier" or unit:GetClassname() == "npc_dota_flying_courier" then
 			if unit:GetTeamNumber() ~= PlayerResource:GetTeam(issuer) then
 				dprint("Blocking enemy team Courier usage CourierTeamID: ", unit:GetTeamNumber(), "PlayerTeamID: ", PlayerResource:GetTeam(issuer))
+				CustomGameEventManager:Send_ServerToPlayer(player, "selection_reset", {})
 				return false
 			end
 		end
