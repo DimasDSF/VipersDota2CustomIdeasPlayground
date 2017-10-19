@@ -1,7 +1,7 @@
 local RADIANT_TEAM_MAX_PLAYERS = 1
 local DIRE_TEAM_MAX_PLAYERS = 8
 local RUNE_SPAWN_TIME = 120
-local VGMAR_DEBUG = true
+local VGMAR_DEBUG = false
 --///////////////////////////////////////////
 --/////////////WORKSHOP_FUCKOVER/////////////
 --Change to true before releasing to workshop
@@ -21,12 +21,6 @@ function Activate()
 	GameRules.VGMAR:Init()
 end
 
-function dprint(...)
-	if VGMAR_DEBUG == true then
-		print(...)
-	end
-end
-
 function VGMAR:Init()
 	self.n_players_radiant = 0
 	self.n_players_dire = 0
@@ -35,6 +29,9 @@ function VGMAR:Init()
 	self.currunenum = 1
 	self.removedrunenum = math.random(1,2)
 	self.botsInLateGameMode = false
+	self.backdoorstatustable = {}
+	self.backdoortimertable = {}
+
 
 	self.mode = GameRules:GetGameModeEntity()
 	GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_GOODGUYS, RADIANT_TEAM_MAX_PLAYERS)
@@ -54,24 +51,140 @@ function VGMAR:Init()
 	self.mode:SetRuneEnabled( DOTA_RUNE_BOUNTY, true )
 	self.mode:SetRuneSpawnFilter( Dynamic_Wrap( VGMAR, "FilterRuneSpawn" ), self )
 	self.mode:SetExecuteOrderFilter( Dynamic_Wrap( VGMAR, "ExecuteOrderFilter" ), self )
-	
-	--GameRules:SetCustomGameSetupTimeout( 30 )
-	--GameRules:SetCustomGameSetupAutoLaunchDelay( 0 )
-	--GameRules:EnableCustomGameSetupAutoLaunch( false )
-	--GameRules:SetPreGameTime( 30 )
-	--GameRules:SetHeroSelectionTime( 30 )
-	--GameRules:SetStrategyTime( 30 )
-	--GameRules:SetCustomGameEndDelay( 0 )
-	--GameRules:SetCustomVictoryMessageDuration( 20 )
+	self.mode:SetDamageFilter( Dynamic_Wrap( VGMAR, "FilterDamage" ), self )
+	--self.mode:SetModifierGainedFilter( Dynamic_Wrap( VGMAR, "FilterModifierGained" ), self)
 
 	ListenToGameEvent( "npc_spawned", Dynamic_Wrap( VGMAR, "OnNPCSpawned" ), self )
 	ListenToGameEvent( "dota_player_learned_ability", Dynamic_Wrap( VGMAR, "OnPlayerLearnedAbility" ), self)
 	ListenToGameEvent( "game_rules_state_change", Dynamic_Wrap( VGMAR, 'OnGameStateChanged' ), self )
 	ListenToGameEvent( "dota_item_picked_up", Dynamic_Wrap( VGMAR, 'OnItemPickedUp' ), self )
 	ListenToGameEvent( "dota_tower_kill", Dynamic_Wrap( VGMAR, 'OnTowerKilled' ), self )
+	Convars:RegisterConvar('vgmar_devmode', 0, "Set to 1 to show debug info.  Set to 0 to disable.", 0)
+	if VGMAR_DEBUG == true then
+		Convars:SetInt("vgmar_devmode", 1)
+	end
 	
 	GameRules:GetGameModeEntity():SetThink( "OnThink", self, 0.25 )
 end
+
+function dprint(...)
+	if Convars:GetInt("vgmar_devmode") == 1 then
+		print(...)
+	end
+end
+
+local bdplist = {
+	{group = "goodbase",
+		buildinglist = {
+			"dota_goodguys_fort",
+			"good_rax_melee_bot",
+			"good_rax_melee_mid",
+			"good_rax_melee_top",
+			"good_rax_range_bot",
+			"good_rax_range_mid",
+			"good_rax_range_top",
+			"dota_goodguys_tower3_bot",
+			"dota_goodguys_tower3_mid",
+			"dota_goodguys_tower3_top",
+			"dota_goodguys_tower4_bot",
+			"dota_goodguys_tower4_top",
+			"good_filler_1",
+			"good_filler_2",
+			"good_filler_3",
+			"good_filler_4",
+			"good_filler_5",
+			"good_healer_2",
+			"good_healer_3",
+			"good_healer_4",
+			},
+		activationtime = 25,
+		protectionholder = "dota_goodguys_fort",
+		protectionrange = 2000,
+		maxdamage = 10
+		},
+	{group = "badbase",
+		buildinglist = {
+			"dota_badguys_fort",
+			"bad_rax_melee_bot",
+			"bad_rax_melee_mid",
+			"bad_rax_melee_top",
+			"bad_rax_range_bot",
+			"bad_rax_range_mid",
+			"bad_rax_range_top",
+			"dota_badguys_tower3_bot",
+			"dota_badguys_tower3_mid",
+			"dota_badguys_tower3_top",
+			"dota_badguys_tower4_bot",
+			"dota_badguys_tower4_top",
+			"bad_filler_1",
+			"bad_filler_2",
+			"bad_filler_3",
+			"bad_filler_4",
+			"bad_filler_5",
+			"bad_healer_2",
+			"bad_healer_3",
+			"bad_healer_4",
+			},
+		activationtime = 25,
+		protectionholder = "dota_badguys_fort",
+		protectionrange = 2000,
+		maxdamage = 10
+		},
+	{group = "g_t2_top",
+		buildinglist = {
+			"dota_goodguys_tower2_top"	
+			},
+		activationtime = 25,
+		protectionholder = "dota_goodguys_tower2_top",
+		protectionrange = 700,
+		maxdamage = 1
+		},
+	{group = "g_t2_mid",
+		buildinglist = {
+			"dota_goodguys_tower2_mid"		
+			},
+		activationtime = 25,
+		protectionholder = "dota_goodguys_tower2_mid",
+		protectionrange = 700,
+		maxdamage = 1
+		},
+	{group = "g_t2_bot",
+		buildinglist = {
+			"dota_goodguys_tower2_bot"		
+			},
+		activationtime = 25,
+		protectionholder = "dota_goodguys_tower2_bot",
+		protectionrange = 700,
+		maxdamage = 1
+		},
+	{group = "b_t2_top",
+		buildinglist = {
+			"dota_badguys_tower2_top"		
+			},
+		activationtime = 25,
+		protectionholder = "dota_badguys_tower2_top",
+		protectionrange = 700,
+		maxdamage = 1
+		},
+	{group = "b_t2_mid",
+		buildinglist = {
+			"dota_badguys_tower2_mid"		
+			},
+		activationtime = 25,
+		protectionholder = "dota_badguys_tower2_mid",
+		protectionrange = 700,
+		maxdamage = 1
+		},
+	{group = "b_t2_bot",
+		buildinglist = {
+			"dota_badguys_tower2_bot"		
+			},
+		activationtime = 25,
+		protectionholder = "dota_badguys_tower2_bot",
+		protectionrange = 700,
+		maxdamage = 1
+		}
+	}
 
 function VGMAR:FilterRuneSpawn( filterTable )
 	local function GetRandomRune( notrune )
@@ -115,6 +228,16 @@ function VGMAR:FilterRuneSpawn( filterTable )
 	self.currunenum = self.currunenum + 1
 	return true
 end
+
+--[[function VGMAR:FilterModifierGained( filterTable )
+	local modifiername = filterTable["name_const"]
+	local ability = nil
+	if filterTable["entindex_ability_const"] then
+		ability = EntIndexToHScript(filterTable.entindex_ability_const)
+	end
+	
+	return true
+end--]]
 
 function VGMAR:HeroHasUsableItemInInventory( hero, item, mutedallowed, backpackallowed )
 	if not hero:HasItemInInventory(item) then
@@ -424,6 +547,33 @@ function VGMAR:OnThink()
 					end
 				end
 			end
+		end
+		--//////////////////
+		--BackDoorProtection
+		--//////////////////
+		for j=1,#bdplist do
+			for k=1,#bdplist[j].buildinglist do
+			local buildingname = bdplist[j].buildinglist[k]
+				if self.backdoorstatustable[buildingname] == nil then
+					table.insert(self.backdoorstatustable, buildingname)
+					self.backdoorstatustable[buildingname] = true
+				else
+					if self.backdoortimertable[buildingname] == nil then
+						table.insert(self.backdoortimertable, buildingname)
+						self.backdoortimertable[buildingname] = GameRules:GetDOTATime(false, false)
+					else
+						self.backdoorstatustable[buildingname] = GameRules:GetDOTATime(false, false) >= self.backdoortimertable[buildingname] + bdplist[j].activationtime
+						local buildingentity = Entities:FindByName(nil, buildingname)
+						if buildingentity then
+							if self.backdoorstatustable[buildingname] == true then
+								buildingentity:AddNewModifier(buildingentity, nil, "modifier_backdoor_protection_active", {})
+							else
+								buildingentity:RemoveModifierByName("modifier_backdoor_protection_active")
+							end
+						end
+					end
+				end
+			end	
 		end
 	end
 	if GameRules:State_Get() >= DOTA_GAMERULES_STATE_PRE_GAME then
@@ -940,11 +1090,95 @@ function VGMAR:OnPlayerLearnedAbility( keys )
 	end
 end
 
+function GetBuildingGroupFromName( name )
+	for i=1,#bdplist do
+		for k=1,#bdplist[i].buildinglist do
+			if bdplist[i].buildinglist[k] == name then
+				return bdplist[i].group
+			end
+		end
+	end
+	return nil
+end
+
+function GetEnemyCreepsInRadius(team, origin, radius, dominated)
+	local ret = false
+	local creeps = FindUnitsInRadius(team, origin, nil, radius, DOTA_UNIT_TARGET_TEAM_ENEMY, DOTA_UNIT_TARGET_CREEP, 0, FIND_CLOSEST, false)
+	if #creeps > 0 then
+		for i=1,#creeps do
+			if not creeps[i]:IsDominated() then
+				ret = true
+			elseif creeps[i]:IsDominated() and dominated == true then
+				ret = true
+			end
+		end
+	end
+	return ret
+end
+
+function VGMAR:UpdateBackdoorGroupTimer(group)
+	for i=1,#bdplist do
+		if bdplist[i].group == group then
+			for k=1,#bdplist[i].buildinglist do
+			local buildingname = bdplist[i].buildinglist[k]
+				if self.backdoortimertable[buildingname] == nil then
+					table.insert(self.backdoortimertable, buildingname)
+					self.backdoortimertable[buildingname] = GameRules:GetDOTATime(false, false)
+				else
+					self.backdoortimertable[buildingname] = GameRules:GetDOTATime(false, false)
+					self.backdoorstatustable[buildingname] = false
+					local buildingentity = Entities:FindByName(nil, buildingname)
+					if buildingentity then
+						buildingentity:RemoveModifierByName("modifier_backdoor_protection_active")
+					end
+				end
+			end
+		end
+	end
+end
+
+function VGMAR:FilterDamage( filterTable )
+	--local victim_index = filterTable["entindex_victim_const"]
+    --local attacker_index = filterTable["entindex_attacker_const"]
+	if not filterTable["entindex_victim_const"] or not filterTable["entindex_attacker_const"] then
+        return true
+    end
+	local victim = EntIndexToHScript(filterTable.entindex_victim_const)
+	local attacker = EntIndexToHScript(filterTable.entindex_attacker_const)
+	local damage = filterTable["damage"]
+
+	--///////////////////
+	--BackDoor Protection
+	--///////////////////
+	for i=1,#bdplist do
+		for k=1,#bdplist[i].buildinglist do
+			if victim:GetName() == bdplist[i].buildinglist[k] then
+				local buildingname = bdplist[i].buildinglist[k]
+				local protent = Entities:FindByName(nil, bdplist[i].protectionholder)
+				local protorigin = protent:GetOrigin()
+				if GetEnemyCreepsInRadius(victim:GetTeamNumber(), protorigin, bdplist[i].protectionrange, false) then
+					self:UpdateBackdoorGroupTimer(bdplist[i].group)
+				end
+				if self.backdoorstatustable[buildingname] == true then
+					if filterTable["damage"] > bdplist[i].maxdamage then
+						filterTable["damage"] = bdplist[i].maxdamage
+					end
+					return true
+				end
+			end
+		end
+	end
+	return true
+end
+
 function VGMAR:ExecuteOrderFilter( filterTable )
 	local order_type = filterTable.order_type
     local units = filterTable["units"]
     local issuer = filterTable["issuer_player_id_const"]
-    local unit = EntIndexToHScript(units["0"])
+	local unit = nil
+	if units["0"] ~= nil then
+		unit = EntIndexToHScript(units["0"])
+	end
     local ability = EntIndexToHScript(filterTable.entindex_ability)
     local target = EntIndexToHScript(filterTable.entindex_target)
 	
@@ -1007,9 +1241,9 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 	
 	--Bot Control Prevention
 	if unit then
+		local player = PlayerResource:GetPlayer(issuer)
 		if unit:IsRealHero() then
 			local unitPlayerID = unit:GetPlayerID()
-			local player = PlayerResource:GetPlayer(issuer)
 			if PlayerResource:GetConnectionState(unitPlayerID) == 1 and unitPlayerID ~= issuer then
 				dprint("Blocking a command to a unit not owned by player UnitPlayerID: ", unitPlayerID, "PlayerID: ", issuer)
 				if player then
