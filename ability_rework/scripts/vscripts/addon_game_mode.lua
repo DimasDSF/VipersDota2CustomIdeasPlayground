@@ -12,6 +12,8 @@ if VGMAR == nil then
 	VGMAR = class({})
 end
 
+require('libraries/timers')
+
 function Precache( ctx )
 
 end
@@ -25,12 +27,15 @@ function VGMAR:Init()
 	self.n_players_radiant = 0
 	self.n_players_dire = 0
 	self.istimescalereset = 0
+	self.direcourieruplevel = 1
+	self.radiantcourieruplevel = 1
 	self.lastrunetype = -1
 	self.currunenum = 1
 	self.removedrunenum = math.random(1,2)
 	self.botsInLateGameMode = false
 	self.backdoorstatustable = {}
 	self.backdoortimertable = {}
+	self.couriergiven = false
 
 
 	self.mode = GameRules:GetGameModeEntity()
@@ -509,7 +514,7 @@ function VGMAR:OnThink()
 				backpack = true,
 				preventedhero = "npc_dota_hero_abyssal_underlord"},
 			{spell = "vgmar_i_deathskiss",
-				items = {itemnames = {"item_rapier"}, itemnum = {3}},
+				items = {itemnames = {"item_relic", "item_greater_crit"}, itemnum = {2, 1}},
 				isconsumable = true,
 				usesmultiple = true,
 				backpack = true,
@@ -520,6 +525,18 @@ function VGMAR:OnThink()
 				usesmultiple = true,
 				backpack = true,
 				preventedhero = "npc_dota_hero_obsidian_destroyer"},
+			{spell = "vgmar_i_rainfall",
+				items = {itemnames = {"item_infused_raindrop"}, itemnum = {6}},
+				isconsumable = true,
+				usesmultiple = true,
+				backpack = true,
+				preventedhero = "npc_dota_hero_crystal_maiden"},
+			{spell = "vgmar_i_spellshield",
+				items = {itemnames = {"item_lotus_orb", "item_cloak"}, itemnum = {1, 2}},
+				isconsumable = true,
+				usesmultiple = true,
+				backpack = true,
+				preventedhero = "npc_dota_hero_antimage"},
 			{spell = "vgmar_i_vampiric_aura",
 				items = {itemnames = {"item_vladmir"}, itemnum = {2}},
 				isconsumable = true,
@@ -546,7 +563,7 @@ function VGMAR:OnThink()
 							if self:HeroHasAllItemsFromListWMultiple( heroent, itemlistforspell[k].items, itemlistforspell[k].backpack) then
 								local itemability = heroent:FindAbilityByName(itemlistforspell[k].spell)
 								if itemability == nil then
-									local itemability = heroent:AddAbility(itemlistforspell[k].spell)
+									itemability = heroent:AddAbility(itemlistforspell[k].spell)
 									itemability:SetLevel(1)
 								end
 							else
@@ -587,6 +604,29 @@ function VGMAR:OnThink()
 						reincarnationability:SetLevel(2)
 					elseif reincarnationability:GetLevel() == 2 and not self:HeroHasUsableItemInInventory(heroent, "item_octarine_core", false, false) then
 						reincarnationability:SetLevel(1)
+					end
+				end
+				
+				--///////////////////
+				--CourierBurstUpgrade
+				--///////////////////
+				if self:HeroHasUsableItemInInventory(heroent, "item_flying_courier", false, true) then
+					local couriers = Entities:FindAllByClassname("npc_dota_courier")
+					for i=1,#couriers do
+						if couriers[i]:GetTeamNumber() == heroent:GetTeamNumber() then
+							local courierburstability = couriers[i]:FindAbilityByName("courier_burst")
+							if courierburstability and courierburstability:GetLevel() >= 1 then
+								if couriers[i]:GetTeamNumber() == 2 and self.radiantcourieruplevel < 4 then
+									self:RemoveNItemsInInventory(heroent, "item_flying_courier", 1)
+									courierburstability:SetLevel(self.radiantcourieruplevel + 1)
+									self.radiantcourieruplevel = courierburstability:GetLevel()
+								elseif couriers[i]:GetTeamNumber() == 3 and self.direcourieruplevel < 4 then
+									self:RemoveNItemsInInventory(heroent, "item_flying_courier", 1)
+									courierburstability:SetLevel(self.direcourieruplevel + 1)
+									self.direcourieruplevel = courierburstability:GetLevel()
+								end
+							end
+						end
 					end
 				end
 			end
@@ -1149,10 +1189,12 @@ function GetEnemyCreepsInRadius(team, origin, radius, dominated)
 	local creeps = FindUnitsInRadius(team, origin, nil, radius, DOTA_UNIT_TARGET_TEAM_ENEMY, DOTA_UNIT_TARGET_CREEP, 0, FIND_CLOSEST, false)
 	if #creeps > 0 then
 		for i=1,#creeps do
-			if not creeps[i]:IsDominated() then
-				ret = true
-			elseif creeps[i]:IsDominated() and dominated == true then
-				ret = true
+			if creeps[i]:GetClassname() == "npc_dota_creep_lane" or creeps[i]:GetClassname() == "npc_dota_creep_siege" then
+				if not creeps[i]:IsDominated() then
+					ret = true
+				elseif creeps[i]:IsDominated() and dominated == true then
+					ret = true
+				end
 			end
 		end
 	end
@@ -1214,6 +1256,16 @@ function VGMAR:FilterDamage( filterTable )
 	return true
 end
 
+function GetHerosCourier(hero)
+	local couriers = Entities:FindAllByClassname("npc_dota_courier")
+	for i=1,#couriers do
+		if couriers[i]:GetTeamNumber() == hero:GetTeamNumber() then
+			return couriers[i]
+		end
+	end
+	return nil
+end
+
 function VGMAR:ExecuteOrderFilter( filterTable )
 	local order_type = filterTable.order_type
     local units = filterTable["units"]
@@ -1224,6 +1276,18 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 	end
     local ability = EntIndexToHScript(filterTable.entindex_ability)
     local target = EntIndexToHScript(filterTable.entindex_target)
+	
+	if unit then
+		if unit:IsRealHero() then
+			if ability and ability:GetName() == "item_courier" then
+				if GetHerosCourier(unit) ~= nil then
+					self:RemoveNItemsInInventory(unit, "item_courier", 1)
+					unit:ModifyGold(100, false, 6)
+					return false
+				end
+			end
+		end
+	end
 	
 	if unit then
         if unit:IsRealHero() then
@@ -1373,9 +1437,31 @@ function VGMAR:OnGameStateChanged( keys )
 				Convars:SetFloat("host_timescale", 3.0)
 			end, DoUniqueString('botsettings'), 10)
 		end
-		--////////////////////////////////////
-		--STOP FUCKING SPLIT PUSHING CATAPULTS
-		--////////////////////////////////////		
+		
+		--////////////
+		--Free Courier
+		--////////////
+		if IsServer() then
+			Timers:CreateTimer(5,
+			function()
+				if self.couriergiven == false then
+					local heroes = HeroList:GetAllHeroes()
+					local radiantheroes = {}
+					for i=1,#heroes do
+						if heroes[i]:GetTeamNumber() == 2 then
+							table.insert(radiantheroes, heroes[i])
+						end
+					end
+					local luckyhero = radiantheroes[math.random(1, #radiantheroes)]
+					if luckyhero ~= nil then
+						luckyhero:AddItemByName("item_courier")
+						self.couriergiven = true
+					else
+						return 5.0
+					end
+				end
+			end)
+		end	
 		--///////////////////////////////
 		--New Implementation of defskills
 		--///////////////////////////////

@@ -31170,10 +31170,11 @@
 		"ID"					"5210"														// unique ID number for this ability.  Do not change this once established or it will invalidate collected stats.
 		"AbilityType"					"DOTA_ABILITY_TYPE_BASIC"
 		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_IMMEDIATE | DOTA_ABILITY_BEHAVIOR_DONT_CANCEL_MOVEMENT | DOTA_ABILITY_BEHAVIOR_IGNORE_BACKSWING"
+		"MaxLevel"						"4"
 		
 		// Time		
 		//-------------------------------------------------------------------------------------------------------------
-		"AbilityCooldown"				"90.0"
+		"AbilityCooldown"				"90.0 70.0 50.0 30.0"
 		
 		// Special
 		//-------------------------------------------------------------------------------------------------------------
@@ -31182,12 +31183,12 @@
 			"01"
 			{
 				"var_type"		"FIELD_FLOAT"
-				"duration"		"4.0"
+				"duration"		"4.0 8.0 12.0 16.0"
 			}
 			"02"
 			{
 				"var_type"			"FIELD_INTEGER"
-				"movement_speed"	"800"
+				"movement_speed"	"800 1000 1200 1400"
 			}
 			"03"
 			{
@@ -31196,7 +31197,7 @@
 			}
 		}
 		
-		"MaxLevel"		"1"
+		//"MaxLevel"		"1"
 	}
 
 	//=================================================================================================================

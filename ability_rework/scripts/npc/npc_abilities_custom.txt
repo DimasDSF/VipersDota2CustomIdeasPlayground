@@ -721,8 +721,8 @@
 		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN | DOTA_ABILITY_BEHAVIOR_NOT_LEARNABLE | DOTA_ABILITY_BEHAVIOR_AURA"
 		"AbilityUnitTargetTeam"			"DOTA_UNIT_TARGET_TEAM_FRIENDLY"
 		"SpellDispellableType"			"SPELL_DISPELLABLE_NO"
-		"BaseClass"						"obsidian_destroyer_essence_aura"
 		"AbilitySound"					"Hero_ObsidianDestroyer.EssenceAura"
+		"BaseClass"						"obsidian_destroyer_essence_aura"
 		"MaxLevel"						"1"
 				
 		// Special
@@ -770,8 +770,8 @@
 		//-------------------------------------------------------------------------------------------------------------
 		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN | DOTA_ABILITY_BEHAVIOR_NOT_LEARNABLE"
 		"SpellDispellableType"			"SPELL_DISPELLABLE_NO"
-		"BaseClass"						"phantom_assassin_coup_de_grace"
 		"AbilitySound"					"Hero_PhantomAssassin.CoupDeGrace"
+		"BaseClass"						"phantom_assassin_coup_de_grace"
 		"MaxLevel"						"1"
 		
 		// Special
@@ -789,5 +789,62 @@
 				"crit_chance"				"1"
 			}
 		}
-	}	
+	}
+	//=================================================================================================================
+	// VGMAR: Raindrop: Crystal Maiden: ManaAura
+	//=================================================================================================================
+	"vgmar_i_rainfall"
+	{
+		// General
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN | DOTA_ABILITY_BEHAVIOR_NOT_LEARNABLE"
+		"AbilityUnitTargetTeam"			"DOTA_UNIT_TARGET_TEAM_FRIENDLY"
+		"SpellDispellableType"			"SPELL_DISPELLABLE_NO"
+		"BaseClass"						"crystal_maiden_brilliance_aura"
+		"MaxLevel"						"1"
+		
+		// Special
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"			"FIELD_FLOAT"
+				"mana_regen"		"4.0"
+			}
+			"02"
+			{
+				"var_type"			"FIELD_FLOAT"
+				"mana_regen_self"	"5.0"
+			}
+		}
+	}
+	//=================================================================================================================
+	// VGMAR: Linken: Antimage: SpellShield
+	//=================================================================================================================
+	"vgmar_i_spellshield"
+	{
+		// General
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN | DOTA_ABILITY_BEHAVIOR_NOT_LEARNABLE"
+		"SpellDispellableType"			"SPELL_DISPELLABLE_NO"
+		"BaseClass"						"antimage_spell_shield"
+		"MaxLevel"						"1"
+		
+		// Special
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"						"FIELD_INTEGER"
+				"spell_shield_resistance"		"35"
+			}
+			"02"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"scepter_cooldown"		"10"
+			}
+		}
+	}
 }
