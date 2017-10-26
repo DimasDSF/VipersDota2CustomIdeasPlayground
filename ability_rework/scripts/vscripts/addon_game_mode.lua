@@ -59,7 +59,7 @@ function VGMAR:Init()
 	ListenToGameEvent( "game_rules_state_change", Dynamic_Wrap( VGMAR, 'OnGameStateChanged' ), self )
 	ListenToGameEvent( "dota_item_picked_up", Dynamic_Wrap( VGMAR, 'OnItemPickedUp' ), self )
 	ListenToGameEvent( "dota_tower_kill", Dynamic_Wrap( VGMAR, 'OnTowerKilled' ), self )
-	Convars:RegisterConvar('vgmar_devmode', 0, "Set to 1 to show debug info.  Set to 0 to disable.", 0)
+	Convars:RegisterConvar('vgmar_devmode', "0", "Set to 1 to show debug info.  Set to 0 to disable.", 0)
 	if VGMAR_DEBUG == true then
 		Convars:SetInt("vgmar_devmode", 1)
 	end
@@ -99,7 +99,7 @@ local bdplist = {
 			},
 		activationtime = 25,
 		protectionholder = "dota_goodguys_fort",
-		protectionrange = 2000,
+		protectionrange = 3200,
 		maxdamage = 10
 		},
 	{group = "badbase",
@@ -127,7 +127,7 @@ local bdplist = {
 			},
 		activationtime = 25,
 		protectionholder = "dota_badguys_fort",
-		protectionrange = 2000,
+		protectionrange = 3200,
 		maxdamage = 10
 		},
 	{group = "g_t2_top",
@@ -446,54 +446,86 @@ function VGMAR:OnThink()
 					if closestrune then
 						heroent:PickupRune(closestrune)
 					end
+					--[[--///////////////////
+					--BotShrineActivation
+					--///////////////////
+					local nearbyshrine = Entities:FindByClassnameWithin(nil, "npc_dota_healer", heroent:GetOrigin(), 400)
+					if nearbyshrine ~= nil and nearbyshrine:GetTeamNumber() == heroent:GetTeamNumber() then
+						dprint("Found a shrine: ", nearbyshrine:GetName())
+						local shrineability = nearbyshrine:FindAbilityByName("filler_ability")
+						local shrinemodifier = nearbyshrine:FindModifierByName("modifier_filler_heal_aura")
+						if shrineability ~= nil and (shrineability:GetCooldownTimeRemaining() == 0 or shrinemodifier ~= nil) then
+							if heroent:GetHealth()/heroent:GetMaxHealth() < 0.7 or heroent:GetMana()/heroent:GetMaxMana() <= 0.5 then
+								heroent:MoveToPositionAggressive(nearbyshrine:GetOrigin()`)
+							end
+						end
+					end--]]
 				end
 			--//////////////////////
 			--Passive Item Abilities
 			--//////////////////////
 			--Items For Spells Table
 				local itemlistforspell = {
-			{spell = "midas_goblins_greed",
+			{spell = "vgmar_i_goblins_greed",
 				items = {itemnames = {"item_hand_of_midas"}, itemnum = {1}},
 				isconsumable = false,
 				usesmultiple = false,
 				backpack = self:TimeIsLaterThan( 30, 0 ) or heroent:GetLevel() >= 25,
 				preventedhero = "npc_dota_hero_alchemist"},
-			{spell = "silver_essense_shift",
+			{spell = "vgmar_i_essense_shift",
 				items = {itemnames = {"item_silver_edge"}, itemnum = {1}},
 				isconsumable = false,
 				usesmultiple = false,
 				backpack = false,
 				preventedhero = "npc_dota_hero_slark"},
-			{spell = "gem_thirst",
+			{spell = "vgmar_i_thirst",
 				items = {itemnames = {"item_gem", "item_phase_boots"}, itemnum = {2, 1}},
 				isconsumable = true,
 				usesmultiple = true,
 				backpack = true,
 				preventedhero = "npc_dota_hero_bloodseeker"},
-			{spell = "urn_pulse",
+			{spell = "vgmar_i_pulse",
 				items = {itemnames = {"item_urn_of_shadows"}, itemnum = {2}},
 				isconsumable = true,
 				usesmultiple = true,
 				backpack = true,
 				preventedhero = "npc_dota_hero_necrolyte"},
-			{spell = "sabre_fervor",
-				items = {itemnames = {"item_echo_sabre"}, itemnum = {2}},
-				isconsumable = self:TimeIsLaterThan( 30, 0 ),
+			{spell = "vgmar_i_fervor",
+				items = {itemnames = {"item_gloves", "item_mask_of_madness"}, itemnum = {2, 1}},
+				isconsumable = true,
 				usesmultiple = true,
-				backpack = (self:TimeIsLaterThan( 20, 0 ) or heroent:GetLevel() >= 25) and not self:TimeIsLaterThan( 30, 0 ),
+				backpack = true,
 				preventedhero = "npc_dota_hero_troll_warlord"},
 			{spell = "aegis_king_reincarnation",
-				items = {itemnames = {"item_stout_shield", "item_poor_mans_shield", "item_vanguard", "item_aegis"}, itemnum = {1, 1, 1, 1}},
+				items = {itemnames = {"item_stout_shield", "item_poor_mans_shield", "item_vanguard", "item_buckler", "item_aegis"}, itemnum = {1, 1, 1, 1, 1}},
 				isconsumable = true,
 				usesmultiple = false,
 				backpack = true,
 				preventedhero = "npc_dota_hero_skeleton_king"},
-			{spell = "satanicdominator_atrophy",
+			{spell = "vgmar_i_atrophy_aura",
 				items = {itemnames = {"item_helm_of_the_dominator", "item_satanic"}, itemnum = {2, 1}},
 				isconsumable = true,
 				usesmultiple = true,
 				backpack = true,
-				preventedhero = "npc_dota_hero_abyssal_underlord"}
+				preventedhero = "npc_dota_hero_abyssal_underlord"},
+			{spell = "vgmar_i_deathskiss",
+				items = {itemnames = {"item_rapier"}, itemnum = {3}},
+				isconsumable = true,
+				usesmultiple = true,
+				backpack = true,
+				preventedhero = "npc_dota_hero_phantom_assassin"},
+			{spell = "vgmar_i_essence_aura",
+				items = {itemnames = {"item_octarine_core"}, itemnum = {2}},
+				isconsumable = true,
+				usesmultiple = true,
+				backpack = true,
+				preventedhero = "npc_dota_hero_obsidian_destroyer"},
+			{spell = "vgmar_i_vampiric_aura",
+				items = {itemnames = {"item_vladmir"}, itemnum = {2}},
+				isconsumable = true,
+				usesmultiple = true,
+				backpack = true,
+				preventedhero = "npc_dota_hero_skeleton_king"}
 			}
 			--TableEND
 			
@@ -508,6 +540,7 @@ function VGMAR:OnThink()
 									end
 									itemability = heroent:AddAbility(itemlistforspell[k].spell)
 									itemability:SetLevel(1)
+									dprint("Added ability: ", itemability:GetAbilityName())
 								end
 							end
 						else
@@ -516,6 +549,7 @@ function VGMAR:OnThink()
 								if itemability == nil then
 									itemability = heroent:AddAbility(itemlistforspell[k].spell)
 									itemability:SetLevel(1)
+									dprint("Added ability: ", itemability:GetAbilityName())
 								end
 							else
 								local itemability = heroent:FindAbilityByName(itemlistforspell[k].spell)
@@ -544,6 +578,17 @@ function VGMAR:OnThink()
 						if heroent:HasModifier("modifier_skeleton_king_mortal_strike_drain_buff") then
 							heroent:RemoveModifierByName("modifier_skeleton_king_mortal_strike_drain_buff")
 						end
+					end
+				end
+				--/////////////////////
+				--AegisKingAntiOctarine
+				--/////////////////////
+				if heroent:FindAbilityByName("aegis_king_reincarnation") ~= nil then
+					local reincarnationability = heroent:FindAbilityByName("aegis_king_reincarnation")
+					if self:HeroHasUsableItemInInventory(heroent, "item_octarine_core", false, false) and reincarnationability:GetLevel() == 1 then
+						reincarnationability:SetLevel(2)
+					elseif reincarnationability:GetLevel() == 2 and not self:HeroHasUsableItemInInventory(heroent, "item_octarine_core", false, false) then
+						reincarnationability:SetLevel(1)
 					end
 				end
 			end
@@ -1146,7 +1191,7 @@ function VGMAR:FilterDamage( filterTable )
 	local victim = EntIndexToHScript(filterTable.entindex_victim_const)
 	local attacker = EntIndexToHScript(filterTable.entindex_attacker_const)
 	local damage = filterTable["damage"]
-
+	
 	--///////////////////
 	--BackDoor Protection
 	--///////////////////
