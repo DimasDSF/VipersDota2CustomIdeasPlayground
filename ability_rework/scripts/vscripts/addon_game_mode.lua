@@ -540,16 +540,14 @@ function VGMAR:OnThink()
 									end
 									itemability = heroent:AddAbility(itemlistforspell[k].spell)
 									itemability:SetLevel(1)
-									dprint("Added ability: ", itemability:GetAbilityName())
 								end
 							end
 						else
 							if self:HeroHasAllItemsFromListWMultiple( heroent, itemlistforspell[k].items, itemlistforspell[k].backpack) then
 								local itemability = heroent:FindAbilityByName(itemlistforspell[k].spell)
 								if itemability == nil then
-									itemability = heroent:AddAbility(itemlistforspell[k].spell)
+									local itemability = heroent:AddAbility(itemlistforspell[k].spell)
 									itemability:SetLevel(1)
-									dprint("Added ability: ", itemability:GetAbilityName())
 								end
 							else
 								local itemability = heroent:FindAbilityByName(itemlistforspell[k].spell)
@@ -878,7 +876,7 @@ function VGMAR:OnThink()
 			end
 			if pldoppelwalk:GetLevel() == 4 and hero:GetLevel() >= 15 then
 				pldoppelwalk:SetLevel( 5 )
-			elseif pldoppelwalk:GetLevel() == 5 and hero:GetLevel() >= 20 or self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false ) then
+			elseif pldoppelwalk:GetLevel() == 5 and (hero:GetLevel() >= 20 or self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false )) then
 				pldoppelwalk:SetLevel( 6 )
 			elseif pldoppelwalk:GetLevel() == 6 and (hero:GetLevel() < 20 and not self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false )) then
 				pldoppelwalk:SetLevel( 5 )
