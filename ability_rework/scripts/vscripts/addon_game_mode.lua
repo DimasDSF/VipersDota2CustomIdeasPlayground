@@ -36,6 +36,9 @@ function VGMAR:Init()
 	self.backdoorstatustable = {}
 	self.backdoortimertable = {}
 	self.couriergiven = false
+	self.direcourierup2given = false
+	self.direcourierup3given = false
+	self.direcourierup4given = false
 
 
 	self.mode = GameRules:GetGameModeEntity()
@@ -244,18 +247,20 @@ end
 	return true
 end--]]
 
-function VGMAR:HeroHasUsableItemInInventory( hero, item, mutedallowed, backpackallowed )
-	if not hero:HasItemInInventory(item) then
+function VGMAR:HeroHasUsableItemInInventory( hero, item, mutedallowed, backpackallowed, stashallowed )
+	if stashallowed ~= true and not hero:HasItemInInventory(item) then
 		return false
 	end
-	for i = 0, 8, 1 do
+	for i = 0, 14 do
 		local slotitem = hero:GetItemInSlot(i);
 		if slotitem then
 			if slotitem:GetName() == item then
 				if slotitem:IsMuted() and mutedallowed == true then
 					if i <= 5 then
 						return true
-					elseif i >= 6 and backpackallowed == true then
+					elseif i >= 6 and i <= 8 and backpackallowed == true then
+						return true
+					elseif i >= 9 and stashallowed == true then
 						return true
 					else 
 						return false
@@ -263,7 +268,9 @@ function VGMAR:HeroHasUsableItemInInventory( hero, item, mutedallowed, backpacka
 				elseif not slotitem:IsMuted() then
 					if i <= 5 then
 						return true
-					elseif i >= 6 and backpackallowed == true then
+					elseif i >= 6 and i <= 8 and backpackallowed == true then
+						return true
+					elseif i >= 9 and stashallowed == true then
 						return true
 					else 
 						return false
@@ -276,18 +283,20 @@ function VGMAR:HeroHasUsableItemInInventory( hero, item, mutedallowed, backpacka
 	end
 end
 
-function VGMAR:GetItemFromInventoryByName( hero, item, mutedallowed, backpackallowed )
-	if not hero:HasItemInInventory(item) then
+function VGMAR:GetItemFromInventoryByName( hero, item, mutedallowed, backpackallowed, stashallowed )
+	if stashallowed ~= true and not hero:HasItemInInventory(item) then
 		return nil
 	end
-	for i = 0, 8, 1 do
+	for i = 0, 14 do
 		local slotitem = hero:GetItemInSlot(i);
 		if slotitem then
 			if slotitem:GetName() == item then
 				if slotitem:IsMuted() and mutedallowed == true then
 					if i <= 5 then
 						return slotitem
-					elseif i >= 6 and backpackallowed == true then
+					elseif i >= 6 and i <= 8 and backpackallowed == true then
+						return slotitem
+					elseif i >= 9 and stashallowed == true then
 						return slotitem
 					else 
 						return nil
@@ -295,7 +304,9 @@ function VGMAR:GetItemFromInventoryByName( hero, item, mutedallowed, backpackall
 				elseif not slotitem:IsMuted() then
 					if i <= 5 then
 						return slotitem
-					elseif i >= 6 and backpackallowed == true then
+					elseif i >= 6 and i <= 8 and backpackallowed == true then
+						return slotitem
+					elseif i >= 9 and stashallowed == true then
 						return slotitem
 					else 
 						return nil
@@ -308,25 +319,29 @@ function VGMAR:GetItemFromInventoryByName( hero, item, mutedallowed, backpackall
 	end
 end
 
-function VGMAR:CountUsableItemsInHeroInventory( hero, item, mutedallowed, backpackallowed )
-	if not hero:HasItemInInventory(item) then
+function VGMAR:CountUsableItemsInHeroInventory( hero, item, mutedallowed, backpackallowed, stashallowed )
+	if stashallowed ~= true and not hero:HasItemInInventory(item) then
 		return 0
 	end
 	local itemcount = 0
-	for i = 0, 8, 1 do
+	for i = 0, 14 do
 		local slotitem = hero:GetItemInSlot(i);
 		if slotitem then
 			if slotitem:GetName() == item then
 				if slotitem:IsMuted() and mutedallowed == true then
 					if i <= 5 then
 						itemcount = itemcount + 1
-					elseif i >= 6 and backpackallowed == true then
+					elseif i >= 6 and i <= 8 and backpackallowed == true then
+						itemcount = itemcount + 1
+					elseif i >= 9 and stashallowed == true then
 						itemcount = itemcount + 1
 					end
 				elseif not slotitem:IsMuted() then
 					if i <= 5 then
 						itemcount = itemcount + 1
-					elseif i >= 6 and backpackallowed == true then
+					elseif i >= 6 and i <= 8 and backpackallowed == true then
+						itemcount = itemcount + 1
+					elseif i >= 9 and stashallowed == true then
 						itemcount = itemcount + 1
 					end
 				end
@@ -337,11 +352,11 @@ function VGMAR:CountUsableItemsInHeroInventory( hero, item, mutedallowed, backpa
 end
 
 function VGMAR:RemoveNItemsInInventory( hero, item, num )
-	if not hero:HasItemInInventory(item) then
-		return
-	end
+	--if not hero:HasItemInInventory(item) then
+	--	return
+	--end
 	local removeditemsnum = 0
-	for i = 0, 8, 1 do
+	for i = 0, 14 do
 		local slotitem = hero:GetItemInSlot(i);
 		if slotitem then
 			if slotitem:GetName() == item and removeditemsnum < num then
@@ -357,7 +372,7 @@ end
 
 function VGMAR:HeroHasAllItemsFromListWMultiple( hero, itemlist, backpack )
 	for i=1,#itemlist.itemnames do
-		if self:CountUsableItemsInHeroInventory( hero, itemlist.itemnames[i], false, backpack) < itemlist.itemnum[i] then
+		if self:CountUsableItemsInHeroInventory( hero, itemlist.itemnames[i], false, backpack, false) < itemlist.itemnum[i] then
 			return false
 		end
 	end
@@ -373,6 +388,22 @@ function VGMAR:TimeIsLaterThan( minute, second )
 	end
 end
 
+function VGMAR:GetHeroFreeInventorySlots( hero, backpackallowed, stashallowed )
+	local slotcount = 0
+	for i = 0, 14, 1 do
+		if hero:GetItemInSlot(i) == nil then
+			if i <= 5 then
+				slotcount = slotcount + 1
+			elseif i >= 6 and i <= 8 and backpackallowed == true then
+				slotcount = slotcount + 1
+			elseif i >= 9 and stashallowed == true then
+				slotcount = slotcount + 1
+			end
+		end
+	end
+	return slotcount
+end
+
 function VGMAR:OnItemPickedUp(keys)
 	local heroEntity = EntIndexToHScript(keys.HeroEntityIndex)
 	local itemEntity = EntIndexToHScript(keys.ItemEntityIndex)
@@ -383,23 +414,23 @@ function VGMAR:OnItemPickedUp(keys)
 	--Consumable Items System
 	--//////////////////////////////
 	--Alchemist-less Scepter consumption
-	if self:CountUsableItemsInHeroInventory( heroEntity, "item_ultimate_scepter", false, true) >= 2 and not heroEntity:FindModifierByName("modifier_item_ultimate_scepter_consumed") then
+	if self:CountUsableItemsInHeroInventory( heroEntity, "item_ultimate_scepter", false, true, false) >= 2 and not heroEntity:FindModifierByName("modifier_item_ultimate_scepter_consumed") then
 		self:RemoveNItemsInInventory(heroEntity, "item_ultimate_scepter", 2)
 		heroEntity:AddNewModifier(heroEntity, nil, 'modifier_item_ultimate_scepter_consumed', { bonus_all_stats = 10, bonus_health = 175, bonus_mana = 175 })
 	end
 	--Diffusal Blade 2+ Upgrade
-	if self:HeroHasUsableItemInInventory( heroEntity, "item_recipe_diffusal_blade", false, false) and self:HeroHasUsableItemInInventory( heroEntity, "item_diffusal_blade_2", false, false)  then
-		local diffbladeitem = self:GetItemFromInventoryByName( heroEntity, "item_diffusal_blade_2", false, false )
-		local diffbladerecipe = self:GetItemFromInventoryByName( heroEntity, "item_recipe_diffusal_blade", false, false )
+	if self:HeroHasUsableItemInInventory( heroEntity, "item_recipe_diffusal_blade", false, false, false) and self:HeroHasUsableItemInInventory( heroEntity, "item_diffusal_blade_2", false, false, false)  then
+		local diffbladeitem = self:GetItemFromInventoryByName( heroEntity, "item_diffusal_blade_2", false, false, false )
+		local diffbladerecipe = self:GetItemFromInventoryByName( heroEntity, "item_recipe_diffusal_blade", false, false, false )
 		if diffbladeitem ~= nil and diffbladeitem:GetCurrentCharges() < diffbladeitem:GetInitialCharges() then
 			heroEntity:RemoveItem(diffbladerecipe)
 			diffbladeitem:SetCurrentCharges(diffbladeitem:GetInitialCharges())
 		end
 	end
 	--Bloodstone recharge
-	if self:HeroHasUsableItemInInventory(heroEntity, "item_bloodstone", false, false) and self:CountUsableItemsInHeroInventory(heroEntity, "item_recipe_bloodstone", false, true) >= 3 then
+	if self:HeroHasUsableItemInInventory(heroEntity, "item_bloodstone", false, false, false) and self:CountUsableItemsInHeroInventory(heroEntity, "item_recipe_bloodstone", false, true, false) >= 3 then
 		self:RemoveNItemsInInventory(heroEntity, "item_recipe_bloodstone", 3)
-		local bloodstone = self:GetItemFromInventoryByName( heroEntity, "item_bloodstone" )
+		local bloodstone = self:GetItemFromInventoryByName( heroEntity, "item_bloodstone", false, false, false )
 		if bloodstone ~= nil then
 			bloodstone:SetCurrentCharges(bloodstone:GetCurrentCharges() + 24)
 		end
@@ -461,8 +492,13 @@ function VGMAR:OnThink()
 						local shrinemodifier = nearbyshrine:FindModifierByName("modifier_filler_heal_aura")
 						if shrineability ~= nil and (shrineability:GetCooldownTimeRemaining() == 0 or shrinemodifier ~= nil) then
 							if heroent:GetHealth()/heroent:GetMaxHealth() < 0.7 or heroent:GetMana()/heroent:GetMaxMana() <= 0.5 then
-								heroent:MoveToPositionAggressive(nearbyshrine:GetOrigin()`)
+								shrineability:CastAbility()
+								heroent:MoveToPositionAggressive(nearbyshrine:GetOrigin())
 							end
+						elseif shrineability:GetCooldownTimeRemaining() >= 295 then
+							if heroent:GetHealth()/heroent:GetMaxHealth() < 0.7 or heroent:GetMana()/heroent:GetMaxMana() <= 0.5 then
+								heroent:MoveToPositionAggressive(nearbyshrine:GetOrigin())
+							end					
 						end
 					end--]]
 				end
@@ -514,7 +550,7 @@ function VGMAR:OnThink()
 				backpack = true,
 				preventedhero = "npc_dota_hero_abyssal_underlord"},
 			{spell = "vgmar_i_deathskiss",
-				items = {itemnames = {"item_relic", "item_greater_crit"}, itemnum = {2, 1}},
+				items = {itemnames = {"item_relic"}, itemnum = {2}},
 				isconsumable = true,
 				usesmultiple = true,
 				backpack = true,
@@ -555,16 +591,18 @@ function VGMAR:OnThink()
 									for j=1,#itemlistforspell[k].items.itemnames do
 										self:RemoveNItemsInInventory( heroent, itemlistforspell[k].items.itemnames[j], itemlistforspell[k].items.itemnum[j])
 									end
-									itemability = heroent:AddAbility(itemlistforspell[k].spell)
-									itemability:SetLevel(1)
+									local addedability = heroent:AddAbility(itemlistforspell[k].spell)
+									addedability:SetLevel(1)
 								end
 							end
 						else
 							if self:HeroHasAllItemsFromListWMultiple( heroent, itemlistforspell[k].items, itemlistforspell[k].backpack) then
 								local itemability = heroent:FindAbilityByName(itemlistforspell[k].spell)
 								if itemability == nil then
-									itemability = heroent:AddAbility(itemlistforspell[k].spell)
-									itemability:SetLevel(1)
+									local addedability = heroent:AddAbility(itemlistforspell[k].spell)
+									if addedability then
+										addedability:SetLevel(1)
+									end
 								end
 							else
 								local itemability = heroent:FindAbilityByName(itemlistforspell[k].spell)
@@ -600,9 +638,9 @@ function VGMAR:OnThink()
 				--/////////////////////
 				if heroent:FindAbilityByName("aegis_king_reincarnation") ~= nil then
 					local reincarnationability = heroent:FindAbilityByName("aegis_king_reincarnation")
-					if self:HeroHasUsableItemInInventory(heroent, "item_octarine_core", false, false) and reincarnationability:GetLevel() == 1 then
+					if self:HeroHasUsableItemInInventory(heroent, "item_octarine_core", false, false, false) and reincarnationability:GetLevel() == 1 then
 						reincarnationability:SetLevel(2)
-					elseif reincarnationability:GetLevel() == 2 and not self:HeroHasUsableItemInInventory(heroent, "item_octarine_core", false, false) then
+					elseif reincarnationability:GetLevel() == 2 and not self:HeroHasUsableItemInInventory(heroent, "item_octarine_core", false, false, false) then
 						reincarnationability:SetLevel(1)
 					end
 				end
@@ -610,7 +648,7 @@ function VGMAR:OnThink()
 				--///////////////////
 				--CourierBurstUpgrade
 				--///////////////////
-				if self:HeroHasUsableItemInInventory(heroent, "item_flying_courier", false, true) then
+				if self:HeroHasUsableItemInInventory(heroent, "item_flying_courier", false, true, true) then
 					local couriers = Entities:FindAllByClassname("npc_dota_courier")
 					for i=1,#couriers do
 						if couriers[i]:GetTeamNumber() == heroent:GetTeamNumber() then
@@ -628,6 +666,28 @@ function VGMAR:OnThink()
 							end
 						end
 					end
+				end
+			end
+			--/////////////////
+			--BotCourierUpgrade
+			--/////////////////
+			if self:TimeIsLaterThan(12, 0) and self.direcourierup2given == false and self:GetCourierBurstLevel( nil, 3 ) >= 1 then
+				if heroent:GetTeamNumber() == 3 and self:GetHeroFreeInventorySlots(heroent, true, false) > 0 then
+					heroent:AddItemByName("item_flying_courier")
+					dprint("Giving ", heroent:GetName(), " having ", self:GetHeroFreeInventorySlots(heroent, true, false), " empty slots 1st courier upgrade")
+					self.direcourierup2given = true
+				end
+			elseif self:TimeIsLaterThan(24, 0) and self.direcourierup3given == false and self:GetCourierBurstLevel( nil, 3 ) >= 1 then
+				if heroent:GetTeamNumber() == 3 and self:GetHeroFreeInventorySlots(heroent, true, false) > 0 then
+					heroent:AddItemByName("item_flying_courier")
+					dprint("Giving ", heroent:GetName(), " having ", self:GetHeroFreeInventorySlots(heroent, true, false), " empty slots 2nd courier upgrade")
+					self.direcourierup3given = true
+				end
+			elseif self:TimeIsLaterThan(38, 0) and self.direcourierup4given == false and self:GetCourierBurstLevel( nil, 3 ) >= 1 then
+				if heroent:GetTeamNumber() == 3 and self:GetHeroFreeInventorySlots(heroent, true, false) > 0 then
+					heroent:AddItemByName("item_flying_courier")
+					dprint("Giving ", heroent:GetName(), " having ", self:GetHeroFreeInventorySlots(heroent, true, false), " empty slots 3rd courier upgrade")
+					self.direcourierup4given = true
 				end
 			end
 		end
@@ -809,9 +869,9 @@ function VGMAR:OnThink()
 			local antimagemanaburn = hero:FindAbilityByName( "antimage_mana_break" )
 			local antimageshield = hero:FindAbilityByName( "antimage_spell_shield" )
 			local antimagevoid = hero:FindAbilityByName( "antimage_mana_void" )
-			if antimagemanaburn:GetLevel() == 4 and (hero:HasScepter() and self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false )) then
+			if antimagemanaburn:GetLevel() == 4 and (hero:HasScepter() and self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false, false )) then
 				antimagemanaburn:SetLevel( 5 )
-			elseif antimagemanaburn:GetLevel() == 5 and not (hero:HasScepter() and self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false )) then
+			elseif antimagemanaburn:GetLevel() == 5 and not (hero:HasScepter() and self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false, false )) then
 				antimagemanaburn:SetLevel( 4 )
 			end
 			if antimageshield:GetLevel() == 4 and (hero:GetLevel() >= 15 or hero:HasScepter()) then
@@ -822,9 +882,9 @@ function VGMAR:OnThink()
 				antimageshield:SetLevel( 6 )
 			elseif antimageshield:GetLevel() == 6 and hero:GetLevel() >= 15 and not hero:HasScepter() then
 				antimageshield:SetLevel( 5 )
-			elseif antimageshield:GetLevel() == 6 and hero:HasScepter() and hero:GetLevel() >= 20 and self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false ) then
+			elseif antimageshield:GetLevel() == 6 and hero:HasScepter() and hero:GetLevel() >= 20 and self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false, false ) then
 				antimageshield:SetLevel( 7 )
-			elseif antimageshield:GetLevel() == 7 and hero:GetLevel() >= 15 and (not hero:HasScepter() or not self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false )) then
+			elseif antimageshield:GetLevel() == 7 and hero:GetLevel() >= 15 and (not hero:HasScepter() or not self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false, false )) then
 				antimageshield:SetLevel( 6 )
 			end
 			if antimagevoid:GetLevel() == 3 and (hero:HasScepter() or hero:GetLevel() == 25) then
@@ -835,9 +895,9 @@ function VGMAR:OnThink()
 				antimagevoid:SetLevel( 5 )
 			elseif antimagevoid:GetLevel() == 5 and hero:GetLevel() == 25 and not hero:HasScepter() then
 				antimagevoid:SetLevel( 4 )
-			elseif antimagevoid:GetLevel() == 5 and hero:HasScepter() and self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false ) then
+			elseif antimagevoid:GetLevel() == 5 and hero:HasScepter() and self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false, false ) then
 				antimagevoid:SetLevel( 6 )
-			elseif antimagevoid:GetLevel() == 6 and (not hero:HasScepter() or not self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false ))  then
+			elseif antimagevoid:GetLevel() == 6 and (not hero:HasScepter() or not self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false, false ))  then
 				antimagevoid:SetLevel( 5 )
 			end
 		end
@@ -848,13 +908,13 @@ function VGMAR:OnThink()
 			local razorstaticlink = hero:FindAbilityByName( "razor_static_link" )
 			local razorunstablecurrent = hero:FindAbilityByName( "razor_unstable_current" )
 			local razorult = hero:FindAbilityByName( "razor_eye_of_the_storm" )
-			if razorplasmafield:GetLevel() == 4 and (hero:HasScepter() and self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false )) then
+			if razorplasmafield:GetLevel() == 4 and (hero:HasScepter() and self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false, false )) then
 				razorplasmafield:SetLevel( 5 )
-			elseif razorplasmafield:GetLevel() == 5 and not (hero:HasScepter() and self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false )) then
+			elseif razorplasmafield:GetLevel() == 5 and not (hero:HasScepter() and self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false, false )) then
 				razorplasmafield:SetLevel( 4 )
-			elseif razorplasmafield:GetLevel() == 5 and hero:HasScepter() and self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false ) and self:HeroHasUsableItemInInventory( hero, "item_aether_lens", false, false ) then
+			elseif razorplasmafield:GetLevel() == 5 and hero:HasScepter() and self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false, false ) and self:HeroHasUsableItemInInventory( hero, "item_aether_lens", false, false, false ) then
 				razorplasmafield:SetLevel( 6 )
-			elseif razorplasmafield:GetLevel() == 6 and (not hero:HasScepter() or not self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false ) or not self:HeroHasUsableItemInInventory( hero, "item_aether_lens", false, false )) then
+			elseif razorplasmafield:GetLevel() == 6 and (not hero:HasScepter() or not self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false, false ) or not self:HeroHasUsableItemInInventory( hero, "item_aether_lens", false, false, false )) then
 				razorplasmafield:SetLevel( 5 )
 			end
 			if razorstaticlink:GetLevel() == 4 and (hero:GetLevel() >= 20 and hero:HasScepter()) then
@@ -866,18 +926,18 @@ function VGMAR:OnThink()
 				razorunstablecurrent:SetLevel( 5 )
 			elseif razorunstablecurrent:GetLevel() == 5 and (hero:GetLevel() < 15 or not hero:HasScepter()) then
 				razorunstablecurrent:SetLevel( 4 )
-			elseif razorunstablecurrent:GetLevel() == 5 and hero:HasScepter() and self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false ) then
+			elseif razorunstablecurrent:GetLevel() == 5 and hero:HasScepter() and self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false, false ) then
 				razorunstablecurrent:SetLevel( 6 )
-			elseif razorunstablecurrent:GetLevel() == 6 and (not hero:HasScepter() or not self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false ))  then
+			elseif razorunstablecurrent:GetLevel() == 6 and (not hero:HasScepter() or not self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false, false ))  then
 				razorunstablecurrent:SetLevel( 5 )
 			end
-			if razorult:GetLevel() == 3 and hero:HasScepter() and self:HeroHasUsableItemInInventory( hero, "item_refresher", false, false ) then
+			if razorult:GetLevel() == 3 and hero:HasScepter() and self:HeroHasUsableItemInInventory( hero, "item_refresher", false, false, false ) then
 				razorult:SetLevel( 4 )
-			elseif razorult:GetLevel() == 4 and (not hero:HasScepter() or not self:HeroHasUsableItemInInventory( hero, "item_refresher", false, false )) then
+			elseif razorult:GetLevel() == 4 and (not hero:HasScepter() or not self:HeroHasUsableItemInInventory( hero, "item_refresher", false, false, false )) then
 				razorult:SetLevel( 3 )
-			elseif razorult:GetLevel() == 4 and hero:HasScepter() and self:HeroHasUsableItemInInventory( hero, "item_refresher", false, false ) and self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false ) then
+			elseif razorult:GetLevel() == 4 and hero:HasScepter() and self:HeroHasUsableItemInInventory( hero, "item_refresher", false, false, false ) and self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false, false ) then
 				razorult:SetLevel( 5 )
-			elseif razorult:GetLevel() == 5 and (not hero:HasScepter() or not self:HeroHasUsableItemInInventory( hero, "item_refresher", false, false ) or not self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false )) then
+			elseif razorult:GetLevel() == 5 and (not hero:HasScepter() or not self:HeroHasUsableItemInInventory( hero, "item_refresher", false, false, false ) or not self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false, false )) then
 				razorult:SetLevel( 4 )
 			end
 		end
@@ -896,36 +956,36 @@ function VGMAR:OnThink()
 				plspiritlance:SetLevel( 6 )
 			elseif plspiritlance:GetLevel() == 6 and (hero:GetLevel() < 18 or not hero:HasScepter()) then
 				plspiritlance:SetLevel( 5 )
-			elseif plspiritlance:GetLevel() == 6 and hero:HasScepter() and hero:GetLevel() >= 20 and self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false ) and self:HeroHasUsableItemInInventory( hero, "item_aether_lens", false, false ) then
+			elseif plspiritlance:GetLevel() == 6 and hero:HasScepter() and hero:GetLevel() >= 20 and self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false, false ) and self:HeroHasUsableItemInInventory( hero, "item_aether_lens", false, false, false ) then
 				plspiritlance:SetLevel( 7 )
-			elseif plspiritlance:GetLevel() == 7 and not (hero:HasScepter() and self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false ) and self:HeroHasUsableItemInInventory( hero, "item_aether_lens", false, false )) then
+			elseif plspiritlance:GetLevel() == 7 and not (hero:HasScepter() and self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false, false ) and self:HeroHasUsableItemInInventory( hero, "item_aether_lens", false, false, false )) then
 				plspiritlance:SetLevel( 6 )
 			end
-			if pljuxtapose:GetLevel() == 3 and hero:GetLevel() >= 22 and (hero:HasScepter() or self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false )) then
+			if pljuxtapose:GetLevel() == 3 and hero:GetLevel() >= 22 and (hero:HasScepter() or self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false, false )) then
 				pljuxtapose:SetLevel( 4 )
-			elseif pljuxtapose:GetLevel() == 4 and not (hero:HasScepter() or self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false )) then
+			elseif pljuxtapose:GetLevel() == 4 and not (hero:HasScepter() or self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false, false )) then
 				pljuxtapose:SetLevel( 3 )
-			elseif pljuxtapose:GetLevel() == 4 and hero:GetLevel() == 25 and (hero:HasScepter() and self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false )) then
+			elseif pljuxtapose:GetLevel() == 4 and hero:GetLevel() == 25 and (hero:HasScepter() and self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false, false )) then
 				pljuxtapose:SetLevel( 5 )
-			elseif pljuxtapose:GetLevel() == 5 and not (hero:HasScepter() and hero:GetLevel() == 25 and self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false )) then
+			elseif pljuxtapose:GetLevel() == 5 and not (hero:HasScepter() and hero:GetLevel() == 25 and self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false, false )) then
 				pljuxtapose:SetLevel( 4 )
-			elseif pljuxtapose:GetLevel() == 5 and hero:HasScepter() and hero:GetLevel() == 25 and self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false ) and self:CountUsableItemsInHeroInventory( hero, "item_heart", false, false) >= 2 then
+			elseif pljuxtapose:GetLevel() == 5 and hero:HasScepter() and hero:GetLevel() == 25 and self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false, false ) and self:CountUsableItemsInHeroInventory( hero, "item_heart", false, false, false) >= 2 then
 				pljuxtapose:SetLevel( 6 )
-			elseif pljuxtapose:GetLevel() == 6 and not (hero:HasScepter() and hero:GetLevel() == 25 and self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false ) and (self:CountUsableItemsInHeroInventory( hero, "item_heart", true, false) >= 2)) then
+			elseif pljuxtapose:GetLevel() == 6 and not (hero:HasScepter() and hero:GetLevel() == 25 and self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false, false ) and (self:CountUsableItemsInHeroInventory( hero, "item_heart", true, false, false) >= 2)) then
 				pljuxtapose:SetLevel( 5 )
 			end
 			if pldoppelwalk:GetLevel() == 4 and hero:GetLevel() >= 15 then
 				pldoppelwalk:SetLevel( 5 )
-			elseif pldoppelwalk:GetLevel() == 5 and (hero:GetLevel() >= 20 or self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false )) then
+			elseif pldoppelwalk:GetLevel() == 5 and (hero:GetLevel() >= 20 or self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false, false )) then
 				pldoppelwalk:SetLevel( 6 )
-			elseif pldoppelwalk:GetLevel() == 6 and (hero:GetLevel() < 20 and not self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false )) then
+			elseif pldoppelwalk:GetLevel() == 6 and (hero:GetLevel() < 20 and not self:HeroHasUsableItemInInventory( hero, "item_octarine_core", false, false, false )) then
 				pldoppelwalk:SetLevel( 5 )
 			end
 			if plphantomedge:GetLevel() == 4 and hero:GetLevel() >= 20 then
 				plphantomedge:SetLevel( 5 )
-			elseif plphantomedge:GetLevel() == 5 and hero:GetLevel() >= 20 and self:HeroHasUsableItemInInventory( hero, "item_aether_lens", false, false ) then
+			elseif plphantomedge:GetLevel() == 5 and hero:GetLevel() >= 20 and self:HeroHasUsableItemInInventory( hero, "item_aether_lens", false, false, false ) then
 				plphantomedge:SetLevel( 6 )
-			elseif plphantomedge:GetLevel() == 6 and hero:GetLevel() >= 20 and not self:HeroHasUsableItemInInventory( hero, "item_aether_lens", false, false ) then
+			elseif plphantomedge:GetLevel() == 6 and hero:GetLevel() >= 20 and not self:HeroHasUsableItemInInventory( hero, "item_aether_lens", false, false, false ) then
 				plphantomedge:SetLevel( 5 )
 			end
 		end
@@ -1245,8 +1305,10 @@ function VGMAR:FilterDamage( filterTable )
 					self:UpdateBackdoorGroupTimer(bdplist[i].group)
 				end
 				if self.backdoorstatustable[buildingname] == true then
-					if filterTable["damage"] > bdplist[i].maxdamage then
-						filterTable["damage"] = bdplist[i].maxdamage
+					if attacker:GetTeamNumber() ~= victim:GetTeamNumber() then
+						if filterTable["damage"] > bdplist[i].maxdamage then
+							filterTable["damage"] = bdplist[i].maxdamage
+						end
 					end
 					return true
 				end
@@ -1256,7 +1318,7 @@ function VGMAR:FilterDamage( filterTable )
 	return true
 end
 
-function GetHerosCourier(hero)
+function VGMAR:GetHerosCourier(hero)
 	local couriers = Entities:FindAllByClassname("npc_dota_courier")
 	for i=1,#couriers do
 		if couriers[i]:GetTeamNumber() == hero:GetTeamNumber() then
@@ -1264,6 +1326,33 @@ function GetHerosCourier(hero)
 		end
 	end
 	return nil
+end
+
+function VGMAR:GetCourierBurstLevel( hero, teamnumber )
+	if hero ~= nil then
+		local courier = self:GetHerosCourier( hero )
+		if courier then
+			local courierburstability = courier:FindAbilityByName("courier_burst")
+			if courierburstability then
+				return courierburstability:GetLevel()
+			end
+		end
+	elseif hero == nil and teamnumber ~= nil then
+		local couriers = Entities:FindAllByClassname("npc_dota_courier")
+		if #couriers > 0 then
+			for i=1,#couriers do
+				if couriers[i]:GetTeamNumber() == teamnumber then
+					local courierburstability = couriers[i]:FindAbilityByName("courier_burst")
+					if courierburstability then
+						return courierburstability:GetLevel()
+					end
+				end
+			end
+		end
+	else
+		return 0
+	end
+	return 0
 end
 
 function VGMAR:ExecuteOrderFilter( filterTable )
@@ -1277,14 +1366,32 @@ function VGMAR:ExecuteOrderFilter( filterTable )
     local ability = EntIndexToHScript(filterTable.entindex_ability)
     local target = EntIndexToHScript(filterTable.entindex_target)
 	
+	--///////////////////////
+	--SecondCourierPrevention
+	--///////////////////////
 	if unit then
 		if unit:IsRealHero() then
 			if ability and ability:GetName() == "item_courier" then
-				if GetHerosCourier(unit) ~= nil then
+				if self:GetHerosCourier(unit) ~= nil then
 					self:RemoveNItemsInInventory(unit, "item_courier", 1)
+					SendOverheadEventMessage( nil, 0, unit, 100, nil )
 					unit:ModifyGold(100, false, 6)
 					return false
 				end
+			end
+		end
+	end
+	
+	--////////////////
+	--AutoCourierBurst
+	--////////////////
+	if unit and unit:GetClassname() == "npc_dota_courier" then
+		local burstability = unit:FindAbilityByName("courier_burst")
+		if burstability and burstability:GetCooldownTimeRemaining() == 0 then
+			if unit:GetTeamNumber() == 2 then
+				burstability:CastAbility()
+			elseif unit:GetTeamNumber() == 3 and burstability:GetLevel() > 2 then
+				burstability:CastAbility()
 			end
 		end
 	end
@@ -1382,7 +1489,7 @@ function VGMAR:OnGameStateChanged( keys )
 			SendToServerConsole("dota_bot_populate")
 			GameRules:GetGameModeEntity():SetThink(function()
 				Convars:SetBool("sv_cheats", true)
-				dprint("Times:Enabling Cheats")
+				dprint("Timer:Enabling Cheats")
 				SendToServerConsole("dota_bot_set_difficulty 3")
 				GameRules:GetGameModeEntity():SetBotThinkingEnabled(true)
 				end, DoUniqueString('setbotdiff'), 3)
@@ -1447,16 +1554,22 @@ function VGMAR:OnGameStateChanged( keys )
 				if self.couriergiven == false then
 					local heroes = HeroList:GetAllHeroes()
 					local radiantheroes = {}
-					for i=1,#heroes do
-						if heroes[i]:GetTeamNumber() == 2 then
-							table.insert(radiantheroes, heroes[i])
+					if #heroes > 0 then
+						for i=1,#heroes do
+							if heroes[i]:GetTeamNumber() == 2 then
+								table.insert(radiantheroes, heroes[i])
+							end
 						end
+					else
+						return 5.0
 					end
 					local luckyhero = radiantheroes[math.random(1, #radiantheroes)]
 					if luckyhero ~= nil then
 						luckyhero:AddItemByName("item_courier")
+						SendOverheadEventMessage(nil, 3, luckyhero, 100, nil)
 						self.couriergiven = true
-					else
+					end
+					if self.couriergiven == false then
 						return 5.0
 					end
 				end

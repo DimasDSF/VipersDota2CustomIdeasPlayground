@@ -2518,7 +2518,7 @@
 			"01"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"bonus_movement_speed"	"100"
+				"bonus_movement_speed"	"150"
 			}
 			"02"
 			{
@@ -3761,7 +3761,8 @@
 		"ItemShareability"				"ITEM_FULLY_SHAREABLE"
 		"ItemStockMax"					"1"
 		"ItemStockInitial"				"0"
-		"ItemStockTime"					"270.0"
+		"ItemStockTime"					"60.0"
+		"ItemInitialStockTime"			"270.0"
 		"ItemSupport"					"1"
 		"IsTempestDoubleClonable"		"0"
 	}
