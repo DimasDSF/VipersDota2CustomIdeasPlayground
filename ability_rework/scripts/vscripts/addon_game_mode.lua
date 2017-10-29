@@ -261,7 +261,11 @@ function VGMAR:HeroHasUsableItemInInventory( hero, item, mutedallowed, backpacka
 	if stashallowed ~= true and not hero:HasItemInInventory(item) then
 		return false
 	end
-	for i = 0, 14 do
+	local endslot = 8
+	if stashallowed == true then
+		endslot = 14
+	end
+	for i = 0, endslot do
 		local slotitem = hero:GetItemInSlot(i);
 		if slotitem then
 			if slotitem:GetName() == item then
@@ -297,7 +301,11 @@ function VGMAR:GetItemFromInventoryByName( hero, item, mutedallowed, backpackall
 	if stashallowed ~= true and not hero:HasItemInInventory(item) then
 		return nil
 	end
-	for i = 0, 14 do
+	local endslot = 8
+	if stashallowed == true then
+		endslot = 14
+	end
+	for i = 0, endslot do
 		local slotitem = hero:GetItemInSlot(i);
 		if slotitem then
 			if slotitem:GetName() == item then
@@ -334,7 +342,11 @@ function VGMAR:CountUsableItemsInHeroInventory( hero, item, mutedallowed, backpa
 		return 0
 	end
 	local itemcount = 0
-	for i = 0, 14 do
+	local endslot = 8
+	if stashallowed == true then
+		endslot = 14
+	end
+	for i = 0, endslot do
 		local slotitem = hero:GetItemInSlot(i);
 		if slotitem then
 			if slotitem:GetName() == item then
@@ -400,7 +412,11 @@ end
 
 function VGMAR:GetHeroFreeInventorySlots( hero, backpackallowed, stashallowed )
 	local slotcount = 0
-	for i = 0, 14, 1 do
+	local endslot = 8
+	if stashallowed == true then
+		endslot = 14
+	end
+	for i = 0, endslot, 1 do
 		if hero:GetItemInSlot(i) == nil then
 			if i <= 5 then
 				slotcount = slotcount + 1
