@@ -324,6 +324,39 @@
 			}
 		}
 	}
+	
+	//============================
+	//============================
+	// VGMAR:Custom Util Abilities
+	//============================
+	//============================
+	
+	//=================================================================================================================
+	// VGMAR: Venomancer: Plague Ward: Destroy
+	//=================================================================================================================
+	"vgmar_util_plague_ward_destroy"
+	{
+		// General
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_NOT_LEARNABLE | DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_IMMEDIATE"
+		"BaseClass"						"broodmother_spin_web_destroy"
+		"AbilityTextureName" 			"venomancer_plague_ward"
+		"MaxLevel"						"1"
+
+		// Casting
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityCastPoint"				"0"
+		
+		// Time		
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityCooldown"				"0"
+	
+		// Cost
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityManaCost"				"0"
+	}
+	
+	
 	//============================
 	//============================
 	// VGMAR:ITEMABILITIES Section
@@ -876,6 +909,24 @@
 
 		"Modifiers" {
 			"modifier_vgmar_i_deathskiss_visual" {
+				"Passive" "1"
+				"IsHidden" "0"
+			}
+		}
+	}
+	//=================================================================================================================
+	// VGMAR: Courier: Upgrade: Level Visual
+	//=================================================================================================================
+	"vgmar_util_courier_level"
+	{
+		"BaseClass" "ability_datadriven"
+		"AbilityBehavior" "DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN | DOTA_ABILITY_BEHAVIOR_NOT_LEARNABLE"
+		"AbilityTextureName" "courier_burst"
+		"SpellImmunityType" "SPELL_IMMUNITY_ENEMIES_YES"
+		"MaxLevel" "1"
+
+		"Modifiers" {
+			"modifier_vgmar_util_courier_level" {
 				"Passive" "1"
 				"IsHidden" "0"
 			}

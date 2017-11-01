@@ -2,6 +2,7 @@ local RADIANT_TEAM_MAX_PLAYERS = 1
 local DIRE_TEAM_MAX_PLAYERS = 8
 local RUNE_SPAWN_TIME = 120
 local VGMAR_DEBUG = false
+local VGMAR_BOT_FILL = false
 --///////////////////////////////////////////
 --/////////////WORKSHOP_FUCKOVER/////////////
 --Change to true before releasing to workshop
@@ -30,6 +31,10 @@ function VGMAR:Init()
 	self.istimescalereset = 0
 	self.direcourieruplevel = 1
 	self.radiantcourieruplevel = 1
+	self.radiantcourierlvldown = false
+	self.direcourierlvldown = false
+	self.radiantcourierlvlup = false
+	self.direcourierlvlup = false
 	self.lastrunetype = -1
 	self.currunenum = 1
 	self.removedrunenum = math.random(1,2)
@@ -445,15 +450,16 @@ function VGMAR:OnItemPickedUp(keys)
 			self:RemoveNItemsInInventory(heroEntity, "item_ultimate_scepter", 2)
 			heroEntity:AddNewModifier(heroEntity, nil, 'modifier_item_ultimate_scepter_consumed', { bonus_all_stats = 10, bonus_health = 175, bonus_mana = 175 })
 		end
+		--##Obsolete707
 		--Diffusal Blade 2+ Upgrade
-		if self:HeroHasUsableItemInInventory( heroEntity, "item_recipe_diffusal_blade", false, false, false) and self:HeroHasUsableItemInInventory( heroEntity, "item_diffusal_blade_2", false, false, false)  then
+		--[[if self:HeroHasUsableItemInInventory( heroEntity, "item_recipe_diffusal_blade", false, false, false) and self:HeroHasUsableItemInInventory( heroEntity, "item_diffusal_blade_2", false, false, false)  then
 			local diffbladeitem = self:GetItemFromInventoryByName( heroEntity, "item_diffusal_blade_2", false, false, false )
 			local diffbladerecipe = self:GetItemFromInventoryByName( heroEntity, "item_recipe_diffusal_blade", false, false, false )
 			if diffbladeitem ~= nil and diffbladeitem:GetCurrentCharges() < diffbladeitem:GetInitialCharges() then
 				heroEntity:RemoveItem(diffbladerecipe)
 				diffbladeitem:SetCurrentCharges(diffbladeitem:GetInitialCharges())
 			end
-		end
+		end--]]
 		--Bloodstone recharge
 		if self:HeroHasUsableItemInInventory(heroEntity, "item_bloodstone", false, false, false) and self:CountUsableItemsInHeroInventory(heroEntity, "item_recipe_bloodstone", false, true, false) >= 3 then
 			self:RemoveNItemsInInventory(heroEntity, "item_recipe_bloodstone", 3)
@@ -490,7 +496,7 @@ function VGMAR:IsHeroBotControlled(hero)
 	return false
 end
 
-function VGMAR:OnThink()	
+function VGMAR:OnThink()
 	if GameRules:State_Get() == DOTA_GAMERULES_STATE_CUSTOM_GAME_SETUP then
 		GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_GOODGUYS, PlayerResource:GetPlayerCount())
 		for playerID=0,PlayerResource:GetPlayerCount() do
@@ -504,7 +510,6 @@ function VGMAR:OnThink()
 		end
 		GameRules:LockCustomGameSetupTeamAssignment(true)
 	end
-
 	if GameRules:State_Get() == DOTA_GAMERULES_STATE_GAME_IN_PROGRESS then
 		for i=0,HeroList:GetHeroCount() do
 			local heroent = HeroList:GetHero(i)
@@ -576,7 +581,7 @@ function VGMAR:OnThink()
 				backpack = true,
 				preventedhero = "npc_dota_hero_troll_warlord"},
 			{spell = "aegis_king_reincarnation",
-				items = {itemnames = {"item_stout_shield", "item_poor_mans_shield", "item_vanguard", "item_buckler", "item_aegis"}, itemnum = {1, 1, 1, 1, 1}},
+				items = {itemnames = {"item_stout_shield", "item_vanguard", "item_buckler", "item_aegis"}, itemnum = {1, 1, 1, 1}},
 				isconsumable = true,
 				usesmultiple = false,
 				backpack = true,
@@ -762,6 +767,24 @@ function VGMAR:OnThink()
 					self.direcourierup4given = true
 				end
 			end
+			--//////////////////
+			--CourierLevelVisual
+			--//////////////////
+			local couriers = Entities:FindAllByClassname("npc_dota_courier")
+			for i=1,#couriers do
+				if not couriers[i]:HasModifier("modifier_vgmar_util_courier_level") then
+					if couriers[i]:FindAbilityByName("vgmar_util_courier_level") ~= nil then
+						local spellshieldcooldownability = couriers[i]:FindAbilityByName("vgmar_util_courier_level")
+						spellshieldcooldownability:ApplyDataDrivenModifier(couriers[i], couriers[i], "modifier_vgmar_util_courier_level", {})
+					else
+						local spellshieldcooldownability = couriers[i]:AddAbility("vgmar_util_courier_level")
+						spellshieldcooldownability:ApplyDataDrivenModifier(couriers[i], couriers[i], "modifier_vgmar_util_courier_level", {})
+					end
+				end
+				if couriers[i]:FindAbilityByName("courier_burst"):GetLevel() > 0 then
+					couriers[i]:SetModifierStackCount("modifier_vgmar_util_courier_level", couriers[i], couriers[i]:FindAbilityByName("courier_burst"):GetLevel())
+				end
+			end
 		end
 		--//////////////////
 		--BackDoorProtection
@@ -795,6 +818,10 @@ function VGMAR:OnThink()
 		--///////////////////
 		--CustomItemsReminder
 		--///////////////////
+		
+		--[[
+		Get Time as (-80 + num from itemabilitytable * 3s)
+		--]]
 		local customitemreminderlist = {
 			[-90] = "<font color='honeydew'>Remember, this gamemode has multiple scripted item abilities</font>",
 			[-85] = "<font color='honeydew'>List of custom abilities:</font>",
@@ -828,24 +855,55 @@ function VGMAR:OnThink()
 			end
 		end
 		
+		--////////////////////
+		--CourierBurstLevelFix
+		--////////////////////
+		if self.radiantcourierlvlup == false or self.direcourierlvlup == false then
+			local couriers = Entities:FindAllByClassname("npc_dota_courier")
+			for i=1,#couriers do
+				if GameRules:State_Get() == DOTA_GAMERULES_STATE_PRE_GAME or self:TimeIsLaterThan( 3, 0 ) == false then
+					if couriers[i]:GetTeamNumber() == 2 and self.radiantcourierlvldown == false then
+						couriers[i]:FindAbilityByName("courier_burst"):SetLevel(0)
+						self.radiantcourierlvldown = true
+					elseif couriers[i]:GetTeamNumber() == 3 and self.direcourierlvldown == false then
+						couriers[i]:FindAbilityByName("courier_burst"):SetLevel(0)
+						self.direcourierlvldown = true
+					end
+				elseif self:TimeIsLaterThan( 3, 0 ) and GameRules:State_Get() > DOTA_GAMERULES_STATE_PRE_GAME then
+					if couriers[i]:GetTeamNumber() == 2 and self.radiantcourierlvlup == false then
+						couriers[i]:FindAbilityByName("courier_burst"):SetLevel( 1 )
+						self.radiantcourierlvlup = true
+					elseif couriers[i]:GetTeamNumber() == 3 and self.direcourierlvlup == false then
+						couriers[i]:FindAbilityByName("courier_burst"):SetLevel( 1 )
+						self.direcourierlvlup = true
+					end
+					self.radiantcourierlvldown = true
+					self.direcourierlvldown = true
+				end
+			end
+		end
+		
+		--##Obsolete707
+		
+		--Full Rework to Table Script Required
 		--///////////////////////////
 		--RealTime Hero Modifications
 		--///////////////////////////
 		
 		--Building a list of heroes
-		local herolistnightstalker = Entities:FindAllByClassname( "npc_dota_hero_night_stalker" )
+		--[[local herolistnightstalker = Entities:FindAllByClassname( "npc_dota_hero_night_stalker" )
 		local herolistluna = Entities:FindAllByClassname( "npc_dota_hero_luna" )
 		local herolistwinterwyvern = Entities:FindAllByClassname( "npc_dota_hero_winter_wyvern" )
-		local herolistdrow = Entities:FindAllByClassname( "npc_dota_hero_drow_ranger" )
+		local herolistdrow = Entities:FindAllByClassname( "npc_dota_hero_drow_ranger" )--]]
 		local herolistriki = Entities:FindAllByClassname( "npc_dota_hero_riki" )
-		local herolistam = Entities:FindAllByClassname( "npc_dota_hero_antimage" )
+		--[[local herolistam = Entities:FindAllByClassname( "npc_dota_hero_antimage" )
 		local herolistrazor = Entities:FindAllByClassname( "npc_dota_hero_razor" )
 		local herolistphantomlancer = Entities:FindAllByClassname( "npc_dota_hero_phantom_lancer" )
-		local herolistviper = Entities:FindAllByClassname( "npc_dota_hero_viper" )
+		local herolistviper = Entities:FindAllByClassname( "npc_dota_hero_viper" )--]]
 		
 		--Checking conditions for automatic Ability leveling
 		--Nightstalker
-		for i, hero in ipairs(herolistnightstalker) do
+		--[[for i, hero in ipairs(herolistnightstalker) do
 			local nsvoid = hero:FindAbilityByName( "night_stalker_void" )
 			local nshunterinthenight = hero:FindAbilityByName( "night_stalker_hunter_in_the_night" )
 			local nsdarkeness = hero:FindAbilityByName( "night_stalker_darkness" )
@@ -938,7 +996,7 @@ function VGMAR:OnThink()
 					drowult:SetLevel( 7 )
 				end
 			end
-		end
+		end--]]
 		
 		--Riki
 		for i, hero in ipairs(herolistriki) do
@@ -973,7 +1031,7 @@ function VGMAR:OnThink()
 		end
 		
 		--Antimage
-		for i, hero in ipairs(herolistam) do
+		--[[for i, hero in ipairs(herolistam) do
 			local antimagemanaburn = hero:FindAbilityByName( "antimage_mana_break" )
 			local antimageshield = hero:FindAbilityByName( "antimage_spell_shield" )
 			local antimagevoid = hero:FindAbilityByName( "antimage_mana_void" )
@@ -1137,7 +1195,7 @@ function VGMAR:OnThink()
 			elseif viperstrike:GetLevel() == 6 and (hero:GetLevel() < 25 or not hero:HasScepter()) then
 				viperstrike:SetLevel( 5 )
 			end
-		end
+		end--]]
 		
 		--///////////////////////////
 		--END
@@ -1155,7 +1213,7 @@ function VGMAR:OnNPCSpawned( event )
 	end
 	
 	if spawnedUnit:GetClassname() == "npc_dota_venomancer_plagueward" then
-		local destroySpell = spawnedUnit:FindAbilityByName( "broodmother_spin_web_destroy" )
+		local destroySpell = spawnedUnit:FindAbilityByName( "vgmar_util_plague_ward_destroy" )
 		if destroySpell then
 			destroySpell:SetLevel( 1 )
 		end
@@ -1168,6 +1226,26 @@ function VGMAR:OnPlayerLearnedAbility( keys )
 	
 	local playerhero = player:GetAssignedHero()
 	
+	--##Obsolete707
+	
+	--FullRewriteToTableForm
+	--[[
+	local blockedlvlupabilities = {
+	{spell = "hero_name__spell_name", maxmanuallevel = 4},
+	...	
+	}
+	
+	for i=1,#blockedlvlupabilities do
+		if abilityname == blockedlvlupabilities[i].spell then
+			local ability = playerhero:FindAbilityByName(abilityname)
+			local abilitylevel = ability:GetLevel()
+			if abilitylevel > blockedlvlupabilities[i].maxmanuallevel then
+				playerhero:SetAbilityPoints(playerhero:GetAbilityPoints() + 1)
+				ability:SetLevel( ability:GetLevel() - 1 )
+			end
+		end
+	end
+	--]]
 	--Building ability list for modification
 	--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	--Probably a better solution would be to build those according to existing heroes
@@ -1504,6 +1582,7 @@ function VGMAR:GetHerosCourier(hero)
 	return nil
 end
 
+--##Obsolete707
 function VGMAR:GetCourierBurstLevel( hero, teamnumber )
 	if hero ~= nil then
 		local courier = self:GetHerosCourier( hero )
@@ -1554,6 +1633,12 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 					unit:ModifyGold(100, false, 6)
 					return false
 				end
+			end
+		end
+		if unit:GetClassname() == "npc_dota_venomancer_plagueward" then
+			if ability and ability:GetName() == "vgmar_util_plague_ward_destroy" then
+				unit:ForceKill(false)
+				return false
 			end
 		end
 	end
@@ -1638,6 +1723,7 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 		end
 	end
 	
+	--##Obsolete707
 	--////////////////
 	--AutoCourierBurst
 	--////////////////
@@ -1664,7 +1750,9 @@ function VGMAR:OnGameStateChanged( keys )
 		if IsServer() then
 			Convars:SetBool("sv_cheats", true)
 			dprint("Instant:Enabling Cheats")
-			SendToServerConsole("dota_bot_populate")
+			if VGMAR_BOT_FILL == true then
+				SendToServerConsole("dota_bot_populate")
+			end
 			GameRules:GetGameModeEntity():SetThink(function()
 				Convars:SetBool("sv_cheats", true)
 				dprint("Timer:Enabling Cheats")
@@ -1702,7 +1790,9 @@ function VGMAR:OnGameStateChanged( keys )
 		
 		Convars:SetBool("sv_cheats", true)
 		for f=0,100 do
-			SendToServerConsole("dota_bot_populate")
+			if VGMAR_BOT_FILL == true then
+				SendToServerConsole("dota_bot_populate")
+			end
 			SendToServerConsole("dota_bot_set_difficulty 3")
 		end
 		Convars:SetBool("dota_bot_disable", false)
