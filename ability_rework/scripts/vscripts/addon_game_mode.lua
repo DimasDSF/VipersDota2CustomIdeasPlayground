@@ -109,9 +109,8 @@ local bdplist = {
 			"good_filler_3",
 			"good_filler_4",
 			"good_filler_5",
-			"good_healer_2",
-			"good_healer_3",
-			"good_healer_4",
+			"good_filler_6",
+			"good_filler_7"
 			},
 		activationtime = 25,
 		protectionholder = "dota_goodguys_fort",
@@ -137,9 +136,8 @@ local bdplist = {
 			"bad_filler_3",
 			"bad_filler_4",
 			"bad_filler_5",
-			"bad_healer_2",
-			"bad_healer_3",
-			"bad_healer_4",
+			"bad_filler_6",
+			"bad_filler_7"
 			},
 		activationtime = 25,
 		protectionholder = "dota_badguys_fort",
@@ -863,18 +861,22 @@ function VGMAR:OnThink()
 			for i=1,#couriers do
 				if GameRules:State_Get() == DOTA_GAMERULES_STATE_PRE_GAME or self:TimeIsLaterThan( 3, 0 ) == false then
 					if couriers[i]:GetTeamNumber() == 2 and self.radiantcourierlvldown == false then
-						couriers[i]:FindAbilityByName("courier_burst"):SetLevel(0)
+						couriers[i]:FindAbilityByName("courier_burst"):SetLevel( 0 )
+						couriers[i]:FindAbilityByName("courier_shield"):SetLevel( 0 )
 						self.radiantcourierlvldown = true
 					elseif couriers[i]:GetTeamNumber() == 3 and self.direcourierlvldown == false then
-						couriers[i]:FindAbilityByName("courier_burst"):SetLevel(0)
+						couriers[i]:FindAbilityByName("courier_burst"):SetLevel( 0 )
+						couriers[i]:FindAbilityByName("courier_shield"):SetLevel( 0 )
 						self.direcourierlvldown = true
 					end
 				elseif self:TimeIsLaterThan( 3, 0 ) and GameRules:State_Get() > DOTA_GAMERULES_STATE_PRE_GAME then
 					if couriers[i]:GetTeamNumber() == 2 and self.radiantcourierlvlup == false then
 						couriers[i]:FindAbilityByName("courier_burst"):SetLevel( 1 )
+						couriers[i]:FindAbilityByName("courier_shield"):SetLevel( 1 )
 						self.radiantcourierlvlup = true
 					elseif couriers[i]:GetTeamNumber() == 3 and self.direcourierlvlup == false then
 						couriers[i]:FindAbilityByName("courier_burst"):SetLevel( 1 )
+						couriers[i]:FindAbilityByName("courier_shield"):SetLevel( 1 )
 						self.direcourierlvlup = true
 					end
 					self.radiantcourierlvldown = true
@@ -1582,7 +1584,6 @@ function VGMAR:GetHerosCourier(hero)
 	return nil
 end
 
---##Obsolete707
 function VGMAR:GetCourierBurstLevel( hero, teamnumber )
 	if hero ~= nil then
 		local courier = self:GetHerosCourier( hero )
@@ -1722,16 +1723,17 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 			end
 		end
 	end
-	
-	--##Obsolete707
+
 	--////////////////
 	--AutoCourierBurst
 	--////////////////
 	if unit and unit:GetClassname() == "npc_dota_courier" then
 		local burstability = unit:FindAbilityByName("courier_burst")
-		if unit:GetTeamNumber() == 2 and ability and ability:GetName() == "courier_take_stash_and_transfer_items" then
+		if unit:GetTeamNumber() == 2 and ability and (ability:GetName() == "courier_take_stash_and_transfer_items" or ability:GetName() == "courier_shield" or ability:GetName() == "courier_burst") then
 			if burstability and burstability:GetCooldownTimeRemaining() == 0 then
 				burstability:CastAbility()
+				unit:FindAbilityByName("courier_shield"):EndCooldown()
+				unit:FindAbilityByName("courier_shield"):StartCooldown(burstability:GetCooldown(burstability:GetLevel() - 1))
 			end
 		elseif unit:GetTeamNumber() == 3 and burstability:GetLevel() > 2 then
 			if burstability and burstability:GetCooldownTimeRemaining() == 0 then
