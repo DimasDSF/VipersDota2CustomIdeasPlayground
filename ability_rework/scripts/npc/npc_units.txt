@@ -4755,7 +4755,7 @@
 		"MinimapIcon"					"minimap_siege"
 		"MinimapIconSize"				"350"
 		"ModelScale" 					".65"
-		"Level"						"4"
+		"Level"						"1"
 		"CanBeDominated"				"1"
 		
 		// Abilities
@@ -4850,7 +4850,7 @@
 		"MinimapIcon"					"minimap_siege"
 		"MinimapIconSize"				"350"
 		"ModelScale" 					".65"
-		"Level"						"4"
+		"Level"						"2"
 		"CanBeDominated"				"1"
 		
 		// Abilities
@@ -4945,7 +4945,7 @@
 		"MinimapIcon"					"minimap_siege"
 		"MinimapIconSize"				"350"
 		"ModelScale" 					".65"
-		"Level"						"4"
+		"Level"						"3"
 		"CanBeDominated"				"1"
 		
 		// Abilities
@@ -5040,7 +5040,7 @@
 		"MinimapIcon"					"minimap_siege"
 		"MinimapIconSize"				"250"
 		"ModelScale" 					".80"
-		"Level"						"4"
+		"Level"						"1"
 		"CanBeDominated"				"1"
 		
 		// Abilities
@@ -5135,7 +5135,7 @@
 		"MinimapIcon"					"minimap_siege"
 		"MinimapIconSize"				"250"
 		"ModelScale" 					".80"
-		"Level"						"4"
+		"Level"						"2"
 		"CanBeDominated"				"1"
 		
 		// Abilities
@@ -5230,7 +5230,7 @@
 		"MinimapIcon"					"minimap_siege"
 		"MinimapIconSize"				"250"
 		"ModelScale" 					".80"
-		"Level"						"4"
+		"Level"						"3"
 		"CanBeDominated"				"1"
 		
 		// Abilities

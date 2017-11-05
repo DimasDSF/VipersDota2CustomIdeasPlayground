@@ -357,6 +357,49 @@
 	}
 	
 	
+	//==============================
+	// VGMAR: Custom Creep Abilities
+	//==============================
+	
+	//=================================================================================================================
+	// VGMAR: Catapult: Faceless Void: TimeLock
+	//=================================================================================================================
+	"vgmar_c_siegetimelock"
+	{
+		// General
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_NOT_LEARNABLE"
+		"SpellDispellableType"			"SPELL_DISPELLABLE_NO"
+		"BaseClass"						"faceless_void_time_lock"
+		"MaxLevel"						"3"
+		
+		// Special
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"				"FIELD_FLOAT"
+				"duration"				"1.0"
+			}
+			"02"
+			{
+				"var_type"				"FIELD_FLOAT"
+				"duration_creep"		"2.0"
+			}
+			"03"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"chance_pct"			"100"
+			}
+			"04"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"bonus_damage"			"25 50 75"
+			}
+		}
+	}
+	
 	//============================
 	//============================
 	// VGMAR:ITEMABILITIES Section
@@ -878,42 +921,6 @@
 	//====================
 	//VisualAbilityModifiers
 	//====================
-	//=================================================================================================================
-	// VGMAR: Linken: Antimage: SpellShield Cooldown Modifier Ability
-	//=================================================================================================================
-	"vgmar_i_spellshield_cooldown"
-	{
-		"BaseClass" "ability_datadriven"
-		"AbilityBehavior" "DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN | DOTA_ABILITY_BEHAVIOR_NOT_LEARNABLE"
-		"AbilityTextureName" "antimage_spell_shield"
-		"SpellImmunityType" "SPELL_IMMUNITY_ENEMIES_YES"
-		"MaxLevel" "1"
-
-		"Modifiers" {
-			"modifier_vgmar_i_spellshield_cooldown" {
-				"Passive" "1"
-				"IsHidden" "0"
-			}
-		}
-	}
-	//=================================================================================================================
-	// VGMAR: Rapier: Phantom Assassin: DeathsKiss Visual
-	//=================================================================================================================
-	"vgmar_i_deathskiss_visual"
-	{
-		"BaseClass" "ability_datadriven"
-		"AbilityBehavior" "DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN | DOTA_ABILITY_BEHAVIOR_NOT_LEARNABLE"
-		"AbilityTextureName" "phantom_assassin_coup_de_grace"
-		"SpellImmunityType" "SPELL_IMMUNITY_ENEMIES_YES"
-		"MaxLevel" "1"
-
-		"Modifiers" {
-			"modifier_vgmar_i_deathskiss_visual" {
-				"Passive" "1"
-				"IsHidden" "0"
-			}
-		}
-	}
 	//=================================================================================================================
 	// VGMAR: Courier: Upgrade: Level Visual
 	//=================================================================================================================
