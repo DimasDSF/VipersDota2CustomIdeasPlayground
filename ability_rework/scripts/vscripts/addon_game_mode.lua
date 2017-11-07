@@ -91,7 +91,7 @@ function VGMAR:Init()
 	ListenToGameEvent( "npc_spawned", Dynamic_Wrap( VGMAR, "OnNPCSpawned" ), self )
 	ListenToGameEvent( "dota_player_learned_ability", Dynamic_Wrap( VGMAR, "OnPlayerLearnedAbility" ), self)
 	ListenToGameEvent( "game_rules_state_change", Dynamic_Wrap( VGMAR, 'OnGameStateChanged' ), self )
-	ListenToGameEvent( "dota_item_picked_up", Dynamic_Wrap( VGMAR, 'OnItemPickedUp' ), self )
+	--ListenToGameEvent( "dota_item_picked_up", Dynamic_Wrap( VGMAR, 'OnItemPickedUp' ), self )
 	ListenToGameEvent( "dota_tower_kill", Dynamic_Wrap( VGMAR, 'OnTowerKilled' ), self )
 	--ListenToGameEvent( "dota_player_used_ability", Dynamic_Wrap( VGMAR, 'OnPlayerUsedAbility' ), self )
 	Convars:RegisterConvar('vgmar_devmode', "0", "Set to 1 to show debug info.  Set to 0 to disable.", 0)
@@ -270,6 +270,13 @@ function PreGameSpeed()
 		return 8.0
 	end
 	return 2.0
+end
+
+function VGMAR:DisplayClientError(pid, message)
+    local player = PlayerResource:GetPlayer(pid)
+    if player then
+        CustomGameEventManager:Send_ServerToPlayer(player, "VGMARDisplayError", {message=message})
+    end
 end
 
 function VGMAR:FilterRuneSpawn( filterTable )
@@ -495,41 +502,17 @@ function VGMAR:GetHeroFreeInventorySlots( hero, backpackallowed, stashallowed )
 	return slotcount
 end
 
+--[[
 function VGMAR:OnItemPickedUp(keys)
 	local heroEntity = EntIndexToHScript(keys.HeroEntityIndex or keys.UnitEntityIndex)
 	local itemEntity = EntIndexToHScript(keys.ItemEntityIndex)
 	local player = PlayerResource:GetPlayer(keys.PlayerID)
 	local itemname = keys.itemname
 	
-	--//////////////////////////////
-	--Consumable Items System
-	--//////////////////////////////
 	if heroEntity:IsRealHero() and not heroEntity:IsCourier() then
-		--Alchemist-less Scepter consumption
-		if self:CountUsableItemsInHeroInventory( heroEntity, "item_ultimate_scepter", false, true, false) >= 2 and not heroEntity:FindModifierByName("modifier_item_ultimate_scepter_consumed") then
-			self:RemoveNItemsInInventory(heroEntity, "item_ultimate_scepter", 2)
-			heroEntity:AddNewModifier(heroEntity, nil, 'modifier_item_ultimate_scepter_consumed', { bonus_all_stats = 10, bonus_health = 175, bonus_mana = 175 })
-		end
-		--##Obsolete707
-		--Diffusal Blade 2+ Upgrade
-		--[[if self:HeroHasUsableItemInInventory( heroEntity, "item_recipe_diffusal_blade", false, false, false) and self:HeroHasUsableItemInInventory( heroEntity, "item_diffusal_blade_2", false, false, false)  then
-			local diffbladeitem = self:GetItemFromInventoryByName( heroEntity, "item_diffusal_blade_2", false, false, false )
-			local diffbladerecipe = self:GetItemFromInventoryByName( heroEntity, "item_recipe_diffusal_blade", false, false, false )
-			if diffbladeitem ~= nil and diffbladeitem:GetCurrentCharges() < diffbladeitem:GetInitialCharges() then
-				heroEntity:RemoveItem(diffbladerecipe)
-				diffbladeitem:SetCurrentCharges(diffbladeitem:GetInitialCharges())
-			end
-		end--]]
-		--Bloodstone recharge
-		if self:HeroHasUsableItemInInventory(heroEntity, "item_bloodstone", false, false, false) and self:CountUsableItemsInHeroInventory(heroEntity, "item_recipe_bloodstone", false, true, false) >= 3 then
-			self:RemoveNItemsInInventory(heroEntity, "item_recipe_bloodstone", 3)
-			local bloodstone = self:GetItemFromInventoryByName( heroEntity, "item_bloodstone", false, false, false )
-			if bloodstone ~= nil then
-				bloodstone:SetCurrentCharges(bloodstone:GetCurrentCharges() + 24)
-			end
-		end
 	end
 end
+--]]
 
 function VGMAR:OnTowerKilled( keys )
 	local switchAI = (RandomInt(1,3))
@@ -605,10 +588,73 @@ function VGMAR:OnThink()
 						end
 					end--]]
 				end
-			--//////////////////////
-			--Passive Item Abilities
-			--//////////////////////
-			--Items For Spells Table
+				
+				--//////////////////
+				--AbilityAutoUpgrade
+				--//////////////////
+				local heroname = heroent:GetName()
+				--AbilityAutoUpgradeTable
+				local heroautoabilityuplist = {
+					["npc_dota_hero_riki"] = {
+						spells = {"riki_smoke_screen",
+							"riki_blink_strike", 
+							"riki_permanent_invisibility", 
+							"riki_tricks_of_the_trade"},
+						levelup = {
+							{[5] = heroent:GetLevel() >= 22},
+							{[5] = heroent:GetLevel() >= 20},
+							{[5] = heroent:GetLevel() >= 15 or heroent:HasScepter(), [6] = heroent:HasScepter() and heroent:GetLevel() >= 15},
+							{[4] = heroent:HasScepter() or heroent:GetLevel() == 25, [5] = heroent:HasScepter() and heroent:GetLevel() == 25}
+						}
+					},
+				}
+				if heroautoabilityuplist[heroname] ~= nil then
+					for j=1,#heroautoabilityuplist[heroname].spells do
+						local ability = heroent:FindAbilityByName(heroautoabilityuplist[heroname].spells[j])
+						if ability then
+							local ablvl = ability:GetLevel()
+							if heroautoabilityuplist[heroname].levelup[j][ablvl] ~= nil and heroautoabilityuplist[heroname].levelup[j][ablvl] == false then
+								ability:SetLevel( ability:GetLevel() - 1 )
+							elseif heroautoabilityuplist[heroname].levelup[j][ablvl + 1] ~= nil and heroautoabilityuplist[heroname].levelup[j][ablvl + 1] == true then
+								ability:SetLevel( ability:GetLevel() + 1 )
+							end
+						end
+					end
+				end
+				
+				--//////////////////////////////
+				--Consumable Items System
+				--//////////////////////////////
+				if heroent:IsRealHero() and not heroent:IsCourier() then
+					--Alchemist-less Scepter consumption
+					if self:CountUsableItemsInHeroInventory( heroent, "item_ultimate_scepter", false, true, false) >= 2 and not heroent:FindModifierByName("modifier_item_ultimate_scepter_consumed") then
+						self:RemoveNItemsInInventory(heroent, "item_ultimate_scepter", 2)
+						heroent:AddNewModifier(heroent, nil, 'modifier_item_ultimate_scepter_consumed', { bonus_all_stats = 10, bonus_health = 175, bonus_mana = 175 })
+					end
+					--##Obsolete707
+					--Diffusal Blade 2+ Upgrade
+					--[[if self:HeroHasUsableItemInInventory( heroent, "item_recipe_diffusal_blade", false, false, false) and self:HeroHasUsableItemInInventory( heroent, "item_diffusal_blade_2", false, false, false)  then
+						local diffbladeitem = self:GetItemFromInventoryByName( heroent, "item_diffusal_blade_2", false, false, false )
+						local diffbladerecipe = self:GetItemFromInventoryByName( heroent, "item_recipe_diffusal_blade", false, false, false )
+						if diffbladeitem ~= nil and diffbladeitem:GetCurrentCharges() < diffbladeitem:GetInitialCharges() then
+							heroent:RemoveItem(diffbladerecipe)
+							diffbladeitem:SetCurrentCharges(diffbladeitem:GetInitialCharges())
+						end
+					end--]]
+					--Bloodstone recharge
+					if self:HeroHasUsableItemInInventory(heroent, "item_bloodstone", false, false, false) and self:CountUsableItemsInHeroInventory(heroent, "item_recipe_bloodstone", false, true, false) >= 3 then
+						self:RemoveNItemsInInventory(heroent, "item_recipe_bloodstone", 3)
+						local bloodstone = self:GetItemFromInventoryByName( heroent, "item_bloodstone", false, false, false )
+						if bloodstone ~= nil then
+							bloodstone:SetCurrentCharges(bloodstone:GetCurrentCharges() + 24)
+						end
+					end
+				end
+				
+				--//////////////////////
+				--Passive Item Abilities
+				--//////////////////////
+				--Items For Spells Table
 				local itemlistforspell = {
 			{spell = "vgmar_i_goblins_greed",
 				items = {itemnames = {"item_hand_of_midas"}, itemnum = {1}},
@@ -930,25 +976,25 @@ function VGMAR:OnThink()
 		
 		--##Obsolete707
 		
-		--Full Rework to Table Script Required
+		--Full Rework to Table Script Required		
 		--///////////////////////////
 		--RealTime Hero Modifications
 		--///////////////////////////
 		
-		--Building a list of heroes
-		--[[local herolistnightstalker = Entities:FindAllByClassname( "npc_dota_hero_night_stalker" )
+		--[[--Building a list of heroes
+		local herolistnightstalker = Entities:FindAllByClassname( "npc_dota_hero_night_stalker" )
 		local herolistluna = Entities:FindAllByClassname( "npc_dota_hero_luna" )
 		local herolistwinterwyvern = Entities:FindAllByClassname( "npc_dota_hero_winter_wyvern" )
-		local herolistdrow = Entities:FindAllByClassname( "npc_dota_hero_drow_ranger" )--]]
+		local herolistdrow = Entities:FindAllByClassname( "npc_dota_hero_drow_ranger" )
 		local herolistriki = Entities:FindAllByClassname( "npc_dota_hero_riki" )
-		--[[local herolistam = Entities:FindAllByClassname( "npc_dota_hero_antimage" )
+		local herolistam = Entities:FindAllByClassname( "npc_dota_hero_antimage" )
 		local herolistrazor = Entities:FindAllByClassname( "npc_dota_hero_razor" )
 		local herolistphantomlancer = Entities:FindAllByClassname( "npc_dota_hero_phantom_lancer" )
 		local herolistviper = Entities:FindAllByClassname( "npc_dota_hero_viper" )--]]
 		
-		--Checking conditions for automatic Ability leveling
+		--[[--Checking conditions for automatic Ability leveling
 		--Nightstalker
-		--[[for i, hero in ipairs(herolistnightstalker) do
+		for i, hero in ipairs(herolistnightstalker) do
 			local nsvoid = hero:FindAbilityByName( "night_stalker_void" )
 			local nshunterinthenight = hero:FindAbilityByName( "night_stalker_hunter_in_the_night" )
 			local nsdarkeness = hero:FindAbilityByName( "night_stalker_darkness" )
@@ -1041,7 +1087,7 @@ function VGMAR:OnThink()
 					drowult:SetLevel( 7 )
 				end
 			end
-		end--]]
+		end
 		
 		--Riki
 		for i, hero in ipairs(herolistriki) do
@@ -1076,7 +1122,7 @@ function VGMAR:OnThink()
 		end
 		
 		--Antimage
-		--[[for i, hero in ipairs(herolistam) do
+		for i, hero in ipairs(herolistam) do
 			local antimagemanaburn = hero:FindAbilityByName( "antimage_mana_break" )
 			local antimageshield = hero:FindAbilityByName( "antimage_spell_shield" )
 			local antimagevoid = hero:FindAbilityByName( "antimage_mana_void" )
@@ -1325,6 +1371,19 @@ function VGMAR:OnPlayerLearnedAbility( keys )
 	{spell = "hero_name__spell_name", maxmanuallevel = 4},
 	...	
 	}
+	--]]
+	
+	--///////////////////////////////////
+	--Preventing manual ability upgrading
+	--///////////////////////////////////
+	
+	local blockedlvlupabilities = {
+		{spell = "riki_smoke_screen", maxmanuallevel = 4},
+		{spell = "riki_blink_strike", maxmanuallevel = 4},
+		{spell = "riki_permanent_invisibility", maxmanuallevel = 4},
+		{spell = "riki_tricks_of_the_trade", maxmanuallevel = 3}
+	}
+	
 	
 	for i=1,#blockedlvlupabilities do
 		if abilityname == blockedlvlupabilities[i].spell then
@@ -1336,7 +1395,8 @@ function VGMAR:OnPlayerLearnedAbility( keys )
 			end
 		end
 	end
-	--]]
+	
+	--[[
 	--Building ability list for modification
 	--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	--Probably a better solution would be to build those according to existing heroes
@@ -1389,9 +1449,7 @@ function VGMAR:OnPlayerLearnedAbility( keys )
 			zeuscloud:SetLevel( 1 )
 		end
 	end
-	--///////////////////////////////////
-	--Preventing manual ability upgrading
-	--///////////////////////////////////
+	
 
 	--Nightstalker
 	if abilityname == "night_stalker_hunter_in_the_night" then
@@ -1576,6 +1634,7 @@ function VGMAR:OnPlayerLearnedAbility( keys )
 			viperstrike:SetLevel( viperstrike:GetLevel() - 1 )
 		end
 	end
+	--]]
 end
 
 function GetBuildingGroupFromName( name )
@@ -1720,6 +1779,7 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 				if self:GetHerosCourier(unit) ~= nil then
 					self:RemoveNItemsInInventory(unit, "item_courier", 1)
 					SendOverheadEventMessage( nil, 0, unit, 100, nil )
+					self:DisplayClientError(issuer, "Second Courier is not allowed")
 					unit:ModifyGold(100, false, 6)
 					return false
 				end
@@ -1812,7 +1872,19 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 			end
 		end
 	end
-
+	
+	--Riki No Enemy Ult Before lvl4 scepters
+	if unit and unit:IsRealHero() then
+		if ability and ability:GetName() == "riki_tricks_of_the_trade" then
+			if ability:GetLevel() < 4 then
+				if filterTable.entindex_target ~= 0 and target:GetTeamNumber() ~= unit:GetTeamNumber() then
+					self:DisplayClientError(issuer, "Unable to cast on enemies before LVL4")
+					return false
+				end
+			end
+		end
+	end
+	
 	--////////////////
 	--AutoCourierBurst
 	--////////////////

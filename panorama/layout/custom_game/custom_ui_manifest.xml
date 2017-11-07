@@ -11,6 +11,13 @@
 
 
 		GameUI.SetDefaultUIEnabled( DotaDefaultUIElement_t.DOTA_DEFAULT_UI_ENDGAME, false );
+		GameEvents.Subscribe("VGMARDisplayError", function(data) {
+            GameEvents.SendEventClientSide("dota_hud_error_message", {
+                "splitscreenplayer": 0,
+                "reason": data.reason || 80,
+                "message": data.message
+            })
+        })
 	</script>
 
 	<Panel>
