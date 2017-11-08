@@ -906,28 +906,9 @@ function VGMAR:OnThink()
 		--CustomItemsReminder
 		--///////////////////
 		
-		--[[
-		Get Time as (-80 + num from itemabilitytable * 3s)
-		--]]
-		
 		local customitemreminderlist = {
 			[-90] = "<font color='honeydew'>Remember, this gamemode has multiple scripted item abilities</font>",
-			[-85] = "<font color='gold'>Bloodstone</font> <font color='honeydew'>can be recharged with</font> <font color='orange'>3*bloodstone recipes</font>",
-			[-80] = "<font color='gold'>Aghanims infusion</font> <font color='honeydew'>is available with</font> <font color='orange'>2*Aghanims scepters</font>",
-			[-77] = "<font color='honeydew'>List of custom abilities:</font>",
-			[-75] = "<font color='red'>[C]</font>-<font color='orange'>items</font> consumed for <font color='gold'>effect</font>",
-			[-70] = "<font color='orange'>Hand of Midas</font> => <font color='gold'>Goblins Greed</font> (works from backpack after 30min or if hero is lvl25)",
-			[-67] = "<font color='orange'>Silver Edge</font> => <font color='gold'>Essense Shift</font>",
-			[-63] = "<font color='orange'>Gem*2 + Phase Boots</font> => <font color='gold'>Thirst</font> <font color='red'>[C]</font>",
-			[-57] = "<font color='orange'>Urn*2</font> => <font color='gold'>DeathPulse Regen</font> <font color='red'>[C]</font>",
-			[-53] = "<font color='orange'>Mask of Madness + Gloves*2</font> => <font color='gold'>Fervor</font> <font color='red'>[C]</font>",
-			[-47] = "<font color='orange'>StoutShield+PMS+Vanguard+Buckler+Aegis</font> => <font color='gold'>Kings Aegis</font> <font color='red'>[C]</font>",
-			[-43] = "<font color='orange'>Dominator*2 + Satanic</font> => <font color='gold'>Atrophy Aura</font> <font color='red'>[C]</font>",
-			[-37] = "<font color='orange'>Sacred Relic*2</font> => <font color='gold'>Deaths Kiss</font> <font color='red'>[C]</font>",
-			[-33] = "<font color='orange'>Octarine Core*2</font> => <font color='gold'>Essence Aura</font> <font color='red'>[C]</font>",
-			[-27] = "<font color='orange'>Infused Raindrop*6</font> => <font color='gold'>Enchanted Rainfall</font> <font color='red'>[C]</font>",
-			[-23] = "<font color='orange'>Lotus Orb+Cloak*2</font> => <font color='gold'>Spell Shield</font> <font color='red'>[C]</font>",
-			[-17] = "<font color='orange'>Vladmir*2</font> => <font color='gold'>Vampiric Aura</font> <font color='red'>[C]</font>",
+			[-80] = "<font color='honeydew'>Use information Icon above your minimap</font>",
 			[-5] = "<font color='lime'>GLHF</font>"
 		}
 		

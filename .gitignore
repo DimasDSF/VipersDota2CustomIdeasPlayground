@@ -1,5 +1,6 @@
 *.apidoc
 *.luabkp
 *.gameenginedoc
+*.bak
 
 ability_rework/scripts/npc/pre707
