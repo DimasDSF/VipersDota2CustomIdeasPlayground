@@ -38,7 +38,7 @@ function modifier_vgmar_i_spellshield_cooldown:OnIntervalThink()
 	local ability = parent:FindAbilityByName("vgmar_i_spellshield")
 	local cooldown = ability:GetCooldownTime()
 	if IsServer() then
-		self:StartIntervalThink( 0.5 )
+		--self:StartIntervalThink( 0.5 )
 		self:SetStackCount( cooldown )
 	end
 end

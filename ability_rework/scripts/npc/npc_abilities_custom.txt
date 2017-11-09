@@ -449,7 +449,7 @@
 		}
 	}
 	//=================================================================================================================
-	// VGMAR: Gem: Bloodseeker: Thirst
+	// VGMAR: Item: Bloodseeker: Thirst
 	//=================================================================================================================
 	"vgmar_i_thirst"
 	{
@@ -467,17 +467,17 @@
 			"01"
 			{
 				"var_type"					"FIELD_INTEGER"
-				"min_bonus_pct"				"50"
+				"min_bonus_pct"				"75"
 			}			
 			"02"
 			{
 				"var_type"					"FIELD_INTEGER"
-				"bonus_movement_speed"		"50"
+				"bonus_movement_speed"		"25"
 			}			
 			"03"
 			{
 				"var_type"					"FIELD_INTEGER"
-				"bonus_damage"				"30"
+				"bonus_damage"				"40"
 			}		
 			"04"
 			{
@@ -487,12 +487,12 @@
 			"05"
 			{
 				"var_type"					"FIELD_INTEGER"
-				"visibility_threshold_pct"	"50"
+				"visibility_threshold_pct"	"35"
 			}
 			"06"
 			{
 				"var_type"					"FIELD_INTEGER"
-				"invis_threshold_pct"	"50"
+				"invis_threshold_pct"	"1"
 			}
 		}
 	}
@@ -982,17 +982,17 @@
 			"03"
 			{
 				"var_type"				"FIELD_FLOAT"
-				"slow_duration"	"0.3"
+				"slow_duration"	"0.0"
 			}
 			"04"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"slow_amount"		"-60"
+				"slow_amount"		"-0"
 			}
 			"05"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"damage"		"150"
+				"damage"		"125"
 			}
 			"06"
 			{
@@ -1002,9 +1002,25 @@
 		}
 	}
 	
-	//====================
+	//=========================
+	//ModifierApplyingAbilities
+	//=========================
+	//=================================================================================================================
+	// VGMAR: Item: TrueSight
+	//=================================================================================================================
+	"vgmar_i_truesight"
+	{
+		"BaseClass"	"ability_datadriven"
+		"AbilityBehavior"	"DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN | DOTA_ABILITY_BEHAVIOR_NOT_LEARNABLE"
+		"AbilityTextureName" "item_gem"
+		"SpellImmunityType"	"SPELL_IMMUNITY_ENEMIES_YES"
+		"MaxLevel"	"1"
+	}
+	
+	
+	//======================
 	//VisualAbilityModifiers
-	//====================
+	//======================
 	//=================================================================================================================
 	// VGMAR: Courier: Upgrade: Level Visual
 	//=================================================================================================================

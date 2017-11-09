@@ -48,7 +48,7 @@ function modifier_vgmar_i_kingsaegis_cooldown:OnIntervalThink()
 				parent:RemoveModifierByName("modifier_vgmar_i_kingsaegis_active")
 			end
 		end
-		self:StartIntervalThink( 0.5 )
+		--self:StartIntervalThink( 0.5 )
 		self:SetStackCount( self.cooldown )
 	end
 end

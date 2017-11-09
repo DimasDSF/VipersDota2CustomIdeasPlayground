@@ -70,6 +70,7 @@ function VGMAR:Init()
 	LinkLuaModifier("modifier_vgmar_i_kingsaegis_active", "abilities/modifiers/modifier_vgmar_i_kingsaegis_active", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_criticalmastery_visual", "abilities/modifiers/modifier_vgmar_i_criticalmastery_visual", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_purgefield_visual", "abilities/modifiers/modifier_vgmar_i_purgefield_visual", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_truesight", "abilities/modifiers/modifier_vgmar_i_truesight", LUA_MODIFIER_MOTION_NONE)
 	
 	self.mode = GameRules:GetGameModeEntity()
 	GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_GOODGUYS, RADIANT_TEAM_MAX_PLAYERS)
@@ -100,6 +101,7 @@ function VGMAR:Init()
 	ListenToGameEvent( "dota_tower_kill", Dynamic_Wrap( VGMAR, 'OnTowerKilled' ), self )
 	--ListenToGameEvent( "dota_player_used_ability", Dynamic_Wrap( VGMAR, 'OnPlayerUsedAbility' ), self )
 	Convars:RegisterConvar('vgmar_devmode', "0", "Set to 1 to show debug info.  Set to 0 to disable.", 0)
+	Convars:RegisterConvar('vgmar_blockbotcontrol', "1", "Set to 0 to enable controlling bots", 0)
 	if VGMAR_DEBUG == true then
 		Convars:SetInt("vgmar_devmode", 1)
 	end
@@ -676,9 +678,9 @@ function VGMAR:OnThink()
 				preventedhero = "npc_dota_hero_slark",
 				specificcond = true },
 			{spell = "vgmar_i_thirst",
-				items = {itemnames = {"item_gem", "item_phase_boots"}, itemnum = {2, 1}},
+				items = {itemnames = {"item_lesser_crit", "item_bloodstone"}, itemnum = {1, 1}},
 				isconsumable = true,
-				usesmultiple = true,
+				usesmultiple = false,
 				backpack = true,
 				preventedhero = "npc_dota_hero_bloodseeker",
 				specificcond = true },
@@ -758,7 +760,14 @@ function VGMAR:OnThink()
 				usesmultiple = true,
 				backpack = true,
 				preventedhero = "npc_dota_hero_razor",
-				specificcond = true	}
+				specificcond = true	},
+			{spell = "vgmar_i_truesight",
+				items = {itemnames = {"item_gem"}, itemnum = {2}},
+				isconsumable = true,
+				usesmultiple = true,
+				backpack = true,
+				preventedhero = "npc_target_dummy",
+				specificcond = true }
 			}
 			--TableEND
 			
@@ -772,18 +781,14 @@ function VGMAR:OnThink()
 										for j=1,#itemlistforspell[k].items.itemnames do
 											self:RemoveNItemsInInventory( heroent, itemlistforspell[k].items.itemnames[j], itemlistforspell[k].items.itemnum[j])
 										end
-										local addedability = heroent:AddAbility(itemlistforspell[k].spell)
-										addedability:SetLevel(1)
+										heroent:AddAbility(itemlistforspell[k].spell):SetLevel(1)
 									end
 								end
 							else
 								if self:HeroHasAllItemsFromListWMultiple( heroent, itemlistforspell[k].items, itemlistforspell[k].backpack) then
 									local itemability = heroent:FindAbilityByName(itemlistforspell[k].spell)
 									if itemability == nil then
-										local addedability = heroent:AddAbility(itemlistforspell[k].spell)
-										if addedability then
-											addedability:SetLevel(1)
-										end
+										heroent:AddAbility(itemlistforspell[k].spell):SetLevel(1)
 									end
 								else
 									local itemability = heroent:FindAbilityByName(itemlistforspell[k].spell)
@@ -830,6 +835,14 @@ function VGMAR:OnThink()
 				if heroent:FindAbilityByName("vgmar_i_purgefield") ~= nil and heroent:IsAlive() then
 					if not heroent:HasModifier("modifier_vgmar_i_purgefield_visual") then
 						heroent:AddNewModifier(heroent, nil, "modifier_vgmar_i_purgefield_visual", {})
+					end
+				end
+				--/////////////////
+				--TrueSightModifier
+				--/////////////////
+				if heroent:FindAbilityByName("vgmar_i_truesight") ~= nil and heroent:IsAlive() then
+					if not heroent:HasModifier("modifier_vgmar_i_truesight") then
+						heroent:AddNewModifier(heroent, nil, "modifier_vgmar_i_truesight", {radius = 900})
 					end
 				end
 				--AegisKingAntiOctarine
@@ -1866,7 +1879,7 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 	end
 	
 	--Bot Control Prevention
-	if unit then
+	if unit and Convars:GetInt("vgmar_blockbotcontrol") == 1 then
 		local player = PlayerResource:GetPlayer(issuer)
 		if unit:IsRealHero() then
 			local unitPlayerID = unit:GetPlayerID()
