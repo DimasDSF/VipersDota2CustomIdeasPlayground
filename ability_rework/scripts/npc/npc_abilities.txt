@@ -8803,6 +8803,8 @@
 		"AbilityCastRange"				"300 300 300 300 1500"
 		"AbilityCastPoint"				"0.3"
 		"AbilityChannelTime"			"3 4 5 6 7"
+		"AbilityCastAnimation"		"ACT_DOTA_CAST_ABILITY_4"
+		"AbilityChannelAnimation"		"ACT_DOTA_CHANNEL_ABILITY_4"
 
 		// Ability Data
 		//-------------------------------------------------------------------------------------------------------------
@@ -9224,7 +9226,7 @@
 			"01"
 			{
 				"var_type"			"FIELD_INTEGER"
-				"damage"			"120 200 280 360"
+				"damage"			"125 200 275 350"
 			}
 			"02"
 			{
@@ -21004,7 +21006,7 @@
 			"01"
 			{
 				"var_type"					"FIELD_FLOAT"
-				"transformation_time"		"1.933"
+				"transformation_time"		"0.8"
 			}
 		}
 	}
@@ -46621,7 +46623,7 @@
 			"01"
 			{
 				"var_type"					"FIELD_FLOAT"
-				"value"				"0.1"
+				"value"				"-0.1"
 			}
 		}
 	}

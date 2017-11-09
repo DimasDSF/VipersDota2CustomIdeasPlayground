@@ -2,7 +2,7 @@ local RADIANT_TEAM_MAX_PLAYERS = 1
 local DIRE_TEAM_MAX_PLAYERS = 8
 local RUNE_SPAWN_TIME = 120
 local VGMAR_DEBUG = false
-local VGMAR_BOT_FILL = false
+local VGMAR_BOT_FILL = true
 --///////////////////////////////////////////
 --/////////////WORKSHOP_FUCKOVER/////////////
 --Change to true before releasing to workshop
@@ -26,7 +26,8 @@ function Precache( ctx )
 		"kunkka",
 		"obsidian_destroyer",
 		"phantom_assassin",
-		"antimage"
+		"antimage",
+		"razor"
 	}
 	
 	for i=1,#herosoundprecachelist do
@@ -65,7 +66,11 @@ function VGMAR:Init()
 	LinkLuaModifier("modifier_vgmar_util_dominator_ability_purger", "abilities/util/modifiers/modifier_vgmar_util_dominator_ability_purger.lua", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_deathskiss_visual", "abilities/modifiers/modifier_vgmar_i_deathskiss_visual", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_spellshield_cooldown", "abilities/modifiers/modifier_vgmar_i_spellshield_cooldown", LUA_MODIFIER_MOTION_NONE)
-
+	LinkLuaModifier("modifier_vgmar_i_kingsaegis_cooldown", "abilities/modifiers/modifier_vgmar_i_kingsaegis_cooldown", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_kingsaegis_active", "abilities/modifiers/modifier_vgmar_i_kingsaegis_active", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_criticalmastery_visual", "abilities/modifiers/modifier_vgmar_i_criticalmastery_visual", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_purgefield_visual", "abilities/modifiers/modifier_vgmar_i_purgefield_visual", LUA_MODIFIER_MOTION_NONE)
+	
 	self.mode = GameRules:GetGameModeEntity()
 	GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_GOODGUYS, RADIANT_TEAM_MAX_PLAYERS)
     GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_BADGUYS, DIRE_TEAM_MAX_PLAYERS)
@@ -661,125 +666,138 @@ function VGMAR:OnThink()
 				isconsumable = false,
 				usesmultiple = false,
 				backpack = self:TimeIsLaterThan( 30, 0 ) or heroent:GetLevel() >= 25,
-				preventedhero = "npc_dota_hero_alchemist"},
+				preventedhero = "npc_dota_hero_alchemist",
+				specificcond = true },
 			{spell = "vgmar_i_essense_shift",
 				items = {itemnames = {"item_silver_edge"}, itemnum = {1}},
 				isconsumable = false,
 				usesmultiple = false,
 				backpack = false,
-				preventedhero = "npc_dota_hero_slark"},
+				preventedhero = "npc_dota_hero_slark",
+				specificcond = true },
 			{spell = "vgmar_i_thirst",
 				items = {itemnames = {"item_gem", "item_phase_boots"}, itemnum = {2, 1}},
 				isconsumable = true,
 				usesmultiple = true,
 				backpack = true,
-				preventedhero = "npc_dota_hero_bloodseeker"},
+				preventedhero = "npc_dota_hero_bloodseeker",
+				specificcond = true },
 			{spell = "vgmar_i_pulse",
 				items = {itemnames = {"item_urn_of_shadows"}, itemnum = {2}},
 				isconsumable = true,
 				usesmultiple = true,
 				backpack = true,
-				preventedhero = "npc_dota_hero_necrolyte"},
+				preventedhero = "npc_dota_hero_necrolyte",
+				specificcond = true },
 			{spell = "vgmar_i_fervor",
 				items = {itemnames = {"item_gloves", "item_mask_of_madness"}, itemnum = {2, 1}},
 				isconsumable = true,
 				usesmultiple = true,
 				backpack = true,
-				preventedhero = "npc_dota_hero_troll_warlord"},
+				preventedhero = "npc_dota_hero_troll_warlord",
+				specificcond = true },
 			{spell = "aegis_king_reincarnation",
 				items = {itemnames = {"item_stout_shield", "item_vanguard", "item_buckler", "item_aegis"}, itemnum = {1, 1, 1, 1}},
 				isconsumable = true,
 				usesmultiple = false,
 				backpack = true,
-				preventedhero = "npc_dota_hero_skeleton_king"},
+				preventedhero = "npc_dota_hero_skeleton_king",
+				specificcond = true },
 			{spell = "vgmar_i_atrophy_aura",
 				items = {itemnames = {"item_helm_of_the_dominator", "item_satanic"}, itemnum = {2, 1}},
 				isconsumable = true,
 				usesmultiple = true,
 				backpack = true,
-				preventedhero = "npc_dota_hero_abyssal_underlord"},
+				preventedhero = "npc_dota_hero_abyssal_underlord",
+				specificcond = true },
 			{spell = "vgmar_i_deathskiss",
 				items = {itemnames = {"item_relic"}, itemnum = {2}},
 				isconsumable = true,
 				usesmultiple = true,
 				backpack = true,
-				preventedhero = "npc_dota_hero_phantom_assassin"},
+				preventedhero = "npc_dota_hero_phantom_assassin",
+				specificcond = heroent:FindAbilityByName("vgmar_i_criticalmastery") == nil },
 			{spell = "vgmar_i_essence_aura",
 				items = {itemnames = {"item_octarine_core"}, itemnum = {2}},
 				isconsumable = true,
 				usesmultiple = true,
 				backpack = true,
-				preventedhero = "npc_dota_hero_obsidian_destroyer"},
+				preventedhero = "npc_dota_hero_obsidian_destroyer",
+				specificcond = true },
 			{spell = "vgmar_i_rainfall",
 				items = {itemnames = {"item_infused_raindrop"}, itemnum = {6}},
 				isconsumable = true,
 				usesmultiple = true,
 				backpack = true,
-				preventedhero = "npc_dota_hero_crystal_maiden"},
+				preventedhero = "npc_dota_hero_crystal_maiden",
+				specificcond = true },
 			{spell = "vgmar_i_spellshield",
 				items = {itemnames = {"item_lotus_orb", "item_cloak"}, itemnum = {1, 2}},
 				isconsumable = true,
 				usesmultiple = true,
 				backpack = true,
-				preventedhero = "npc_dota_hero_antimage"},
+				preventedhero = "npc_dota_hero_antimage",
+				specificcond = true },
 			{spell = "vgmar_i_vampiric_aura",
 				items = {itemnames = {"item_vladmir"}, itemnum = {2}},
 				isconsumable = true,
 				usesmultiple = true,
 				backpack = true,
-				preventedhero = "npc_dota_hero_skeleton_king"}
+				preventedhero = "npc_dota_hero_skeleton_king",
+				specificcond = true },
+			{spell = "vgmar_i_criticalmastery",
+				items = {itemnames = {"item_greater_crit", "item_lesser_crit"}, itemnum = {2, 1}},
+				isconsumable = true,
+				usesmultiple = true,
+				backpack = true,
+				preventedhero = "npc_dota_hero_phantom_assassin",
+				specificcond = heroent:FindAbilityByName("vgmar_i_deathskiss") == nil },
+			{spell = "vgmar_i_purgefield",
+				items = {itemnames = {"item_nullifier", "item_null_talisman"}, itemnum = {1, 3}},
+				isconsumable = true,
+				usesmultiple = true,
+				backpack = true,
+				preventedhero = "npc_dota_hero_razor",
+				specificcond = true	}
 			}
 			--TableEND
 			
 				for k=1,#itemlistforspell do
 					if heroent:GetClassname() ~= itemlistforspell[k].preventedhero then
-						if itemlistforspell[k].isconsumable == true then
-							if self:HeroHasAllItemsFromListWMultiple( heroent, itemlistforspell[k].items, itemlistforspell[k].backpack) and not heroent:FindAbilityByName(itemlistforspell[k].spell) then
-								local itemability = heroent:FindAbilityByName(itemlistforspell[k].spell)
-								if itemability == nil then
-									for j=1,#itemlistforspell[k].items.itemnames do
-										self:RemoveNItemsInInventory( heroent, itemlistforspell[k].items.itemnames[j], itemlistforspell[k].items.itemnum[j])
-									end
-									local addedability = heroent:AddAbility(itemlistforspell[k].spell)
-									addedability:SetLevel(1)
-								end
-							end
-						else
-							if self:HeroHasAllItemsFromListWMultiple( heroent, itemlistforspell[k].items, itemlistforspell[k].backpack) then
-								local itemability = heroent:FindAbilityByName(itemlistforspell[k].spell)
-								if itemability == nil then
-									local addedability = heroent:AddAbility(itemlistforspell[k].spell)
-									if addedability then
+						if itemlistforspell[k].specificcond == true then
+							if itemlistforspell[k].isconsumable == true then
+								if self:HeroHasAllItemsFromListWMultiple( heroent, itemlistforspell[k].items, itemlistforspell[k].backpack) and not heroent:FindAbilityByName(itemlistforspell[k].spell) then
+									local itemability = heroent:FindAbilityByName(itemlistforspell[k].spell)
+									if itemability == nil then
+										for j=1,#itemlistforspell[k].items.itemnames do
+											self:RemoveNItemsInInventory( heroent, itemlistforspell[k].items.itemnames[j], itemlistforspell[k].items.itemnum[j])
+										end
+										local addedability = heroent:AddAbility(itemlistforspell[k].spell)
 										addedability:SetLevel(1)
 									end
 								end
 							else
-								local itemability = heroent:FindAbilityByName(itemlistforspell[k].spell)
-								if itemability ~= nil then
-									heroent:RemoveAbility(itemlistforspell[k].spell)
+								if self:HeroHasAllItemsFromListWMultiple( heroent, itemlistforspell[k].items, itemlistforspell[k].backpack) then
+									local itemability = heroent:FindAbilityByName(itemlistforspell[k].spell)
+									if itemability == nil then
+										local addedability = heroent:AddAbility(itemlistforspell[k].spell)
+										if addedability then
+											addedability:SetLevel(1)
+										end
+									end
+								else
+									local itemability = heroent:FindAbilityByName(itemlistforspell[k].spell)
+									if itemability ~= nil then
+										heroent:RemoveAbility(itemlistforspell[k].spell)
+									end
 								end
 							end
 						end
 					end
 				end
 				if heroent:FindAbilityByName("aegis_king_reincarnation") ~= nil and heroent:IsAlive() then
-					local reincarnationability = heroent:FindAbilityByName("aegis_king_reincarnation")
-					local reincarnationcooldown = reincarnationability:GetCooldownTime()
-					if reincarnationcooldown ~= 0 then
-						if not heroent:HasModifier("modifier_skeleton_king_mortal_strike_drain_buff") then
-							heroent:AddNewModifier(heroent, heroent, "modifier_skeleton_king_mortal_strike_drain_buff", {hp_drain = 0, drain_duration = 99999})
-						end
-						if heroent:HasModifier("modifier_skeleton_king_mortal_strike_drain_debuff") then
-							heroent:RemoveModifierByName("modifier_skeleton_king_mortal_strike_drain_debuff")
-						end
-						heroent:SetModifierStackCount("modifier_skeleton_king_mortal_strike_drain_buff", heroent, reincarnationcooldown)
-					else
-						if not heroent:HasModifier("modifier_skeleton_king_mortal_strike_drain_debuff") then
-							heroent:AddNewModifier(heroent, heroent, "modifier_skeleton_king_mortal_strike_drain_debuff", {hp_drain = 0, drain_duration = 99999})
-						end
-						if heroent:HasModifier("modifier_skeleton_king_mortal_strike_drain_buff") then
-							heroent:RemoveModifierByName("modifier_skeleton_king_mortal_strike_drain_buff")
-						end
+					if not heroent:HasModifier("modifier_vgmar_i_kingsaegis_cooldown") then
+						heroent:AddNewModifier(heroent, nil, "modifier_vgmar_i_kingsaegis_cooldown", {})
 					end
 				end
 				--/////////////////////////
@@ -796,6 +814,22 @@ function VGMAR:OnThink()
 				if heroent:FindAbilityByName("vgmar_i_deathskiss") ~= nil and heroent:IsAlive() then
 					if not heroent:HasModifier("modifier_vgmar_i_deathskiss_visual") then
 						heroent:AddNewModifier(heroent, nil, "modifier_vgmar_i_deathskiss_visual", {})
+					end
+				end
+				--/////////////////////
+				--CriticalMasteryVisual
+				--/////////////////////
+				if heroent:FindAbilityByName("vgmar_i_criticalmastery") ~= nil and heroent:IsAlive() then
+					if not heroent:HasModifier("modifier_vgmar_i_criticalmastery_visual") then
+						heroent:AddNewModifier(heroent, nil, "modifier_vgmar_i_criticalmastery_visual", {})
+					end
+				end
+				--////////////////
+				--PurgeFieldVisual
+				--////////////////
+				if heroent:FindAbilityByName("vgmar_i_purgefield") ~= nil and heroent:IsAlive() then
+					if not heroent:HasModifier("modifier_vgmar_i_purgefield_visual") then
+						heroent:AddNewModifier(heroent, nil, "modifier_vgmar_i_purgefield_visual", {})
 					end
 				end
 				--AegisKingAntiOctarine

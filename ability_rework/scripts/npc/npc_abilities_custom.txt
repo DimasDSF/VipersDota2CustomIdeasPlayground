@@ -745,12 +745,12 @@
 			"05"
 			{
 				"var_type"						"FIELD_FLOAT"
-				"bonus_damage_duration"			"180"
+				"bonus_damage_duration"			"240"
 			}
 			"06"
 			{
 				"var_type"						"FIELD_FLOAT"
-				"bonus_damage_duration_scepter"		"3600"
+				"bonus_damage_duration_scepter"		"900"
 			}
 		}
 	}
@@ -773,12 +773,12 @@
 			"01"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"vampiric_aura_radius"	"900"
+				"vampiric_aura_radius"	"700"
 			}
 			"02"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"vampiric_aura"			"20"
+				"vampiric_aura"			"30"
 			}
 		}
 	}
@@ -808,7 +808,7 @@
 			"02"
 			{
 				"var_type"			"FIELD_INTEGER"
-				"bonus_mana"	    "800"
+				"bonus_mana"	    "1000"
 			}
 			"03"
 			{
@@ -852,12 +852,41 @@
 			"01"
 			{
 				"var_type"					"FIELD_INTEGER"
-				"crit_bonus"				"99999"
+				"crit_bonus"				"20000"
 			}
 			"02"
 			{
 				"var_type"					"FIELD_INTEGER"
 				"crit_chance"				"1"
+			}
+		}
+	}
+	//=================================================================================================================
+	// VGMAR: Rapier: Phantom Assassin: DeathsKiss
+	//=================================================================================================================
+	"vgmar_i_criticalmastery"
+	{
+		// General
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN | DOTA_ABILITY_BEHAVIOR_NOT_LEARNABLE"
+		"SpellDispellableType"			"SPELL_DISPELLABLE_NO"
+		"AbilitySound"					"Hero_PhantomAssassin.CoupDeGrace"
+		"BaseClass"						"phantom_assassin_coup_de_grace"
+		"MaxLevel"						"1"
+		
+		// Special
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"					"FIELD_INTEGER"
+				"crit_bonus"				"300"
+			}
+			"02"
+			{
+				"var_type"					"FIELD_INTEGER"
+				"crit_chance"				"100"
 			}
 		}
 	}
@@ -891,7 +920,7 @@
 		}
 	}
 	//=================================================================================================================
-	// VGMAR: Linken: Antimage: SpellShield
+	// VGMAR: Item: Antimage: SpellShield
 	//=================================================================================================================
 	"vgmar_i_spellshield"
 	{
@@ -918,6 +947,61 @@
 			}
 		}
 	}
+	//=================================================================================================================
+	// VGMAR: Item: Razor: PurgeField
+	//=================================================================================================================
+	"vgmar_i_purgefield"
+	{
+		// General
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN | DOTA_ABILITY_BEHAVIOR_NOT_LEARNABLE"
+		"AbilityUnitDamageType"			"DAMAGE_TYPE_MAGICAL"	
+		"SpellImmunityType"				"SPELL_IMMUNITY_ENEMIES_NO"
+		"SpellDispellableType"			"SPELL_DISPELLABLE_YES"
+		"BaseClass"						"razor_unstable_current"
+		"MaxLevel"						"1"
+
+		// Time		
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityCooldown"				"0.5"
+				
+		// Special
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"movement_speed_pct"	"0"
+			}
+			"02"
+			{
+				"var_type"				"FIELD_FLOAT"
+				"hit_interval"			"0.5"
+			}
+			"03"
+			{
+				"var_type"				"FIELD_FLOAT"
+				"slow_duration"	"0.3"
+			}
+			"04"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"slow_amount"		"-60"
+			}
+			"05"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"damage"		"150"
+			}
+			"06"
+			{
+				"var_type"		"FIELD_INTEGER"
+				"radius"		"375"
+			}
+		}
+	}
+	
 	//====================
 	//VisualAbilityModifiers
 	//====================
