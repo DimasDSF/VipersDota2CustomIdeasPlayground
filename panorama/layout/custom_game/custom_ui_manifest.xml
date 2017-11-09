@@ -1,4 +1,7 @@
 <root>
+	<scripts>
+		<include src="s2r://panorama/scripts/custom_game/util.vjs_c" /> 
+	</scripts>
 	<script>
 		GameUI.CustomUIConfig().multiteam_top_scoreboard =
 		{
@@ -11,6 +14,13 @@
 
 
 		GameUI.SetDefaultUIEnabled( DotaDefaultUIElement_t.DOTA_DEFAULT_UI_ENDGAME, false );
+		GameEvents.Subscribe("VGMARDisplayError", function(data) {
+            GameEvents.SendEventClientSide("dota_hud_error_message", {
+                "splitscreenplayer": 0,
+                "reason": data.reason || 80,
+                "message": data.message
+            })
+        })
 	</script>
 
 	<Panel>
@@ -20,5 +30,7 @@
 		<CustomUIElement type="HeroSelection" 		layoutfile="file://{resources}/layout/custom_game/multiteam_hero_select_overlay.xml" />
 		<CustomUIElement type="EndScreen" 			layoutfile="file://{resources}/layout/custom_game/multiteam_end_screen.xml" />
 		<CustomUIElement type="Hud"					layoutfile="file://{resources}/layout/custom_game/selection_reset.xml" />
+		<CustomUIElement type="Hud" 				layoutfile="file://{resources}/layout/custom_game/minimap_buttons.xml" />
+		<CustomUIElement type="Hud"					layoutfile="file://{resources}/layout/custom_game/information.xml" />
 	</Panel>
 </root>

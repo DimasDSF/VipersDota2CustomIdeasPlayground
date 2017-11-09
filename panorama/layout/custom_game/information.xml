@@ -1,0 +1,268 @@
+<root>
+	<styles>
+		<include src="s2r://panorama/styles/dotastyles.vcss_c" />
+		<include src="s2r://panorama/styles/play.vcss_c" />
+		<include src="s2r://panorama/styles/dashboard_page_profile.vcss_c" />
+		<include src="s2r://panorama/styles/custom_game/information.vcss_c" />
+	</styles>
+	<scripts>
+	    <include src="s2r://panorama/scripts/custom_game/information.vjs_c" /> 
+	</scripts>
+
+	<Panel class="changelogRoot" hittest="false">
+		<Panel id="changelogDisplay" class="changelogDisplayHidden" hittest="false">
+			<Button id="closeChangelogButton" class="CloseButton" onactivate='toggleChangelog()'>
+			</Button>
+			<Panel id="Title">
+				<Label id="TitleName" text="#vgmarAddonName" />
+				<Label id="SubTitleName" text="#vgmarAddonDescription" />
+				<Panel id="OptionSelect" hittest="false">
+					<RadioButton id="showDescriptionButton" class="HeaderButtonText" text="#vgmarInformationButtonText" onactivate="toggleInformation()"/>
+					<Label class="HeaderButtonSeparator" tabindex="auto" text="/" />
+					<RadioButton id="showUpdatesButton" class="HeaderButtonTextSmall" text="#vgmarHeroesButtonText" onactivate="toggleHeroes()"/>
+					<Label class="HeaderButtonSeparator" tabindex="auto" text="/" />
+					<RadioButton id="showCreditsButton" class="HeaderButtonTextSmall" text="#vgmarItemsButtonText" onactivate="toggleItems()"/>
+				</Panel>
+				<Panel class="horizontalSeparator"/>
+				<Panel id="currentDisplay" hittest="false" onmouseout="UIHideCustomLayoutTooltip( SendTooltip )">
+					<Panel class="displayPanel" id="descriptionDisplay" hittest="false">
+						<Panel class="descriptionTextPanel" hittest="false">
+							<Panel class="updateClipper" id="updateClipper" hittest="false">
+								<Label class="updateHeaderText" html="true" text="#vgmarInformationHeaderText1"/>
+								<Label class="displayText" html="true" text="#vgmarInformationText1" />
+								<Label class="updateHeaderText" html="true" text="#vgmarInformationHeaderText2"/>
+								<Label class="displayText" html="true" text="#vgmarInformationText2" />
+								<Label class="updateHeaderText" html="true" text="#vgmarInformationHeaderText3"/>
+								<Label class="displayText" html="true" text="#vgmarInformationText3" />
+								<Label class="updateHeaderText" html="true" text="#vgmarInformationHeaderText4"/>
+								<Label class="displayText" html="true" text="#vgmarInformationText4" />
+								<Label class="updateHeaderText" html="true" text="#vgmarInformationHeaderText5"/>
+								<Label class="displayText" html="true" text="#vgmarInformationText5" />
+							</Panel>
+						</Panel>
+					</Panel>
+					<Panel class="displayPanel" id="updateDisplay" hittest="false">
+						<Panel class="displayHeader" hittest="false">
+							<Panel class="updateClipper" id="updateClipper" hittest="false">
+								<Panel class="displayHeader updateEntry" hittest="false">
+									<Label class="updateHeaderText" text="#vgmarHeroesHeader1" />
+									<Label class="displayText" text="#vgmarHeroesText1"/>
+									<Label class="updateHeaderText" text="#vgmarHeroesHeader2" />
+									<Label class="displayText" text="#vgmarHeroesText2"/>
+									<Label class="updateHeaderText" text="#vgmarHeroesHeader3" />
+									<Label class="displayText" text="#vgmarHeroesText3"/>
+									<Label class="updateHeaderText" text="#vgmarHeroesHeader4" />
+									<Label class="displayText" text="#vgmarHeroesText4"/>
+									<Label class="updateHeaderText" text="#vgmarHeroesHeader5" />
+									<Label class="displayText" text="#vgmarHeroesText5"/>
+									<Label class="updateHeaderText" text="#vgmarHeroesHeader6" />
+									<Label class="displayText" text="#vgmarHeroesText6"/>
+									<Label class="updateHeaderText" text="#vgmarHeroesHeader7" />
+									<Label class="displayText" text="#vgmarHeroesText7"/>
+									<Label class="updateHeaderText" text="#vgmarHeroesHeader8" />
+									<Label class="displayText" text="#vgmarHeroesText8"/>
+									<Label class="updateHeaderText" text="#vgmarHeroesHeader9" />
+									<Label class="displayText" text="#vgmarHeroesText9"/>
+									<Label class="updateHeaderText" text="#vgmarHeroesHeader10" />
+									<Label class="displayText" text="#vgmarHeroesText10"/>
+									<Label class="updateHeaderText" text="#vgmarHeroesHeader11" />
+									<Label class="displayText" text="#vgmarHeroesText11"/>
+									<Label class="updateHeaderText" text="#vgmarHeroesHeader12" />
+									<Label class="displayText" text="#vgmarHeroesText12"/>
+									<Label class="updateHeaderText" text="#vgmarHeroesHeader13" />
+									<Label class="displayText" text="#vgmarHeroesText13"/>
+									<Label class="updateHeaderText" text="#vgmarHeroesHeader14" />
+									<Label class="displayText" text="#vgmarHeroesText14"/>
+									<Label class="updateHeaderText" text="#vgmarHeroesHeader15" />
+									<Label class="displayText" text="#vgmarHeroesText15"/>
+									<Label class="updateHeaderText" text="#vgmarHeroesHeader16" />
+									<Label class="displayText" text="#vgmarHeroesText16"/>
+									<Label class="updateHeaderText" text="#vgmarHeroesHeader17" />
+									<Label class="displayText" text="#vgmarHeroesText17"/>
+									<Label class="updateHeaderText" text="#vgmarHeroesHeader18" />
+									<Label class="displayText" text="#vgmarHeroesText18"/>
+									<Label class="updateHeaderText" text="#vgmarHeroesHeader19" />
+									<Label class="displayText" text="#vgmarHeroesText19"/>
+									<Label class="updateHeaderText" text="#vgmarHeroesHeader20" />
+									<Label class="displayText" text="#vgmarHeroesText20"/>
+									<Label class="updateHeaderText" text="#vgmarHeroesHeader21" />
+									<Label class="displayText" text="#vgmarHeroesText21"/>
+									<Label class="updateHeaderText" text="#vgmarHeroesHeader22" />
+									<Label class="displayText" text="#vgmarHeroesText22"/>
+									<Label class="updateHeaderText" text="#vgmarHeroesHeader23" />
+									<Label class="displayText" text="#vgmarHeroesText23"/>
+									<Label class="updateHeaderText" text="#vgmarHeroesHeader24" />
+									<Label class="displayText" text="#vgmarHeroesText24"/>
+									<Label class="updateHeaderText" text="#vgmarHeroesHeader25" />
+									<Label class="displayText" text="#vgmarHeroesText25"/>
+									<Label class="updateHeaderText" text="#vgmarHeroesHeader26" />
+									<Label class="displayText" text="#vgmarHeroesText26"/>
+									<Label class="updateHeaderText" text="#vgmarHeroesHeader27" />
+									<Label class="displayText" text="#vgmarHeroesText27"/>
+									<Label class="updateHeaderText" text="#vgmarHeroesHeader28" />
+									<Label class="displayText" text="#vgmarHeroesText28"/>
+									<Label class="updateHeaderText" text="#vgmarHeroesHeader29" />
+									<Label class="displayText" text="#vgmarHeroesText29"/>
+									<Label class="updateHeaderText" text="#vgmarHeroesHeader30" />
+									<Label class="displayText" text="#vgmarHeroesText30"/>
+									<Label class="updateHeaderText" text="#vgmarHeroesHeader31" />
+									<Label class="displayText" text="#vgmarHeroesText31"/>
+									<Label class="updateHeaderText" text="#vgmarHeroesHeader32" />
+									<Label class="displayText" text="#vgmarHeroesText32"/>
+									<Label class="updateHeaderText" text="#vgmarHeroesHeader33" />
+									<Label class="displayText" text="#vgmarHeroesText33"/>
+									<Label class="updateHeaderText" text="#vgmarHeroesHeader34" />
+									<Label class="displayText" text="#vgmarHeroesText34"/>
+									<Label class="updateHeaderText" text="#vgmarHeroesHeader35" />
+									<Label class="displayText" text="#vgmarHeroesText35"/>
+									<Label class="updateHeaderText" text="#vgmarHeroesHeader36" />
+									<Label class="displayText" text="#vgmarHeroesText36"/>
+									<Label class="updateHeaderText" text="#vgmarHeroesHeader37" />
+									<Label class="displayText" text="#vgmarHeroesText37"/>
+									<Label class="updateHeaderText" text="#vgmarHeroesHeader38" />
+									<Label class="displayText" text="#vgmarHeroesText38"/>
+									<Label class="updateHeaderText" text="#vgmarHeroesHeader39" />
+									<Label class="displayText" text="#vgmarHeroesText39"/>
+									<Label class="updateHeaderText" text="#vgmarHeroesHeader40" />
+									<Label class="displayText" text="#vgmarHeroesText40"/>
+								</Panel>
+								<Panel class="horizontalSeparator"/>
+							</Panel>
+						</Panel>
+					</Panel>
+					<Panel class="displayPanel" id="creditsDisplay" hittest="false">
+						<Panel id="creditsPanel" class="creditsPanel" hittest="false">
+							<Panel class="displayHeader" hittest="false">
+								<Panel class="updateClipper" id="updateClipper" hittest="false">
+									<Panel class="displayHeader updateEntry" hittest="false">
+										<Label class="updateHeaderItemText" text="#vgmarItemsHeader1" />
+										<Label class="displayTextItemRecipe" text="#vgmarItemsTextRecipe1"/>
+										<Label class="displayTextItemDescription" text="#vgmarItemsTextDescription1"/>
+										<Label class="updateHeaderItemText" text="#vgmarItemsHeader2" />
+										<Label class="displayTextItemRecipe" text="#vgmarItemsTextRecipe2"/>
+										<Label class="displayTextItemDescription" text="#vgmarItemsTextDescription2"/>
+										<Label class="updateHeaderItemText" text="#vgmarItemsHeader3" />
+										<Label class="displayTextItemRecipe" text="#vgmarItemsTextRecipe3"/>
+										<Label class="displayTextItemDescription" text="#vgmarItemsTextDescription3"/>
+										<Label class="updateHeaderItemText" text="#vgmarItemsHeader4" />
+										<Label class="displayTextItemRecipe" text="#vgmarItemsTextRecipe4"/>
+										<Label class="displayTextItemDescription" text="#vgmarItemsTextDescription4"/>
+										<Label class="updateHeaderItemText" text="#vgmarItemsHeader5" />
+										<Label class="displayTextItemRecipe" text="#vgmarItemsTextRecipe5"/>
+										<Label class="displayTextItemDescription" text="#vgmarItemsTextDescription5"/>
+										<Label class="updateHeaderItemText" text="#vgmarItemsHeader6" />
+										<Label class="displayTextItemRecipe" text="#vgmarItemsTextRecipe6"/>
+										<Label class="displayTextItemDescription" text="#vgmarItemsTextDescription6"/>
+										<Label class="updateHeaderItemText" text="#vgmarItemsHeader7" />
+										<Label class="displayTextItemRecipe" text="#vgmarItemsTextRecipe7"/>
+										<Label class="displayTextItemDescription" text="#vgmarItemsTextDescription7"/>
+										<Label class="updateHeaderItemText" text="#vgmarItemsHeader8" />
+										<Label class="displayTextItemRecipe" text="#vgmarItemsTextRecipe8"/>
+										<Label class="displayTextItemDescription" text="#vgmarItemsTextDescription8"/>
+										<Label class="updateHeaderItemText" text="#vgmarItemsHeader9" />
+										<Label class="displayTextItemRecipe" text="#vgmarItemsTextRecipe9"/>
+										<Label class="displayTextItemDescription" text="#vgmarItemsTextDescription9"/>
+										<Label class="updateHeaderItemText" text="#vgmarItemsHeader10" />
+										<Label class="displayTextItemRecipe" text="#vgmarItemsTextRecipe10"/>
+										<Label class="displayTextItemDescription" text="#vgmarItemsTextDescription10"/>
+										<Label class="updateHeaderItemText" text="#vgmarItemsHeader11" />
+										<Label class="displayTextItemRecipe" text="#vgmarItemsTextRecipe11"/>
+										<Label class="displayTextItemDescription" text="#vgmarItemsTextDescription11"/>
+										<Label class="updateHeaderItemText" text="#vgmarItemsHeader12" />
+										<Label class="displayTextItemRecipe" text="#vgmarItemsTextRecipe12"/>
+										<Label class="displayTextItemDescription" text="#vgmarItemsTextDescription12"/>
+										<Label class="updateHeaderItemText" text="#vgmarItemsHeader13" />
+										<Label class="displayTextItemRecipe" text="#vgmarItemsTextRecipe13"/>
+										<Label class="displayTextItemDescription" text="#vgmarItemsTextDescription13"/>
+										<Label class="updateHeaderItemText" text="#vgmarItemsHeader14" />
+										<Label class="displayTextItemRecipe" text="#vgmarItemsTextRecipe14"/>
+										<Label class="displayTextItemDescription" text="#vgmarItemsTextDescription14"/>
+										<Label class="updateHeaderItemText" text="#vgmarItemsHeader15" />
+										<Label class="displayTextItemRecipe" text="#vgmarItemsTextRecipe15"/>
+										<Label class="displayTextItemDescription" text="#vgmarItemsTextDescription15"/>
+										<Label class="updateHeaderItemText" text="#vgmarItemsHeader16" />
+										<Label class="displayTextItemRecipe" text="#vgmarItemsTextRecipe16"/>
+										<Label class="displayTextItemDescription" text="#vgmarItemsTextDescription16"/>
+										<Label class="updateHeaderItemText" text="#vgmarItemsHeader17" />
+										<Label class="displayTextItemRecipe" text="#vgmarItemsTextRecipe17"/>
+										<Label class="displayTextItemDescription" text="#vgmarItemsTextDescription17"/>
+										<Label class="updateHeaderItemText" text="#vgmarItemsHeader18" />
+										<Label class="displayTextItemRecipe" text="#vgmarItemsTextRecipe18"/>
+										<Label class="displayTextItemDescription" text="#vgmarItemsTextDescription18"/>
+										<Label class="updateHeaderItemText" text="#vgmarItemsHeader19" />
+										<Label class="displayTextItemRecipe" text="#vgmarItemsTextRecipe19"/>
+										<Label class="displayTextItemDescription" text="#vgmarItemsTextDescription19"/>
+										<Label class="updateHeaderItemText" text="#vgmarItemsHeader20" />
+										<Label class="displayTextItemRecipe" text="#vgmarItemsTextRecipe20"/>
+										<Label class="displayTextItemDescription" text="#vgmarItemsTextDescription20"/>
+										<Label class="updateHeaderItemText" text="#vgmarItemsHeader21" />
+										<Label class="displayTextItemRecipe" text="#vgmarItemsTextRecipe21"/>
+										<Label class="displayTextItemDescription" text="#vgmarItemsTextDescription21"/>
+										<Label class="updateHeaderItemText" text="#vgmarItemsHeader22" />
+										<Label class="displayTextItemRecipe" text="#vgmarItemsTextRecipe22"/>
+										<Label class="displayTextItemDescription" text="#vgmarItemsTextDescription22"/>
+										<Label class="updateHeaderItemText" text="#vgmarItemsHeader23" />
+										<Label class="displayTextItemRecipe" text="#vgmarItemsTextRecipe23"/>
+										<Label class="displayTextItemDescription" text="#vgmarItemsTextDescription23"/>
+										<Label class="updateHeaderItemText" text="#vgmarItemsHeader24" />
+										<Label class="displayTextItemRecipe" text="#vgmarItemsTextRecipe24"/>
+										<Label class="displayTextItemDescription" text="#vgmarItemsTextDescription24"/>
+										<Label class="updateHeaderItemText" text="#vgmarItemsHeader25" />
+										<Label class="displayTextItemRecipe" text="#vgmarItemsTextRecipe25"/>
+										<Label class="displayTextItemDescription" text="#vgmarItemsTextDescription25"/>
+										<Label class="updateHeaderItemText" text="#vgmarItemsHeader26" />
+										<Label class="displayTextItemRecipe" text="#vgmarItemsTextRecipe26"/>
+										<Label class="displayTextItemDescription" text="#vgmarItemsTextDescription26"/>
+										<Label class="updateHeaderItemText" text="#vgmarItemsHeader27" />
+										<Label class="displayTextItemRecipe" text="#vgmarItemsTextRecipe27"/>
+										<Label class="displayTextItemDescription" text="#vgmarItemsTextDescription27"/>
+										<Label class="updateHeaderItemText" text="#vgmarItemsHeader28" />
+										<Label class="displayTextItemRecipe" text="#vgmarItemsTextRecipe28"/>
+										<Label class="displayTextItemDescription" text="#vgmarItemsTextDescription28"/>
+										<Label class="updateHeaderItemText" text="#vgmarItemsHeader29" />
+										<Label class="displayTextItemRecipe" text="#vgmarItemsTextRecipe29"/>
+										<Label class="displayTextItemDescription" text="#vgmarItemsTextDescription29"/>
+										<Label class="updateHeaderItemText" text="#vgmarItemsHeader30" />
+										<Label class="displayTextItemRecipe" text="#vgmarItemsTextRecipe30"/>
+										<Label class="displayTextItemDescription" text="#vgmarItemsTextDescription30"/>
+										<Label class="updateHeaderItemText" text="#vgmarItemsHeader31" />
+										<Label class="displayTextItemRecipe" text="#vgmarItemsTextRecipe31"/>
+										<Label class="displayTextItemDescription" text="#vgmarItemsTextDescription31"/>
+										<Label class="updateHeaderItemText" text="#vgmarItemsHeader32" />
+										<Label class="displayTextItemRecipe" text="#vgmarItemsTextRecipe32"/>
+										<Label class="displayTextItemDescription" text="#vgmarItemsTextDescription32"/>
+										<Label class="updateHeaderItemText" text="#vgmarItemsHeader33" />
+										<Label class="displayTextItemRecipe" text="#vgmarItemsTextRecipe33"/>
+										<Label class="displayTextItemDescription" text="#vgmarItemsTextDescription33"/>
+										<Label class="updateHeaderItemText" text="#vgmarItemsHeader34" />
+										<Label class="displayTextItemRecipe" text="#vgmarItemsTextRecipe34"/>
+										<Label class="displayTextItemDescription" text="#vgmarItemsTextDescription34"/>
+										<Label class="updateHeaderItemText" text="#vgmarItemsHeader35" />
+										<Label class="displayTextItemRecipe" text="#vgmarItemsTextRecipe35"/>
+										<Label class="displayTextItemDescription" text="#vgmarItemsTextDescription35"/>
+										<Label class="updateHeaderItemText" text="#vgmarItemsHeader36" />
+										<Label class="displayTextItemRecipe" text="#vgmarItemsTextRecipe36"/>
+										<Label class="displayTextItemDescription" text="#vgmarItemsTextDescription36"/>
+										<Label class="updateHeaderItemText" text="#vgmarItemsHeader37" />
+										<Label class="displayTextItemRecipe" text="#vgmarItemsTextRecipe37"/>
+										<Label class="displayTextItemDescription" text="#vgmarItemsTextDescription37"/>
+										<Label class="updateHeaderItemText" text="#vgmarItemsHeader38" />
+										<Label class="displayTextItemRecipe" text="#vgmarItemsTextRecipe38"/>
+										<Label class="displayTextItemDescription" text="#vgmarItemsTextDescription38"/>
+										<Label class="updateHeaderItemText" text="#vgmarItemsHeader39" />
+										<Label class="displayTextItemRecipe" text="#vgmarItemsTextRecipe39"/>
+										<Label class="displayTextItemDescription" text="#vgmarItemsTextDescription39"/>
+										<Label class="updateHeaderItemText" text="#vgmarItemsHeader40" />
+										<Label class="displayTextItemRecipe" text="#vgmarItemsTextRecipe40"/>
+										<Label class="displayTextItemDescription" text="#vgmarItemsTextDescription40"/>
+									</Panel>
+									<Panel class="horizontalSeparator"/>
+								</Panel>
+							</Panel>
+						</Panel>
+					</Panel>
+				</Panel>
+			</Panel>		
+		</Panel>
+	</Panel>
+</root>

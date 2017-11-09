@@ -1,0 +1,13 @@
+<root>
+    <styles>
+        <include src="s2r://panorama/styles/custom_game/minimap_buttons.vcss_c" />
+    </styles>
+    <scripts>
+        <include src="s2r://panorama/scripts/custom_game/minimap_buttons.vjs_c" />
+    </scripts>
+    <Panel class="menuButtonsRoot" hittest="false">
+        <Button class="menuButton" onactivate='onBtnOpenInfo()' onmouseover="DOTAShowTextTooltip(Information)" onmouseout="DOTAHideTextTooltip()" >
+            <Image class="menuButtonsIcon" src="s2r://panorama/images/custom_game/info_png.vtex"/>
+        </Button>
+    </Panel>
+</root>

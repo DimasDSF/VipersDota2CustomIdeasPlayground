@@ -2,6 +2,7 @@ local RADIANT_TEAM_MAX_PLAYERS = 1
 local DIRE_TEAM_MAX_PLAYERS = 8
 local RUNE_SPAWN_TIME = 120
 local VGMAR_DEBUG = false
+local VGMAR_BOT_FILL = true
 --///////////////////////////////////////////
 --/////////////WORKSHOP_FUCKOVER/////////////
 --Change to true before releasing to workshop
@@ -16,7 +17,23 @@ require('libraries/timers')
 require('libraries/heronames')
 
 function Precache( ctx )
-
+	--Precaching Custom Ability sounds (and all used heros' sounds :fp:)
+	
+	--Warning! Hero Names should be in internal format ex. OD is obsidian_destroyer
+	local herosoundprecachelist = {
+		"tusk",
+		"faceless_void",
+		"kunkka",
+		"obsidian_destroyer",
+		"phantom_assassin",
+		"antimage",
+		"razor"
+	}
+	
+	for i=1,#herosoundprecachelist do
+		PrecacheResource("soundfile", "soundevents/game_sounds_heroes/game_sounds_"..herosoundprecachelist[i]..".vsndevts", ctx)
+	end
+	
 end
 
 function Activate()
@@ -30,6 +47,10 @@ function VGMAR:Init()
 	self.istimescalereset = 0
 	self.direcourieruplevel = 1
 	self.radiantcourieruplevel = 1
+	self.radiantcourierlvldown = false
+	self.direcourierlvldown = false
+	self.radiantcourierlvlup = false
+	self.direcourierlvlup = false
 	self.lastrunetype = -1
 	self.currunenum = 1
 	self.removedrunenum = math.random(1,2)
@@ -41,8 +62,15 @@ function VGMAR:Init()
 	self.direcourierup3given = false
 	self.direcourierup4given = false
 	self.customitemsreminderfinished = false
-
-
+	
+	LinkLuaModifier("modifier_vgmar_util_dominator_ability_purger", "abilities/util/modifiers/modifier_vgmar_util_dominator_ability_purger.lua", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_deathskiss_visual", "abilities/modifiers/modifier_vgmar_i_deathskiss_visual", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_spellshield_cooldown", "abilities/modifiers/modifier_vgmar_i_spellshield_cooldown", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_kingsaegis_cooldown", "abilities/modifiers/modifier_vgmar_i_kingsaegis_cooldown", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_kingsaegis_active", "abilities/modifiers/modifier_vgmar_i_kingsaegis_active", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_criticalmastery_visual", "abilities/modifiers/modifier_vgmar_i_criticalmastery_visual", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_purgefield_visual", "abilities/modifiers/modifier_vgmar_i_purgefield_visual", LUA_MODIFIER_MOTION_NONE)
+	
 	self.mode = GameRules:GetGameModeEntity()
 	GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_GOODGUYS, RADIANT_TEAM_MAX_PLAYERS)
     GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_BADGUYS, DIRE_TEAM_MAX_PLAYERS)
@@ -68,8 +96,9 @@ function VGMAR:Init()
 	ListenToGameEvent( "npc_spawned", Dynamic_Wrap( VGMAR, "OnNPCSpawned" ), self )
 	ListenToGameEvent( "dota_player_learned_ability", Dynamic_Wrap( VGMAR, "OnPlayerLearnedAbility" ), self)
 	ListenToGameEvent( "game_rules_state_change", Dynamic_Wrap( VGMAR, 'OnGameStateChanged' ), self )
-	ListenToGameEvent( "dota_item_picked_up", Dynamic_Wrap( VGMAR, 'OnItemPickedUp' ), self )
+	--ListenToGameEvent( "dota_item_picked_up", Dynamic_Wrap( VGMAR, 'OnItemPickedUp' ), self )
 	ListenToGameEvent( "dota_tower_kill", Dynamic_Wrap( VGMAR, 'OnTowerKilled' ), self )
+	--ListenToGameEvent( "dota_player_used_ability", Dynamic_Wrap( VGMAR, 'OnPlayerUsedAbility' ), self )
 	Convars:RegisterConvar('vgmar_devmode', "0", "Set to 1 to show debug info.  Set to 0 to disable.", 0)
 	if VGMAR_DEBUG == true then
 		Convars:SetInt("vgmar_devmode", 1)
@@ -84,6 +113,7 @@ function dprint(...)
 	end
 end
 
+--BackDoorProtected Building List
 local bdplist = {
 	{group = "goodbase",
 		buildinglist = {
@@ -104,9 +134,8 @@ local bdplist = {
 			"good_filler_3",
 			"good_filler_4",
 			"good_filler_5",
-			"good_healer_2",
-			"good_healer_3",
-			"good_healer_4",
+			"good_filler_6",
+			"good_filler_7"
 			},
 		activationtime = 25,
 		protectionholder = "dota_goodguys_fort",
@@ -132,9 +161,8 @@ local bdplist = {
 			"bad_filler_3",
 			"bad_filler_4",
 			"bad_filler_5",
-			"bad_healer_2",
-			"bad_healer_3",
-			"bad_healer_4",
+			"bad_filler_6",
+			"bad_filler_7"
 			},
 		activationtime = 25,
 		protectionholder = "dota_badguys_fort",
@@ -197,11 +225,63 @@ local bdplist = {
 		}
 	}
 	
+--List of Units with additional abilities
+--[[
+Leveling mechanic modes unitlevel, returnvalue, daynight.
+-unitlevel args - N/A (sets ability level to unit level)
+-returnvalue args - any script (unit pointer not available)
+-daynight args - {daylvl = ,nightlvl = }
+Unbroken modes - 1:Remove abilities 0:UnLvl abilities
+
+Up to 10 abilities
+
+Example:
+{classname = "npc_dota_creep_siege",
+	abilities = {
+		"ability1",
+		"ability2"
+	},
+	levelmechanicmode = {
+		"unitlevel",
+		"daynight"
+	},
+	levelmechanicarg = {
+		nil,
+		{daylvl = 1, nightlvl = 2}
+	},
+	unbroken = true,
+	unbrokenmode = 1
+}
+
+]]--
+local creepabilitieslist = {
+	{classname = "npc_dota_creep_siege",
+		abilities = {
+			"vgmar_c_siegetimelock"
+		},
+		levelmechanicmode = {
+			"unitlevel"
+		},
+		levelmechanicarg = {
+			nil
+		},
+		unbroken = true,
+		unbrokenmode = 1
+	}
+}
+	
 function PreGameSpeed()
 	if Convars:GetInt("vgmar_devmode") == 1 then
 		return 8.0
 	end
 	return 2.0
+end
+
+function VGMAR:DisplayClientError(pid, message)
+    local player = PlayerResource:GetPlayer(pid)
+    if player then
+        CustomGameEventManager:Send_ServerToPlayer(player, "VGMARDisplayError", {message=message})
+    end
 end
 
 function VGMAR:FilterRuneSpawn( filterTable )
@@ -374,9 +454,6 @@ function VGMAR:CountUsableItemsInHeroInventory( hero, item, mutedallowed, backpa
 end
 
 function VGMAR:RemoveNItemsInInventory( hero, item, num )
-	--if not hero:HasItemInInventory(item) then
-	--	return
-	--end
 	local removeditemsnum = 0
 	for i = 0, 14 do
 		local slotitem = hero:GetItemInSlot(i);
@@ -392,15 +469,6 @@ function VGMAR:RemoveNItemsInInventory( hero, item, num )
 	return
 end
 
-function VGMAR:HeroHasAllItemsFromListWMultiple( hero, itemlist, backpack )
-	for i=1,#itemlist.itemnames do
-		if self:CountUsableItemsInHeroInventory( hero, itemlist.itemnames[i], false, backpack, false) < itemlist.itemnum[i] then
-			return false
-		end
-	end
-	return true
-end
-
 function VGMAR:TimeIsLaterThan( minute, second )
 	local num = minute * 60 + second
 	if GameRules:GetDOTATime(false, false) > num then
@@ -408,6 +476,15 @@ function VGMAR:TimeIsLaterThan( minute, second )
 	else
 		return false
 	end
+end
+
+function VGMAR:HeroHasAllItemsFromListWMultiple( hero, itemlist, backpack )
+	for i=1,#itemlist.itemnames do
+		if self:CountUsableItemsInHeroInventory( hero, itemlist.itemnames[i], false, backpack, false) < itemlist.itemnum[i] then
+			return false
+		end
+	end
+	return true
 end
 
 function VGMAR:GetHeroFreeInventorySlots( hero, backpackallowed, stashallowed )
@@ -430,40 +507,17 @@ function VGMAR:GetHeroFreeInventorySlots( hero, backpackallowed, stashallowed )
 	return slotcount
 end
 
+--[[
 function VGMAR:OnItemPickedUp(keys)
 	local heroEntity = EntIndexToHScript(keys.HeroEntityIndex or keys.UnitEntityIndex)
 	local itemEntity = EntIndexToHScript(keys.ItemEntityIndex)
 	local player = PlayerResource:GetPlayer(keys.PlayerID)
 	local itemname = keys.itemname
 	
-	--//////////////////////////////
-	--Consumable Items System
-	--//////////////////////////////
 	if heroEntity:IsRealHero() and not heroEntity:IsCourier() then
-		--Alchemist-less Scepter consumption
-		if self:CountUsableItemsInHeroInventory( heroEntity, "item_ultimate_scepter", false, true, false) >= 2 and not heroEntity:FindModifierByName("modifier_item_ultimate_scepter_consumed") then
-			self:RemoveNItemsInInventory(heroEntity, "item_ultimate_scepter", 2)
-			heroEntity:AddNewModifier(heroEntity, nil, 'modifier_item_ultimate_scepter_consumed', { bonus_all_stats = 10, bonus_health = 175, bonus_mana = 175 })
-		end
-		--Diffusal Blade 2+ Upgrade
-		if self:HeroHasUsableItemInInventory( heroEntity, "item_recipe_diffusal_blade", false, false, false) and self:HeroHasUsableItemInInventory( heroEntity, "item_diffusal_blade_2", false, false, false)  then
-			local diffbladeitem = self:GetItemFromInventoryByName( heroEntity, "item_diffusal_blade_2", false, false, false )
-			local diffbladerecipe = self:GetItemFromInventoryByName( heroEntity, "item_recipe_diffusal_blade", false, false, false )
-			if diffbladeitem ~= nil and diffbladeitem:GetCurrentCharges() < diffbladeitem:GetInitialCharges() then
-				heroEntity:RemoveItem(diffbladerecipe)
-				diffbladeitem:SetCurrentCharges(diffbladeitem:GetInitialCharges())
-			end
-		end
-		--Bloodstone recharge
-		if self:HeroHasUsableItemInInventory(heroEntity, "item_bloodstone", false, false, false) and self:CountUsableItemsInHeroInventory(heroEntity, "item_recipe_bloodstone", false, true, false) >= 3 then
-			self:RemoveNItemsInInventory(heroEntity, "item_recipe_bloodstone", 3)
-			local bloodstone = self:GetItemFromInventoryByName( heroEntity, "item_bloodstone", false, false, false )
-			if bloodstone ~= nil then
-				bloodstone:SetCurrentCharges(bloodstone:GetCurrentCharges() + 24)
-			end
-		end
 	end
 end
+--]]
 
 function VGMAR:OnTowerKilled( keys )
 	local switchAI = (RandomInt(1,3))
@@ -490,7 +544,7 @@ function VGMAR:IsHeroBotControlled(hero)
 	return false
 end
 
-function VGMAR:OnThink()	
+function VGMAR:OnThink()
 	if GameRules:State_Get() == DOTA_GAMERULES_STATE_CUSTOM_GAME_SETUP then
 		GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_GOODGUYS, PlayerResource:GetPlayerCount())
 		for playerID=0,PlayerResource:GetPlayerCount() do
@@ -504,7 +558,6 @@ function VGMAR:OnThink()
 		end
 		GameRules:LockCustomGameSetupTeamAssignment(true)
 	end
-
 	if GameRules:State_Get() == DOTA_GAMERULES_STATE_GAME_IN_PROGRESS then
 		for i=0,HeroList:GetHeroCount() do
 			local heroent = HeroList:GetHero(i)
@@ -540,156 +593,219 @@ function VGMAR:OnThink()
 						end
 					end--]]
 				end
-			--//////////////////////
-			--Passive Item Abilities
-			--//////////////////////
-			--Items For Spells Table
+				
+				--//////////////////
+				--AbilityAutoUpgrade
+				--//////////////////
+				local heroname = heroent:GetName()
+				--AbilityAutoUpgradeTable
+				local heroautoabilityuplist = {
+					["npc_dota_hero_riki"] = {
+						spells = {"riki_smoke_screen",
+							"riki_blink_strike", 
+							"riki_permanent_invisibility", 
+							"riki_tricks_of_the_trade"},
+						levelup = {
+							{[5] = heroent:GetLevel() >= 22},
+							{[5] = heroent:GetLevel() >= 20},
+							{[5] = heroent:GetLevel() >= 15 or heroent:HasScepter(), [6] = heroent:HasScepter() and heroent:GetLevel() >= 15},
+							{[4] = heroent:HasScepter() or heroent:GetLevel() == 25, [5] = heroent:HasScepter() and heroent:GetLevel() == 25}
+						}
+					},
+				}
+				if heroautoabilityuplist[heroname] ~= nil then
+					for j=1,#heroautoabilityuplist[heroname].spells do
+						local ability = heroent:FindAbilityByName(heroautoabilityuplist[heroname].spells[j])
+						if ability then
+							local ablvl = ability:GetLevel()
+							if heroautoabilityuplist[heroname].levelup[j][ablvl] ~= nil and heroautoabilityuplist[heroname].levelup[j][ablvl] == false then
+								ability:SetLevel( ability:GetLevel() - 1 )
+							elseif heroautoabilityuplist[heroname].levelup[j][ablvl + 1] ~= nil and heroautoabilityuplist[heroname].levelup[j][ablvl + 1] == true then
+								ability:SetLevel( ability:GetLevel() + 1 )
+							end
+						end
+					end
+				end
+				
+				--//////////////////////////////
+				--Consumable Items System
+				--//////////////////////////////
+				if heroent:IsRealHero() and not heroent:IsCourier() then
+					--Alchemist-less Scepter consumption
+					if self:CountUsableItemsInHeroInventory( heroent, "item_ultimate_scepter", false, true, false) >= 2 and not heroent:FindModifierByName("modifier_item_ultimate_scepter_consumed") then
+						self:RemoveNItemsInInventory(heroent, "item_ultimate_scepter", 2)
+						heroent:AddNewModifier(heroent, nil, 'modifier_item_ultimate_scepter_consumed', { bonus_all_stats = 10, bonus_health = 175, bonus_mana = 175 })
+					end
+					--##Obsolete707
+					--Diffusal Blade 2+ Upgrade
+					--[[if self:HeroHasUsableItemInInventory( heroent, "item_recipe_diffusal_blade", false, false, false) and self:HeroHasUsableItemInInventory( heroent, "item_diffusal_blade_2", false, false, false)  then
+						local diffbladeitem = self:GetItemFromInventoryByName( heroent, "item_diffusal_blade_2", false, false, false )
+						local diffbladerecipe = self:GetItemFromInventoryByName( heroent, "item_recipe_diffusal_blade", false, false, false )
+						if diffbladeitem ~= nil and diffbladeitem:GetCurrentCharges() < diffbladeitem:GetInitialCharges() then
+							heroent:RemoveItem(diffbladerecipe)
+							diffbladeitem:SetCurrentCharges(diffbladeitem:GetInitialCharges())
+						end
+					end--]]
+					--Bloodstone recharge
+					if self:HeroHasUsableItemInInventory(heroent, "item_bloodstone", false, false, false) and self:CountUsableItemsInHeroInventory(heroent, "item_recipe_bloodstone", false, true, false) >= 3 then
+						self:RemoveNItemsInInventory(heroent, "item_recipe_bloodstone", 3)
+						local bloodstone = self:GetItemFromInventoryByName( heroent, "item_bloodstone", false, false, false )
+						if bloodstone ~= nil then
+							bloodstone:SetCurrentCharges(bloodstone:GetCurrentCharges() + 24)
+						end
+					end
+				end
+				
+				--//////////////////////
+				--Passive Item Abilities
+				--//////////////////////
+				--Items For Spells Table
 				local itemlistforspell = {
 			{spell = "vgmar_i_goblins_greed",
 				items = {itemnames = {"item_hand_of_midas"}, itemnum = {1}},
 				isconsumable = false,
 				usesmultiple = false,
 				backpack = self:TimeIsLaterThan( 30, 0 ) or heroent:GetLevel() >= 25,
-				preventedhero = "npc_dota_hero_alchemist"},
+				preventedhero = "npc_dota_hero_alchemist",
+				specificcond = true },
 			{spell = "vgmar_i_essense_shift",
 				items = {itemnames = {"item_silver_edge"}, itemnum = {1}},
 				isconsumable = false,
 				usesmultiple = false,
 				backpack = false,
-				preventedhero = "npc_dota_hero_slark"},
+				preventedhero = "npc_dota_hero_slark",
+				specificcond = true },
 			{spell = "vgmar_i_thirst",
 				items = {itemnames = {"item_gem", "item_phase_boots"}, itemnum = {2, 1}},
 				isconsumable = true,
 				usesmultiple = true,
 				backpack = true,
-				preventedhero = "npc_dota_hero_bloodseeker"},
+				preventedhero = "npc_dota_hero_bloodseeker",
+				specificcond = true },
 			{spell = "vgmar_i_pulse",
 				items = {itemnames = {"item_urn_of_shadows"}, itemnum = {2}},
 				isconsumable = true,
 				usesmultiple = true,
 				backpack = true,
-				preventedhero = "npc_dota_hero_necrolyte"},
+				preventedhero = "npc_dota_hero_necrolyte",
+				specificcond = true },
 			{spell = "vgmar_i_fervor",
 				items = {itemnames = {"item_gloves", "item_mask_of_madness"}, itemnum = {2, 1}},
 				isconsumable = true,
 				usesmultiple = true,
 				backpack = true,
-				preventedhero = "npc_dota_hero_troll_warlord"},
+				preventedhero = "npc_dota_hero_troll_warlord",
+				specificcond = true },
 			{spell = "aegis_king_reincarnation",
-				items = {itemnames = {"item_stout_shield", "item_poor_mans_shield", "item_vanguard", "item_buckler", "item_aegis"}, itemnum = {1, 1, 1, 1, 1}},
+				items = {itemnames = {"item_stout_shield", "item_vanguard", "item_buckler", "item_aegis"}, itemnum = {1, 1, 1, 1}},
 				isconsumable = true,
 				usesmultiple = false,
 				backpack = true,
-				preventedhero = "npc_dota_hero_skeleton_king"},
+				preventedhero = "npc_dota_hero_skeleton_king",
+				specificcond = true },
 			{spell = "vgmar_i_atrophy_aura",
 				items = {itemnames = {"item_helm_of_the_dominator", "item_satanic"}, itemnum = {2, 1}},
 				isconsumable = true,
 				usesmultiple = true,
 				backpack = true,
-				preventedhero = "npc_dota_hero_abyssal_underlord"},
+				preventedhero = "npc_dota_hero_abyssal_underlord",
+				specificcond = true },
 			{spell = "vgmar_i_deathskiss",
 				items = {itemnames = {"item_relic"}, itemnum = {2}},
 				isconsumable = true,
 				usesmultiple = true,
 				backpack = true,
-				preventedhero = "npc_dota_hero_phantom_assassin"},
+				preventedhero = "npc_dota_hero_phantom_assassin",
+				specificcond = heroent:FindAbilityByName("vgmar_i_criticalmastery") == nil },
 			{spell = "vgmar_i_essence_aura",
 				items = {itemnames = {"item_octarine_core"}, itemnum = {2}},
 				isconsumable = true,
 				usesmultiple = true,
 				backpack = true,
-				preventedhero = "npc_dota_hero_obsidian_destroyer"},
+				preventedhero = "npc_dota_hero_obsidian_destroyer",
+				specificcond = true },
 			{spell = "vgmar_i_rainfall",
 				items = {itemnames = {"item_infused_raindrop"}, itemnum = {6}},
 				isconsumable = true,
 				usesmultiple = true,
 				backpack = true,
-				preventedhero = "npc_dota_hero_crystal_maiden"},
+				preventedhero = "npc_dota_hero_crystal_maiden",
+				specificcond = true },
 			{spell = "vgmar_i_spellshield",
 				items = {itemnames = {"item_lotus_orb", "item_cloak"}, itemnum = {1, 2}},
 				isconsumable = true,
 				usesmultiple = true,
 				backpack = true,
-				preventedhero = "npc_dota_hero_antimage"},
+				preventedhero = "npc_dota_hero_antimage",
+				specificcond = true },
 			{spell = "vgmar_i_vampiric_aura",
 				items = {itemnames = {"item_vladmir"}, itemnum = {2}},
 				isconsumable = true,
 				usesmultiple = true,
 				backpack = true,
-				preventedhero = "npc_dota_hero_skeleton_king"}
+				preventedhero = "npc_dota_hero_skeleton_king",
+				specificcond = true },
+			{spell = "vgmar_i_criticalmastery",
+				items = {itemnames = {"item_greater_crit", "item_lesser_crit"}, itemnum = {2, 1}},
+				isconsumable = true,
+				usesmultiple = true,
+				backpack = true,
+				preventedhero = "npc_dota_hero_phantom_assassin",
+				specificcond = heroent:FindAbilityByName("vgmar_i_deathskiss") == nil },
+			{spell = "vgmar_i_purgefield",
+				items = {itemnames = {"item_nullifier", "item_null_talisman"}, itemnum = {1, 3}},
+				isconsumable = true,
+				usesmultiple = true,
+				backpack = true,
+				preventedhero = "npc_dota_hero_razor",
+				specificcond = true	}
 			}
 			--TableEND
 			
 				for k=1,#itemlistforspell do
 					if heroent:GetClassname() ~= itemlistforspell[k].preventedhero then
-						if itemlistforspell[k].isconsumable == true then
-							if self:HeroHasAllItemsFromListWMultiple( heroent, itemlistforspell[k].items, itemlistforspell[k].backpack) and not heroent:FindAbilityByName(itemlistforspell[k].spell) then
-								local itemability = heroent:FindAbilityByName(itemlistforspell[k].spell)
-								if itemability == nil then
-									for j=1,#itemlistforspell[k].items.itemnames do
-										self:RemoveNItemsInInventory( heroent, itemlistforspell[k].items.itemnames[j], itemlistforspell[k].items.itemnum[j])
-									end
-									local addedability = heroent:AddAbility(itemlistforspell[k].spell)
-									addedability:SetLevel(1)
-								end
-							end
-						else
-							if self:HeroHasAllItemsFromListWMultiple( heroent, itemlistforspell[k].items, itemlistforspell[k].backpack) then
-								local itemability = heroent:FindAbilityByName(itemlistforspell[k].spell)
-								if itemability == nil then
-									local addedability = heroent:AddAbility(itemlistforspell[k].spell)
-									if addedability then
+						if itemlistforspell[k].specificcond == true then
+							if itemlistforspell[k].isconsumable == true then
+								if self:HeroHasAllItemsFromListWMultiple( heroent, itemlistforspell[k].items, itemlistforspell[k].backpack) and not heroent:FindAbilityByName(itemlistforspell[k].spell) then
+									local itemability = heroent:FindAbilityByName(itemlistforspell[k].spell)
+									if itemability == nil then
+										for j=1,#itemlistforspell[k].items.itemnames do
+											self:RemoveNItemsInInventory( heroent, itemlistforspell[k].items.itemnames[j], itemlistforspell[k].items.itemnum[j])
+										end
+										local addedability = heroent:AddAbility(itemlistforspell[k].spell)
 										addedability:SetLevel(1)
 									end
 								end
 							else
-								local itemability = heroent:FindAbilityByName(itemlistforspell[k].spell)
-								if itemability ~= nil then
-									heroent:RemoveAbility(itemlistforspell[k].spell)
+								if self:HeroHasAllItemsFromListWMultiple( heroent, itemlistforspell[k].items, itemlistforspell[k].backpack) then
+									local itemability = heroent:FindAbilityByName(itemlistforspell[k].spell)
+									if itemability == nil then
+										local addedability = heroent:AddAbility(itemlistforspell[k].spell)
+										if addedability then
+											addedability:SetLevel(1)
+										end
+									end
+								else
+									local itemability = heroent:FindAbilityByName(itemlistforspell[k].spell)
+									if itemability ~= nil then
+										heroent:RemoveAbility(itemlistforspell[k].spell)
+									end
 								end
 							end
 						end
 					end
 				end
 				if heroent:FindAbilityByName("aegis_king_reincarnation") ~= nil and heroent:IsAlive() then
-					local reincarnationability = heroent:FindAbilityByName("aegis_king_reincarnation")
-					local reincarnationcooldown = reincarnationability:GetCooldownTime()
-					if reincarnationcooldown ~= 0 then
-						if not heroent:HasModifier("modifier_skeleton_king_mortal_strike_drain_buff") then
-							heroent:AddNewModifier(heroent, heroent, "modifier_skeleton_king_mortal_strike_drain_buff", {hp_drain = 0, drain_duration = 99999})
-						end
-						if heroent:HasModifier("modifier_skeleton_king_mortal_strike_drain_debuff") then
-							heroent:RemoveModifierByName("modifier_skeleton_king_mortal_strike_drain_debuff")
-						end
-						heroent:SetModifierStackCount("modifier_skeleton_king_mortal_strike_drain_buff", heroent, reincarnationcooldown)
-					else
-						if not heroent:HasModifier("modifier_skeleton_king_mortal_strike_drain_debuff") then
-							heroent:AddNewModifier(heroent, heroent, "modifier_skeleton_king_mortal_strike_drain_debuff", {hp_drain = 0, drain_duration = 99999})
-						end
-						if heroent:HasModifier("modifier_skeleton_king_mortal_strike_drain_buff") then
-							heroent:RemoveModifierByName("modifier_skeleton_king_mortal_strike_drain_buff")
-						end
+					if not heroent:HasModifier("modifier_vgmar_i_kingsaegis_cooldown") then
+						heroent:AddNewModifier(heroent, nil, "modifier_vgmar_i_kingsaegis_cooldown", {})
 					end
 				end
 				--/////////////////////////
 				--ActiveSpellShieldCooldown
 				--/////////////////////////
 				if heroent:FindAbilityByName("vgmar_i_spellshield") ~= nil and heroent:IsAlive() then
-					local spellshieldability = heroent:FindAbilityByName("vgmar_i_spellshield")
-					local spellshieldcooldown = spellshieldability:GetCooldownTime()
 					if not heroent:HasModifier("modifier_vgmar_i_spellshield_cooldown") then
-						if heroent:FindAbilityByName("vgmar_i_spellshield_cooldown") ~= nil then
-							local spellshieldcooldownability = heroent:FindAbilityByName("vgmar_i_spellshield_cooldown")
-							spellshieldcooldownability:ApplyDataDrivenModifier(heroent, heroent, "modifier_vgmar_i_spellshield_cooldown", {})
-						else
-							local spellshieldcooldownability = heroent:AddAbility("vgmar_i_spellshield_cooldown")
-							spellshieldcooldownability:ApplyDataDrivenModifier(heroent, heroent, "modifier_vgmar_i_spellshield_cooldown", {})
-						end
-					end
-					if heroent:HasScepter() then
-						heroent:SetModifierStackCount("modifier_vgmar_i_spellshield_cooldown", heroent, spellshieldcooldown)
-					else
-						heroent:SetModifierStackCount("modifier_vgmar_i_spellshield_cooldown", heroent, 0)
+						heroent:AddNewModifier(heroent, nil, "modifier_vgmar_i_spellshield_cooldown", {})
 					end
 				end
 				--////////////////
@@ -697,13 +813,23 @@ function VGMAR:OnThink()
 				--////////////////
 				if heroent:FindAbilityByName("vgmar_i_deathskiss") ~= nil and heroent:IsAlive() then
 					if not heroent:HasModifier("modifier_vgmar_i_deathskiss_visual") then
-						if heroent:FindAbilityByName("vgmar_i_deathskiss_visual") ~= nil then
-							local spellshieldcooldownability = heroent:FindAbilityByName("vgmar_i_deathskiss_visual")
-							spellshieldcooldownability:ApplyDataDrivenModifier(heroent, heroent, "modifier_vgmar_i_deathskiss_visual", {})
-						else
-							local spellshieldcooldownability = heroent:AddAbility("vgmar_i_deathskiss_visual")
-							spellshieldcooldownability:ApplyDataDrivenModifier(heroent, heroent, "modifier_vgmar_i_deathskiss_visual", {})
-						end
+						heroent:AddNewModifier(heroent, nil, "modifier_vgmar_i_deathskiss_visual", {})
+					end
+				end
+				--/////////////////////
+				--CriticalMasteryVisual
+				--/////////////////////
+				if heroent:FindAbilityByName("vgmar_i_criticalmastery") ~= nil and heroent:IsAlive() then
+					if not heroent:HasModifier("modifier_vgmar_i_criticalmastery_visual") then
+						heroent:AddNewModifier(heroent, nil, "modifier_vgmar_i_criticalmastery_visual", {})
+					end
+				end
+				--////////////////
+				--PurgeFieldVisual
+				--////////////////
+				if heroent:FindAbilityByName("vgmar_i_purgefield") ~= nil and heroent:IsAlive() then
+					if not heroent:HasModifier("modifier_vgmar_i_purgefield_visual") then
+						heroent:AddNewModifier(heroent, nil, "modifier_vgmar_i_purgefield_visual", {})
 					end
 				end
 				--AegisKingAntiOctarine
@@ -762,6 +888,24 @@ function VGMAR:OnThink()
 					self.direcourierup4given = true
 				end
 			end
+			--//////////////////
+			--CourierLevelVisual
+			--//////////////////
+			local couriers = Entities:FindAllByClassname("npc_dota_courier")
+			for i=1,#couriers do
+				if not couriers[i]:HasModifier("modifier_vgmar_util_courier_level") then
+					if couriers[i]:FindAbilityByName("vgmar_util_courier_level") ~= nil then
+						local spellshieldcooldownability = couriers[i]:FindAbilityByName("vgmar_util_courier_level")
+						spellshieldcooldownability:ApplyDataDrivenModifier(couriers[i], couriers[i], "modifier_vgmar_util_courier_level", {})
+					else
+						local spellshieldcooldownability = couriers[i]:AddAbility("vgmar_util_courier_level")
+						spellshieldcooldownability:ApplyDataDrivenModifier(couriers[i], couriers[i], "modifier_vgmar_util_courier_level", {})
+					end
+				end
+				if couriers[i]:FindAbilityByName("courier_burst"):GetLevel() > 0 then
+					couriers[i]:SetModifierStackCount("modifier_vgmar_util_courier_level", couriers[i], couriers[i]:FindAbilityByName("courier_burst"):GetLevel())
+				end
+			end
 		end
 		--//////////////////
 		--BackDoorProtection
@@ -795,25 +939,10 @@ function VGMAR:OnThink()
 		--///////////////////
 		--CustomItemsReminder
 		--///////////////////
+		
 		local customitemreminderlist = {
 			[-90] = "<font color='honeydew'>Remember, this gamemode has multiple scripted item abilities</font>",
-			[-85] = "<font color='honeydew'>List of custom abilities:</font>",
-			[-80] = "<font color='red'>[C]</font>-<font color='orange'>items</font> consumed for <font color='gold'>effect</font>",
-			[-77] = "<font color='orange'>Hand of Midas</font> => <font color='gold'>Goblins Greed</font> (works from backpack after 30min or if hero is lvl25)",
-			[-73] = "<font color='orange'>Silver Edge</font> => <font color='gold'>Essense Shift</font>",
-			[-67] = "<font color='orange'>Gem*2 + Phase Boots</font> => <font color='gold'>Thirst</font> <font color='red'>[C]</font>",
-			[-63] = "<font color='orange'>Urn*2</font> => <font color='gold'>DeathPulse Regen</font> <font color='red'>[C]</font>",
-			[-57] = "<font color='orange'>Mask of Madness + Gloves*2</font> => <font color='gold'>Fervor</font> <font color='red'>[C]</font>",
-			[-53] = "<font color='orange'>StoutShield+PMS+Vanguard+Buckler+Aegis</font> => <font color='gold'>Kings Aegis</font> <font color='red'>[C]</font>",
-			[-50] = "<font color='orange'>Dominator*2 + Satanic</font> => <font color='gold'>Atrophy Aura</font> <font color='red'>[C]</font>",
-			[-47] = "<font color='orange'>Sacred Relic*2</font> => <font color='gold'>Deaths Kiss</font> <font color='red'>[C]</font>",
-			[-45] = "<font color='orange'>Octarine Core*2</font> => <font color='gold'>Essence Aura</font> <font color='red'>[C]</font>",
-			[-43] = "<font color='orange'>Infused Raindrop*6</font> => <font color='gold'>Enchanted Rainfall</font> <font color='red'>[C]</font>",
-			[-40] = "<font color='orange'>Lotus Orb+Cloak*2</font> => <font color='gold'>Spell Shield</font> <font color='red'>[C]</font>",
-			[-37] = "<font color='orange'>Vladmir*2</font> => <font color='gold'>Vampiric Aura</font> <font color='red'>[C]</font>",
-			[-30] = "<font color='gold'>Bloodstone</font> <font color='honeydew'>can be recharged with</font> <font color='orange'>3*bloodstone recipes</font>",
-			[-25] = "<font color='gold'>Diffusal Blade</font> <font color='honeydew'>can be recharged with a</font> <font color='orange'>recipe</font>",
-			[-20] = "<font color='gold'>Aghanims infusion</font> <font color='honeydew'>is available with</font> <font color='orange'>2*Aghanims scepters</font>",
+			[-80] = "<font color='honeydew'>Use information Icon above your minimap</font>",
 			[-5] = "<font color='lime'>GLHF</font>"
 		}
 		
@@ -828,11 +957,46 @@ function VGMAR:OnThink()
 			end
 		end
 		
+		--////////////////////
+		--CourierBurstLevelFix
+		--////////////////////
+		if self.radiantcourierlvlup == false or self.direcourierlvlup == false then
+			local couriers = Entities:FindAllByClassname("npc_dota_courier")
+			for i=1,#couriers do
+				if GameRules:State_Get() == DOTA_GAMERULES_STATE_PRE_GAME or self:TimeIsLaterThan( 3, 5 ) == false then
+					if couriers[i]:GetTeamNumber() == 2 and self.radiantcourierlvldown == false then
+						couriers[i]:FindAbilityByName("courier_burst"):SetLevel( 0 )
+						couriers[i]:FindAbilityByName("courier_shield"):SetLevel( 0 )
+						self.radiantcourierlvldown = true
+					elseif couriers[i]:GetTeamNumber() == 3 and self.direcourierlvldown == false then
+						couriers[i]:FindAbilityByName("courier_burst"):SetLevel( 0 )
+						couriers[i]:FindAbilityByName("courier_shield"):SetLevel( 0 )
+						self.direcourierlvldown = true
+					end
+				elseif self:TimeIsLaterThan( 3, 5 ) and GameRules:State_Get() > DOTA_GAMERULES_STATE_PRE_GAME then
+					if couriers[i]:GetTeamNumber() == 2 and self.radiantcourierlvlup == false then
+						couriers[i]:FindAbilityByName("courier_burst"):SetLevel( 1 )
+						couriers[i]:FindAbilityByName("courier_shield"):SetLevel( 1 )
+						self.radiantcourierlvlup = true
+					elseif couriers[i]:GetTeamNumber() == 3 and self.direcourierlvlup == false then
+						couriers[i]:FindAbilityByName("courier_burst"):SetLevel( 1 )
+						couriers[i]:FindAbilityByName("courier_shield"):SetLevel( 1 )
+						self.direcourierlvlup = true
+					end
+					self.radiantcourierlvldown = true
+					self.direcourierlvldown = true
+				end
+			end
+		end
+		
+		--##Obsolete707
+		
+		--Full Rework to Table Script Required		
 		--///////////////////////////
 		--RealTime Hero Modifications
 		--///////////////////////////
 		
-		--Building a list of heroes
+		--[[--Building a list of heroes
 		local herolistnightstalker = Entities:FindAllByClassname( "npc_dota_hero_night_stalker" )
 		local herolistluna = Entities:FindAllByClassname( "npc_dota_hero_luna" )
 		local herolistwinterwyvern = Entities:FindAllByClassname( "npc_dota_hero_winter_wyvern" )
@@ -841,9 +1005,9 @@ function VGMAR:OnThink()
 		local herolistam = Entities:FindAllByClassname( "npc_dota_hero_antimage" )
 		local herolistrazor = Entities:FindAllByClassname( "npc_dota_hero_razor" )
 		local herolistphantomlancer = Entities:FindAllByClassname( "npc_dota_hero_phantom_lancer" )
-		local herolistviper = Entities:FindAllByClassname( "npc_dota_hero_viper" )
+		local herolistviper = Entities:FindAllByClassname( "npc_dota_hero_viper" )--]]
 		
-		--Checking conditions for automatic Ability leveling
+		--[[--Checking conditions for automatic Ability leveling
 		--Nightstalker
 		for i, hero in ipairs(herolistnightstalker) do
 			local nsvoid = hero:FindAbilityByName( "night_stalker_void" )
@@ -1137,7 +1301,7 @@ function VGMAR:OnThink()
 			elseif viperstrike:GetLevel() == 6 and (hero:GetLevel() < 25 or not hero:HasScepter()) then
 				viperstrike:SetLevel( 5 )
 			end
-		end
+		end--]]
 		
 		--///////////////////////////
 		--END
@@ -1155,12 +1319,58 @@ function VGMAR:OnNPCSpawned( event )
 	end
 	
 	if spawnedUnit:GetClassname() == "npc_dota_venomancer_plagueward" then
-		local destroySpell = spawnedUnit:FindAbilityByName( "broodmother_spin_web_destroy" )
+		local destroySpell = spawnedUnit:FindAbilityByName( "vgmar_util_plague_ward_destroy" )
 		if destroySpell then
 			destroySpell:SetLevel( 1 )
 		end
 	end
+	
+	for i=1,#creepabilitieslist do
+		if spawnedUnit:GetClassname() == creepabilitieslist[i].classname then
+			for k=1,#creepabilitieslist[i].abilities do
+				local ability = spawnedUnit:AddAbility( creepabilitieslist[i].abilities[k] )
+				if creepabilitieslist[i].levelmechanicmode[k] == "unitlevel" then
+					ability:SetLevel( spawnedUnit:GetLevel() )
+				elseif creepabilitieslist[i].levelmechanicmode[k] == "returnvalue" then
+					ability:SetLevel( creepabilitieslist[i].levelmechanicarg[k] )
+				elseif creepabilitieslist[i].levelmechanicmode[k] == "daynight" then
+					if GameRules:IsDaytime() then
+						ability:SetLevel( creepabilitieslist[i].levelmechanicarg[k].daylvl )
+					else
+						ability:SetLevel( creepabilitieslist[i].levelmechanicarg[k].nightlvl )
+					end
+				end				
+			end
+			if creepabilitieslist[i].unbroken == true then
+				spawnedUnit:AddNewModifier(spawnedUnit, nil, "modifier_vgmar_util_dominator_ability_purger", 
+					{remove_mode = creepabilitieslist[i].unbrokenmode,
+						ability1 = creepabilitieslist[i].abilities[1],
+						ability2 = creepabilitieslist[i].abilities[2],
+						ability3 = creepabilitieslist[i].abilities[3],
+						ability4 = creepabilitieslist[i].abilities[4],
+						ability5 = creepabilitieslist[i].abilities[5],
+						ability6 = creepabilitieslist[i].abilities[6],
+						ability7 = creepabilitieslist[i].abilities[7],
+						ability8 = creepabilitieslist[i].abilities[8],
+						ability9 = creepabilitieslist[i].abilities[9],
+						ability10 = creepabilitieslist[i].abilities[10]})
+			end
+		end
+	end
+	
+	--[[if spawnedUnit:GetClassname() == "npc_dota_creep_siege" then
+		local bashSpell = spawnedUnit:AddAbility( "vgmar_c_siegetimelock" )
+		spawnedUnit:AddNewModifier(spawnedUnit, nil, "modifier_vgmar_util_dominator_ability_purger", {remove_mode = 1, ability1 = "vgmar_c_siegetimelock"})                                                                          
+		if bashSpell then
+			bashSpell:SetLevel( spawnedUnit:GetLevel() )
+		end
+	end--]]
 end
+
+--[[function VGMAR:OnPlayerUsedAbility( keys )
+	local PlayerID = keys.PlayerID
+	local ability = keys.abilityname
+end--]]
 
 function VGMAR:OnPlayerLearnedAbility( keys )
 	local player = EntIndexToHScript(keys.player)
@@ -1168,6 +1378,40 @@ function VGMAR:OnPlayerLearnedAbility( keys )
 	
 	local playerhero = player:GetAssignedHero()
 	
+	--##Obsolete707
+	
+	--FullRewriteToTableForm
+	--[[
+	local blockedlvlupabilities = {
+	{spell = "hero_name__spell_name", maxmanuallevel = 4},
+	...	
+	}
+	--]]
+	
+	--///////////////////////////////////
+	--Preventing manual ability upgrading
+	--///////////////////////////////////
+	
+	local blockedlvlupabilities = {
+		{spell = "riki_smoke_screen", maxmanuallevel = 4},
+		{spell = "riki_blink_strike", maxmanuallevel = 4},
+		{spell = "riki_permanent_invisibility", maxmanuallevel = 4},
+		{spell = "riki_tricks_of_the_trade", maxmanuallevel = 3}
+	}
+	
+	
+	for i=1,#blockedlvlupabilities do
+		if abilityname == blockedlvlupabilities[i].spell then
+			local ability = playerhero:FindAbilityByName(abilityname)
+			local abilitylevel = ability:GetLevel()
+			if abilitylevel > blockedlvlupabilities[i].maxmanuallevel then
+				playerhero:SetAbilityPoints(playerhero:GetAbilityPoints() + 1)
+				ability:SetLevel( ability:GetLevel() - 1 )
+			end
+		end
+	end
+	
+	--[[
 	--Building ability list for modification
 	--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	--Probably a better solution would be to build those according to existing heroes
@@ -1220,9 +1464,7 @@ function VGMAR:OnPlayerLearnedAbility( keys )
 			zeuscloud:SetLevel( 1 )
 		end
 	end
-	--///////////////////////////////////
-	--Preventing manual ability upgrading
-	--///////////////////////////////////
+	
 
 	--Nightstalker
 	if abilityname == "night_stalker_hunter_in_the_night" then
@@ -1407,6 +1649,7 @@ function VGMAR:OnPlayerLearnedAbility( keys )
 			viperstrike:SetLevel( viperstrike:GetLevel() - 1 )
 		end
 	end
+	--]]
 end
 
 function GetBuildingGroupFromName( name )
@@ -1551,9 +1794,16 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 				if self:GetHerosCourier(unit) ~= nil then
 					self:RemoveNItemsInInventory(unit, "item_courier", 1)
 					SendOverheadEventMessage( nil, 0, unit, 100, nil )
+					self:DisplayClientError(issuer, "Second Courier is not allowed")
 					unit:ModifyGold(100, false, 6)
 					return false
 				end
+			end
+		end
+		if unit:GetClassname() == "npc_dota_venomancer_plagueward" then
+			if ability and ability:GetName() == "vgmar_util_plague_ward_destroy" then
+				unit:ForceKill(false)
+				return false
 			end
 		end
 	end
@@ -1638,14 +1888,28 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 		end
 	end
 	
+	--Riki No Enemy Ult Before lvl4 scepters
+	if unit and unit:IsRealHero() then
+		if ability and ability:GetName() == "riki_tricks_of_the_trade" then
+			if ability:GetLevel() < 4 then
+				if filterTable.entindex_target ~= 0 and target:GetTeamNumber() ~= unit:GetTeamNumber() then
+					self:DisplayClientError(issuer, "Unable to cast on enemies before LVL4")
+					return false
+				end
+			end
+		end
+	end
+	
 	--////////////////
 	--AutoCourierBurst
 	--////////////////
 	if unit and unit:GetClassname() == "npc_dota_courier" then
 		local burstability = unit:FindAbilityByName("courier_burst")
-		if unit:GetTeamNumber() == 2 and ability and ability:GetName() == "courier_take_stash_and_transfer_items" then
+		if unit:GetTeamNumber() == 2 and ability and (ability:GetName() == "courier_take_stash_and_transfer_items" or ability:GetName() == "courier_shield" or ability:GetName() == "courier_burst") then
 			if burstability and burstability:GetCooldownTimeRemaining() == 0 then
 				burstability:CastAbility()
+				unit:FindAbilityByName("courier_shield"):EndCooldown()
+				unit:FindAbilityByName("courier_shield"):StartCooldown(burstability:GetCooldown(burstability:GetLevel() - 1))
 			end
 		elseif unit:GetTeamNumber() == 3 and burstability:GetLevel() > 2 then
 			if burstability and burstability:GetCooldownTimeRemaining() == 0 then
@@ -1664,7 +1928,9 @@ function VGMAR:OnGameStateChanged( keys )
 		if IsServer() then
 			Convars:SetBool("sv_cheats", true)
 			dprint("Instant:Enabling Cheats")
-			SendToServerConsole("dota_bot_populate")
+			if VGMAR_BOT_FILL == true then
+				SendToServerConsole("dota_bot_populate")
+			end
 			GameRules:GetGameModeEntity():SetThink(function()
 				Convars:SetBool("sv_cheats", true)
 				dprint("Timer:Enabling Cheats")
@@ -1702,7 +1968,9 @@ function VGMAR:OnGameStateChanged( keys )
 		
 		Convars:SetBool("sv_cheats", true)
 		for f=0,100 do
-			SendToServerConsole("dota_bot_populate")
+			if VGMAR_BOT_FILL == true then
+				SendToServerConsole("dota_bot_populate")
+			end
 			SendToServerConsole("dota_bot_set_difficulty 3")
 		end
 		Convars:SetBool("dota_bot_disable", false)
@@ -1745,7 +2013,6 @@ function VGMAR:OnGameStateChanged( keys )
 					if luckyhero ~= nil then
 						luckyhero:AddItemByName("item_courier")
 						local heroname = HeroNamesLib:ConvertInternalToHeroName(luckyhero:GetName())
-						dprint("PlayerName: ", heroname)
 						GameRules:SendCustomMessageToTeam("<font color='turquoise'>Giving Free Courier to</font> <font color='gold'>"..heroname.."</font>", DOTA_TEAM_GOODGUYS, DOTA_TEAM_GOODGUYS, DOTA_TEAM_GOODGUYS)
 						self.couriergiven = true
 					end
@@ -1759,18 +2026,18 @@ function VGMAR:OnGameStateChanged( keys )
 		--New Implementation of defskills
 		--///////////////////////////////
 		local buildingstobufflist = {
-			{bn = "dota_goodguys_fort", priority = 4, istower = 0, regnegation = 8.0},
-			{bn = "good_rax_melee_bot", priority = 3, istower = 0, regnegation = 8.0},
-			{bn = "good_rax_melee_mid", priority = 3, istower = 0, regnegation = 8.0},
-			{bn = "good_rax_melee_top", priority = 3, istower = 0, regnegation = 8.0},
-			{bn = "good_rax_range_top", priority = 2, istower = 0, regnegation = 8.0},
-			{bn = "good_rax_range_mid", priority = 2, istower = 0, regnegation = 8.0},
-			{bn = "good_rax_range_bot", priority = 2, istower = 0, regnegation = 8.0},
-			{bn = "dota_goodguys_tower4_bot", priority = 1, istower = 1, regnegation = 8.0},
-			{bn = "dota_goodguys_tower4_top", priority = 1, istower = 1, regnegation = 8.0},
-			{bn = "dota_goodguys_tower3_top", priority = 0, istower = 1, regnegation = 8.0},
-			{bn = "dota_goodguys_tower3_mid", priority = 0, istower = 1, regnegation = 8.0},
-			{bn = "dota_goodguys_tower3_bot", priority = 0, istower = 1, regnegation = 8.0}
+			{bn = "dota_goodguys_fort", priority = 4, istower = 0, regnegation = 5.5},
+			{bn = "good_rax_melee_bot", priority = 3, istower = 0, regnegation = 5.5},
+			{bn = "good_rax_melee_mid", priority = 3, istower = 0, regnegation = 5.5},
+			{bn = "good_rax_melee_top", priority = 3, istower = 0, regnegation = 5.5},
+			{bn = "good_rax_range_top", priority = 2, istower = 0, regnegation = 5.5},
+			{bn = "good_rax_range_mid", priority = 2, istower = 0, regnegation = 5.5},
+			{bn = "good_rax_range_bot", priority = 2, istower = 0, regnegation = 5.5},
+			{bn = "dota_goodguys_tower4_bot", priority = 1, istower = 1, regnegation = 5.5},
+			{bn = "dota_goodguys_tower4_top", priority = 1, istower = 1, regnegation = 5.5},
+			{bn = "dota_goodguys_tower3_top", priority = 0, istower = 1, regnegation = 5.5},
+			{bn = "dota_goodguys_tower3_mid", priority = 0, istower = 1, regnegation = 5.5},
+			{bn = "dota_goodguys_tower3_bot", priority = 0, istower = 1, regnegation = 5.5}
 		}
 		
 		local defskills = {

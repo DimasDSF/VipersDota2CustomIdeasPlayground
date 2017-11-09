@@ -51,24 +51,19 @@
 			"02"
 			{
 				"var_type"					"FIELD_INTEGER"
-				"bonus_movement_speed"		"-10 -15 -20 -25"
+				"bonus_attack_speed"		"-10 -15 -20 -25"
 			}
 			"03"
 			{
 				"var_type"					"FIELD_INTEGER"
-				"bonus_attack_speed"		"-10 -15 -20 -25"
+				"bonus_magic_resistance"	"0"
 			}
 			"04"
 			{
 				"var_type"					"FIELD_INTEGER"
-				"bonus_magic_resistance"	"0"
-			}
-			"05"
-			{
-				"var_type"					"FIELD_INTEGER"
 				"damage"					"15 20 25 30"
 			}
-			"06"
+			"05"
 			{
 				"var_type"					"FIELD_INTEGER"
 				"max_range_tooltip"					"1600"
@@ -329,6 +324,82 @@
 			}
 		}
 	}
+	
+	//============================
+	//============================
+	// VGMAR:Custom Util Abilities
+	//============================
+	//============================
+	
+	//=================================================================================================================
+	// VGMAR: Venomancer: Plague Ward: Destroy
+	//=================================================================================================================
+	"vgmar_util_plague_ward_destroy"
+	{
+		// General
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_NOT_LEARNABLE | DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_IMMEDIATE"
+		"BaseClass"						"broodmother_spin_web_destroy"
+		"AbilityTextureName" 			"venomancer_plague_ward"
+		"MaxLevel"						"1"
+
+		// Casting
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityCastPoint"				"0"
+		
+		// Time		
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityCooldown"				"0"
+	
+		// Cost
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityManaCost"				"0"
+	}
+	
+	
+	//==============================
+	// VGMAR: Custom Creep Abilities
+	//==============================
+	
+	//=================================================================================================================
+	// VGMAR: Catapult: Faceless Void: TimeLock
+	//=================================================================================================================
+	"vgmar_c_siegetimelock"
+	{
+		// General
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_NOT_LEARNABLE"
+		"SpellDispellableType"			"SPELL_DISPELLABLE_NO"
+		"BaseClass"						"faceless_void_time_lock"
+		"MaxLevel"						"3"
+		
+		// Special
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"				"FIELD_FLOAT"
+				"duration"				"1.0"
+			}
+			"02"
+			{
+				"var_type"				"FIELD_FLOAT"
+				"duration_creep"		"2.0"
+			}
+			"03"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"chance_pct"			"100"
+			}
+			"04"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"bonus_damage"			"25 50 75"
+			}
+		}
+	}
+	
 	//============================
 	//============================
 	// VGMAR:ITEMABILITIES Section
@@ -523,7 +594,7 @@
 			"06"
 			{
 				"var_type"		"FIELD_FLOAT"
-				"regen_duration"		"10"
+				"regen_duration"		"7"
 			}			
 			"07"
 			{
@@ -674,12 +745,12 @@
 			"05"
 			{
 				"var_type"						"FIELD_FLOAT"
-				"bonus_damage_duration"			"180"
+				"bonus_damage_duration"			"240"
 			}
 			"06"
 			{
 				"var_type"						"FIELD_FLOAT"
-				"bonus_damage_duration_scepter"		"3600"
+				"bonus_damage_duration_scepter"		"900"
 			}
 		}
 	}
@@ -702,12 +773,12 @@
 			"01"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"vampiric_aura_radius"	"900"
+				"vampiric_aura_radius"	"700"
 			}
 			"02"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"vampiric_aura"			"20"
+				"vampiric_aura"			"30"
 			}
 		}
 	}
@@ -737,7 +808,7 @@
 			"02"
 			{
 				"var_type"			"FIELD_INTEGER"
-				"bonus_mana"	    "400"
+				"bonus_mana"	    "1000"
 			}
 			"03"
 			{
@@ -781,12 +852,41 @@
 			"01"
 			{
 				"var_type"					"FIELD_INTEGER"
-				"crit_bonus"				"99999"
+				"crit_bonus"				"20000"
 			}
 			"02"
 			{
 				"var_type"					"FIELD_INTEGER"
 				"crit_chance"				"1"
+			}
+		}
+	}
+	//=================================================================================================================
+	// VGMAR: Rapier: Phantom Assassin: DeathsKiss
+	//=================================================================================================================
+	"vgmar_i_criticalmastery"
+	{
+		// General
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN | DOTA_ABILITY_BEHAVIOR_NOT_LEARNABLE"
+		"SpellDispellableType"			"SPELL_DISPELLABLE_NO"
+		"AbilitySound"					"Hero_PhantomAssassin.CoupDeGrace"
+		"BaseClass"						"phantom_assassin_coup_de_grace"
+		"MaxLevel"						"1"
+		
+		// Special
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"					"FIELD_INTEGER"
+				"crit_bonus"				"300"
+			}
+			"02"
+			{
+				"var_type"					"FIELD_INTEGER"
+				"crit_chance"				"100"
 			}
 		}
 	}
@@ -820,7 +920,7 @@
 		}
 	}
 	//=================================================================================================================
-	// VGMAR: Linken: Antimage: SpellShield
+	// VGMAR: Item: Antimage: SpellShield
 	//=================================================================================================================
 	"vgmar_i_spellshield"
 	{
@@ -843,41 +943,81 @@
 			"02"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"scepter_cooldown"		"10"
+				"scepter_cooldown"		"12"
 			}
 		}
 	}
 	//=================================================================================================================
-	// VGMAR: Linken: Antimage: SpellShield Cooldown Modifier Ability
+	// VGMAR: Item: Razor: PurgeField
 	//=================================================================================================================
-	"vgmar_i_spellshield_cooldown"
+	"vgmar_i_purgefield"
 	{
-		"BaseClass" "ability_datadriven"
-		"AbilityBehavior" "DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN | DOTA_ABILITY_BEHAVIOR_NOT_LEARNABLE"
-		"AbilityTextureName" "antimage_spell_shield"
-		"SpellImmunityType" "SPELL_IMMUNITY_ENEMIES_YES"
-		"MaxLevel" "1"
+		// General
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN | DOTA_ABILITY_BEHAVIOR_NOT_LEARNABLE"
+		"AbilityUnitDamageType"			"DAMAGE_TYPE_MAGICAL"	
+		"SpellImmunityType"				"SPELL_IMMUNITY_ENEMIES_NO"
+		"SpellDispellableType"			"SPELL_DISPELLABLE_YES"
+		"BaseClass"						"razor_unstable_current"
+		"MaxLevel"						"1"
 
-		"Modifiers" {
-			"modifier_vgmar_i_spellshield_cooldown" {
-				"Passive" "1"
-				"IsHidden" "0"
+		// Time		
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityCooldown"				"0.5"
+				
+		// Special
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"movement_speed_pct"	"0"
+			}
+			"02"
+			{
+				"var_type"				"FIELD_FLOAT"
+				"hit_interval"			"0.5"
+			}
+			"03"
+			{
+				"var_type"				"FIELD_FLOAT"
+				"slow_duration"	"0.3"
+			}
+			"04"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"slow_amount"		"-60"
+			}
+			"05"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"damage"		"150"
+			}
+			"06"
+			{
+				"var_type"		"FIELD_INTEGER"
+				"radius"		"375"
 			}
 		}
 	}
+	
+	//====================
+	//VisualAbilityModifiers
+	//====================
 	//=================================================================================================================
-	// VGMAR: Rapier: Phantom Assassin: DeathsKiss Visual
+	// VGMAR: Courier: Upgrade: Level Visual
 	//=================================================================================================================
-	"vgmar_i_deathskiss_visual"
+	"vgmar_util_courier_level"
 	{
 		"BaseClass" "ability_datadriven"
 		"AbilityBehavior" "DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN | DOTA_ABILITY_BEHAVIOR_NOT_LEARNABLE"
-		"AbilityTextureName" "phantom_assassin_coup_de_grace"
+		"AbilityTextureName" "courier_burst"
 		"SpellImmunityType" "SPELL_IMMUNITY_ENEMIES_YES"
 		"MaxLevel" "1"
 
 		"Modifiers" {
-			"modifier_vgmar_i_deathskiss_visual" {
+			"modifier_vgmar_util_courier_level" {
 				"Passive" "1"
 				"IsHidden" "0"
 			}
