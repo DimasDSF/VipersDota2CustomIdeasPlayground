@@ -10,7 +10,7 @@
 	</scripts>
 
 	<Panel class="changelogRoot" hittest="false">
-		<Panel id="changelogDisplay" class="changelogDisplayHidden" hittest="false">
+		<Panel id="changelogDisplay" class="changelogDisplayHidden" hittest="false" onmouseover='ChangelogGiveFocus()' oncancel='hideChangelog()'>
 			<Button id="closeChangelogButton" class="CloseButton" onactivate='toggleChangelog()'>
 			</Button>
 			<Panel id="Title">

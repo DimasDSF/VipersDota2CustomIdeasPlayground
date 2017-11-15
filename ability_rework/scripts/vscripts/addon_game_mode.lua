@@ -2,7 +2,7 @@ local RADIANT_TEAM_MAX_PLAYERS = 1
 local DIRE_TEAM_MAX_PLAYERS = 8
 local RUNE_SPAWN_TIME = 120
 local VGMAR_DEBUG = false
-local VGMAR_BOT_FILL = true
+local VGMAR_BOT_FILL = false
 --///////////////////////////////////////////
 --/////////////WORKSHOP_FUCKOVER/////////////
 --Change to true before releasing to workshop
@@ -15,9 +15,13 @@ end
 
 require('libraries/timers')
 require('libraries/heronames')
+require('libraries/heroabilityslots')
+AbilitySlotsLib:Init()
 
 function Precache( ctx )
 	--Precaching Custom Ability sounds (and all used heros' sounds :fp:)
+	
+	PrecacheUnitByNameSync("npc_dota_hero_wisp", ctx)
 	
 	--Warning! Hero Names should be in internal format ex. OD is obsidian_destroyer
 	local herosoundprecachelist = {
@@ -27,7 +31,8 @@ function Precache( ctx )
 		"obsidian_destroyer",
 		"phantom_assassin",
 		"antimage",
-		"razor"
+		"razor",
+		"wisp"
 	}
 	
 	for i=1,#herosoundprecachelist do
@@ -62,6 +67,8 @@ function VGMAR:Init()
 	self.direcourierup3given = false
 	self.direcourierup4given = false
 	self.customitemsreminderfinished = false
+	self.companionheroes = {}
+	self.playercompanionsnum = {}
 	
 	LinkLuaModifier("modifier_vgmar_util_dominator_ability_purger", "abilities/util/modifiers/modifier_vgmar_util_dominator_ability_purger.lua", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_deathskiss_visual", "abilities/modifiers/modifier_vgmar_i_deathskiss_visual", LUA_MODIFIER_MOTION_NONE)
@@ -71,7 +78,12 @@ function VGMAR:Init()
 	LinkLuaModifier("modifier_vgmar_i_criticalmastery_visual", "abilities/modifiers/modifier_vgmar_i_criticalmastery_visual", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_purgefield_visual", "abilities/modifiers/modifier_vgmar_i_purgefield_visual", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_truesight", "abilities/modifiers/modifier_vgmar_i_truesight", LUA_MODIFIER_MOTION_NONE)
-	
+	LinkLuaModifier("modifier_vgmar_ai_companion_wisp", "abilities/modifiers/ai/modifier_vgmar_ai_companion_wisp", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_ai_companion_respawntime", "abilities/modifiers/ai/modifier_vgmar_ai_companion_respawntime", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_ai_companion_wisp_force_retether", "abilities/modifiers/ai/modifier_vgmar_ai_companion_wisp_force_retether", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_ai_companion_midas_usage", "abilities/modifiers/ai/modifier_vgmar_ai_companion_midas_usage", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_ai_companion_wisp_force_stop", "abilities/modifiers/ai/modifier_vgmar_ai_companion_wisp_force_stop", LUA_MODIFIER_MOTION_NONE)
+
 	self.mode = GameRules:GetGameModeEntity()
 	GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_GOODGUYS, RADIANT_TEAM_MAX_PLAYERS)
     GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_BADGUYS, DIRE_TEAM_MAX_PLAYERS)
@@ -102,6 +114,7 @@ function VGMAR:Init()
 	--ListenToGameEvent( "dota_player_used_ability", Dynamic_Wrap( VGMAR, 'OnPlayerUsedAbility' ), self )
 	Convars:RegisterConvar('vgmar_devmode', "0", "Set to 1 to show debug info.  Set to 0 to disable.", 0)
 	Convars:RegisterConvar('vgmar_blockbotcontrol', "1", "Set to 0 to enable controlling bots", 0)
+	Convars:RegisterConvar('vgmar_enablecompanion_fullcontrol', "0", "Set to 1 to enable controlling a companion", 0)
 	if VGMAR_DEBUG == true then
 		Convars:SetInt("vgmar_devmode", 1)
 	end
@@ -419,6 +432,46 @@ function VGMAR:GetItemFromInventoryByName( hero, item, mutedallowed, backpackall
 	end
 end
 
+function VGMAR:GetItemSlotFromInventoryByItemName( hero, item, mutedallowed, backpackallowed, stashallowed )
+	if stashallowed ~= true and not hero:HasItemInInventory(item) then
+		return -1
+	end
+	local endslot = 8
+	if stashallowed == true then
+		endslot = 14
+	end
+	for i = 0, endslot do
+		local slotitem = hero:GetItemInSlot(i);
+		if slotitem then
+			if slotitem:GetName() == item then
+				if slotitem:IsMuted() and mutedallowed == true then
+					if i <= 5 then
+						return i
+					elseif i >= 6 and i <= 8 and backpackallowed == true then
+						return i
+					elseif i >= 9 and stashallowed == true then
+						return i
+					else 
+						return -1
+					end
+				elseif not slotitem:IsMuted() then
+					if i <= 5 then
+						return i
+					elseif i >= 6 and i <= 8 and backpackallowed == true then
+						return i
+					elseif i >= 9 and stashallowed == true then
+						return i
+					else 
+						return -1
+					end
+				else
+					return -1
+				end
+			end
+		end
+	end
+end
+
 function VGMAR:CountUsableItemsInHeroInventory( hero, item, mutedallowed, backpackallowed, stashallowed )
 	if stashallowed ~= true and not hero:HasItemInInventory(item) then
 		return 0
@@ -546,6 +599,51 @@ function VGMAR:IsHeroBotControlled(hero)
 	return false
 end
 
+function VGMAR:IsUnitACompanion( unit, index )
+	if index == 0 and unit ~= nil then
+		index = unit:entindex()
+	end
+	if index then
+		for i=1,#self.companionheroes do
+			if self.companionheroes[i].index == index then
+				if unit then
+					dprint("Unit: ", unit:GetName(), "index: ", index, "Is A Companion")
+				else
+					dprint("index: ", index, "Is A Companion")
+				end
+				return true
+			end
+		end
+	end
+	return false
+end
+
+function VGMAR:GetCompanionNum( ownerhero, ownerid, index )
+	if ownerhero == nil and ownerid >= 0 then
+		ownerhero = PlayerResource:GetPlayer(ownerid):GetAssignedHero()
+	end
+	if ownerid < 0 and ownerhero ~= nil then
+		ownerid = ownerhero:GetPlayerID()
+	end
+	dprint("Attempting to find a companion with index: ", index)
+	for i=1,#self.companionheroes do
+		if index and self.companionheroes[i].index == index then
+			dprint("GetCompanionNum got a match on Index: ", index, "with: ", i)
+			return i
+		end
+		if ownerhero ~= nil and self.companionheroes[i].ownerhero == ownerhero then
+			dprint("GetCompanionNum got a match on OwnerHero: ", HeroNamesLib:ConvertInternalToHeroName(ownerhero:GetName()), "with: ", i)
+			return i
+		end
+		if ownerid >= 0 and self.companionheroes[i].ownerid == ownerid then
+			dprint("GetCompanionNum got a match on OwnerID: ", ownerid, "with: ", i)
+			return i
+		end
+	end
+	dprint("GetCompanionNum Didnt find any match. Returning nil")
+	return 0
+end
+
 function VGMAR:OnThink()
 	if GameRules:State_Get() == DOTA_GAMERULES_STATE_CUSTOM_GAME_SETUP then
 		GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_GOODGUYS, PlayerResource:GetPlayerCount())
@@ -561,8 +659,9 @@ function VGMAR:OnThink()
 		GameRules:LockCustomGameSetupTeamAssignment(true)
 	end
 	if GameRules:State_Get() == DOTA_GAMERULES_STATE_GAME_IN_PROGRESS then
+		local heroes = HeroList:GetAllHeroes()
 		for i=0,HeroList:GetHeroCount() do
-			local heroent = HeroList:GetHero(i)
+			local heroent = heroes[i]
 			if heroent then
 			--///////////////////////////
 			--Bot Rune Fix
@@ -575,8 +674,9 @@ function VGMAR:OnThink()
 					if closestrune then
 						heroent:PickupRune(closestrune)
 					end
-					--[[--///////////////////
-					--BotShrineActivation
+					
+					--///////////////////
+					--[[--BotShrineActivation
 					--///////////////////
 					local nearbyshrine = Entities:FindByClassnameWithin(nil, "npc_dota_healer", heroent:GetOrigin(), 400)
 					if nearbyshrine ~= nil and nearbyshrine:GetTeamNumber() == heroent:GetTeamNumber() then
@@ -655,6 +755,57 @@ function VGMAR:OnThink()
 						if bloodstone ~= nil then
 							bloodstone:SetCurrentCharges(bloodstone:GetCurrentCharges() + 24)
 						end
+					end
+					--Companion System
+					if self:CountUsableItemsInHeroInventory(heroent, "item_bloodstone", false, true, false) >= 3 then
+						self:RemoveNItemsInInventory(heroent, "item_bloodstone", 3)
+						--GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_GOODGUYS, GameRules:GetCustomGameTeamMaxPlayers(DOTA_TEAM_GOODGUYS) + 1)
+						local playerID = heroent:GetPlayerID()
+						local player = PlayerResource:GetPlayer(playerID)
+						local wisp = CreateUnitByName("npc_dota_hero_wisp", heroent:GetAbsOrigin(), true, heroent, heroent, heroent:GetTeamNumber())
+						wisp:SetControllableByPlayer(playerID, false)
+						for i=1,25 do
+							wisp:HeroLevelUp(false)
+						end
+						wisp:AddAbility("vgmar_ca_wisp_tether"):SetLevel( 4 )
+						wisp:SwapAbilities("wisp_tether", "vgmar_ca_wisp_tether", false, true)
+						wisp:RemoveAbility("wisp_tether")
+						wisp:AddAbility("vgmar_ca_wisp_overcharge"):SetLevel( 4 )
+						wisp:SwapAbilities("wisp_overcharge", "vgmar_ca_wisp_overcharge", false, true)
+						wisp:RemoveAbility("wisp_overcharge")
+						wisp:AddAbility("vgmar_ca_wisp_relocate"):SetLevel( 3 )
+						wisp:SwapAbilities("wisp_relocate", "vgmar_ca_wisp_relocate", false, true)
+						wisp:RemoveAbility("wisp_relocate")
+						wisp:AddAbility("vgmar_ai_companion_wisp_toggle_autohit"):SetLevel( 1 )
+						wisp:SwapAbilities("wisp_spirits_in", "vgmar_ai_companion_wisp_toggle_autohit", false, true)
+						wisp:RemoveAbility("wisp_spirits_in")
+						wisp:AddAbility("vgmar_ai_companion_wisp_toggle_scepter"):SetLevel( 1 )
+						wisp:SwapAbilities("wisp_spirits_out", "vgmar_ai_companion_wisp_toggle_scepter", false, true)
+						wisp:RemoveAbility("wisp_spirits_out")
+						local tethertoggle = wisp:AddAbility("vgmar_ai_companion_wisp_toggle_tether")
+						tethertoggle:SetLevel( 1 )
+						if tethertoggle:GetToggleState() ~= true then
+							tethertoggle:ToggleAbility()
+						end
+						wisp:SwapAbilities("wisp_spirits", "vgmar_ai_companion_wisp_toggle_tether", false, true)
+						wisp:RemoveAbility("wisp_spirits")
+						Timers:CreateTimer(2,
+						function()
+							self:RemoveNItemsInInventory( wisp, "item_tpscroll", 1 )
+							self:GetItemFromInventoryByName( wisp, "item_travel_boots_2", false, false, false ):EndCooldown()
+						end)
+						wisp:AddItemByName("item_travel_boots_2")
+						wisp:AddItemByName("item_octarine_core")
+						local companion = {type = "wisp", hero = wisp, index = wisp:entindex(), owner = player, ownerhero = heroent, ownerindex = heroent:entindex(), ownerid = playerID}
+						dprint("Saving a Companion to companion List:")
+						dprint("type: wisp, heroindex: ", wisp:entindex(), "ownerhero: ", HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()), "ownerindex: ", heroent:entindex(), "ownerid: ", playerID)
+						if self.playercompanionsnum[playerID] == nil then
+							self.playercompanionsnum[playerID] = 1
+						else
+							self.playercompanionsnum[playerID] = self.playercompanionsnum[playerID] + 1
+						end
+						table.insert(self.companionheroes, companion)
+						wisp:AddNewModifier( wisp, nil, "modifier_vgmar_ai_companion_wisp", {ownerid = playerID, ownerindex = heroent:entindex()})
 					end
 				end
 				
@@ -775,25 +926,32 @@ function VGMAR:OnThink()
 					if heroent:GetClassname() ~= itemlistforspell[k].preventedhero then
 						if itemlistforspell[k].specificcond == true then
 							if itemlistforspell[k].isconsumable == true then
-								if self:HeroHasAllItemsFromListWMultiple( heroent, itemlistforspell[k].items, itemlistforspell[k].backpack) and not heroent:FindAbilityByName(itemlistforspell[k].spell) then
-									local itemability = heroent:FindAbilityByName(itemlistforspell[k].spell)
-									if itemability == nil then
-										for j=1,#itemlistforspell[k].items.itemnames do
-											self:RemoveNItemsInInventory( heroent, itemlistforspell[k].items.itemnames[j], itemlistforspell[k].items.itemnum[j])
+								if AbilitySlotsLib:GetFreeAbilitySlotsForSpecificHero( heroent ) > 0 then
+									if self:HeroHasAllItemsFromListWMultiple( heroent, itemlistforspell[k].items, itemlistforspell[k].backpack) and not heroent:FindAbilityByName(itemlistforspell[k].spell) then
+										local itemability = heroent:FindAbilityByName(itemlistforspell[k].spell)
+										if itemability == nil then
+											for j=1,#itemlistforspell[k].items.itemnames do
+												self:RemoveNItemsInInventory( heroent, itemlistforspell[k].items.itemnames[j], itemlistforspell[k].items.itemnum[j])
+											end
+											AbilitySlotsLib:SafeAddAbility( heroent, itemlistforspell[k].spell, 1 )
+											--heroent:AddAbility(itemlistforspell[k].spell):SetLevel(1)
 										end
-										heroent:AddAbility(itemlistforspell[k].spell):SetLevel(1)
 									end
 								end
 							else
 								if self:HeroHasAllItemsFromListWMultiple( heroent, itemlistforspell[k].items, itemlistforspell[k].backpack) then
-									local itemability = heroent:FindAbilityByName(itemlistforspell[k].spell)
-									if itemability == nil then
-										heroent:AddAbility(itemlistforspell[k].spell):SetLevel(1)
+									if AbilitySlotsLib:GetFreeAbilitySlotsForSpecificHero( heroent ) > 0 then
+										local itemability = heroent:FindAbilityByName(itemlistforspell[k].spell)
+										if itemability == nil then
+											AbilitySlotsLib:SafeAddAbility( heroent, itemlistforspell[k].spell, 1 )
+											--heroent:AddAbility(itemlistforspell[k].spell):SetLevel(1)
+										end
 									end
 								else
 									local itemability = heroent:FindAbilityByName(itemlistforspell[k].spell)
 									if itemability ~= nil then
-										heroent:RemoveAbility(itemlistforspell[k].spell)
+										AbilitySlotsLib:SafeRemoveAbility( heroent, itemlistforspell[k].spell )
+										--heroent:RemoveAbility(itemlistforspell[k].spell)
 									end
 								end
 							end
@@ -878,27 +1036,27 @@ function VGMAR:OnThink()
 						end
 					end
 				end
-			end
-			--/////////////////
-			--BotCourierUpgrade
-			--/////////////////
-			if self:TimeIsLaterThan(12, 0) and self.direcourierup2given == false and self:GetCourierBurstLevel( nil, 3 ) >= 1 then
-				if heroent:GetTeamNumber() == 3 and self:GetHeroFreeInventorySlots(heroent, true, false) > 0 then
-					heroent:AddItemByName("item_flying_courier")
-					dprint("Giving ", heroent:GetName(), " having ", self:GetHeroFreeInventorySlots(heroent, true, false), " empty slots 1st courier upgrade")
-					self.direcourierup2given = true
-				end
-			elseif self:TimeIsLaterThan(24, 0) and self.direcourierup3given == false and self:GetCourierBurstLevel( nil, 3 ) >= 1 then
-				if heroent:GetTeamNumber() == 3 and self:GetHeroFreeInventorySlots(heroent, true, false) > 0 then
-					heroent:AddItemByName("item_flying_courier")
-					dprint("Giving ", heroent:GetName(), " having ", self:GetHeroFreeInventorySlots(heroent, true, false), " empty slots 2nd courier upgrade")
-					self.direcourierup3given = true
-				end
-			elseif self:TimeIsLaterThan(38, 0) and self.direcourierup4given == false and self:GetCourierBurstLevel( nil, 3 ) >= 1 then
-				if heroent:GetTeamNumber() == 3 and self:GetHeroFreeInventorySlots(heroent, true, false) > 0 then
-					heroent:AddItemByName("item_flying_courier")
-					dprint("Giving ", heroent:GetName(), " having ", self:GetHeroFreeInventorySlots(heroent, true, false), " empty slots 3rd courier upgrade")
-					self.direcourierup4given = true
+				--/////////////////
+				--BotCourierUpgrade
+				--/////////////////
+				if self:TimeIsLaterThan(12, 0) and self.direcourierup2given == false and self:GetCourierBurstLevel( nil, 3 ) >= 1 then
+					if heroent:GetTeamNumber() == 3 and self:GetHeroFreeInventorySlots(heroent, true, false) > 0 then
+						heroent:AddItemByName("item_flying_courier")
+						dprint("Giving ", heroent:GetName(), " having ", self:GetHeroFreeInventorySlots(heroent, true, false), " empty slots 1st courier upgrade")
+						self.direcourierup2given = true
+					end
+				elseif self:TimeIsLaterThan(24, 0) and self.direcourierup3given == false and self:GetCourierBurstLevel( nil, 3 ) >= 1 then
+					if heroent:GetTeamNumber() == 3 and self:GetHeroFreeInventorySlots(heroent, true, false) > 0 then
+						heroent:AddItemByName("item_flying_courier")
+						dprint("Giving ", heroent:GetName(), " having ", self:GetHeroFreeInventorySlots(heroent, true, false), " empty slots 2nd courier upgrade")
+						self.direcourierup3given = true
+					end
+				elseif self:TimeIsLaterThan(38, 0) and self.direcourierup4given == false and self:GetCourierBurstLevel( nil, 3 ) >= 1 then
+					if heroent:GetTeamNumber() == 3 and self:GetHeroFreeInventorySlots(heroent, true, false) > 0 then
+						heroent:AddItemByName("item_flying_courier")
+						dprint("Giving ", heroent:GetName(), " having ", self:GetHeroFreeInventorySlots(heroent, true, false), " empty slots 3rd courier upgrade")
+						self.direcourierup4given = true
+					end
 				end
 			end
 			--//////////////////
@@ -1796,7 +1954,7 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 		unit = EntIndexToHScript(units["0"])
 	end
     local ability = EntIndexToHScript(filterTable.entindex_ability)
-    local target = EntIndexToHScript(filterTable.entindex_target)
+    local target = EntIndexToHScript(filterTable.entindex_target)		
 	
 	--///////////////////////
 	--SecondCourierPrevention
@@ -1898,6 +2056,27 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 				CustomGameEventManager:Send_ServerToPlayer(player, "selection_reset", {})
 				return false
 			end
+		end
+	end
+	
+	--CompanionControl
+	if unit and self:IsUnitACompanion( unit , 0 ) then
+		local companionnum = self:GetCompanionNum( nil, -1, unit:entindex())
+		local companionowner = self.companionheroes[companionnum].ownerid
+		if issuer == companionowner then
+			if ability and (ability:GetName() == "vgmar_ca_wisp_relocate" or ability:GetName() == "vgmar_ai_companion_wisp_toggle_autohit" or ability:GetName() == "vgmar_ai_companion_wisp_toggle_scepter" or ability:GetName() == "vgmar_ai_companion_wisp_toggle_tether") then
+				if ability:GetName() == "vgmar_ai_companion_wisp_toggle_autohit" or ability:GetName() == "vgmar_ai_companion_wisp_toggle_scepter" then
+					unit:AddNewModifier( unit, nil, "modifier_vgmar_ai_companion_wisp_force_retether", {ownerindex = unit:entindex(), ownerid = companionowner})
+				end
+				return true
+			else
+				if Convars:GetInt("vgmar_enablecompanion_fullcontrol") == 0 then
+					return false
+				end
+			end
+		elseif issuer ~= companionowner then
+			self:DisplayClientError(issuer, "You are not allowed to control other players Companions")
+			return false
 		end
 	end
 	

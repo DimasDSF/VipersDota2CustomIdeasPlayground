@@ -8,10 +8,26 @@ function toggleChangelog(arg){
 	if (arg) { //shortcut to open panel and select specific tab
 		arg();
 	}
+	if (!$("#changelogDisplay").BHasClass("changelogDisplayHidden")) {
+		$("#changelogDisplay").SetFocus();
+	}
+}
+
+function hideChangelog(){
+	$("#changelogDisplay").SetHasClass("changelogDisplayHidden", true)
 }
 
 function displayChangelog(){
 	$("#changelogDisplay").SetHasClass("changelogDisplayHidden", !$("#changelogDisplay").BHasClass("changelogDisplayHidden"))
+	if (!$("#changelogDisplay").BHasClass("changelogDisplayHidden")) {
+		$("#changelogDisplay").SetFocus();
+	}
+}
+
+function ChangelogGiveFocus(){
+	if (!$("#changelogDisplay").BHasClass("changelogDisplayHidden")) {
+		$("#changelogDisplay").SetFocus();
+	}
 }
 
 function toggleInformation(arg){
@@ -19,6 +35,9 @@ function toggleInformation(arg){
 	$("#updateDisplay").visible = false
 	$("#creditsDisplay").visible = false
 	$("#showDescriptionButton").checked = true;
+	if (!$("#changelogDisplay").BHasClass("changelogDisplayHidden")) {
+		$("#changelogDisplay").SetFocus();
+	}
 }
 
 function toggleHeroes(arg){
@@ -26,6 +45,9 @@ function toggleHeroes(arg){
 	$("#updateDisplay").visible = true
 	$("#creditsDisplay").visible = false
 	$("#showUpdatesButton").checked = true;
+	if (!$("#changelogDisplay").BHasClass("changelogDisplayHidden")) {
+		$("#changelogDisplay").SetFocus();
+	}
 }
 
 function toggleItems(arg){
@@ -33,6 +55,9 @@ function toggleItems(arg){
 	$("#updateDisplay").visible = false
 	$("#creditsDisplay").visible = true
 	$("#showCreditsButton").checked = true;
+	if (!$("#changelogDisplay").BHasClass("changelogDisplayHidden")) {
+		$("#changelogDisplay").SetFocus();
+	}
 }
 
 (function() {
@@ -40,6 +65,9 @@ function toggleItems(arg){
 	$("#showDescriptionButton").checked = true;
 	
 	util.blockMouseWheel($("#changelogDisplay"));
+	if (!$("#changelogDisplay").BHasClass("changelogDisplayHidden")) {
+		$("#changelogDisplay").SetFocus();
+	}
 
 	GameEvents.Subscribe( "vgmarOnInfo", displayChangelog );
 })();
