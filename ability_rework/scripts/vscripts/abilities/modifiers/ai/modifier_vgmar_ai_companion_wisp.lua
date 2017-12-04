@@ -119,10 +119,10 @@ function modifier_vgmar_ai_companion_wisp:OnIntervalThink()
 				parent:AddNewModifier( self:GetCaster(), nil, "modifier_vgmar_ai_companion_wisp_force_stop", {duration = timetorune + 1})
 				parent:PickupRune(closestrune)
 			end
+			local towers = FindUnitsInRadius(parent:GetTeamNumber(), movetarget, nil, 1200, DOTA_UNIT_TARGET_TEAM_ENEMY, DOTA_UNIT_TARGET_BUILDING, 0, FIND_CLOSEST, false)
 			if distancetoowner < 400 and shouldmove() then
 				if GameRules:GetDOTATime( false, true ) > self.idlemovetime + 3 then
 					local movetarget = self.ownerhero:GetAbsOrigin()+RandomVector(390)
-					local towers = FindUnitsInRadius(parent:GetTeamNumber(), movetarget, nil, 800, DOTA_UNIT_TARGET_TEAM_ENEMY, DOTA_UNIT_TARGET_BUILDING, 0, FIND_CLOSEST, false)
 					local moveallowed = true
 					if #towers > 0 then
 						for i=1,#towers do
@@ -131,6 +131,8 @@ function modifier_vgmar_ai_companion_wisp:OnIntervalThink()
 									if (towers[i]:GetAbsOrigin() - self.ownerhero:GetAbsOrigin()):Length2D() > 700 then
 										moveallowed = false
 									end
+								elseif towers[i]:GetClassname() == "npc_dota_fountain" and towers[i]:GetTeamNumber() ~= parent:GetTeamNumber() then
+									moveallowed = false
 								end
 							end
 						end
@@ -142,7 +144,6 @@ function modifier_vgmar_ai_companion_wisp:OnIntervalThink()
 				end
 			elseif (distancetoowner >= 400 and distancetoowner < 4000) and shouldmove() then
 				local movetarget = self.ownerhero:GetAbsOrigin()+RandomVector(300)
-				local towers = FindUnitsInRadius(parent:GetTeamNumber(), movetarget, nil, 800, DOTA_UNIT_TARGET_TEAM_ENEMY, DOTA_UNIT_TARGET_BUILDING, 0, FIND_CLOSEST, false)
 				local moveallowed = true
 				if #towers > 0 then
 					for i=1,#towers do
@@ -151,6 +152,8 @@ function modifier_vgmar_ai_companion_wisp:OnIntervalThink()
 								if (towers[i]:GetAbsOrigin() - self.ownerhero:GetAbsOrigin()):Length2D() > 700 then
 									moveallowed = false
 								end
+							elseif towers[i]:GetClassname() == "npc_dota_fountain" and towers[i]:GetTeamNumber() ~= parent:GetTeamNumber() then
+								moveallowed = false
 							end
 						end
 					end
@@ -220,7 +223,7 @@ function modifier_vgmar_ai_companion_wisp:OnIntervalThink()
 					overchargedesiredstate = true
 				end
 			end
-			if parent:GetMana()/parent:GetMaxMana() > 0.95 and self.ownerhero:GetMana()/self.ownerhero:GetMaxMana() < 0.9 and parent:GetHealth()/parent:GetMaxHealth() > 0.4 then
+			if parent:GetMana()/parent:GetMaxMana() > 0.95 and self.ownerhero:GetMana()/self.ownerhero:GetMaxMana() < 0.9 and parent:GetHealth()/parent:GetMaxHealth() > 0.8 then
 				overchargedesiredstate = true
 			end
 		end

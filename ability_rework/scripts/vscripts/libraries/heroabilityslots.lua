@@ -50,7 +50,7 @@ function AbilitySlotsLib:Init()
 end
 
 function AbilitySlotsLib:OnAbilityLearned( keys )
-	DeepPrintTable( keys )
+	--DeepPrintTable( keys )
 	local player = EntIndexToHScript(keys.player)
 	local abilityname = keys.abilityname
 	local playerhero = nil

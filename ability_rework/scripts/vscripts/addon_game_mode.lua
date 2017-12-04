@@ -2,7 +2,7 @@ local RADIANT_TEAM_MAX_PLAYERS = 1
 local DIRE_TEAM_MAX_PLAYERS = 8
 local RUNE_SPAWN_TIME = 120
 local VGMAR_DEBUG = false
-local VGMAR_BOT_FILL = false
+local VGMAR_BOT_FILL = true
 --///////////////////////////////////////////
 --/////////////WORKSHOP_FUCKOVER/////////////
 --Change to true before releasing to workshop
@@ -73,26 +73,10 @@ function VGMAR:Init()
 	--CustomAbilitiesValues
 	--For ClientSide
 	self:InitNetTables()
-	CustomNetTables:SetTableValue( "client_side_ability_values", "modifier_vgmar_i_manaregen_aura", {regenself = 4, regenallies = 3} )
-	CustomNetTables:SetTableValue( "client_side_ability_values", "modifier_vgmar_i_attackrange", {range = 140, bonusstr = 12, bonusagi = 12} )
-	CustomNetTables:SetTableValue( "client_side_ability_values", "modifier_vgmar_i_castrange", {range = 250, manaregen = 1.25, bonusmana = 400} )
-	CustomNetTables:SetTableValue( "client_side_ability_values", "modifier_vgmar_i_spellamp", {percentage = 10, costpercentage = 10, bonusint = 16} )
-	CustomNetTables:SetTableValue( "client_side_ability_values", "modifier_vgmar_i_cdreduction", {percentage = 25, bonusmana = 905, bonushealth = 905, intbonus = 25} )
-	CustomNetTables:SetTableValue( "client_side_ability_values", "modifier_vgmar_i_essence_aura", {bonusmana = 900, restoreamount = 20} )
-	CustomNetTables:SetTableValue( "client_side_ability_values", "modifier_vgmar_i_spellshield", {resistance = 35, cooldown = 12} )
-	CustomNetTables:SetTableValue( "client_side_ability_values", "modifier_vgmar_i_fervor", {asperstack = 15} )
-	CustomNetTables:SetTableValue( "client_side_ability_values", "modifier_vgmar_i_essence_shift", {reductionprimary = 1, reductionsecondary = 0, increaseprimary = 1, increasesecondary = 0} )
-	CustomNetTables:SetTableValue( "client_side_ability_values", "modifier_vgmar_i_pulse", {hpregenperstack = 4, manaregenperstack = 4} )
-	CustomNetTables:SetTableValue( "client_side_ability_values", "modifier_vgmar_i_greatcleave", {cleaveperc = 100} )
-	CustomNetTables:SetTableValue( "client_side_ability_values", "modifier_vgmar_i_vampiric_aura", { lspercent = 30, lspercentranged = 20} )
-	CustomNetTables:SetTableValue( "client_side_ability_values", "modifier_vgmar_i_multishot", {shotspercap = 8} )
-	CustomNetTables:SetTableValue( "client_side_ability_values", "modifier_vgmar_i_midas_greed", {killsperstack = 4} )
-	CustomNetTables:SetTableValue( "client_side_ability_values", "modifier_vgmar_i_kingsaegis_cooldown", {cooldown = 240} )
-	CustomNetTables:SetTableValue( "client_side_ability_values", "modifier_vgmar_i_critical_mastery", {critdmgpercentage = 300} )
 	
 	LinkLuaModifier("modifier_vgmar_util_dominator_ability_purger", "abilities/util/modifiers/modifier_vgmar_util_dominator_ability_purger.lua", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_deathskiss_visual", "abilities/modifiers/modifier_vgmar_i_deathskiss_visual", LUA_MODIFIER_MOTION_NONE)
-	LinkLuaModifier("modifier_vgmar_i_spellshield", "abilities/modifiers/modifier_vgmar_i_spellshield_cooldown", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_spellshield", "abilities/modifiers/modifier_vgmar_i_spellshield", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_kingsaegis_cooldown", "abilities/modifiers/modifier_vgmar_i_kingsaegis_cooldown", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_kingsaegis_active", "abilities/modifiers/modifier_vgmar_i_kingsaegis_active", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_criticalmastery_visual", "abilities/modifiers/modifier_vgmar_i_criticalmastery_visual", LUA_MODIFIER_MOTION_NONE)
@@ -199,11 +183,11 @@ local modifierdatatable = {
 	["modifier_vgmar_i_spellshield"] = {resistance = 35, cooldown = 12, maxstacks = 2},
 	["modifier_vgmar_i_fervor"] = {maxstacks = 15, asperstack = 15},
 	["modifier_vgmar_i_essence_shift"] = {reductionprimary = 1, reductionsecondary = 0, increaseprimary = 1, increasesecondary = 0, hitsperstackinc = 1, hitsperstackred = 2, duration = 40, durationtarget = 40},
-	["modifier_vgmar_i_pulse"] = {stackspercreep = 1, stacksperhero = 10, duration = 3, hpregenperstack = 4, manaregenperstack = 4},
+	["modifier_vgmar_i_pulse"] = {stackspercreep = 1, stacksperhero = 10, duration = 3, hpregenperstack = 2, manaregenperstack = 2},
 	["modifier_vgmar_i_greatcleave"] = {cleaveperc = 100, cleavestartrad = 150, cleaveendrad = 300, cleaveradius = 700, bonusdamage = 75},
 	["modifier_vgmar_i_vampiric_aura"] = {radius = 700, lspercent = 30, lspercentranged = 20},
 	["modifier_vgmar_i_multishot"] = {stackscap = 5, shotspercap = 8, attackduration = 2, bonusrange = 140},
-	["modifier_vgmar_i_midas_greed"] = {min_bonus_gold = 0, count_per_kill = 1, reduction_per_tick = 2, bonus_gold_cap = 80, stack_duration = 30, reduction_duration = 2.5, killsperstack = 4},
+	["modifier_vgmar_i_midas_greed"] = {min_bonus_gold = 0, count_per_kill = 1, reduction_per_tick = 2, bonus_gold_cap = 80, stack_duration = 30, reduction_duration = 2.5, killsperstack = 3},
 	["modifier_vgmar_i_kingsaegis_cooldown"] = {cooldown = 240, reincarnate_time = 5},
 	["modifier_vgmar_i_critical_mastery"] = {critdmgpercentage = 300, critchance = 100},
 	["modifier_vgmar_i_atrophy"] = {radius = 1000, dmgpercreep = 1, dmgperhero = 5, stack_duration = 240, stack_duration_scepter = -1, max_stacks = 1000, initial_stacks = 0},
@@ -861,8 +845,8 @@ function VGMAR:OnThink()
 						end
 					end
 					--Companion System
-					if self:CountUsableItemsInHeroInventory(heroent, "item_bloodstone", false, true, false) >= 3 then
-						self:RemoveNItemsInInventory(heroent, "item_bloodstone", 3)
+					if self:CountUsableItemsInHeroInventory(heroent, "item_bloodstone", false, true, false) >= 2 then
+						self:RemoveNItemsInInventory(heroent, "item_bloodstone", 2)
 						--GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_GOODGUYS, GameRules:GetCustomGameTeamMaxPlayers(DOTA_TEAM_GOODGUYS) + 1)
 						local playerID = heroent:GetPlayerID()
 						local player = PlayerResource:GetPlayer(playerID)

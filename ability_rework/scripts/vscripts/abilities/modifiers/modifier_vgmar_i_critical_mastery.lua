@@ -69,7 +69,7 @@ function modifier_vgmar_i_critical_mastery:GetModifierPreAttack_CriticalStrike(k
 end
 
 function modifier_vgmar_i_critical_mastery:OnAttackLanded(kv)
-	if self.crit == true and kv.attacker == self:GetParent() then
+	if self.crit == true and kv.attacker == self:GetParent() and kv.target:IsBuilding() == false then
 		local particle = "particles/units/heroes/hero_phantom_assassin/phantom_assassin_crit_impact.vpcf"
 		local soundevnt = "Hero_PhantomAssassin.CoupDeGrace"
 		if kv.target:GetClassname() == "npc_dota_creep_siege" then
