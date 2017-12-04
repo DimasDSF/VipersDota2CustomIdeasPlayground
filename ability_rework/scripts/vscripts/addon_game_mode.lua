@@ -16,7 +16,6 @@ end
 require('libraries/timers')
 require('libraries/heronames')
 require('libraries/heroabilityslots')
-AbilitySlotsLib:Init()
 
 function Precache( ctx )
 	--Precaching Custom Ability sounds (and all used heros' sounds :fp:)
@@ -47,6 +46,7 @@ function Activate()
 end
 
 function VGMAR:Init()
+	AbilitySlotsLib:Init()
 	self.n_players_radiant = 0
 	self.n_players_dire = 0
 	self.istimescalereset = 0
@@ -70,9 +70,29 @@ function VGMAR:Init()
 	self.companionheroes = {}
 	self.playercompanionsnum = {}
 	
+	--CustomAbilitiesValues
+	--For ClientSide
+	self:InitNetTables()
+	CustomNetTables:SetTableValue( "client_side_ability_values", "modifier_vgmar_i_manaregen_aura", {regenself = 4, regenallies = 3} )
+	CustomNetTables:SetTableValue( "client_side_ability_values", "modifier_vgmar_i_attackrange", {range = 140, bonusstr = 12, bonusagi = 12} )
+	CustomNetTables:SetTableValue( "client_side_ability_values", "modifier_vgmar_i_castrange", {range = 250, manaregen = 1.25, bonusmana = 400} )
+	CustomNetTables:SetTableValue( "client_side_ability_values", "modifier_vgmar_i_spellamp", {percentage = 10, costpercentage = 10, bonusint = 16} )
+	CustomNetTables:SetTableValue( "client_side_ability_values", "modifier_vgmar_i_cdreduction", {percentage = 25, bonusmana = 905, bonushealth = 905, intbonus = 25} )
+	CustomNetTables:SetTableValue( "client_side_ability_values", "modifier_vgmar_i_essence_aura", {bonusmana = 900, restoreamount = 20} )
+	CustomNetTables:SetTableValue( "client_side_ability_values", "modifier_vgmar_i_spellshield", {resistance = 35, cooldown = 12} )
+	CustomNetTables:SetTableValue( "client_side_ability_values", "modifier_vgmar_i_fervor", {asperstack = 15} )
+	CustomNetTables:SetTableValue( "client_side_ability_values", "modifier_vgmar_i_essence_shift", {reductionprimary = 1, reductionsecondary = 0, increaseprimary = 1, increasesecondary = 0} )
+	CustomNetTables:SetTableValue( "client_side_ability_values", "modifier_vgmar_i_pulse", {hpregenperstack = 4, manaregenperstack = 4} )
+	CustomNetTables:SetTableValue( "client_side_ability_values", "modifier_vgmar_i_greatcleave", {cleaveperc = 100} )
+	CustomNetTables:SetTableValue( "client_side_ability_values", "modifier_vgmar_i_vampiric_aura", { lspercent = 30, lspercentranged = 20} )
+	CustomNetTables:SetTableValue( "client_side_ability_values", "modifier_vgmar_i_multishot", {shotspercap = 8} )
+	CustomNetTables:SetTableValue( "client_side_ability_values", "modifier_vgmar_i_midas_greed", {killsperstack = 4} )
+	CustomNetTables:SetTableValue( "client_side_ability_values", "modifier_vgmar_i_kingsaegis_cooldown", {cooldown = 240} )
+	CustomNetTables:SetTableValue( "client_side_ability_values", "modifier_vgmar_i_critical_mastery", {critdmgpercentage = 300} )
+	
 	LinkLuaModifier("modifier_vgmar_util_dominator_ability_purger", "abilities/util/modifiers/modifier_vgmar_util_dominator_ability_purger.lua", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_deathskiss_visual", "abilities/modifiers/modifier_vgmar_i_deathskiss_visual", LUA_MODIFIER_MOTION_NONE)
-	LinkLuaModifier("modifier_vgmar_i_spellshield_cooldown", "abilities/modifiers/modifier_vgmar_i_spellshield_cooldown", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_spellshield", "abilities/modifiers/modifier_vgmar_i_spellshield_cooldown", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_kingsaegis_cooldown", "abilities/modifiers/modifier_vgmar_i_kingsaegis_cooldown", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_kingsaegis_active", "abilities/modifiers/modifier_vgmar_i_kingsaegis_active", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_criticalmastery_visual", "abilities/modifiers/modifier_vgmar_i_criticalmastery_visual", LUA_MODIFIER_MOTION_NONE)
@@ -83,7 +103,33 @@ function VGMAR:Init()
 	LinkLuaModifier("modifier_vgmar_ai_companion_wisp_force_retether", "abilities/modifiers/ai/modifier_vgmar_ai_companion_wisp_force_retether", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_ai_companion_midas_usage", "abilities/modifiers/ai/modifier_vgmar_ai_companion_midas_usage", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_ai_companion_wisp_force_stop", "abilities/modifiers/ai/modifier_vgmar_ai_companion_wisp_force_stop", LUA_MODIFIER_MOTION_NONE)
-
+	LinkLuaModifier("modifier_vgmar_i_fervor", "abilities/modifiers/modifier_vgmar_i_fervor", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_cdreduction", "abilities/modifiers/modifier_vgmar_i_cdreduction", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_midas_greed", "abilities/modifiers/modifier_vgmar_i_midas_greed", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_spellamp", "abilities/modifiers/modifier_vgmar_i_spellamp", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_castrange", "abilities/modifiers/modifier_vgmar_i_castrange", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_attackrange", "abilities/modifiers/modifier_vgmar_i_attackrange", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_essence_aura", "abilities/modifiers/modifier_vgmar_i_essence_aura", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_essence_aura_effect", "abilities/modifiers/modifier_vgmar_i_essence_aura_effect", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_atrophy", "abilities/modifiers/modifier_vgmar_i_atrophy", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_greatcleave", "abilities/modifiers/modifier_vgmar_i_greatcleave", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_ogre_tester", "abilities/modifiers/modifier_vgmar_i_ogre_tester", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_manaregen_aura", "abilities/modifiers/modifier_vgmar_i_manaregen_aura", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_manaregen_aura_effect", "abilities/modifiers/modifier_vgmar_i_manaregen_aura_effect", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_spellshield_active", "abilities/modifiers/modifier_vgmar_i_spellshield_active", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_vampiric_aura", "abilities/modifiers/modifier_vgmar_i_vampiric_aura", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_vampiric_aura_effect", "abilities/modifiers/modifier_vgmar_i_vampiric_aura_effect", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_essence_shift", "abilities/modifiers/modifier_vgmar_i_essence_shift", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_essence_shift_target_agi", "abilities/modifiers/modifier_vgmar_i_essence_shift_target_agi", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_essence_shift_target_str", "abilities/modifiers/modifier_vgmar_i_essence_shift_target_str", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_essence_shift_target_int", "abilities/modifiers/modifier_vgmar_i_essence_shift_target_int", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_deathskiss", "abilities/modifiers/modifier_vgmar_i_deathskiss", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_critical_mastery", "abilities/modifiers/modifier_vgmar_i_critical_mastery", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_pulse", "abilities/modifiers/modifier_vgmar_i_pulse", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_multishot", "abilities/modifiers/modifier_vgmar_i_multishot", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_multishot_attack", "abilities/modifiers/modifier_vgmar_i_multishot_attack", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_ai_companion_wisp_item_usage", "abilities/modifiers/ai/modifier_vgmar_ai_companion_wisp_item_usage", LUA_MODIFIER_MOTION_NONE)
+	
 	self.mode = GameRules:GetGameModeEntity()
 	GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_GOODGUYS, RADIANT_TEAM_MAX_PLAYERS)
     GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_BADGUYS, DIRE_TEAM_MAX_PLAYERS)
@@ -93,7 +139,9 @@ function VGMAR:Init()
 	GameRules:SetRuneSpawnTime(RUNE_SPAWN_TIME)
 	GameRules:SetRuneMinimapIconScale( 1 )
 	self.mode:SetRecommendedItemsDisabled(true)
-	GameRules:GetGameModeEntity():SetBotThinkingEnabled(true)
+	if VGMAR_BOT_FILL == true then
+		GameRules:GetGameModeEntity():SetBotThinkingEnabled(true)
+	end
 	self.mode:SetRuneEnabled( DOTA_RUNE_DOUBLEDAMAGE, true )
 	self.mode:SetRuneEnabled( DOTA_RUNE_HASTE, true )
 	self.mode:SetRuneEnabled( DOTA_RUNE_ILLUSION, true )
@@ -105,6 +153,7 @@ function VGMAR:Init()
 	self.mode:SetExecuteOrderFilter( Dynamic_Wrap( VGMAR, "ExecuteOrderFilter" ), self )
 	self.mode:SetDamageFilter( Dynamic_Wrap( VGMAR, "FilterDamage" ), self )
 	--self.mode:SetModifierGainedFilter( Dynamic_Wrap( VGMAR, "FilterModifierGained" ), self)
+	self.mode:SetModifyExperienceFilter( Dynamic_Wrap( VGMAR, "FilterExperienceGained" ), self)
 
 	ListenToGameEvent( "npc_spawned", Dynamic_Wrap( VGMAR, "OnNPCSpawned" ), self )
 	ListenToGameEvent( "dota_player_learned_ability", Dynamic_Wrap( VGMAR, "OnPlayerLearnedAbility" ), self)
@@ -115,6 +164,7 @@ function VGMAR:Init()
 	Convars:RegisterConvar('vgmar_devmode', "0", "Set to 1 to show debug info.  Set to 0 to disable.", 0)
 	Convars:RegisterConvar('vgmar_blockbotcontrol', "1", "Set to 0 to enable controlling bots", 0)
 	Convars:RegisterConvar('vgmar_enablecompanion_fullcontrol', "0", "Set to 1 to enable controlling a companion", 0)
+	Convars:RegisterCommand('vgmar_reload_test_modifier', Dynamic_Wrap( VGMAR, "ReloadTestModifier" ), "Reload script modifier", 0)
 	if VGMAR_DEBUG == true then
 		Convars:SetInt("vgmar_devmode", 1)
 	end
@@ -122,10 +172,54 @@ function VGMAR:Init()
 	GameRules:GetGameModeEntity():SetThink( "OnThink", self, 0.25 )
 end
 
+--Creep -> Building Damage Multiplier
+local creeptobuildingdmgmult = {
+	["npc_dota_creep_lane"] = 0.5,
+	["npc_dota_creep_siege"] = 0.25
+}
+
+function VGMAR:ReloadTestModifier()
+	SendToServerConsole("script_reload")
+	LinkLuaModifier("modifier_vgmar_i_ogre_tester", "abilities/modifiers/modifier_vgmar_i_ogre_tester", LUA_MODIFIER_MOTION_NONE)
+end
+
 function dprint(...)
 	if Convars:GetInt("vgmar_devmode") == 1 then
 		print(...)
 	end
+end
+
+local modifierdatatable = {
+	["modifier_vgmar_i_manaregen_aura"] = {radius = 4000, bonusmanaself = 400, bonusmanaallies = 300, regenself = 4, regenallies = 3},
+	["modifier_vgmar_i_attackrange"] = {range = 140, bonusstr = 12, bonusagi = 12},
+	["modifier_vgmar_i_castrange"] = {range = 250, manaregen = 1.25, bonusmana = 400},
+	["modifier_vgmar_i_spellamp"] = {percentage = 10, costpercentage = 10, bonusint = 16},
+	["modifier_vgmar_i_cdreduction"] = {percentage = 25, bonusmana = 905, bonushealth = 905, intbonus = 25, spelllifestealhero = 25, spelllifestealcreep = 5},
+	["modifier_vgmar_i_essence_aura"] = {radius = 1000, bonusmana = 900, restorechance = 25, restoreamount = 20},
+	["modifier_vgmar_i_spellshield"] = {resistance = 35, cooldown = 12, maxstacks = 2},
+	["modifier_vgmar_i_fervor"] = {maxstacks = 15, asperstack = 15},
+	["modifier_vgmar_i_essence_shift"] = {reductionprimary = 1, reductionsecondary = 0, increaseprimary = 1, increasesecondary = 0, hitsperstackinc = 1, hitsperstackred = 2, duration = 40, durationtarget = 40},
+	["modifier_vgmar_i_pulse"] = {stackspercreep = 1, stacksperhero = 10, duration = 3, hpregenperstack = 4, manaregenperstack = 4},
+	["modifier_vgmar_i_greatcleave"] = {cleaveperc = 100, cleavestartrad = 150, cleaveendrad = 300, cleaveradius = 700, bonusdamage = 75},
+	["modifier_vgmar_i_vampiric_aura"] = {radius = 700, lspercent = 30, lspercentranged = 20},
+	["modifier_vgmar_i_multishot"] = {stackscap = 5, shotspercap = 8, attackduration = 2, bonusrange = 140},
+	["modifier_vgmar_i_midas_greed"] = {min_bonus_gold = 0, count_per_kill = 1, reduction_per_tick = 2, bonus_gold_cap = 80, stack_duration = 30, reduction_duration = 2.5, killsperstack = 4},
+	["modifier_vgmar_i_kingsaegis_cooldown"] = {cooldown = 240, reincarnate_time = 5},
+	["modifier_vgmar_i_critical_mastery"] = {critdmgpercentage = 300, critchance = 100},
+	["modifier_vgmar_i_atrophy"] = {radius = 1000, dmgpercreep = 1, dmgperhero = 5, stack_duration = 240, stack_duration_scepter = -1, max_stacks = 1000, initial_stacks = 0},
+	["modifier_vgmar_i_deathskiss"] = {critdmgpercentage = 20000, critchance = 1},
+	["modifier_vgmar_i_truesight"] = {radius = 900},
+	["modifier_item_ultimate_scepter_consumed"] = {bonus_all_stats = 10, bonus_health = 175, bonus_mana = 175},
+	["modifier_vgmar_i_ogre_tester"] = {}
+}
+	
+function VGMAR:InitNetTables()
+	local num = 0
+	for i,v in pairs(modifierdatatable) do
+		CustomNetTables:SetTableValue( "client_side_ability_values", i, v )
+		num = num + 1
+	end
+	print("Initiated "..num.." KeyNames in Net Tables")
 end
 
 --BackDoorProtected Building List
@@ -339,6 +433,14 @@ function VGMAR:FilterRuneSpawn( filterTable )
 		self.lastrunetype = filterTable.rune_type
 	end
 	self.currunenum = self.currunenum + 1
+	return true
+end
+
+function VGMAR:FilterExperienceGained( filterTable )
+	--DeepPrintTable( filterTable )
+	if self.playercompanionsnum[filterTable["player_id_const"]] ~= nil then
+		filterTable["experience"] = filterTable["experience"] + filterTable["experience"] * (self.playercompanionsnum[filterTable["player_id_const"]] * 0.5)
+	end
 	return true
 end
 
@@ -733,10 +835,12 @@ function VGMAR:OnThink()
 				--Consumable Items System
 				--//////////////////////////////
 				if heroent:IsRealHero() and not heroent:IsCourier() then
-					--Alchemist-less Scepter consumption
-					if self:CountUsableItemsInHeroInventory( heroent, "item_ultimate_scepter", false, true, false) >= 2 and not heroent:FindModifierByName("modifier_item_ultimate_scepter_consumed") then
-						self:RemoveNItemsInInventory(heroent, "item_ultimate_scepter", 2)
-						heroent:AddNewModifier(heroent, nil, 'modifier_item_ultimate_scepter_consumed', { bonus_all_stats = 10, bonus_health = 175, bonus_mana = 175 })
+					--Shrines Fill Bottles --modifier_filler_heal_aura
+					if self:HeroHasUsableItemInInventory( heroent, "item_bottle", false, true, false) and heroent:FindModifierByName("modifier_filler_heal") ~= nil then
+						local bottle = self:GetItemFromInventoryByName( heroent, "item_bottle", false, true, false )
+						if bottle:GetCurrentCharges() < bottle:GetInitialCharges() then
+							bottle:SetCurrentCharges( bottle:GetInitialCharges() )
+						end
 					end
 					--##Obsolete707
 					--Diffusal Blade 2+ Upgrade
@@ -749,8 +853,8 @@ function VGMAR:OnThink()
 						end
 					end--]]
 					--Bloodstone recharge
-					if self:HeroHasUsableItemInInventory(heroent, "item_bloodstone", false, false, false) and self:CountUsableItemsInHeroInventory(heroent, "item_recipe_bloodstone", false, true, false) >= 3 then
-						self:RemoveNItemsInInventory(heroent, "item_recipe_bloodstone", 3)
+					if self:HeroHasUsableItemInInventory(heroent, "item_bloodstone", false, false, false) and self:CountUsableItemsInHeroInventory(heroent, "item_pers", false, true, false) >= 2 then
+						self:RemoveNItemsInInventory(heroent, "item_pers", 2)
 						local bloodstone = self:GetItemFromInventoryByName( heroent, "item_bloodstone", false, false, false )
 						if bloodstone ~= nil then
 							bloodstone:SetCurrentCharges(bloodstone:GetCurrentCharges() + 24)
@@ -764,16 +868,16 @@ function VGMAR:OnThink()
 						local player = PlayerResource:GetPlayer(playerID)
 						local wisp = CreateUnitByName("npc_dota_hero_wisp", heroent:GetAbsOrigin(), true, heroent, heroent, heroent:GetTeamNumber())
 						wisp:SetControllableByPlayer(playerID, false)
-						for i=1,25 do
+						for i=2,heroent:GetLevel() do
 							wisp:HeroLevelUp(false)
 						end
-						wisp:AddAbility("vgmar_ca_wisp_tether"):SetLevel( 4 )
+						wisp:AddAbility("vgmar_ca_wisp_tether")
 						wisp:SwapAbilities("wisp_tether", "vgmar_ca_wisp_tether", false, true)
 						wisp:RemoveAbility("wisp_tether")
-						wisp:AddAbility("vgmar_ca_wisp_overcharge"):SetLevel( 4 )
+						wisp:AddAbility("vgmar_ca_wisp_overcharge")
 						wisp:SwapAbilities("wisp_overcharge", "vgmar_ca_wisp_overcharge", false, true)
 						wisp:RemoveAbility("wisp_overcharge")
-						wisp:AddAbility("vgmar_ca_wisp_relocate"):SetLevel( 3 )
+						wisp:AddAbility("vgmar_ca_wisp_relocate")
 						wisp:SwapAbilities("wisp_relocate", "vgmar_ca_wisp_relocate", false, true)
 						wisp:RemoveAbility("wisp_relocate")
 						wisp:AddAbility("vgmar_ai_companion_wisp_toggle_autohit"):SetLevel( 1 )
@@ -809,182 +913,323 @@ function VGMAR:OnThink()
 					end
 				end
 				
+				--////////////////////
+				--CompanionAutoLevelUp
+				--////////////////////
+				if self:IsUnitACompanion( heroent , 0 ) then
+					local companionnum = self:GetCompanionNum( nil, -1, heroent:entindex())
+					local companionowner = self.companionheroes[companionnum].ownerhero
+					if heroent:GetLevel() < companionowner:GetLevel() then
+						for i=1,companionowner:GetLevel()-heroent:GetLevel() do
+							heroent:HeroLevelUp(false)
+						end
+					end
+				end
+				
 				--//////////////////////
 				--Passive Item Abilities
 				--//////////////////////
-				--Items For Spells Table
+				--Items For Spells Table --vgmar_i_spellshield
 				local itemlistforspell = {
-			{spell = "vgmar_i_goblins_greed",
+			{spell = "modifier_vgmar_i_midas_greed",
 				items = {itemnames = {"item_hand_of_midas"}, itemnum = {1}},
 				isconsumable = false,
+				ismodifier = true,
+				usemodifierdatatable = true,
+				modifierdata = {min_bonus_gold = 0, count_per_kill = 1, reduction_per_tick = 2, bonus_gold_cap = 80, stack_duration = 30, reduction_duration = 2.5, killsperstack = 4},
 				usesmultiple = false,
 				backpack = self:TimeIsLaterThan( 30, 0 ) or heroent:GetLevel() >= 25,
-				preventedhero = "npc_dota_hero_alchemist",
+				preventedhero = "npc_target_dummy",
 				specificcond = true },
-			{spell = "vgmar_i_essense_shift",
-				items = {itemnames = {"item_silver_edge"}, itemnum = {1}},
+			{spell = "modifier_vgmar_i_essence_shift",
+				items = {itemnames = {"item_diffusal_blade"}, itemnum = {1}},
 				isconsumable = false,
+				ismodifier = true,
+				usemodifierdatatable = true,
+				modifierdata = {reductionprimary = 1, reductionsecondary = 0, increaseprimary = 1, increasesecondary = 0, hitsperstackinc = 1, hitsperstackred = 2, duration = 40, durationtarget = 40},
 				usesmultiple = false,
 				backpack = false,
-				preventedhero = "npc_dota_hero_slark",
+				preventedhero = "npc_target_dummy",
 				specificcond = true },
 			{spell = "vgmar_i_thirst",
 				items = {itemnames = {"item_lesser_crit", "item_bloodstone"}, itemnum = {1, 1}},
 				isconsumable = true,
+				ismodifier = false,
+				usemodifierdatatable = false,
+				modifierdata = {},
 				usesmultiple = false,
 				backpack = true,
 				preventedhero = "npc_dota_hero_bloodseeker",
 				specificcond = true },
-			{spell = "vgmar_i_pulse",
+			{spell = "modifier_vgmar_i_pulse",
 				items = {itemnames = {"item_urn_of_shadows"}, itemnum = {2}},
 				isconsumable = true,
+				ismodifier = true,
+				usemodifierdatatable = true,
+				modifierdata = {stackspercreep = 1, stacksperhero = 10, duration = 3, hpregenperstack = 4, manaregenperstack = 4},
 				usesmultiple = true,
 				backpack = true,
-				preventedhero = "npc_dota_hero_necrolyte",
+				preventedhero = "npc_target_dummy",
 				specificcond = true },
-			{spell = "vgmar_i_fervor",
+			{spell = "modifier_vgmar_i_fervor",
 				items = {itemnames = {"item_gloves", "item_mask_of_madness"}, itemnum = {2, 1}},
 				isconsumable = true,
+				ismodifier = true,
+				usemodifierdatatable = true,
+				modifierdata = {maxstacks = 15, asperstack = 15},
 				usesmultiple = true,
 				backpack = true,
 				preventedhero = "npc_dota_hero_troll_warlord",
 				specificcond = true },
-			{spell = "aegis_king_reincarnation",
+			{spell = "modifier_vgmar_i_kingsaegis_cooldown",
 				items = {itemnames = {"item_stout_shield", "item_vanguard", "item_buckler", "item_aegis"}, itemnum = {1, 1, 1, 1}},
 				isconsumable = true,
+				ismodifier = true,
+				usemodifierdatatable = true,
+				modifierdata = {cooldown = 240, reincarnate_time = 5},
 				usesmultiple = false,
 				backpack = true,
-				preventedhero = "npc_dota_hero_skeleton_king",
+				preventedhero = "npc_target_dummy",
 				specificcond = true },
-			{spell = "vgmar_i_atrophy_aura",
+			{spell = "modifier_vgmar_i_atrophy",
 				items = {itemnames = {"item_helm_of_the_dominator", "item_satanic"}, itemnum = {2, 1}},
 				isconsumable = true,
+				ismodifier = true,
+				usemodifierdatatable = true,
+				modifierdata = {radius = 1000, dmgpercreep = 1, dmgperhero = 5, stack_duration = 240, stack_duration_scepter = -1, max_stacks = 1000, initial_stacks = 0},
 				usesmultiple = true,
 				backpack = true,
-				preventedhero = "npc_dota_hero_abyssal_underlord",
+				preventedhero = "npc_target_dummy",
 				specificcond = true },
-			{spell = "vgmar_i_deathskiss",
+			{spell = "modifier_vgmar_i_deathskiss",
 				items = {itemnames = {"item_relic"}, itemnum = {2}},
 				isconsumable = true,
+				ismodifier = true,
+				usemodifierdatatable = true,
+				modifierdata = {critdmgpercentage = 20000, critchance = 1},
 				usesmultiple = true,
 				backpack = true,
-				preventedhero = "npc_dota_hero_phantom_assassin",
-				specificcond = heroent:FindAbilityByName("vgmar_i_criticalmastery") == nil },
-			{spell = "vgmar_i_essence_aura",
+				preventedhero = "npc_target_dummy",
+				specificcond = heroent:FindModifierByName("modifier_vgmar_i_critical_mastery") == nil },
+			{spell = "modifier_vgmar_i_cdreduction",
 				items = {itemnames = {"item_octarine_core"}, itemnum = {2}},
 				isconsumable = true,
+				ismodifier = true,
+				usemodifierdatatable = true,
+				modifierdata = { percentage = 25, bonusmana = 905, bonushealth = 905, intbonus = 25, spelllifestealhero = 25, spelllifestealcreep = 5 },
 				usesmultiple = true,
 				backpack = true,
-				preventedhero = "npc_dota_hero_obsidian_destroyer",
+				preventedhero = "npc_target_dummy",
 				specificcond = true },
-			{spell = "vgmar_i_rainfall",
+			{spell = "modifier_vgmar_i_manaregen_aura",
 				items = {itemnames = {"item_infused_raindrop"}, itemnum = {6}},
 				isconsumable = true,
+				ismodifier = true,
+				usemodifierdatatable = true,
+				modifierdata = {radius = 4000, bonusmanaself = 400, bonusmanaallies = 300, regenself = 4, regenallies = 3},
 				usesmultiple = true,
 				backpack = true,
-				preventedhero = "npc_dota_hero_crystal_maiden",
+				preventedhero = "npc_target_dummy",
 				specificcond = true },
-			{spell = "vgmar_i_spellshield",
+			{spell = "modifier_vgmar_i_spellshield",
 				items = {itemnames = {"item_lotus_orb", "item_cloak"}, itemnum = {1, 2}},
 				isconsumable = true,
+				ismodifier = true,
+				usemodifierdatatable = true,
+				modifierdata = {resistance = 35, cooldown = 12, maxstacks = 2},
 				usesmultiple = true,
 				backpack = true,
-				preventedhero = "npc_dota_hero_antimage",
+				preventedhero = "npc_target_dummy",
 				specificcond = true },
-			{spell = "vgmar_i_vampiric_aura",
+			{spell = "modifier_vgmar_i_vampiric_aura",
 				items = {itemnames = {"item_vladmir"}, itemnum = {2}},
 				isconsumable = true,
+				ismodifier = true,
+				usemodifierdatatable = true,
+				modifierdata = {radius = 700, lspercent = 30, lspercentranged = 20},
 				usesmultiple = true,
 				backpack = true,
-				preventedhero = "npc_dota_hero_skeleton_king",
+				preventedhero = "npc_target_dummy",
 				specificcond = true },
-			{spell = "vgmar_i_criticalmastery",
+			{spell = "modifier_vgmar_i_critical_mastery",
 				items = {itemnames = {"item_greater_crit", "item_lesser_crit"}, itemnum = {2, 1}},
 				isconsumable = true,
+				ismodifier = true,
+				usemodifierdatatable = true,
+				modifierdata = {critdmgpercentage = 300, critchance = 100},
 				usesmultiple = true,
 				backpack = true,
 				preventedhero = "npc_dota_hero_phantom_assassin",
-				specificcond = heroent:FindAbilityByName("vgmar_i_deathskiss") == nil },
+				specificcond = heroent:FindModifierByName("modifier_vgmar_i_deathskiss") == nil },
 			{spell = "vgmar_i_purgefield",
 				items = {itemnames = {"item_nullifier", "item_null_talisman"}, itemnum = {1, 3}},
 				isconsumable = true,
+				ismodifier = false,
+				usemodifierdatatable = true,
+				modifierdata = {},
 				usesmultiple = true,
 				backpack = true,
 				preventedhero = "npc_dota_hero_razor",
 				specificcond = true	},
-			{spell = "vgmar_i_truesight",
+			{spell = "modifier_vgmar_i_truesight",
 				items = {itemnames = {"item_gem"}, itemnum = {2}},
 				isconsumable = true,
+				ismodifier = true,
+				usemodifierdatatable = true,
+				modifierdata = {radius = 900},
 				usesmultiple = true,
 				backpack = true,
 				preventedhero = "npc_target_dummy",
-				specificcond = true }
+				specificcond = true },
+			{spell = "modifier_item_ultimate_scepter_consumed",
+				items = {itemnames = {"item_ultimate_scepter"}, itemnum = {2}},
+				isconsumable = true,
+				ismodifier = true,
+				usemodifierdatatable = true,
+				modifierdata = { bonus_all_stats = 10, bonus_health = 175, bonus_mana = 175 },
+				usesmultiple = true,
+				backpack = true,
+				preventedhero = "npc_dota_hero_alchemist",
+				specificcond = true },
+			{spell = "modifier_vgmar_i_spellamp",
+				items = {itemnames = {"item_kaya"}, itemnum = {2}},
+				isconsumable = true,
+				ismodifier = true,
+				usemodifierdatatable = true,
+				modifierdata = {percentage = 10, costpercentage = 10, bonusint = 16},
+				usesmultiple = true,
+				backpack = true,
+				preventedhero = "npc_target_dummy",
+				specificcond = true },
+			{spell = "modifier_vgmar_i_castrange",
+				items = {itemnames = {"item_aether_lens"}, itemnum = {2}},
+				isconsumable = true,
+				ismodifier = true,
+				usemodifierdatatable = true,
+				modifierdata = {range = 250, manaregen = 1.25, bonusmana = 400},
+				usesmultiple = true,
+				backpack = true,
+				preventedhero = "npc_target_dummy",
+				specificcond = true},
+			{spell = "modifier_vgmar_i_attackrange",
+				items = {itemnames = {"item_dragon_lance"}, itemnum = {2}},
+				isconsumable = true,
+				ismodifier = true,
+				usemodifierdatatable = true,
+				modifierdata = {range = 140, bonusstr = 12, bonusagi = 12},
+				usesmultiple = true,
+				backpack = true,
+				preventedhero = "npc_target_dummy",
+				specificcond = heroent:IsRangedAttacker()},
+			{spell = "modifier_vgmar_i_essence_aura",
+				items = {itemnames = {"item_mystic_staff"}, itemnum = {3}},
+				isconsumable = true,
+				ismodifier = true,
+				usemodifierdatatable = true,
+				modifierdata = { radius = 1000, bonusmana = 900, restorechance = 25, restoreamount = 20 },
+				usesmultiple = true,
+				backpack = true,
+				preventedhero = "npc_dota_hero_obsidian_destroyer",
+				specificcond = true },
+			{spell = "modifier_vgmar_i_greatcleave",
+				items = {itemnames = {"item_bfury"}, itemnum = {2}},
+				isconsumable = true,
+				ismodifier = true,
+				usemodifierdatatable = true,
+				modifierdata = { cleaveperc = 100, cleavestartrad = 150, cleaveendrad = 300, cleaveradius = 700 },
+				usesmultiple = true,
+				backpack = true,
+				preventedhero = "npc_target_dummy",
+				specificcond = heroent:IsRangedAttacker() == false },
+			{spell = "modifier_vgmar_i_multishot",
+				items = {itemnames = {"item_dragon_lance", "item_demon_edge", "item_yasha"}, itemnum = {1, 2, 1}},
+				isconsumable = true,
+				ismodifier = true,
+				usemodifierdatatable = true,
+				modifierdata = {stackscap = 5, shotspercap = 8, attackduration = 2},
+				usesmultiple = true,
+				backpack = true,
+				preventedhero = "npc_target_dummy",
+				specificcond = heroent:IsRangedAttacker() == true },
+			{spell = "modifier_vgmar_i_ogre_tester",
+				items = {itemnames = {"item_ogre_axe"}, itemnum = {2}},
+				isconsumable = false,
+				ismodifier = true,
+				usemodifierdatatable = false,
+				modifierdata = {},
+				usesmultiple = true,
+				backpack = true,
+				preventedhero = "npc_target_dummy",
+				specificcond = Convars:GetInt("vgmar_devmode") == 1 }
 			}
 			--TableEND
 			
 				for k=1,#itemlistforspell do
-					if heroent:GetClassname() ~= itemlistforspell[k].preventedhero then
-						if itemlistforspell[k].specificcond == true then
-							if itemlistforspell[k].isconsumable == true then
-								if AbilitySlotsLib:GetFreeAbilitySlotsForSpecificHero( heroent ) > 0 then
-									if self:HeroHasAllItemsFromListWMultiple( heroent, itemlistforspell[k].items, itemlistforspell[k].backpack) and not heroent:FindAbilityByName(itemlistforspell[k].spell) then
-										local itemability = heroent:FindAbilityByName(itemlistforspell[k].spell)
-										if itemability == nil then
+					if heroent:IsRealHero() then
+						if heroent:GetClassname() ~= itemlistforspell[k].preventedhero then
+							if itemlistforspell[k].specificcond == true then
+								if itemlistforspell[k].isconsumable == true then
+									if itemlistforspell[k].ismodifier == true then
+										if self:HeroHasAllItemsFromListWMultiple( heroent, itemlistforspell[k].items, itemlistforspell[k].backpack) and heroent:IsAlive() and not heroent:HasModifier(itemlistforspell[k].spell) then
 											for j=1,#itemlistforspell[k].items.itemnames do
 												self:RemoveNItemsInInventory( heroent, itemlistforspell[k].items.itemnames[j], itemlistforspell[k].items.itemnum[j])
 											end
-											AbilitySlotsLib:SafeAddAbility( heroent, itemlistforspell[k].spell, 1 )
-											--heroent:AddAbility(itemlistforspell[k].spell):SetLevel(1)
+											if itemlistforspell[k].usemodifierdatatable == true then
+												heroent:AddNewModifier(heroent, nil, itemlistforspell[k].spell, modifierdatatable[itemlistforspell[k].spell])
+											else
+												heroent:AddNewModifier(heroent, nil, itemlistforspell[k].spell, itemlistforspell[k].modifierdata)
+											end
 										end
-									end
-								end
-							else
-								if self:HeroHasAllItemsFromListWMultiple( heroent, itemlistforspell[k].items, itemlistforspell[k].backpack) then
-									if AbilitySlotsLib:GetFreeAbilitySlotsForSpecificHero( heroent ) > 0 then
-										local itemability = heroent:FindAbilityByName(itemlistforspell[k].spell)
-										if itemability == nil then
-											AbilitySlotsLib:SafeAddAbility( heroent, itemlistforspell[k].spell, 1 )
-											--heroent:AddAbility(itemlistforspell[k].spell):SetLevel(1)
+									else
+										if AbilitySlotsLib:GetFreeAbilitySlotsForSpecificHero( heroent ) > 0 then
+											if self:HeroHasAllItemsFromListWMultiple( heroent, itemlistforspell[k].items, itemlistforspell[k].backpack) and heroent:IsAlive() and not heroent:FindAbilityByName(itemlistforspell[k].spell) then
+												local itemability = heroent:FindAbilityByName(itemlistforspell[k].spell)
+												if itemability == nil then
+													for j=1,#itemlistforspell[k].items.itemnames do
+														self:RemoveNItemsInInventory( heroent, itemlistforspell[k].items.itemnames[j], itemlistforspell[k].items.itemnum[j])
+													end
+													AbilitySlotsLib:SafeAddAbility( heroent, itemlistforspell[k].spell, 1 )
+												end
+											end
 										end
 									end
 								else
-									local itemability = heroent:FindAbilityByName(itemlistforspell[k].spell)
-									if itemability ~= nil then
-										AbilitySlotsLib:SafeRemoveAbility( heroent, itemlistforspell[k].spell )
-										--heroent:RemoveAbility(itemlistforspell[k].spell)
+									if self:HeroHasAllItemsFromListWMultiple( heroent, itemlistforspell[k].items, itemlistforspell[k].backpack) then
+										if heroent:IsAlive() then
+											if itemlistforspell[k].ismodifier == true then
+												if not heroent:HasModifier(itemlistforspell[k].spell) then
+													if itemlistforspell[k].usemodifierdatatable == true then
+														heroent:AddNewModifier(heroent, nil, itemlistforspell[k].spell, modifierdatatable[itemlistforspell[k].spell])
+													else
+														heroent:AddNewModifier(heroent, nil, itemlistforspell[k].spell, itemlistforspell[k].modifierdata)
+													end
+												end
+											else
+												if AbilitySlotsLib:GetFreeAbilitySlotsForSpecificHero( heroent ) > 0 then
+													local itemability = heroent:FindAbilityByName(itemlistforspell[k].spell)
+													if itemability == nil then
+														AbilitySlotsLib:SafeAddAbility( heroent, itemlistforspell[k].spell, 1 )
+														--heroent:AddAbility(itemlistforspell[k].spell):SetLevel(1)
+													end
+												end
+											end
+										end
+									else
+										if itemlistforspell[k].ismodifier == true then
+											if heroent:HasModifier(itemlistforspell[k].spell) then
+												heroent:RemoveModifierByName(itemlistforspell[k].spell)
+											end
+										else
+											local itemability = heroent:FindAbilityByName(itemlistforspell[k].spell)
+											if itemability ~= nil then
+												AbilitySlotsLib:SafeRemoveAbility( heroent, itemlistforspell[k].spell )
+												--heroent:RemoveAbility(itemlistforspell[k].spell)
+											end
+										end
 									end
 								end
 							end
 						end
-					end
-				end
-				if heroent:FindAbilityByName("aegis_king_reincarnation") ~= nil and heroent:IsAlive() then
-					if not heroent:HasModifier("modifier_vgmar_i_kingsaegis_cooldown") then
-						heroent:AddNewModifier(heroent, nil, "modifier_vgmar_i_kingsaegis_cooldown", {})
-					end
-				end
-				--/////////////////////////
-				--ActiveSpellShieldCooldown
-				--/////////////////////////
-				if heroent:FindAbilityByName("vgmar_i_spellshield") ~= nil and heroent:IsAlive() then
-					if not heroent:HasModifier("modifier_vgmar_i_spellshield_cooldown") then
-						heroent:AddNewModifier(heroent, nil, "modifier_vgmar_i_spellshield_cooldown", {})
-					end
-				end
-				--////////////////
-				--DeathsKissVisual
-				--////////////////
-				if heroent:FindAbilityByName("vgmar_i_deathskiss") ~= nil and heroent:IsAlive() then
-					if not heroent:HasModifier("modifier_vgmar_i_deathskiss_visual") then
-						heroent:AddNewModifier(heroent, nil, "modifier_vgmar_i_deathskiss_visual", {})
-					end
-				end
-				--/////////////////////
-				--CriticalMasteryVisual
-				--/////////////////////
-				if heroent:FindAbilityByName("vgmar_i_criticalmastery") ~= nil and heroent:IsAlive() then
-					if not heroent:HasModifier("modifier_vgmar_i_criticalmastery_visual") then
-						heroent:AddNewModifier(heroent, nil, "modifier_vgmar_i_criticalmastery_visual", {})
 					end
 				end
 				--////////////////
@@ -993,24 +1238,6 @@ function VGMAR:OnThink()
 				if heroent:FindAbilityByName("vgmar_i_purgefield") ~= nil and heroent:IsAlive() then
 					if not heroent:HasModifier("modifier_vgmar_i_purgefield_visual") then
 						heroent:AddNewModifier(heroent, nil, "modifier_vgmar_i_purgefield_visual", {})
-					end
-				end
-				--/////////////////
-				--TrueSightModifier
-				--/////////////////
-				if heroent:FindAbilityByName("vgmar_i_truesight") ~= nil and heroent:IsAlive() then
-					if not heroent:HasModifier("modifier_vgmar_i_truesight") then
-						heroent:AddNewModifier(heroent, nil, "modifier_vgmar_i_truesight", {radius = 900})
-					end
-				end
-				--AegisKingAntiOctarine
-				--/////////////////////
-				if heroent:FindAbilityByName("aegis_king_reincarnation") ~= nil then
-					local reincarnationability = heroent:FindAbilityByName("aegis_king_reincarnation")
-					if self:HeroHasUsableItemInInventory(heroent, "item_octarine_core", false, false, false) and reincarnationability:GetLevel() == 1 then
-						reincarnationability:SetLevel(2)
-					elseif reincarnationability:GetLevel() == 2 and not self:HeroHasUsableItemInInventory(heroent, "item_octarine_core", false, false, false) then
-						reincarnationability:SetLevel(1)
 					end
 				end
 				
@@ -1882,6 +2109,13 @@ function VGMAR:FilterDamage( filterTable )
 	local attacker = EntIndexToHScript(filterTable.entindex_attacker_const)
 	local damage = filterTable["damage"]
 	
+	--Damn 7.07 Makes Creeps SuperDemolishingSquads
+	--Reduce Creep Damage to Buildings
+	if (victim:IsBuilding() or victim:IsTower()) and (attacker:GetClassname() == "npc_dota_creep_lane" or attacker:GetClassname() == "npc_dota_creep_lane") and not attacker:IsDominated() then
+		dprint("Reducing Creep Damage to Building")
+		filterTable["damage"] = filterTable["damage"] * creeptobuildingdmgmult[attacker:GetClassname()]
+	end
+	
 	--///////////////////
 	--BackDoor Protection
 	--///////////////////
@@ -2065,9 +2299,9 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 		local companionowner = self.companionheroes[companionnum].ownerid
 		if issuer == companionowner then
 			if ability and (ability:GetName() == "vgmar_ca_wisp_relocate" or ability:GetName() == "vgmar_ai_companion_wisp_toggle_autohit" or ability:GetName() == "vgmar_ai_companion_wisp_toggle_scepter" or ability:GetName() == "vgmar_ai_companion_wisp_toggle_tether") then
-				if ability:GetName() == "vgmar_ai_companion_wisp_toggle_autohit" or ability:GetName() == "vgmar_ai_companion_wisp_toggle_scepter" then
-					unit:AddNewModifier( unit, nil, "modifier_vgmar_ai_companion_wisp_force_retether", {ownerindex = unit:entindex(), ownerid = companionowner})
-				end
+				--if ability:GetName() == "vgmar_ai_companion_wisp_toggle_autohit" or ability:GetName() == "vgmar_ai_companion_wisp_toggle_scepter" then
+				--	unit:AddNewModifier( unit, nil, "modifier_vgmar_ai_companion_wisp_force_retether", {ownerindex = unit:entindex(), ownerid = companionowner})
+				--end
 				return true
 			else
 				if Convars:GetInt("vgmar_enablecompanion_fullcontrol") == 0 then
@@ -2123,15 +2357,19 @@ function VGMAR:OnGameStateChanged( keys )
 			if VGMAR_BOT_FILL == true then
 				SendToServerConsole("dota_bot_populate")
 			end
-			GameRules:GetGameModeEntity():SetThink(function()
+			Timers:CreateTimer(3, function()
 				Convars:SetBool("sv_cheats", true)
 				dprint("Timer:Enabling Cheats")
 				SendToServerConsole("dota_bot_set_difficulty 3")
-				GameRules:GetGameModeEntity():SetBotThinkingEnabled(true)
-				end, DoUniqueString('setbotdiff'), 3)
+				if VGMAR_BOT_FILL == true then
+					GameRules:GetGameModeEntity():SetBotThinkingEnabled(true)
+				end
+			end)
 			SendToServerConsole("dota_bot_set_difficulty 3")
 			Convars:SetBool("sv_cheats", false)
-			GameRules:GetGameModeEntity():SetBotThinkingEnabled(true)
+			if VGMAR_BOT_FILL == true then
+				GameRules:GetGameModeEntity():SetBotThinkingEnabled(true)
+			end
 		end
 	elseif state == DOTA_GAMERULES_STATE_STRATEGY_TIME then
 		local used_hero_name = "npc_dota_hero_dragon_knight"
@@ -2172,15 +2410,16 @@ function VGMAR:OnGameStateChanged( keys )
 		dprint("Radiant:", self.n_players_dire)
 		
 	elseif state == DOTA_GAMERULES_STATE_PRE_GAME then
-		local gm = GameRules:GetGameModeEntity()
 		if IsServer() then
-			gm:SetThink(function()
+			Timers:CreateTimer(10, function()
 				Convars:SetBool("sv_cheats", true)
 				Convars:SetBool("dota_bot_disable", false)
-				GameRules:GetGameModeEntity():SetBotThinkingEnabled(true)
-				GameRules:GetGameModeEntity():SetBotsInLateGame(self.botsInLateGameMode)
+				if VGMAR_BOT_FILL == true then
+					GameRules:GetGameModeEntity():SetBotThinkingEnabled(true)
+					GameRules:GetGameModeEntity():SetBotsInLateGame(self.botsInLateGameMode)
+				end
 				Convars:SetFloat("host_timescale", PreGameSpeed())
-			end, DoUniqueString('botsettings'), 10)
+			end)
 		end
 	
 		--////////////

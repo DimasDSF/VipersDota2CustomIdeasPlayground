@@ -150,6 +150,7 @@ function Teleportation_PreDestroyTree( event )
 		for i=1,#allies do
 			if allies[i]:HasModifier(tether_ally_modifier) and allies[i]:FindModifierByName(tether_ally_modifier):GetCaster() == caster then
 				ability.tetheredAlly = allies[i]
+				break
 			end
 		end
 		
@@ -286,6 +287,8 @@ function ReturningTeleportation_PreDestroyTree( event )
 	local tether_ally_modifier = event.tether_ally_modifier
 
 	-- Grab the tethered ally
+	
+	ability.tetheredAlly = nil
 
 	if caster:HasModifier( event.tether_modifier ) then
 		local allies = FindUnitsInRadius(caster:GetTeamNumber(), caster:GetAbsOrigin(), nil, FIND_UNITS_EVERYWHERE, DOTA_UNIT_TARGET_TEAM_FRIENDLY, DOTA_UNIT_TARGET_HERO, DOTA_UNIT_TARGET_FLAG_NONE, FIND_CLOSEST, false)

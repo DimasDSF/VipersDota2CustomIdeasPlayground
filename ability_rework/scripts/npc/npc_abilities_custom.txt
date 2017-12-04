@@ -1487,6 +1487,7 @@
 		"AbilityTextureName" "custom/aiautotether"
 		"MaxLevel" "1"
 		"ResetToggleOnRespawn" "0"
+		"AbilityProcsMagicStick" "0"
 	}
 	//===========
 	// Toggle Hit
@@ -1498,6 +1499,7 @@
 		"AbilityTextureName" "custom/aiautoattacktoggle"
 		"MaxLevel" "1"
 		"ResetToggleOnRespawn" "0"
+		"AbilityProcsMagicStick" "0"
 	}
 	//===============
 	// Toggle Scepter
@@ -1509,6 +1511,7 @@
 		"AbilityTextureName" "custom/aisceptertoggle"
 		"MaxLevel" "1"
 		"ResetToggleOnRespawn" "0"
+		"AbilityProcsMagicStick" "0"
 	}
 	
 	//======================

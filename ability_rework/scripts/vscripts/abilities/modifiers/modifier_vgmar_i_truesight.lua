@@ -5,7 +5,7 @@ modifier_vgmar_i_truesight = class({})
 --------------------------------------------------------------------------------
 
 function modifier_vgmar_i_truesight:GetTexture()
-	return "custom/gem_of_true_sight"
+	return "custom/items/gem_of_true_sight"
 end
 
 --------------------------------------------------------------------------------

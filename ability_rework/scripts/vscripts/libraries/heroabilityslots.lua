@@ -32,15 +32,10 @@ function AbilitySlotsLib:Init()
 			end
 		end
 		print("[AbilitySlotsLib] Starting Think Function")
-		print("Invoker Test")
-		print(AbilitySlotsLib:GetTalent( "npc_dota_hero_invoker", 25, false ), "25", AbilitySlotsLib:GetTalent( "npc_dota_hero_invoker", 25, true ))
-		print(AbilitySlotsLib:GetTalent( "npc_dota_hero_invoker", 20, false ), "20", AbilitySlotsLib:GetTalent( "npc_dota_hero_invoker", 20, true ))
-		print(AbilitySlotsLib:GetTalent( "npc_dota_hero_invoker", 15, false ), "15", AbilitySlotsLib:GetTalent( "npc_dota_hero_invoker", 15, true ))
-		print(AbilitySlotsLib:GetTalent( "npc_dota_hero_invoker", 10, false ), "10", AbilitySlotsLib:GetTalent( "npc_dota_hero_invoker", 10, true ))
 		Timers:CreateTimer(function()
 			if #self.removetalentsqueue > 0 then
 				if AbilitySlotsLib:ReplaceWithGenericHidden( self.removetalentsqueue[1].hero, self.removetalentsqueue[1].ability, false ) then
-					print("Removed", self.removetalentsqueue[1].ability, "from Queue")
+					--print("Removed", self.removetalentsqueue[1].ability, "from Queue")
 					table.remove(self.removetalentsqueue, 1)
 					if #self.removetalentsqueue > 0 then
 						return 0.5
@@ -66,34 +61,34 @@ function AbilitySlotsLib:OnAbilityLearned( keys )
 			playerhero = heroes[i]
 		end	
 		if playerhero and playerhero:FindAbilityByName(abilityname) then
-			print("Testing Assigned Hero For AbilitySlotsLib")
-			print("Player ", playerhero:GetPlayerID(), "Hero is: ", playerhero:GetName())
+			--print("Testing Assigned Hero For AbilitySlotsLib")
+			--print("Player ", playerhero:GetPlayerID(), "Hero is: ", playerhero:GetName())
 			if abilityname == AbilitySlotsLib:GetTalent( playerhero:GetName(), 10, true ) then
-				print("Removing Lvl10 Left Talent: ", AbilitySlotsLib:GetTalent( playerhero:GetName(), 10, false ))
+				--print("Removing Lvl10 Left Talent: ", AbilitySlotsLib:GetTalent( playerhero:GetName(), 10, false ))
 				AbilitySlotsLib:ReplaceWithGenericHidden( playerhero, AbilitySlotsLib:GetTalent( playerhero:GetName(), 10, false ), true )
 			elseif abilityname == AbilitySlotsLib:GetTalent( playerhero:GetName(), 10, false ) then
-				print("Removing Lvl10 Right Talent: ", AbilitySlotsLib:GetTalent( playerhero:GetName(), 10, true ))
+				--print("Removing Lvl10 Right Talent: ", AbilitySlotsLib:GetTalent( playerhero:GetName(), 10, true ))
 				AbilitySlotsLib:ReplaceWithGenericHidden( playerhero, AbilitySlotsLib:GetTalent( playerhero:GetName(), 10, true ), true )
 			end
 			if abilityname == AbilitySlotsLib:GetTalent( playerhero:GetName(), 15, true ) then
-				print("Removing Lvl15 Left Talent: ", AbilitySlotsLib:GetTalent( playerhero:GetName(), 15, false ))
+				--print("Removing Lvl15 Left Talent: ", AbilitySlotsLib:GetTalent( playerhero:GetName(), 15, false ))
 				AbilitySlotsLib:ReplaceWithGenericHidden( playerhero, AbilitySlotsLib:GetTalent( playerhero:GetName(), 15, false ), true )
 			elseif abilityname == AbilitySlotsLib:GetTalent( playerhero:GetName(), 15, false ) then
-				print("Removing Lvl15 Right Talent: ", AbilitySlotsLib:GetTalent( playerhero:GetName(), 15, true ))
+				--print("Removing Lvl15 Right Talent: ", AbilitySlotsLib:GetTalent( playerhero:GetName(), 15, true ))
 				AbilitySlotsLib:ReplaceWithGenericHidden( playerhero, AbilitySlotsLib:GetTalent( playerhero:GetName(), 15, true ), true )
 			end
 			if abilityname == AbilitySlotsLib:GetTalent( playerhero:GetName(), 20, true ) then
-				print("Removing Lvl20 Left Talent: ", AbilitySlotsLib:GetTalent( playerhero:GetName(), 20, false ))
+				--print("Removing Lvl20 Left Talent: ", AbilitySlotsLib:GetTalent( playerhero:GetName(), 20, false ))
 				AbilitySlotsLib:ReplaceWithGenericHidden( playerhero, AbilitySlotsLib:GetTalent( playerhero:GetName(), 20, false ), true )
 			elseif abilityname == AbilitySlotsLib:GetTalent( playerhero:GetName(), 20, false ) then
-				print("Removing Lvl20 Right Talent: ", AbilitySlotsLib:GetTalent( playerhero:GetName(), 20, true ))
+				--print("Removing Lvl20 Right Talent: ", AbilitySlotsLib:GetTalent( playerhero:GetName(), 20, true ))
 				AbilitySlotsLib:ReplaceWithGenericHidden( playerhero, AbilitySlotsLib:GetTalent( playerhero:GetName(), 20, true ), true )
 			end
 			if abilityname == AbilitySlotsLib:GetTalent( playerhero:GetName(), 25, true ) then
-				print("Removing Lvl25 Left Talent: ", AbilitySlotsLib:GetTalent( playerhero:GetName(), 25, false ))
+				--print("Removing Lvl25 Left Talent: ", AbilitySlotsLib:GetTalent( playerhero:GetName(), 25, false ))
 				AbilitySlotsLib:ReplaceWithGenericHidden( playerhero, AbilitySlotsLib:GetTalent( playerhero:GetName(), 25, false ), true )
 			elseif abilityname == AbilitySlotsLib:GetTalent( playerhero:GetName(), 25, false ) then
-				print("Removing Lvl25 Right Talent: ", AbilitySlotsLib:GetTalent( playerhero:GetName(), 25, true ))
+				--print("Removing Lvl25 Right Talent: ", AbilitySlotsLib:GetTalent( playerhero:GetName(), 25, true ))
 				AbilitySlotsLib:ReplaceWithGenericHidden( playerhero, AbilitySlotsLib:GetTalent( playerhero:GetName(), 25, true ), true )
 			end
 		end
@@ -364,9 +359,9 @@ function AbilitySlotsLib:GetFreeAbilitySlotsForSpecificHero( hero )
 		--print("Free Slots: ", self:GetFreeAbilitySlotsForDefaultHero( heroname, false ) - self:ReadFromAbilitiesCountList(heroindex))
 		--print("Free Slots with replaceables: ", self:GetFreeAbilitySlotsForDefaultHero( heroname, true ) - (self:ReadFromAbilitiesCountList(heroindex) + (self:ReadFromSlotsReplacedList(heroindex) - self:ReadFromAddedHiddenCountList( heroindex ))))
 		if heroname == "npc_dota_hero_invoker" and self:ReadFromInvokerCleanedUp( heroindex ) < 2 then
-			print("GetFreeAbilitySlotsForSpecificHero Calling InvokerCleanUp")
+			--print("GetFreeAbilitySlotsForSpecificHero Calling InvokerCleanUp")
 			self:InvokerAbilityCleanUp( hero )
-			print("Free Slots with replaceables: ", self:GetFreeAbilitySlotsForDefaultHero( heroname, true ) - (self:ReadFromAbilitiesCountList(heroindex) + (self:ReadFromSlotsReplacedList(heroindex) - self:ReadFromAddedHiddenCountList( heroindex ))))
+			--print("Free Slots with replaceables: ", self:GetFreeAbilitySlotsForDefaultHero( heroname, true ) - (self:ReadFromAbilitiesCountList(heroindex) + (self:ReadFromSlotsReplacedList(heroindex) - self:ReadFromAddedHiddenCountList( heroindex ))))
 		end
 		if self:GetFreeAbilitySlotsForDefaultHero( heroname, false ) - self:ReadFromAbilitiesCountList(heroindex) > 0 then
 			return self:GetFreeAbilitySlotsForDefaultHero( heroname, false ) - self:ReadFromAbilitiesCountList(heroindex)
@@ -419,12 +414,12 @@ function AbilitySlotsLib:ReplaceWithGenericHidden( hero, ability, addtolistonfai
 			hero:RemoveAbility(ability)
 			if newability ~= nil then
 				self:IncrementAddedHiddenCountList(heroindex)
-				print("Successfully replaced", ability, "with a hidden talent")
+				--print("Successfully replaced", ability, "with a hidden talent")
 				return true
 			end
 		else
 			if addtolistonfail == true then
-				print("Failed to replace", ability, "with a hidden talent. Adding to Queue")
+				--print("Failed to replace", ability, "with a hidden talent. Adding to Queue")
 				self:AddTalentToReplaceLaterList( hero, ability )
 				return false
 			end
@@ -474,18 +469,14 @@ function AbilitySlotsLib:InvokerAbilityCleanUp( invoker )
 		local index = invoker:entindex()
 		if invoker:FindAbilityByName("invoker_empty1") ~= nil and invoker:GetAbilityByIndex(3):GetName() ~= "invoker_empty1" and invoker:GetAbilityByIndex(4):GetName() ~= "invoker_empty1" then
 			invoker:RemoveAbility("invoker_empty1")
-			--self:IncrementAddedHiddenCountList(index)
 			self:DecrementAbilitiesCountList( index )
-			print("Removed invoker_empty1. slots: ", self:ReadFromAddedHiddenCountList(index))
-			--invoker:AddAbility("generic_hidden")
+			--print("Removed invoker_empty1. slots: ", self:ReadFromAddedHiddenCountList(index))
 			self:SetInvokerCleanedUp( index )
 		end
 		if invoker:FindAbilityByName("invoker_empty2") ~= nil and invoker:GetAbilityByIndex(3):GetName() ~= "invoker_empty2" and invoker:GetAbilityByIndex(4):GetName() ~= "invoker_empty2" then
 			invoker:RemoveAbility("invoker_empty2")
-			--self:IncrementAddedHiddenCountList(index)
 			self:DecrementAbilitiesCountList( index )
-			print("Removed invoker empty2. slots: ", self:ReadFromAddedHiddenCountList(index))
-			--invoker:AddAbility("generic_hidden")
+			--print("Removed invoker empty2. slots: ", self:ReadFromAddedHiddenCountList(index))
 			self:SetInvokerCleanedUp( index )
 		end
 	end

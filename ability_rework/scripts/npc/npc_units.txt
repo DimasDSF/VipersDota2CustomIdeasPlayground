@@ -10113,6 +10113,7 @@
 		"Level"						"1"
 		"ModelScale" 				"0.4"
 		"SelectionGroup"			"Venomancer_Wards"
+		"UnitLabel"			"plaguewards"
 
 		// Abilities
 		//----------------------------------------------------------------
@@ -10190,6 +10191,7 @@
 		"Level"						"1"
 		"ModelScale" 				"0.6"
 		"SelectionGroup"			"Venomancer_Wards"
+		"UnitLabel"			"plaguewards"
 
 		// Abilities
 		//----------------------------------------------------------------
@@ -10267,6 +10269,7 @@
 		"Level"						"1"
 		"ModelScale" 				"1.0"
 		"SelectionGroup"			"Venomancer_Wards"
+		"UnitLabel"			"plaguewards"
 
 
 		// Abilities
@@ -10314,7 +10317,7 @@
 
 			// Status
 		//----------------------------------------------------------------
-		"StatusHealth"				"325"		// Base health.
+		"StatusHealth"				"525"		// Base health.
 		"StatusHealthRegen"			"0.25"		// Health regeneration rate.
 		"StatusMana"				"0"			// Base mana.
 		"StatusManaRegen"			"0"			// Mana regeneration rate.
@@ -10345,6 +10348,7 @@
 		"Level"						"1"
 		"ModelScale" 				"1.2"
 		"SelectionGroup"			"Venomancer_Wards"
+		"UnitLabel"			"plaguewards"
 
 
 		// Abilities
@@ -10392,7 +10396,7 @@
 
 			// Status
 		//----------------------------------------------------------------
-		"StatusHealth"				"450"		// Base health.
+		"StatusHealth"				"1000"		// Base health.
 		"StatusHealthRegen"			"0.25"		// Health regeneration rate.
 		"StatusMana"				"0"			// Base mana.
 		"StatusManaRegen"			"0"			// Mana regeneration rate.
@@ -12334,7 +12338,7 @@
 		// Movement
 		//----------------------------------------------------------------
 		"MovementCapabilities"		"DOTA_UNIT_CAP_MOVE_FLY"
-		"MovementSpeed"				"450"		// Speed.
+		"MovementSpeed"				"430"		// Speed.
 		"MovementTurnRate"			"0.6"		// Turning rate.
 
 		// Status
@@ -13050,13 +13054,13 @@
 		"Ability1"					"brewmaster_earth_hurl_boulder"		// Ability 1
 		"Ability2"					"brewmaster_earth_spell_immunity"	// Ability 2
 		"Ability3"					"brewmaster_earth_pulverize"		// Ability 3
-		"Ability4"					"generic_hidden"
+		"Ability4"					"brewmaster_thunder_clap"
 		"Ability5"					"generic_hidden"
-		"Ability6"					"brewmaster_thunder_clap"			// Ability 6	
+		"Ability6"					"generic_hidden"			// Ability 6	
 
 		// Armor
 		//----------------------------------------------------------------
-		"ArmorPhysical"				"5"			// Physical protection.
+		"ArmorPhysical"				"3"			// Physical protection.
 
 		// Attack
 		//----------------------------------------------------------------
@@ -13120,13 +13124,13 @@
 		"Ability1"					"brewmaster_earth_hurl_boulder"		// Ability 1
 		"Ability2"					"brewmaster_earth_spell_immunity"	// Ability 2
 		"Ability3"					"brewmaster_earth_pulverize"		// Ability 3
-		"Ability4"					"generic_hidden"
+		"Ability4"					"brewmaster_thunder_clap"
 		"Ability5"					"generic_hidden"
-		"Ability6"					"brewmaster_thunder_clap"			// Ability 6	
+		"Ability6"					"generic_hidden"			// Ability 6	
 
 		// Armor
 		//----------------------------------------------------------------
-		"ArmorPhysical"				"5"			// Physical protection.
+		"ArmorPhysical"				"3"			// Physical protection.
 
 		// Attack
 		//----------------------------------------------------------------
@@ -13190,13 +13194,13 @@
 		"Ability1"					"brewmaster_earth_hurl_boulder"		// Ability 1
 		"Ability2"					"brewmaster_earth_spell_immunity"	// Ability 2
 		"Ability3"					"brewmaster_earth_pulverize"		// Ability 3
-		"Ability4"					"generic_hidden"
+		"Ability4"					"brewmaster_thunder_clap"
 		"Ability5"					"generic_hidden"
-		"Ability6"					"brewmaster_thunder_clap"			// Ability 6
+		"Ability6"					"generic_hidden"			// Ability 6
 
 		// Armor
 		//----------------------------------------------------------------
-		"ArmorPhysical"				"5"			// Physical protection.
+		"ArmorPhysical"				"3"			// Physical protection.
 
 		// Attack
 		//----------------------------------------------------------------
@@ -13261,9 +13265,9 @@
 		"Ability1"					"brewmaster_storm_dispel_magic"		// Ability 1
 		"Ability2"					"brewmaster_storm_cyclone"			// Ability 2
 		"Ability3"					"brewmaster_storm_wind_walk"		// Ability 3
-		"Ability4"					"generic_hidden"
+		"Ability4"					"brewmaster_drunken_haze"
 		"Ability5"					"generic_hidden"
-		"Ability6"					"brewmaster_drunken_haze"			// Ability 6	
+		"Ability6"					"generic_hidden"			// Ability 6	
 
 		// Armor
 		//----------------------------------------------------------------
@@ -13334,9 +13338,9 @@
 		"Ability1"					"brewmaster_storm_dispel_magic"		// Ability 1
 		"Ability2"					"brewmaster_storm_cyclone"			// Ability 2
 		"Ability3"					"brewmaster_storm_wind_walk"		// Ability 3
-		"Ability4"					"generic_hidden"
+		"Ability4"					"brewmaster_drunken_haze"
 		"Ability5"					"generic_hidden"
-		"Ability6"					"brewmaster_drunken_haze"			// Ability 6	
+		"Ability6"					"generic_hidden"			// Ability 6	
 
 		// Armor
 		//----------------------------------------------------------------
@@ -13407,9 +13411,9 @@
 		"Ability1"					"brewmaster_storm_dispel_magic"		// Ability 1
 		"Ability2"					"brewmaster_storm_cyclone"			// Ability 2
 		"Ability3"					"brewmaster_storm_wind_walk"		// Ability 3
-		"Ability4"					"generic_hidden"
+		"Ability4"					"brewmaster_drunken_haze"
 		"Ability5"					"generic_hidden"
-		"Ability6"					"brewmaster_drunken_haze"			// Ability 6	
+		"Ability6"					"generic_hidden"			// Ability 6	
 
 		// Armor
 		//----------------------------------------------------------------
@@ -15453,7 +15457,7 @@
 
 		// Status
 		//----------------------------------------------------------------
-		"StatusHealth"				"1400"		// Base health.
+		"StatusHealth"				"1500"		// Base health.
 		"StatusHealthRegen"			"4"			// Health regeneration rate.
 		"StatusMana"				"300"		// Base mana.
 		"StatusManaRegen"			"0.5"		// Mana regeneration rate.		 
@@ -15528,7 +15532,7 @@
 
 		// Status
 		//----------------------------------------------------------------
-		"StatusHealth"				"1800"		// Base health.
+		"StatusHealth"				"2000"		// Base health.
 		"StatusHealthRegen"			"5"			// Health regeneration rate.
 		"StatusMana"				"300"		// Base mana.
 		"StatusManaRegen"			"0.5"		// Mana regeneration rate.		 
@@ -15604,7 +15608,7 @@
 
 		// Status
 		//----------------------------------------------------------------
-		"StatusHealth"				"2300"		// Base health.
+		"StatusHealth"				"2500"		// Base health.
 		"StatusHealthRegen"			"6"			// Health regeneration rate.
 		"StatusMana"				"300"			// Base mana.
 		"StatusManaRegen"			"0.5"		// Mana regeneration rate.		 
@@ -15681,7 +15685,7 @@
 
 		// Status
 		//----------------------------------------------------------------
-		"StatusHealth"				"2700"		// Base health.
+		"StatusHealth"				"3000"		// Base health.
 		"StatusHealthRegen"			"7"			// Health regeneration rate.
 		"StatusMana"				"300"		// Base mana.
 		"StatusManaRegen"			"0.5"		// Mana regeneration rate.		 

@@ -29,5 +29,60 @@ end
 function modifier_vgmar_i_kingsaegis_active:RemoveOnDeath()
 	return false
 end
+
+function modifier_vgmar_i_kingsaegis_active:DeclareFunctions()
+	local funcs = {
+        MODIFIER_PROPERTY_REINCARNATION,
+		MODIFIER_EVENT_ON_DEATH,
+    }
+    return funcs
+end
+
+function modifier_vgmar_i_kingsaegis_active:ShouldUseAbilityReincarnation()
+	local parent = self:GetParent()
+	if (self:GetParent():FindAbilityByName("skeleton_king_reincarnation") == nil or self:GetParent():FindAbilityByName("skeleton_king_reincarnation"):GetCooldownTimeRemaining() > 0) then
+		return true
+	end
+	return false
+end
+
+function modifier_vgmar_i_kingsaegis_active:ReincarnateTime()
+	if IsServer() then
+		local parent = self:GetParent()
+		local reincanrate_modifier = parent:FindModifierByName("modifier_vgmar_i_kingsaegis_cooldown")
+		if self:ShouldUseAbilityReincarnation() and reincanrate_modifier:GetStackCount() == 0 then
+			reincanrate_modifier:SetStackCount(reincanrate_modifier.cooldown)
+			AddFOWViewer(parent:GetTeamNumber(), parent:GetAbsOrigin(), 250, 5, false)
+			local instparticle = ParticleManager:CreateParticle("particles/econ/items/dazzle/dazzle_ti6_gold/dazzle_ti6_shallow_grave_gold_glyph.vpcf", PATTACH_ABSORIGIN, parent)
+			--ParticleManager:SetParticleControl(instparticle, 1, Vector(reincanrate_modifier.reincarnate_time,0,0))
+			ParticleManager:SetParticleControl(instparticle, 3, parent:GetAbsOrigin())
+			ParticleManager:ReleaseParticleIndex(instparticle)
+			Timers:CreateTimer(reincanrate_modifier.reincarnate_time - reincanrate_modifier.reincarnate_time / 20, function()
+				local particle = ParticleManager:CreateParticle("particles/items_fx/aegis_respawn_aegis_starfall.vpcf", PATTACH_ABSORIGIN, parent)
+				ParticleManager:SetParticleControl(particle, 1, Vector(reincanrate_modifier.reincarnate_time,0,0))
+				ParticleManager:SetParticleControl(particle, 3, parent:GetAbsOrigin())
+				ParticleManager:ReleaseParticleIndex(particle)
+			end)
+			return reincanrate_modifier.reincarnate_time
+		end
+	else
+		return -1
+	end
+end
+
+function modifier_vgmar_i_kingsaegis_active:OnDeath( kv )
+    if IsServer() then
+        -- Only apply if the caster is the unit that died
+        if self:GetParent() == kv.unit then
+			local parent = self:GetParent()
+			local reincanrate_modifier = self:GetParent():FindModifierByName("modifier_vgmar_i_kingsaegis_cooldown")
+			if self:ShouldUseAbilityReincarnation() and reincanrate_modifier:GetStackCount() == 0 then
+				Timers:CreateTimer(FrameTime(), function()
+					self:Destroy()
+				end)
+			end
+        end
+    end
+end
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
