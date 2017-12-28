@@ -109,6 +109,8 @@ function modifier_vgmar_ai_companion_wisp:OnIntervalThink()
 		Update it on event towerfalls
 		Restrict entering tower range if owner is not in range
 		
+		Prioritize staying away from enemies
+		
 		Separate Tethered Activities and Untethered Activities
 		to allow wisp to do its own stuff while untethered instead of just following owner
 		--]]
