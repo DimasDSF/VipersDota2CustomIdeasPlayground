@@ -2641,3 +2641,20 @@ ignore = {
 exclude_files = {
   "ability_rework/scripts/vscripts/libraries/timers.lua",
 }
+
+files["ability_rework/scripts/vscripts/libraries/extensions.lua"].ignore = {
+  -- Specific
+  "122", -- setting read-only field of global
+  -- Base
+  "131", -- unused global variable
+  "211", -- unused variable
+  "212", -- unused argument
+  "213", -- unused loop variable
+  "231", -- never accessed
+  "311", -- Value assigned to a local variable is unused.
+  "611", -- A line consists of nothing but whitespace.
+  "612", -- Line Contains trailing whitespace.
+  "613", -- Trailing whitespace in a string.
+  "614", -- Trailing whitespace in a comment.
+  "631", -- line is too long
+}
