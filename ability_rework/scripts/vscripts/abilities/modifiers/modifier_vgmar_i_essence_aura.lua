@@ -34,6 +34,13 @@ function modifier_vgmar_i_essence_aura:GetAuraSearchFlags() return DOTA_UNIT_TAR
 ----------------------------------------------------------------------------------------------------------
 function modifier_vgmar_i_essence_aura:GetAuraRadius() return self.radius end
 
+function modifier_vgmar_i_essence_aura:GetAuraEntityReject(entity)
+	if entity:FindAbilityByName("obsidian_destroyer_essence_aura") ~= nil then
+		return true
+	end
+	return false
+end
+
 function modifier_vgmar_i_essence_aura:OnCreated(kv) 
 	if IsServer() then
 		self.radius = kv.radius or 0

@@ -42,34 +42,68 @@ end
 
 function modifier_vgmar_i_critical_mastery:DeclareFunctions()
 	local funcs = {
-        MODIFIER_PROPERTY_PREATTACK_CRITICALSTRIKE,
-		MODIFIER_EVENT_ON_ATTACK_LANDED,
+		MODIFIER_EVENT_ON_ATTACK_START,
 		MODIFIER_PROPERTY_TOOLTIP
     }
     return funcs
+end
+
+function modifier_vgmar_i_critical_mastery:OnAttackStart(kv)
+	if IsServer() then
+		if kv.attacker == self:GetParent() and kv.target:GetTeamNumber() ~= self:GetParent():GetTeamNumber() and kv.target:IsBuilding() == false then
+			if math.random(0,100) <= self.critchance then
+				kv.attacker:AddNewModifier(kv.attacker, self, "modifier_vgmar_i_critical_mastery_active", {critdmgpercentage = self.critdmgpercentage})
+			end
+		end
+	end
 end
 
 function modifier_vgmar_i_critical_mastery:OnTooltip()
 	return self.clientvalues.critdmgpercentage
 end
 
-function modifier_vgmar_i_critical_mastery:GetModifierPreAttack_CriticalStrike(kv)
+------------------------------------------------------------------------------------
+
+modifier_vgmar_i_critical_mastery_active = class({})
+
+function modifier_vgmar_i_critical_mastery_active:IsHidden()
+    return true
+end
+
+function modifier_vgmar_i_critical_mastery_active:IsDebuff()
+	return false
+end
+
+function modifier_vgmar_i_critical_mastery_active:IsPurgable()
+	return false
+end
+
+function modifier_vgmar_i_critical_mastery_active:RemoveOnDeath()
+	return true
+end
+
+function modifier_vgmar_i_critical_mastery_active:OnCreated( kv )
 	if IsServer() then
-		if kv.attacker == self:GetParent() then
-			if kv.target:IsBuilding() then 
-				return end
-			if kv.target:GetTeamNumber() == self:GetParent():GetTeamNumber() then
-				return end
-			if math.random(0,100) <= self.critchance then
-				self.crit = true
-				return self.critdmgpercentage
-			end
-		end
+		self.critdmgpercentage = kv.critdmgpercentage
 	end
 end
 
-function modifier_vgmar_i_critical_mastery:OnAttackLanded(kv)
-	if self.crit == true and kv.attacker == self:GetParent() and kv.target:IsBuilding() == false then
+function modifier_vgmar_i_critical_mastery_active:DeclareFunctions()
+	local funcs = {
+        MODIFIER_PROPERTY_PREATTACK_CRITICALSTRIKE,
+		MODIFIER_EVENT_ON_ATTACK_LANDED,
+    }
+    return funcs
+end
+
+function modifier_vgmar_i_critical_mastery_active:GetModifierPreAttack_CriticalStrike(kv)
+	if kv.attacker == self:GetParent() and kv.target:GetTeamNumber() ~= self:GetParent():GetTeamNumber() and kv.target:IsBuilding() == false then
+		return self.critdmgpercentage
+	end
+end
+
+function modifier_vgmar_i_critical_mastery_active:OnAttackLanded(kv)
+	if kv.attacker == self:GetParent() and kv.target:GetTeamNumber() ~= self:GetParent():GetTeamNumber() and kv.target:IsBuilding() == false then
 		local particle = "particles/units/heroes/hero_phantom_assassin/phantom_assassin_crit_impact.vpcf"
 		local soundevnt = "Hero_PhantomAssassin.CoupDeGrace"
 		if kv.target:GetClassname() == "npc_dota_creep_siege" then
@@ -90,7 +124,6 @@ function modifier_vgmar_i_critical_mastery:OnAttackLanded(kv)
 		ParticleManager:SetParticleControlOrientation(pfx,1,circlecap*damagepower, Vector(0,0,0), Vector(0,0,0))
 		ParticleManager:ReleaseParticleIndex(pfx)
 		StartSoundEvent(soundevnt, kv.target)
-		self.crit = false
 	end
 end
 --------------------------------------------------------------------------------

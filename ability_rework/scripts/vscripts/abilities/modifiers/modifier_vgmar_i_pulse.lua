@@ -11,7 +11,7 @@ end
 --------------------------------------------------------------------------------
 
 function modifier_vgmar_i_pulse:IsHidden()
-    return false
+    return self:GetStackCount() <= 0
 end
 
 function modifier_vgmar_i_pulse:IsPurgable()
@@ -37,8 +37,9 @@ function modifier_vgmar_i_pulse:OnCreated(kv)
 		self.duration = kv.duration
 		self.hpregenperstack = kv.hpregenperstack
 		self.manaregenperstack = kv.manaregenperstack
+		self.maxstacks = kv.maxstacks
 		self:SetDuration( -1, true )
-		self:StartIntervalThink( 0.5 )
+		self:StartIntervalThink( 0.1 )
 	else
 		self.clientvalues = CustomNetTables:GetTableValue("client_side_ability_values", "modifier_vgmar_i_pulse")
 	end
@@ -57,26 +58,31 @@ function modifier_vgmar_i_pulse:OnDeath(kv)
 	if IsServer() then
 		if kv.attacker == self:GetCaster() then
 			if kv.unit:IsRealHero() then
-				self:SetStackCount( self:GetStackCount() + self.stacksperhero )
+				if (self:GetStackCount() + self.stacksperhero) < self.maxstacks then
+					self:SetStackCount( self:GetStackCount() + self.stacksperhero )
+				else
+					self:SetStackCount( self.maxstacks )
+				end
 				self:SetDuration( self.duration, true )
 			else
-				self:SetStackCount( self:GetStackCount() + self.stackspercreep )
+				if (self:GetStackCount() + self.stackspercreep) < self.maxstacks then
+					self:SetStackCount( self:GetStackCount() + self.stackspercreep )
+				else
+					self:SetStackCount( self.maxstacks )
+				end
 				self:SetDuration( self.duration, true )
 			end
-			self:StartIntervalThink( 0.5 )
 		end
 	end
 end
 
 function modifier_vgmar_i_pulse:OnIntervalThink()
 	if self:GetRemainingTime() <= 0 then
-		if self:GetStackCount() > 0 then
-			self:SetDuration( 1, true )
+		if self:GetStackCount() >= 1 then
 			self:SetStackCount( self:GetStackCount() - 1 )
-			self:StartIntervalThink( 0.25 )
-		elseif self:GetStackCount() == 0 then
+			self:SetDuration( 0.5, true )
+		else
 			self:SetDuration( -1, true )
-			self:StartIntervalThink( 0.5 )
 		end
 	end
 end

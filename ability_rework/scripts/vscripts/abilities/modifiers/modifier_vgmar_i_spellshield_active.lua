@@ -35,20 +35,25 @@ function modifier_vgmar_i_spellshield_active:DeclareFunctions()
     return funcs
 end
 
-function modifier_vgmar_i_spellshield_active:GetAbsorbSpell()
+function modifier_vgmar_i_spellshield_active:GetAbsorbSpell(kv)
 	if IsServer() then
-		local pfx = ParticleManager:CreateParticle("particles/units/heroes/hero_antimage/antimage_spellshield.vpcf", PATTACH_ROOTBONE_FOLLOW, self:GetParent())
-		local pfx2 = ParticleManager:CreateParticle("particles/units/heroes/hero_antimage/antimage_spellshield_reflect.vpcf" , PATTACH_ROOTBONE_FOLLOW, self:GetParent())
-		ParticleManager:ReleaseParticleIndex(pfx)
-		ParticleManager:ReleaseParticleIndex(pfx2)
-		EmitSoundOn("Hero_Antimage.SpellShield.Block", self:GetParent())
-		EmitSoundOn("Hero_Antimage.SpellShield.Reflect", self:GetParent())
-		self:GetParent():FindModifierByName("modifier_vgmar_i_spellshield"):SetStackCount( self:GetParent():FindModifierByName("modifier_vgmar_i_spellshield"):GetStackCount() - 1 )
-		self:GetParent():FindModifierByName("modifier_vgmar_i_spellshield"):SetDuration( self.cooldown, true )
-		if self:GetParent():FindModifierByName("modifier_vgmar_i_spellshield"):GetStackCount() < 1 then
-			self:Destroy()
+		if kv.ability:GetCaster():GetTeamNumber() ~= self:GetParent():GetTeamNumber() then
+			local pfx = ParticleManager:CreateParticle("particles/units/heroes/hero_antimage/antimage_spellshield.vpcf", PATTACH_ROOTBONE_FOLLOW, self:GetParent())
+			local pfx2 = ParticleManager:CreateParticle("particles/units/heroes/hero_antimage/antimage_spellshield_reflect.vpcf" , PATTACH_ROOTBONE_FOLLOW, self:GetParent())
+			ParticleManager:ReleaseParticleIndex(pfx)
+			ParticleManager:ReleaseParticleIndex(pfx2)
+			EmitSoundOn("Hero_Antimage.SpellShield.Block", self:GetParent())
+			EmitSoundOn("Hero_Antimage.SpellShield.Reflect", self:GetParent())
+			self:GetParent():FindModifierByName("modifier_vgmar_i_spellshield"):SetStackCount( self:GetParent():FindModifierByName("modifier_vgmar_i_spellshield"):GetStackCount() - 1 )
+			if self:GetParent():FindModifierByName("modifier_vgmar_i_spellshield"):GetRemainingTime() <= 0 then
+				self:GetParent():FindModifierByName("modifier_vgmar_i_spellshield"):SetDuration( self.cooldown, true )
+			end
+			if self:GetParent():FindModifierByName("modifier_vgmar_i_spellshield"):GetStackCount() < 1 then
+				self:Destroy()
+			end
+			return 1
 		end
-		return 1
+		
 	end
 end
 

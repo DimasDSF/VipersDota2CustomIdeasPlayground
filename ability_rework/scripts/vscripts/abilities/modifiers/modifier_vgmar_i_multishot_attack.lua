@@ -56,7 +56,7 @@ function modifier_vgmar_i_multishot_attack:OnIntervalThink()
 				if enemy ~= nil and enemy1 ~= nil and enemy2 ~= nil then
 					break
 				end
-				if self.provider.enemies[i]:IsNull() == false and self.provider.enemies[i]:IsAlive() and (self:GetParent():GetAbsOrigin() - self.provider.enemies[i]:GetAbsOrigin()):Length2D() <= self:GetParent():GetAttackRange() + 400 then
+				if self.provider.enemies[i]:IsNull() == false and self.provider.enemies[i]:IsAlive() and (self:GetParent():GetAbsOrigin() - self.provider.enemies[i]:GetAbsOrigin()):Length2D() <= self:GetParent():GetAttackRange() + 200 then
 					if enemy == nil then
 						enemy = self.provider.enemies[i]
 					elseif enemy ~= nil and enemy1 == nil then
@@ -66,14 +66,16 @@ function modifier_vgmar_i_multishot_attack:OnIntervalThink()
 					end
 				end
 			end
-			if enemy ~= nil then 
-				self:GetParent():PerformAttack(enemy, true, true, true, false, true, false, false)
-			end
-			if enemy1 ~= nil then
-				self:GetParent():PerformAttack(enemy1, true, true, true, false, true, false, false)
-			end
-			if enemy2 ~= nil then
-				self:GetParent():PerformAttack(enemy2, true, true, true, false, true, false, false)
+			if not (self:GetParent():IsStunned() or self:GetParent():IsHexed() or self:GetParent():IsDisarmed()) then
+				if enemy ~= nil then 
+					self:GetParent():PerformAttack(enemy, true, true, true, false, true, false, false)
+				end
+				if enemy1 ~= nil then
+					self:GetParent():PerformAttack(enemy1, true, true, true, false, true, false, false)
+				end
+				if enemy2 ~= nil then
+					self:GetParent():PerformAttack(enemy2, true, true, true, false, true, false, false)
+				end
 			end
 			self:SetStackCount( self:GetStackCount() - 1 )
 		else

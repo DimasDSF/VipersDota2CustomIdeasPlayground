@@ -67,6 +67,12 @@ function modifier_vgmar_i_manaregen_aura_effect:GetModifierManaBonus()
 		else
 			return self.bonusmanaallies
 		end
+	else
+		if self:GetParent() == self:GetCaster() then
+			return self.clientvalues.bonusmanaself
+		else
+			return self.clientvalues.bonusmanaallies
+		end
 	end
 end
 --------------------------------------------------------------------------------

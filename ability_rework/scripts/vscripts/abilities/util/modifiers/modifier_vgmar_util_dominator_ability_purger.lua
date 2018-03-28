@@ -21,37 +21,29 @@ end
 --------------------------------------------------------------------------------
 
 function modifier_vgmar_util_dominator_ability_purger:OnCreated( kv )
-	self.removemode = kv.remove_mode
-	self.abilitiesforremoval = {}
-	if kv.ability1 ~= nil then
-		table.insert(self.abilitiesforremoval, kv.ability1)
+	if IsServer() then
+		self.removemode = kv.remove_mode
+		self.abilitiesforremoval = {}
+		self.modifiersforremoval = {}
+		if kv.ability ~= nil then
+			if kv.abilityismod == 1 then
+				table.insert(self.modifiersforremoval, kv.ability)
+			else
+				table.insert(self.abilitiesforremoval, kv.ability)
+			end
+		end
 	end
-	if kv.ability2 ~= nil then 
-		table.insert(self.abilitiesforremoval, kv.ability2)
-	end
-	if kv.ability3 ~= nil then
-		table.insert(self.abilitiesforremoval, kv.ability3)
-	end
-	if kv.ability4 ~= nil then 
-		table.insert(self.abilitiesforremoval, kv.ability4)
-	end
-	if kv.ability5 ~= nil then
-		table.insert(self.abilitiesforremoval, kv.ability5)
-	end
-	if kv.ability6 ~= nil then 
-		table.insert(self.abilitiesforremoval, kv.ability6)
-	end
-	if kv.ability7 ~= nil then
-		table.insert(self.abilitiesforremoval, kv.ability7)
-	end
-	if kv.ability8 ~= nil then 
-		table.insert(self.abilitiesforremoval, kv.ability8)
-	end
-	if kv.ability9 ~= nil then
-		table.insert(self.abilitiesforremoval, kv.ability9)
-	end
-	if kv.ability10 ~= nil then 
-		table.insert(self.abilitiesforremoval, kv.ability10)
+end
+
+function modifier_vgmar_util_dominator_ability_purger:OnRefresh( kv )
+	if IsServer() then
+		if kv.ability ~= nil then
+			if kv.abilityismod == 1 then
+				table.insert(self.modifiersforremoval, kv.ability)
+			else
+				table.insert(self.abilitiesforremoval, kv.ability)
+			end
+		end
 	end
 end
 
@@ -63,8 +55,11 @@ function modifier_vgmar_util_dominator_ability_purger:DeclareFunctions()
 end
 
 function modifier_vgmar_util_dominator_ability_purger:OnDominated( kv )
-	local parent = self:GetCaster()
-		
+	local parent = self:GetParent()
+	
+	if parent:FindModifierByName("modifier_vgmar_util_creep_ability_updater") then
+		parent:FindModifierByName("modifier_vgmar_util_creep_ability_updater"):Destroy()
+	end
 	for i=1,#self.abilitiesforremoval do
 		if parent:FindAbilityByName(self.abilitiesforremoval[i]) then
 			if self.removemode == 1 then
@@ -74,6 +69,12 @@ function modifier_vgmar_util_dominator_ability_purger:OnDominated( kv )
 			end
 		end
 	end
+	for i=1,#self.modifiersforremoval do
+		if parent:FindModifierByName(self.modifiersforremoval[i]) then
+			parent:FindModifierByName(self.modifiersforremoval[i]):Destroy()
+		end
+	end
+
 	self:Destroy()
 	
 end

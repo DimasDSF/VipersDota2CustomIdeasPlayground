@@ -40,7 +40,10 @@ end
 
 function modifier_vgmar_i_kingsaegis_active:ShouldUseAbilityReincarnation()
 	local parent = self:GetParent()
-	if (self:GetParent():FindAbilityByName("skeleton_king_reincarnation") == nil or self:GetParent():FindAbilityByName("skeleton_king_reincarnation"):GetCooldownTimeRemaining() > 0) then
+	if self:GetParent():FindAbilityByName("skeleton_king_reincarnation") == nil then
+		return true
+	end
+	if self:GetParent():FindAbilityByName("skeleton_king_reincarnation") ~= nil and parent:FindModifierByName("modifier_skeleton_king_reincarnation_scepter") == nil and (self:GetParent():FindAbilityByName("skeleton_king_reincarnation"):GetCooldownTimeRemaining() > 0 or self:GetParent():FindAbilityByName("skeleton_king_reincarnation"):IsOwnersManaEnough() == false) then
 		return true
 	end
 	return false
@@ -65,8 +68,6 @@ function modifier_vgmar_i_kingsaegis_active:ReincarnateTime()
 			end)
 			return reincanrate_modifier.reincarnate_time
 		end
-	else
-		return -1
 	end
 end
 
@@ -74,7 +75,6 @@ function modifier_vgmar_i_kingsaegis_active:OnDeath( kv )
     if IsServer() then
         -- Only apply if the caster is the unit that died
         if self:GetParent() == kv.unit then
-			local parent = self:GetParent()
 			local reincanrate_modifier = self:GetParent():FindModifierByName("modifier_vgmar_i_kingsaegis_cooldown")
 			if self:ShouldUseAbilityReincarnation() and reincanrate_modifier:GetStackCount() == 0 then
 				Timers:CreateTimer(FrameTime(), function()

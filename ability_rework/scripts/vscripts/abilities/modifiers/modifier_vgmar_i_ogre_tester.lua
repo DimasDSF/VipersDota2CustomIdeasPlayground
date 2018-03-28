@@ -70,6 +70,9 @@ function modifier_vgmar_i_ogre_tester:OnCreated(kv)
 	if IsServer() then
 		self:StartIntervalThink( 1 )
 		self.crit = false
+		--self.p1 = nil
+		--self.p2 = nil
+		--self.p3 = nil
 	end
 end
 
@@ -122,8 +125,40 @@ function modifier_vgmar_i_ogre_tester:OnIntervalThink()
 				end
 			end
 			self.oldgold = PlayerResource:GetGold(self:GetParent():GetPlayerOwnerID())
-		end		
+		end
+		
+		local parent = self:GetParent()
+		--ParticleTest
+		--[[if self.p1 == nil then
+			self.p1 = ParticleManager:CreateParticle("particles/units/heroes/hero_razor/razor_rain_storm.vpcf", PATTACH_WORLDORIGIN, parent)
+			ParticleManager:SetParticleControl(self.p1, 0, parent:GetAbsOrigin() + Vector(0,0,200))
+			ParticleManager:SetParticleControl(self.p1, 2, parent:GetAbsOrigin() + Vector(0,0,200))
+			self:GetParent():EmitSound("Hero_Razor.Storm.Loop")
+		end
+		if self.p2 == nil then
+			self.p2 = ParticleManager:CreateParticle("particles/econ/items/outworld_devourer/od_shards_exile_gold/od_shards_exile_prison_top_orb_gold.vpcf", PATTACH_WORLDORIGIN, parent)
+			ParticleManager:SetParticleControl(self.p2, 0, parent:GetAbsOrigin() + Vector(0,0,500))
+		end--]]
+		--if self.p3 == nil then --"particles/econ/items/sven/sven_warcry_ti5/sven_spell_warcry_ti_5.vpcf"
+		local p3 = ParticleManager:CreateParticle("particles/items4_fx/combo_breaker_spell.vpcf", PATTACH_POINT_FOLLOW, parent)
+		ParticleManager:SetParticleControl(p3, 0, parent:GetAbsOrigin() + Vector(0,0,0))
+		ParticleManager:SetParticleControl(p3, 1, parent:GetAbsOrigin() + Vector(0,0,70))
+		--ParticleManager:SetParticleControl(p3, 2, parent:GetAbsOrigin() + Vector(0,0,100))
+		ParticleManager:ReleaseParticleIndex(p3)
+		--end
 		--self:ForceRefresh()
+	end
+end
+
+function modifier_vgmar_i_ogre_tester:OnRemoved()
+	if IsServer() then
+		--ParticleManager:DestroyParticle(self.p1, false)
+		--self:GetParent():StopSound("Hero_Razor.Storm.Loop")
+		--ParticleManager:DestroyParticle(self.p2, false)
+		--ParticleManager:DestroyParticle(self.p3, false)
+		--ParticleManager:ReleaseParticleIndex(self.p1)
+		--ParticleManager:ReleaseParticleIndex(self.p2)
+		--ParticleManager:ReleaseParticleIndex(self.p3)
 	end
 end
 

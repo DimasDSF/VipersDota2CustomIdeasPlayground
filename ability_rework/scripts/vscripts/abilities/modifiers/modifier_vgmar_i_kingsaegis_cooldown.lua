@@ -52,7 +52,7 @@ end
 
 function modifier_vgmar_i_kingsaegis_cooldown:OnAbilityFullyCast( event )
 	if IsServer() then
-		if event.unit == self:GetCaster() then
+		if event.unit == self:GetParent() then
 			local hAbility = event.ability
 			if hAbility ~= nil then
 				if hAbility:GetName() == "item_refresher" or hAbility:GetName() == "item_refresher_shard" then

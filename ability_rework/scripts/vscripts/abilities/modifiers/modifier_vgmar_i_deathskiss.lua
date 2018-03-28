@@ -35,10 +35,54 @@ function modifier_vgmar_i_deathskiss:OnCreated( kv )
 	if IsServer() then
 		self.critdmgpercentage = kv.critdmgpercentage
 		self.critchance = kv.critchance
+		self.crit = false
 	end
 end
 
 function modifier_vgmar_i_deathskiss:DeclareFunctions()
+	local funcs = {
+		MODIFIER_EVENT_ON_ATTACK_START
+    }
+    return funcs
+end
+
+function modifier_vgmar_i_deathskiss:OnAttackStart(kv)
+	if IsServer() then
+		if kv.attacker == self:GetParent() and kv.target:GetTeamNumber() ~= self:GetParent():GetTeamNumber() and kv.target:IsBuilding() == false then
+			if math.random(0,100) <= self.critchance then
+				kv.attacker:AddNewModifier(kv.attacker, self, "modifier_vgmar_i_deathskiss_active", {critdmgpercentage = self.critdmgpercentage})
+			end
+		end
+	end
+end
+
+--------------------------------------------------------------------------
+
+modifier_vgmar_i_deathskiss_active = class({})
+
+function modifier_vgmar_i_deathskiss_active:IsHidden()
+    return true
+end
+
+function modifier_vgmar_i_deathskiss_active:IsDebuff()
+	return false
+end
+
+function modifier_vgmar_i_deathskiss_active:IsPurgable()
+	return false
+end
+
+function modifier_vgmar_i_deathskiss_active:RemoveOnDeath()
+	return true
+end
+
+function modifier_vgmar_i_deathskiss_active:OnCreated( kv )
+	if IsServer() then
+		self.critdmgpercentage = kv.critdmgpercentage
+	end
+end
+
+function modifier_vgmar_i_deathskiss_active:DeclareFunctions()
 	local funcs = {
         MODIFIER_PROPERTY_PREATTACK_CRITICALSTRIKE,
 		MODIFIER_EVENT_ON_ATTACK_LANDED
@@ -46,23 +90,12 @@ function modifier_vgmar_i_deathskiss:DeclareFunctions()
     return funcs
 end
 
-function modifier_vgmar_i_deathskiss:GetModifierPreAttack_CriticalStrike(kv)
-	if IsServer() then
-		if kv.attacker == self:GetParent() then
-			if kv.target:IsBuilding() then 
-				return end
-			if kv.target:GetTeamNumber() == self:GetParent():GetTeamNumber() then
-				return end
-			if math.random(0,100) <= self.critchance then
-				self.crit = true
-				return self.critdmgpercentage
-			end
-		end
-	end
+function modifier_vgmar_i_deathskiss_active:GetModifierPreAttack_CriticalStrike()
+	return self.critdmgpercentage
 end
 
-function modifier_vgmar_i_deathskiss:OnAttackLanded(kv)
-	if self.crit == true and kv.attacker == self:GetParent() then
+function modifier_vgmar_i_deathskiss_active:OnAttackLanded(kv)
+	if kv.attacker == self:GetParent() and kv.target:GetTeamNumber() ~= self:GetParent():GetTeamNumber() and kv.target:IsBuilding() == false then
 		local particle = "particles/units/heroes/hero_phantom_assassin/phantom_assassin_crit_impact.vpcf"
 		local soundevnt = "Hero_PhantomAssassin.CoupDeGrace"
 		if kv.target:GetClassname() == "npc_dota_creep_siege" then
@@ -83,7 +116,7 @@ function modifier_vgmar_i_deathskiss:OnAttackLanded(kv)
 		ParticleManager:SetParticleControlOrientation(pfx,1,circlecap*damagepower, Vector(0,0,0), Vector(0,0,0))
 		ParticleManager:ReleaseParticleIndex(pfx)
 		StartSoundEvent(soundevnt, kv.target)
-		self.crit = false
+		self:Destroy()
 	end
 end
 --------------------------------------------------------------------------------

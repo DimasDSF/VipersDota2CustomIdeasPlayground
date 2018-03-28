@@ -71,13 +71,14 @@ function modifier_vgmar_i_multishot:OnAttack( event )
 	if IsServer() then
 		if event.attacker == self:GetParent() and self:GetParent():IsRangedAttacker() == true then
 			if event.attacker:GetTeamNumber() ~= event.target:GetTeamNumber() then
-				if self:GetParent():FindModifierByName("modifier_vgmar_i_multishot_attack") == nil then
+				if self:GetParent():FindModifierByName("modifier_vgmar_util_multishot_active") == nil and self:GetParent():PassivesDisabled() == false then
 					self:SetStackCount(self:GetStackCount() + 1)
 				end
-				if self:GetStackCount() >= self.stackscap and self:GetParent():FindModifierByName("modifier_vgmar_i_multishot_attack") == nil then
+				if self:GetStackCount() >= self.stackscap and self:GetParent():FindModifierByName("modifier_vgmar_util_multishot_active") == nil then
 					self.enemies = FindUnitsInRadius(self:GetParent():GetTeamNumber(), self:GetParent():GetAbsOrigin(), nil, self:GetParent():GetAttackRange() + 400, DOTA_UNIT_TARGET_TEAM_ENEMY, DOTA_UNIT_TARGET_HERO + DOTA_UNIT_TARGET_CREEP + DOTA_UNIT_TARGET_BUILDING, DOTA_UNIT_TARGET_FLAG_FOW_VISIBLE, FIND_CLOSEST, false)
 					self:SetStackCount( 0 )
 					self:GetParent():AddNewModifier(self:GetParent(), nil, "modifier_vgmar_i_multishot_attack", {})
+					self:GetParent():AddNewModifier(self:GetParent(), nil, "modifier_vgmar_util_multishot_active", {duration = self.attackduration + 1})
 				end
 			end
 		end
@@ -85,3 +86,28 @@ function modifier_vgmar_i_multishot:OnAttack( event )
 end
 
 --------------------------------------------------------------------------------
+
+modifier_vgmar_util_multishot_active = class({})
+
+function modifier_vgmar_util_multishot_active:IsHidden()
+    return true
+end
+
+function modifier_vgmar_util_multishot_active:IsPurgable()
+	return false
+end
+
+function modifier_vgmar_util_multishot_active:RemoveOnDeath()
+	return false
+end
+
+function modifier_vgmar_util_multishot_active:DestroyOnExpire()
+	return true
+end
+
+function modifier_vgmar_util_multishot_active:OnCreated( kv )
+	if IsServer() then
+		self.duration = kv.duration
+		self:SetDuration( self.duration, true )
+	end
+end

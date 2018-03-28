@@ -36,6 +36,7 @@ function modifier_vgmar_i_midas_greed:OnCreated(kv)
 		self.reduction_duration = kv.reduction_duration
 		self.killsperstack = kv.killsperstack
 		self.killscount = 0
+		self.midasusestacks = kv.midasusestacks
 		self:SetStackCount( self.min_bonus_gold )
 	else
 		self.clientvalues = CustomNetTables:GetTableValue("client_side_ability_values", "modifier_vgmar_i_midas_greed")
@@ -45,6 +46,7 @@ end
 function modifier_vgmar_i_midas_greed:DeclareFunctions()
 	local funcs = {
 		MODIFIER_EVENT_ON_DEATH,
+		MODIFIER_EVENT_ON_ABILITY_FULLY_CAST,
 		MODIFIER_PROPERTY_TOOLTIP
     }
     return funcs
@@ -69,6 +71,22 @@ end
 
 function modifier_vgmar_i_midas_greed:OnTooltip()
 	return self.clientvalues.killsperstack
+end
+
+function modifier_vgmar_i_midas_greed:OnAbilityFullyCast( event )
+	if IsServer() then
+		if event.unit == self:GetCaster() then
+			local hAbility = event.ability
+			if hAbility ~= nil then
+				if hAbility:GetName() == "item_hand_of_midas" then
+					if self.killscount < self.bonus_gold_cap * self.killsperstack then
+						self.killscount = self.killscount + self.killsperstack * self.midasusestacks
+						self:SetStackCount( math.floor(self.killscount / self.killsperstack) )
+					end
+				end
+			end
+		end
+	end
 end
 
 function modifier_vgmar_i_midas_greed:OnDeath(kv)
