@@ -1,3 +1,6 @@
+allow_defined_top = true
+no-max-line-length = true
+
 globals = { -- these globals can be set and accessed.
 -- "GameMode",
 "Gold",
@@ -2629,5 +2632,5 @@ ignore = {
   "213", -- unused loop variable
   "231", -- never accessed
   "311", -- Value assigned to a local variable is unused.
-  "631", -- line is too long (200)
+  "631", -- line is too long
 }
