@@ -1549,7 +1549,7 @@ function VGMAR:OnThink()
 						local player = PlayerResource:GetPlayer(playerID)
 						local wisp = CreateUnitByName("npc_dota_hero_wisp", heroent:GetAbsOrigin(), true, heroent, heroent, heroent:GetTeamNumber())
 						wisp:SetControllableByPlayer(playerID, false)
-						for 2,heroent:GetLevel(),1 do
+						for j=2,heroent:GetLevel() do
 							wisp:HeroLevelUp(false)
 						end
 						wisp:AddAbility("vgmar_ca_wisp_tether")
@@ -1601,7 +1601,7 @@ function VGMAR:OnThink()
 					local companionnum = self:GetCompanionNum( nil, -1, heroent:entindex())
 					local companionowner = self.companionheroes[companionnum].ownerhero
 					if heroent:GetLevel() < companionowner:GetLevel() then
-						for 1,companionowner:GetLevel()-heroent:GetLevel(),1 do
+						for j=1,companionowner:GetLevel()-heroent:GetLevel() do
 							heroent:HeroLevelUp(false)
 						end
 					end
