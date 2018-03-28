@@ -78,6 +78,10 @@
 
 #closeChangelogButton {
 	horizontal-align: right;
+	background-size: 45px 45px;
+	background-repeat: no-repeat;
+	height: 50px;
+	width: 50px;
 }
  
 .changelogDisplayHidden
@@ -88,6 +92,8 @@
 #Title
 {
     flow-children: down;
+	margin-top: -40px;
+	vertical-align: top;
 	padding: 10px 0 10px 0;
 }
 

@@ -214,7 +214,7 @@
 		"AttackDamageType"			"DAMAGE_TYPE_ArmorPhysical"
 		"AttackRate"				"1"			// Speed of attack.
 		"AttackAnimationPoint"		"0.5"		// Normalized time in animation cycle to attack.
-		"AttackAcquisitionRange"	"800"		// Range within a target can be acquired.
+		"AttackAcquisitionRange"	"600"		// Range within a target can be acquired.
 		"AttackRange"				"500"		// Range within a target can be attacked.
 		"ProjectileModel"			"particles/base_attacks/ranged_badguy.vpcf" // Particle system model for projectile.
 		"ProjectileSpeed"			"900"		// Speed of projectile.
@@ -307,7 +307,7 @@
 		"AttackDamageType"			"DAMAGE_TYPE_ArmorPhysical"
 		"AttackRate"				"1"			// Speed of attack.
 		"AttackAnimationPoint"		"0.5"		// Normalized time in animation cycle to attack.
-		"AttackAcquisitionRange"	"800"		// Range within a target can be acquired.
+		"AttackAcquisitionRange"	"600"		// Range within a target can be acquired.
 		"AttackRange"				"500"		// Range within a target can be attacked.
 		"ProjectileModel"			"particles/base_attacks/ranged_badguy.vpcf" // Particle system model for projectile.
 		"ProjectileSpeed"			"900"		// Speed of projectile.
@@ -400,7 +400,7 @@
 		"AttackDamageType"			"DAMAGE_TYPE_ArmorPhysical"
 		"AttackRate"				"1"			// Speed of attack.
 		"AttackAnimationPoint"		"0.5"		// Normalized time in animation cycle to attack.
-		"AttackAcquisitionRange"	"800"		// Range within a target can be acquired.
+		"AttackAcquisitionRange"	"600"		// Range within a target can be acquired.
 		"AttackRange"				"500"		// Range within a target can be attacked.
 		"ProjectileModel"			"particles/base_attacks/ranged_badguy.vpcf" // Particle system model for projectile.
 		"ProjectileSpeed"			"900"		// Speed of projectile.
@@ -493,7 +493,7 @@
 		"AttackDamageType"			"DAMAGE_TYPE_ArmorPhysical"
 		"AttackRate"				"1"			// Speed of attack.
 		"AttackAnimationPoint"		"0.5"		// Normalized time in animation cycle to attack.
-		"AttackAcquisitionRange"	"800"		// Range within a target can be acquired.
+		"AttackAcquisitionRange"	"600"		// Range within a target can be acquired.
 		"AttackRange"				"500"		// Range within a target can be attacked.
 		"ProjectileModel"			"particles/base_attacks/ranged_goodguy.vpcf" // Particle system model for projectile.
 		"ProjectileSpeed"			"900"		// Speed of projectile.
@@ -586,7 +586,7 @@
 		"AttackDamageType"			"DAMAGE_TYPE_ArmorPhysical"
 		"AttackRate"				"1"			// Speed of attack.
 		"AttackAnimationPoint"		"0.5"		// Normalized time in animation cycle to attack.
-		"AttackAcquisitionRange"	"800"		// Range within a target can be acquired.
+		"AttackAcquisitionRange"	"600"		// Range within a target can be acquired.
 		"AttackRange"				"500"		// Range within a target can be attacked.
 		"ProjectileModel"			"particles/base_attacks/ranged_goodguy.vpcf" // Particle system model for projectile.
 		"ProjectileSpeed"			"900"		// Speed of projectile.
@@ -679,7 +679,7 @@
 		"AttackDamageType"			"DAMAGE_TYPE_ArmorPhysical"
 		"AttackRate"				"1"			// Speed of attack.
 		"AttackAnimationPoint"		"0.5"		// Normalized time in animation cycle to attack.
-		"AttackAcquisitionRange"	"800"		// Range within a target can be acquired.
+		"AttackAcquisitionRange"	"600"		// Range within a target can be acquired.
 		"AttackRange"				"500"		// Range within a target can be attacked.
 		"ProjectileModel"			"particles/base_attacks/ranged_goodguy.vpcf" // Particle system model for projectile.
 		"ProjectileSpeed"			"900"		// Speed of projectile.
@@ -790,8 +790,8 @@
 		// Bounty
 		//----------------------------------------------------------------
 		"BountyXP"					"57"		// Experience earn.
-		"BountyGoldMin"				"38"		// Gold earned min.
-		"BountyGoldMax"				"44"		// Gold earned max.
+		"BountyGoldMin"				"37"		// Gold earned min.
+		"BountyGoldMax"				"43"		// Gold earned max.
 
 		// Bounds
 		//----------------------------------------------------------------
@@ -1069,8 +1069,8 @@
 		// Bounty
 		//----------------------------------------------------------------
 		"BountyXP"					"57"		// Experience earn.
-		"BountyGoldMin"				"38"		// Gold earned min.
-		"BountyGoldMax"				"44"		// Gold earned max.
+		"BountyGoldMin"				"37"		// Gold earned min.
+		"BountyGoldMax"				"43"		// Gold earned max.
 
 		// Bounds
 		//----------------------------------------------------------------
@@ -7552,8 +7552,8 @@
 		// Bounty
 		//----------------------------------------------------------------
 		"BountyXP"					"95"		// Experience earn.
-		"BountyGoldMin"				"42"		// Gold earned min.
-		"BountyGoldMax"				"56"		// Gold earned max.
+		"BountyGoldMin"				"38"		// Gold earned min.
+		"BountyGoldMax"				"51"		// Gold earned max.
 
 		// Movement
 		//----------------------------------------------------------------
@@ -7627,8 +7627,8 @@
 		// Bounty
 		//----------------------------------------------------------------
 		"BountyXP"					"124"		// Experience earn.
-		"BountyGoldMin"				"122"		// Gold earned min.
-		"BountyGoldMax"				"136"		// Gold earned max.
+		"BountyGoldMin"				"110"		// Gold earned min.
+		"BountyGoldMax"				"123"		// Gold earned max.
 
 		// Movement
 		//----------------------------------------------------------------
@@ -7701,8 +7701,8 @@
 		// Bounty
 		//----------------------------------------------------------------
 		"BountyXP"					"50"		// Experience earn.
-		"BountyGoldMin"				"59"		// Gold earned min.
-		"BountyGoldMax"				"66"		// Gold earned max.
+		"BountyGoldMin"				"54"		// Gold earned min.
+		"BountyGoldMax"				"60"		// Gold earned max.
 
 		// Movement
 		//----------------------------------------------------------------
@@ -7775,8 +7775,8 @@
 		// Bounty
 		//----------------------------------------------------------------
 		"BountyXP"					"95"		// Experience earn.
-		"BountyGoldMin"				"69"		// Gold earned min.
-		"BountyGoldMax"				"78"		// Gold earned max.
+		"BountyGoldMin"				"60"		// Gold earned min.
+		"BountyGoldMax"				"71"		// Gold earned max.
 
 		// Movement
 		//----------------------------------------------------------------
@@ -7850,8 +7850,8 @@
 		// Bounty
 		//----------------------------------------------------------------
 		"BountyXP"					"95"		// Experience earn.
-		"BountyGoldMin"				"43"		// Gold earned min.
-		"BountyGoldMax"				"50"		// Gold earned max.
+		"BountyGoldMin"				"39"		// Gold earned min.
+		"BountyGoldMax"				"45"		// Gold earned max.
 
 		// Movement
 		//----------------------------------------------------------------
@@ -7925,8 +7925,8 @@
 		// Bounty
 		//----------------------------------------------------------------
 		"BountyXP"					"124"		// Experience earn.
-		"BountyGoldMin"				"86"		// Gold earned min.
-		"BountyGoldMax"				"97"		// Gold earned max.
+		"BountyGoldMin"				"78"		// Gold earned min.
+		"BountyGoldMax"				"88"		// Gold earned max.
 
 		// Movement
 		//----------------------------------------------------------------
@@ -8000,8 +8000,8 @@
 		// Bounty
 		//----------------------------------------------------------------
 		"BountyXP"					"124"		// Experience earn.
-		"BountyGoldMin"				"71"		// Gold earned min.
-		"BountyGoldMax"				"78"		// Gold earned max.
+		"BountyGoldMin"				"64"		// Gold earned min.
+		"BountyGoldMax"				"71"		// Gold earned max.
 
 		// Movement
 		//----------------------------------------------------------------
@@ -8075,8 +8075,8 @@
 		// Bounty
 		//----------------------------------------------------------------
 		"BountyXP"					"95"		// Experience earn.
-		"BountyGoldMin"				"48"		// Gold earned min.
-		"BountyGoldMax"				"56"		// Gold earned max.
+		"BountyGoldMin"				"44"		// Gold earned min.
+		"BountyGoldMax"				"51"		// Gold earned max.
 
 		// Movement
 		//----------------------------------------------------------------
@@ -8879,8 +8879,8 @@
 		// Bounty
 		//----------------------------------------------------------------
 		"BountyXP"					"50"		// Experience earn.
-		"BountyGoldMin"				"28"		// Gold earned min.
-		"BountyGoldMax"				"36"		// Gold earned max.
+		"BountyGoldMin"				"26"		// Gold earned min.
+		"BountyGoldMax"				"33"		// Gold earned max.
 
 		// Movement
 		//----------------------------------------------------------------
@@ -8953,8 +8953,8 @@
 		// Bounty
 		//----------------------------------------------------------------
 		"BountyXP"					"124"		// Experience earn.
-		"BountyGoldMin"				"120"		// Gold earned min.
-		"BountyGoldMax"				"152"		// Gold earned max.
+		"BountyGoldMin"				"108"		// Gold earned min.
+		"BountyGoldMax"				"137"		// Gold earned max.
 
 		// Movement
 		//----------------------------------------------------------------
@@ -9567,7 +9567,7 @@
 	
 		// Status
 		//----------------------------------------------------------------
-		"StatusHealth"				"200"		// Base health.
+		"StatusHealth"				"8"		// Base health.
 		"StatusHealthRegen"			"0"			// Health regeneration rate.
 		"StatusMana"				"0"			// Base mana.
 		"StatusManaRegen"			"0"			// Mana regeneration rate.
@@ -9616,7 +9616,7 @@
 	
 		// Status
 		//----------------------------------------------------------------
-		"StatusHealth"				"200"		// Base health.
+		"StatusHealth"				"8"		// Base health.
 		"StatusHealthRegen"			"0"			// Health regeneration rate.
 		"StatusMana"				"0"			// Base mana.
 		"StatusManaRegen"			"0"			// Mana regeneration rate.
@@ -10113,6 +10113,7 @@
 		"Level"						"1"
 		"ModelScale" 				"0.4"
 		"SelectionGroup"			"Venomancer_Wards"
+		"UnitLabel"			"plaguewards"
 
 		// Abilities
 		//----------------------------------------------------------------
@@ -10190,6 +10191,7 @@
 		"Level"						"1"
 		"ModelScale" 				"0.6"
 		"SelectionGroup"			"Venomancer_Wards"
+		"UnitLabel"			"plaguewards"
 
 		// Abilities
 		//----------------------------------------------------------------
@@ -10267,6 +10269,7 @@
 		"Level"						"1"
 		"ModelScale" 				"1.0"
 		"SelectionGroup"			"Venomancer_Wards"
+		"UnitLabel"			"plaguewards"
 
 
 		// Abilities
@@ -10314,7 +10317,7 @@
 
 			// Status
 		//----------------------------------------------------------------
-		"StatusHealth"				"325"		// Base health.
+		"StatusHealth"				"525"		// Base health.
 		"StatusHealthRegen"			"0.25"		// Health regeneration rate.
 		"StatusMana"				"0"			// Base mana.
 		"StatusManaRegen"			"0"			// Mana regeneration rate.
@@ -10345,6 +10348,7 @@
 		"Level"						"1"
 		"ModelScale" 				"1.2"
 		"SelectionGroup"			"Venomancer_Wards"
+		"UnitLabel"			"plaguewards"
 
 
 		// Abilities
@@ -10392,7 +10396,7 @@
 
 			// Status
 		//----------------------------------------------------------------
-		"StatusHealth"				"450"		// Base health.
+		"StatusHealth"				"1000"		// Base health.
 		"StatusHealthRegen"			"0.25"		// Health regeneration rate.
 		"StatusMana"				"0"			// Base mana.
 		"StatusManaRegen"			"0"			// Mana regeneration rate.
@@ -10552,7 +10556,7 @@
 		// Movement
 		//----------------------------------------------------------------
 		"MovementCapabilities"		"DOTA_UNIT_CAP_MOVE_GROUND"			// Type of locomotion - ground, air
-		"MovementSpeed"				"300"		// Speed
+		"MovementSpeed"				"310"		// Speed
 		"MovementTurnRate"			"0.5"		// Turning rate.
 
 		// Status
@@ -10633,7 +10637,7 @@
 		// Movement
 		//----------------------------------------------------------------
 		"MovementCapabilities"		"DOTA_UNIT_CAP_MOVE_GROUND"			// Type of locomotion - ground, air
-		"MovementSpeed"				"320"		// Speed
+		"MovementSpeed"				"340"		// Speed
 		"MovementTurnRate"			"0.5"		// Turning rate.
 
 		// Status
@@ -10714,7 +10718,7 @@
 		// Movement
 		//----------------------------------------------------------------
 		"MovementCapabilities"		"DOTA_UNIT_CAP_MOVE_GROUND"			// Type of locomotion - ground, air
-		"MovementSpeed"				"340"		// Speed
+		"MovementSpeed"				"370"		// Speed
 		"MovementTurnRate"			"0.5"		// Turning rate.
 
 		// Status
@@ -11054,8 +11058,8 @@
 		
 		// Vision
 		//----------------------------------------------------------------
-		"VisionDaytimeRange"		"1100"		// Range of vision during day light.
-		"VisionNighttimeRange"		"800"		// Range of vision at night time.
+		"VisionDaytimeRange"		"700"		// Range of vision during day light.
+		"VisionNighttimeRange"		"700"		// Range of vision at night time.
 	}
 
 	"npc_dota_broodmother_spiderite"
@@ -11135,8 +11139,8 @@
 		
 		// Vision
 		//----------------------------------------------------------------
-		"VisionDaytimeRange"		"1100"		// Range of vision during day light.
-		"VisionNighttimeRange"		"800"		// Range of vision at night time.
+		"VisionDaytimeRange"		"700"		// Range of vision during day light.
+		"VisionNighttimeRange"		"700"		// Range of vision at night time.
 	}
 
 	"npc_dota_dark_troll_warlord_skeleton_warrior"
@@ -12334,7 +12338,7 @@
 		// Movement
 		//----------------------------------------------------------------
 		"MovementCapabilities"		"DOTA_UNIT_CAP_MOVE_FLY"
-		"MovementSpeed"				"450"		// Speed.
+		"MovementSpeed"				"430"		// Speed.
 		"MovementTurnRate"			"0.6"		// Turning rate.
 
 		// Status
@@ -13050,13 +13054,13 @@
 		"Ability1"					"brewmaster_earth_hurl_boulder"		// Ability 1
 		"Ability2"					"brewmaster_earth_spell_immunity"	// Ability 2
 		"Ability3"					"brewmaster_earth_pulverize"		// Ability 3
-		"Ability4"					"generic_hidden"
+		"Ability4"					"brewmaster_thunder_clap"
 		"Ability5"					"generic_hidden"
-		"Ability6"					"brewmaster_thunder_clap"			// Ability 6	
+		"Ability6"					"generic_hidden"			// Ability 6	
 
 		// Armor
 		//----------------------------------------------------------------
-		"ArmorPhysical"				"5"			// Physical protection.
+		"ArmorPhysical"				"3"			// Physical protection.
 
 		// Attack
 		//----------------------------------------------------------------
@@ -13120,13 +13124,13 @@
 		"Ability1"					"brewmaster_earth_hurl_boulder"		// Ability 1
 		"Ability2"					"brewmaster_earth_spell_immunity"	// Ability 2
 		"Ability3"					"brewmaster_earth_pulverize"		// Ability 3
-		"Ability4"					"generic_hidden"
+		"Ability4"					"brewmaster_thunder_clap"
 		"Ability5"					"generic_hidden"
-		"Ability6"					"brewmaster_thunder_clap"			// Ability 6	
+		"Ability6"					"generic_hidden"			// Ability 6	
 
 		// Armor
 		//----------------------------------------------------------------
-		"ArmorPhysical"				"5"			// Physical protection.
+		"ArmorPhysical"				"3"			// Physical protection.
 
 		// Attack
 		//----------------------------------------------------------------
@@ -13190,13 +13194,13 @@
 		"Ability1"					"brewmaster_earth_hurl_boulder"		// Ability 1
 		"Ability2"					"brewmaster_earth_spell_immunity"	// Ability 2
 		"Ability3"					"brewmaster_earth_pulverize"		// Ability 3
-		"Ability4"					"generic_hidden"
+		"Ability4"					"brewmaster_thunder_clap"
 		"Ability5"					"generic_hidden"
-		"Ability6"					"brewmaster_thunder_clap"			// Ability 6
+		"Ability6"					"generic_hidden"			// Ability 6
 
 		// Armor
 		//----------------------------------------------------------------
-		"ArmorPhysical"				"5"			// Physical protection.
+		"ArmorPhysical"				"3"			// Physical protection.
 
 		// Attack
 		//----------------------------------------------------------------
@@ -13261,9 +13265,9 @@
 		"Ability1"					"brewmaster_storm_dispel_magic"		// Ability 1
 		"Ability2"					"brewmaster_storm_cyclone"			// Ability 2
 		"Ability3"					"brewmaster_storm_wind_walk"		// Ability 3
-		"Ability4"					"generic_hidden"
+		"Ability4"					"brewmaster_drunken_haze"
 		"Ability5"					"generic_hidden"
-		"Ability6"					"brewmaster_drunken_haze"			// Ability 6	
+		"Ability6"					"generic_hidden"			// Ability 6	
 
 		// Armor
 		//----------------------------------------------------------------
@@ -13334,9 +13338,9 @@
 		"Ability1"					"brewmaster_storm_dispel_magic"		// Ability 1
 		"Ability2"					"brewmaster_storm_cyclone"			// Ability 2
 		"Ability3"					"brewmaster_storm_wind_walk"		// Ability 3
-		"Ability4"					"generic_hidden"
+		"Ability4"					"brewmaster_drunken_haze"
 		"Ability5"					"generic_hidden"
-		"Ability6"					"brewmaster_drunken_haze"			// Ability 6	
+		"Ability6"					"generic_hidden"			// Ability 6	
 
 		// Armor
 		//----------------------------------------------------------------
@@ -13407,9 +13411,9 @@
 		"Ability1"					"brewmaster_storm_dispel_magic"		// Ability 1
 		"Ability2"					"brewmaster_storm_cyclone"			// Ability 2
 		"Ability3"					"brewmaster_storm_wind_walk"		// Ability 3
-		"Ability4"					"generic_hidden"
+		"Ability4"					"brewmaster_drunken_haze"
 		"Ability5"					"generic_hidden"
-		"Ability6"					"brewmaster_drunken_haze"			// Ability 6	
+		"Ability6"					"generic_hidden"			// Ability 6	
 
 		// Armor
 		//----------------------------------------------------------------
@@ -15057,8 +15061,8 @@
 		// Bounty
 		//----------------------------------------------------------------
 		"BountyXP"					"20"		// Experience earn.
-		"BountyGoldMin"				"20"		// Gold earned min.
-		"BountyGoldMax"				"30"		// Gold earned max.
+		"BountyGoldMin"				"50"		// Gold earned min.
+		"BountyGoldMax"				"50"		// Gold earned max.
 
 		// Movement
 		//----------------------------------------------------------------
@@ -15413,10 +15417,10 @@
 
 		// Abilities
 		//----------------------------------------------------------------
-		"Ability1"					"bear_empty"			// Ability 1
-		"Ability2"					"bear_empty"			// Ability 2
-		"Ability3"					"lone_druid_savage_roar_bear"			// Ability 3
-		"Ability4"					""			// Ability 4
+		"Ability1"					"bear_empty1"
+		"Ability2"					"bear_empty2"
+		"Ability3"					"lone_druid_savage_roar_bear"
+		"Ability4"					""
 
 		// Armor
 		//----------------------------------------------------------------
@@ -15453,8 +15457,8 @@
 
 		// Status
 		//----------------------------------------------------------------
-		"StatusHealth"				"1400"		// Base health.
-		"StatusHealthRegen"			"4"			// Health regeneration rate.
+		"StatusHealth"				"1500"		// Base health.
+		"StatusHealthRegen"			"5"			// Health regeneration rate.
 		"StatusMana"				"300"		// Base mana.
 		"StatusManaRegen"			"0.5"		// Mana regeneration rate.		 
 		
@@ -15488,10 +15492,10 @@
 
 		// Abilities
 		//----------------------------------------------------------------
-		"Ability1"					"lone_druid_spirit_bear_return"			// Ability 1
-		"Ability2"					"bear_empty"			// Ability 2
-		"Ability3"					"lone_druid_savage_roar_bear"			// Ability 3
-		"Ability4"					""			// Ability 4
+		"Ability1"					"lone_druid_spirit_bear_return"
+		"Ability2"					"bear_empty2"
+		"Ability3"					"lone_druid_savage_roar_bear"
+		"Ability4"					""
 
 		// Armor
 		//----------------------------------------------------------------
@@ -15528,8 +15532,8 @@
 
 		// Status
 		//----------------------------------------------------------------
-		"StatusHealth"				"1800"		// Base health.
-		"StatusHealthRegen"			"5"			// Health regeneration rate.
+		"StatusHealth"				"2000"		// Base health.
+		"StatusHealthRegen"			"6"			// Health regeneration rate.
 		"StatusMana"				"300"		// Base mana.
 		"StatusManaRegen"			"0.5"		// Mana regeneration rate.		 
 		
@@ -15604,8 +15608,8 @@
 
 		// Status
 		//----------------------------------------------------------------
-		"StatusHealth"				"2300"		// Base health.
-		"StatusHealthRegen"			"6"			// Health regeneration rate.
+		"StatusHealth"				"2500"		// Base health.
+		"StatusHealthRegen"			"7"			// Health regeneration rate.
 		"StatusMana"				"300"			// Base mana.
 		"StatusManaRegen"			"0.5"		// Mana regeneration rate.		 
 		
@@ -15681,8 +15685,8 @@
 
 		// Status
 		//----------------------------------------------------------------
-		"StatusHealth"				"2700"		// Base health.
-		"StatusHealthRegen"			"7"			// Health regeneration rate.
+		"StatusHealth"				"3000"		// Base health.
+		"StatusHealthRegen"			"8"			// Health regeneration rate.
 		"StatusMana"				"300"		// Base mana.
 		"StatusManaRegen"			"0.5"		// Mana regeneration rate.		 
 		
@@ -19218,6 +19222,7 @@
 
 		"DrawParticlesWhileHidden"	"1"
 	}	
+
 
 }
 		

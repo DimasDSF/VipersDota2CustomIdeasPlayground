@@ -356,6 +356,90 @@
 		"AbilityManaCost"				"0"
 	}
 	
+	//==============================
+	// Hidden Talent
+	//==============================
+	//=================================================================================================================
+	// Ability: Special Bonus
+	//=================================================================================================================
+	"special_bonus_unique_hidden_1"
+	{
+		// General
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityType"					"DOTA_ABILITY_TYPE_ATTRIBUTES"
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_PASSIVE"
+		"BaseClass"						"special_bonus_unique_alchemist_3"
+		
+		// Special
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"					"FIELD_FLOAT"
+				"value"				"-0.0"
+			}
+		}
+	}
+	"special_bonus_unique_hidden_2"
+	{
+		// General
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityType"					"DOTA_ABILITY_TYPE_ATTRIBUTES"
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_PASSIVE"
+		"BaseClass"						"special_bonus_unique_alchemist_3"
+		
+		// Special
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"					"FIELD_FLOAT"
+				"value"				"-0.0"
+			}
+		}
+	}
+	"special_bonus_unique_hidden_3"
+	{
+		// General
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityType"					"DOTA_ABILITY_TYPE_ATTRIBUTES"
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_PASSIVE"
+		"BaseClass"						"special_bonus_unique_alchemist_3"
+		
+		// Special
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"					"FIELD_FLOAT"
+				"value"				"-0.0"
+			}
+		}
+	}
+	"special_bonus_unique_hidden_4"
+	{
+		// General
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityType"					"DOTA_ABILITY_TYPE_ATTRIBUTES"
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_PASSIVE"
+		"BaseClass"						"special_bonus_unique_alchemist_3"
+		
+		// Special
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"					"FIELD_FLOAT"
+				"value"				"-0.0"
+			}
+		}
+	}
+	
+	
 	
 	//==============================
 	// VGMAR: Custom Creep Abilities
@@ -449,7 +533,7 @@
 		}
 	}
 	//=================================================================================================================
-	// VGMAR: Gem: Bloodseeker: Thirst
+	// VGMAR: Item: Bloodseeker: Thirst
 	//=================================================================================================================
 	"vgmar_i_thirst"
 	{
@@ -467,17 +551,17 @@
 			"01"
 			{
 				"var_type"					"FIELD_INTEGER"
-				"min_bonus_pct"				"50"
+				"min_bonus_pct"				"75"
 			}			
 			"02"
 			{
 				"var_type"					"FIELD_INTEGER"
-				"bonus_movement_speed"		"50"
+				"bonus_movement_speed"		"25"
 			}			
 			"03"
 			{
 				"var_type"					"FIELD_INTEGER"
-				"bonus_damage"				"30"
+				"bonus_damage"				"40"
 			}		
 			"04"
 			{
@@ -487,12 +571,12 @@
 			"05"
 			{
 				"var_type"					"FIELD_INTEGER"
-				"visibility_threshold_pct"	"50"
+				"visibility_threshold_pct"	"35"
 			}
 			"06"
 			{
 				"var_type"					"FIELD_INTEGER"
-				"invis_threshold_pct"	"50"
+				"invis_threshold_pct"	"1"
 			}
 		}
 	}
@@ -982,17 +1066,17 @@
 			"03"
 			{
 				"var_type"				"FIELD_FLOAT"
-				"slow_duration"	"0.3"
+				"slow_duration"	"0.0"
 			}
 			"04"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"slow_amount"		"-60"
+				"slow_amount"		"-0"
 			}
 			"05"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"damage"		"150"
+				"damage"		"125"
 			}
 			"06"
 			{
@@ -1001,10 +1085,495 @@
 			}
 		}
 	}
+
+	//=========================
+	//ModifierApplyingAbilities
+	//=========================
+	//=================================================================================================================
+	// VGMAR: Item: TrueSight
+	//=================================================================================================================
+	"vgmar_i_truesight"
+	{
+		"BaseClass"	"ability_datadriven"
+		"AbilityBehavior"	"DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN | DOTA_ABILITY_BEHAVIOR_NOT_LEARNABLE"
+		"AbilityTextureName" "item_gem"
+		"SpellImmunityType"	"SPELL_IMMUNITY_ENEMIES_YES"
+		"MaxLevel"	"1"
+	}
+
+
+	//===================
+	// CompanionAbilities
+	//===================
+	//Wisp
+	//===============================
+	// VGMAR: Companion: Wisp: Tether
+	//===============================
+	"vgmar_ca_wisp_tether"
+	{
+		// General
+		//-------------------------------------------------------------------------------------------------------------
+		"BaseClass"						"wisp_tether"
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_UNIT_TARGET"
+		"AbilityUnitTargetTeam"			"DOTA_UNIT_TARGET_TEAM_FRIENDLY"
+		"AbilityUnitTargetType"			"DOTA_UNIT_TARGET_CUSTOM"
+		"SpellImmunityType"				"SPELL_IMMUNITY_ENEMIES_NO"
+		"SpellDispellableType"			"SPELL_DISPELLABLE_NO"
+		"AbilityTextureName"			"custom/companion_wisp_tether"
+
+		// Casting
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityCastPoint"				"0.001 0.001 0.001 0.001"
+		"AbilityCastAnimation"			"ACT_INVALID"
+
+		// Time		
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityCooldown"				"1.0 1.0 1.0 1.0"
+		"AbilityDuration"				"999.0 999.0 999.0 999.0"
+
+		// Cost
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityManaCost"				"0 0 0 0"
+
+		// Cast Range
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityCastRange"				"1800 1800 1800 1800"
+
+		// Special
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"					"FIELD_INTEGER"
+				"radius"					"1800 1800 1800 1800"
+			}
+			"02"
+			{
+				"var_type"					"FIELD_INTEGER"
+				"movespeed"					"20 20 20 20"
+			}
+			"03"
+			{
+				"var_type"					"FIELD_INTEGER"
+				"latch_distance"			"700 700 700 700"
+			}
+			"04"
+			{
+				"var_type"					"FIELD_INTEGER"
+				"latch_speed"				"1000 1000 1000 1000"
+			}
+			"05"
+			{
+				"var_type"					"FIELD_FLOAT"
+				"tether_duration"			"999.0 999.0 999.0 999.0"
+			}
+			"06"
+			{
+				"var_type"					"FIELD_FLOAT"
+				"tether_heal_amp"			"1.5"
+			}
+			"07"
+			{
+				"var_type"					"FIELD_INTEGER"
+				"slow"			"0"
+			}
+			"08"
+			{
+				"var_type"					"FIELD_INTEGER"
+				"attackslow_tooltip"			"0"
+			}
+			"09"
+			{
+				"var_type"					"FIELD_FLOAT"
+				"stun_duration"				"0 0 0 0"
+			}
+		}
+	}
 	
-	//====================
+	//===================================
+	// VGMAR: Companion: Wisp: Overcharge
+	//===================================
+	"vgmar_ca_wisp_overcharge"
+	{
+		// General
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_TOGGLE"
+		"SpellDispellableType"			"SPELL_DISPELLABLE_NO"
+		"BaseClass"						"wisp_overcharge"
+		"AbilityTextureName"			"custom/companion_wisp_overcharge"
+
+		// Casting
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityCastPoint"				"0 0 0 0"
+   		"AbilityCastAnimation"			"ACT_INVALID"
+
+		// Time		
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityCooldown"				"0.0"
+
+		// Special
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"					"FIELD_INTEGER"
+				"bonus_attack_speed"		"50 60 70 80"
+			}
+			"02"
+			{
+				"var_type"					"FIELD_INTEGER"
+				"bonus_damage_pct"			"-15 -25 -35 -45"
+			}
+			"03"
+			{
+				"var_type"					"FIELD_FLOAT"
+				"drain_interval"			"0.2 0.2 0.2 0.2"
+			}
+			"04"
+			{
+				"var_type"					"FIELD_FLOAT"
+				"drain_pct"					"0.06"
+			}
+			"05"
+			{
+				"var_type"					"FIELD_FLOAT"
+				"drain_pct_tooltip"			"6.0"
+			}
+		}
+	}
+	//=================================================================================================================
+	// VGMAR: Companion: Wisp: Relocate
+	//=================================================================================================================
+	"vgmar_ca_wisp_relocate"
+	{
+		// General
+		//-------------------------------------------------------------------------------------------------------------
+		"BaseClass"						"ability_datadriven"
+		"AbilityType"					"DOTA_ABILITY_TYPE_ULTIMATE"
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_POINT"
+		"SpellDispellableType"			"SPELL_DISPELLABLE_NO"
+		"FightRecapLevel"				"1"
+		"AbilitySound"					"Hero_Wisp.Relocate"
+		"AbilityTextureName"			"custom/companion_wisp_relocate"
+
+		// Casting
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityCastPoint"				"0 0 0"
+ 		"AbilityCastAnimation"			"ACT_INVALID"
+
+		// Time		
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityCooldown"				"120.0 100.0 80.0"
+
+		// Cost
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityManaCost"				"100 100 100"
+		
+		// Special
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"					"FIELD_FLOAT"
+				"cast_delay"				"2.5 2.25 2.0"
+			}
+			"02"
+			{
+				"var_type"					"FIELD_FLOAT"
+				"return_time"				"12.0 12.0 12.0"
+			}
+			// Extra variables
+			"03"
+			{
+				"var_type"					"FIELD_INTEGER"
+				"destroy_tree_radius"		"300"
+			}
+			"04"
+			{
+				"var_type"					"FIELD_INTEGER"
+				"vision_radius"				"64"
+			}
+		}
+		
+		// Data driven
+		//-------------------------------------------------------------------------------------------------------------
+		"precache"
+		{
+			"soundfile"					"soundevents/game_sounds_heroes/game_sounds_wisp.vsndevts"
+			"particle"					"particles/units/heroes/hero_wisp/wisp_relocate_channel.vpcf"
+			"particle"					"particles/units/heroes/hero_wisp/wisp_relocate_marker.vpcf"
+			"particle"					"particles/units/heroes/hero_wisp/wisp_relocate_marker_endpoint.vpcf"
+			"particle"					"particles/units/heroes/hero_wisp/wisp_relocate_teleport.vpcf"
+			"particle"					"particles/units/heroes/hero_wisp/wisp_relocate_timer.vpcf"
+		}
+		
+		"OnSpellStart"
+		{
+			"FireSound"
+			{
+				"EffectName"		"Hero_Wisp.Relocate"
+				"Target"			"CASTER"
+			}
+			
+			"RunScript"
+			{
+				"ScriptFile"		"abilities/hero/wisp/wisp_relocate.lua"
+				"Function"			"CastRelocate"
+				"Target"			"POINT"
+				
+				"tether_ability"				"vgmar_ca_wisp_tether"
+				"tether_modifier"				"modifier_wisp_tether"
+				"tether_ally_modifier"			"modifier_wisp_tether_haste"
+			}
+			
+			"ApplyModifier"
+			{
+				"ModifierName"		"modifier_relocate_channel_datadriven"
+				"Target"			"CASTER"
+			}
+		}
+		
+		"Modifiers"
+		{
+			"modifier_relocate_channel_datadriven"
+			{
+				"Duration"	"%cast_delay"
+				
+				"OnCreated"
+				{
+					"AttachEffect"
+					{
+						"EffectName"		"particles/units/heroes/hero_wisp/wisp_relocate_channel.vpcf"
+						"EffectAttachType"	"attach_hitloc"
+						"Target"			"TARGET"
+						
+						"ControlPointEntities"
+						{
+							"TARGET"	"attach_hitloc"
+						}
+					}
+				
+					"RunScript"
+					{
+						"ScriptFile"	"abilities/hero/wisp/wisp_relocate.lua"
+						"Function"		"CreateMarkerEndpoint"
+						
+						"endpoint_particle"		"particles/units/heroes/hero_wisp/wisp_relocate_marker_endpoint.vpcf"
+						
+						"vision_radius"			"%vision_radius"
+						"vision_duration"		"%cast_delay"
+					}
+				}
+				
+				"OnStateChanged"
+				{
+					"RunScript"
+					{
+						"ScriptFile"		"abilities/hero/wisp/wisp_relocate.lua"
+						"Function"			"CheckToInterrupt"
+						
+						"channel_modifier"	"modifier_relocate_channel_datadriven"
+					}
+				}
+				
+				"OnDestroy"
+				{
+					"RunScript"
+					{
+						"ScriptFile"	"abilities/hero/wisp/wisp_relocate.lua"
+						"Function"		"DestroyMarkerEndpoint"
+					}
+					
+					"RunScript"
+					{
+						"ScriptFile"	"abilities/hero/wisp/wisp_relocate.lua"
+						"Function"		"TryToTeleport"
+						
+						"timer_modifier"	"modifier_relocate_timer_datadriven"
+					}
+				}
+			}
+			
+			"modifier_relocate_return_datadriven"
+			{
+				// Visible from otheres as compared with modifier_relocate_timer_datadriven
+			}
+			
+			"modifier_relocate_timer_datadriven"
+			{
+				"IsHidden"	"1"
+				"Duration"	"%return_time"		// Timer should be hidden
+				
+				"OnCreated"
+				{
+					"ApplyModifier"
+					{
+						"ModifierName"	"modifier_relocate_return_datadriven"
+						"Target"		"TARGET"
+					}
+					
+					"RunScript"
+					{
+						"ScriptFile"	"abilities/hero/wisp/wisp_relocate.lua"
+						"Function"		"Teleportation_PreDestroyTree"
+						
+						"tether_ability"				"vgmar_ca_wisp_tether"
+						"tether_modifier"				"modifier_wisp_tether"
+						"tether_ally_modifier"			"modifier_wisp_tether_haste"
+						
+						"teleport_particle"		"particles/units/heroes/hero_wisp/wisp_relocate_teleport.vpcf"
+					}
+					
+					"DestroyTrees"
+					{
+						"Target"		"CASTER"
+						"Radius"		"%destroy_tree_radius"
+					}
+					
+					"RunScript"
+					{
+						"ScriptFile"	"abilities/hero/wisp/wisp_relocate.lua"
+						"Function"		"Teleportation_PostDestroyTree"
+						
+						"return_time"		"%return_time"
+						
+						"marker_particle"	"particles/units/heroes/hero_wisp/wisp_relocate_marker.vpcf"
+						"timer_particle"	"particles/units/heroes/hero_wisp/wisp_relocate_timer.vpcf"
+					}
+					
+					"FireSound"
+					{
+						"EffectName"	"Hero_Wisp.ReturnCounter"
+						"Target"		"CASTER"
+					}
+				}
+				
+				"ThinkInterval"		"1.0"
+				"OnIntervalThink"
+				{
+					"RunScript"
+					{
+						"ScriptFile"	"abilities/hero/wisp/wisp_relocate.lua"
+						"Function"		"UpdateTimer"
+					}
+				}
+				
+				"OnDestroy"
+				{
+					"RunScript"
+					{
+						"ScriptFile"	"abilities/hero/wisp/wisp_relocate.lua"
+						"Function"		"TryReturningTeleportation"
+						
+						"returning_modifier"	"modifier_relocate_returning_teleport_datadriven"
+					}
+					
+					"RunScript"
+					{
+						"ScriptFile"		"abilities/hero/wisp/wisp_relocate.lua"
+						"Function"			"StopSound"
+						"Target"			"CASTER"
+						"sound_name"		"Hero_Wisp.ReturnCounter"
+					}
+					
+					"RemoveModifier"
+					{
+						"ModifierName"	"modifier_relocate_return_datadriven"
+						"Target"		"TARGET"
+					}
+				}
+			}
+			
+			"modifier_relocate_returning_teleport_datadriven"
+			{
+				"OnCreated"
+				{
+					"RunScript"
+					{
+						"ScriptFile"	"abilities/hero/wisp/wisp_relocate.lua"
+						"Function"		"ReturningTeleportation_PreDestroyTree"
+						
+						"tether_ability"				"vgmar_ca_wisp_tether"
+						"tether_modifier"				"modifier_wisp_tether"
+						"tether_ally_modifier"			"modifier_wisp_tether_haste"
+						
+						"teleport_particle"		"particles/units/heroes/hero_wisp/wisp_relocate_teleport.vpcf"
+					}
+					
+					"DestroyTrees"
+					{
+						"Target"		"CASTER"
+						"Radius"		"%destroy_tree_radius"
+					}
+					
+					"RunScript"
+					{
+						"ScriptFile"	"abilities/hero/wisp/wisp_relocate.lua"
+						"Function"		"ReturningTeleportation_PostDestroyTree"
+					}
+					
+					"FireSound"
+					{
+						"EffectName"	"Hero_Wisp.Return"
+						"Target"		"CASTER"
+					}
+					
+					"RemoveModifier"
+					{
+						"ModifierName"	"modifier_relocate_returning_teleport_datadriven"
+						"Target"		"CASTER"
+					}
+				}
+			}
+		}
+	}
+
+	//=================================
+	// Wisp: Mechanics Toggle Abilities
+	//=================================
+	//==============
+	// Toggle Tether
+	//==============
+	"vgmar_ai_companion_wisp_toggle_tether"
+	{
+		"BaseClass" "ability_datadriven"
+		"AbilityBehavior" "DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_TOGGLE | DOTA_ABILITY_BEHAVIOR_IMMEDIATE | DOTA_ABILITY_BEHAVIOR_IGNORE_BACKSWING"
+		"AbilityTextureName" "custom/aiautotether"
+		"MaxLevel" "1"
+		"ResetToggleOnRespawn" "0"
+		"AbilityProcsMagicStick" "0"
+	}
+	//===========
+	// Toggle Hit
+	//===========
+	"vgmar_ai_companion_wisp_toggle_autohit"
+	{
+		"BaseClass" "ability_datadriven"
+		"AbilityBehavior" "DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_TOGGLE | DOTA_ABILITY_BEHAVIOR_IMMEDIATE | DOTA_ABILITY_BEHAVIOR_IGNORE_BACKSWING"
+		"AbilityTextureName" "custom/aiautoattacktoggle"
+		"MaxLevel" "1"
+		"ResetToggleOnRespawn" "0"
+		"AbilityProcsMagicStick" "0"
+	}
+	//===============
+	// Toggle Scepter
+	//===============
+	"vgmar_ai_companion_wisp_toggle_scepter"
+	{
+		"BaseClass" "ability_datadriven"
+		"AbilityBehavior" "DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_TOGGLE | DOTA_ABILITY_BEHAVIOR_IMMEDIATE | DOTA_ABILITY_BEHAVIOR_IGNORE_BACKSWING"
+		"AbilityTextureName" "custom/aisceptertoggle"
+		"MaxLevel" "1"
+		"ResetToggleOnRespawn" "0"
+		"AbilityProcsMagicStick" "0"
+	}
+	
+	//======================
 	//VisualAbilityModifiers
-	//====================
+	//======================
 	//=================================================================================================================
 	// VGMAR: Courier: Upgrade: Level Visual
 	//=================================================================================================================

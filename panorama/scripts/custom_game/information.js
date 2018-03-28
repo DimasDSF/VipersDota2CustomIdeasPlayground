@@ -10,8 +10,18 @@ function toggleChangelog(arg){
 	}
 }
 
+function hideChangelog(){
+	$("#changelogDisplay").SetHasClass("changelogDisplayHidden", true)
+}
+
 function displayChangelog(){
 	$("#changelogDisplay").SetHasClass("changelogDisplayHidden", !$("#changelogDisplay").BHasClass("changelogDisplayHidden"))
+}
+
+function ChangelogGiveFocus(){
+	if (!$("#changelogDisplay").BHasClass("changelogDisplayHidden")) {
+		$("#changelogDisplay").SetFocus();
+	}
 }
 
 function toggleInformation(arg){
