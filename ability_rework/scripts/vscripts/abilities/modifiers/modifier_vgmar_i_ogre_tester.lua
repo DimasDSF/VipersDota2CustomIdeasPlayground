@@ -77,8 +77,8 @@ function modifier_vgmar_i_ogre_tester:OnCreated(kv)
 end
 
 function modifier_vgmar_i_ogre_tester:OnRefresh( kv )
-	if IsServer() then
-	end
+	--if IsServer() then
+	--end
 end
 
 function modifier_vgmar_i_ogre_tester:OnIntervalThink()
@@ -151,7 +151,7 @@ function modifier_vgmar_i_ogre_tester:OnIntervalThink()
 end
 
 function modifier_vgmar_i_ogre_tester:OnRemoved()
-	if IsServer() then
+	--if IsServer() then
 		--ParticleManager:DestroyParticle(self.p1, false)
 		--self:GetParent():StopSound("Hero_Razor.Storm.Loop")
 		--ParticleManager:DestroyParticle(self.p2, false)
@@ -159,7 +159,7 @@ function modifier_vgmar_i_ogre_tester:OnRemoved()
 		--ParticleManager:ReleaseParticleIndex(self.p1)
 		--ParticleManager:ReleaseParticleIndex(self.p2)
 		--ParticleManager:ReleaseParticleIndex(self.p3)
-	end
+	--end
 end
 
 function modifier_vgmar_i_ogre_tester:OnDestroy()

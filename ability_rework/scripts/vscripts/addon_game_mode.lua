@@ -899,9 +899,9 @@ function VGMAR:FindAuraChildren(parent)
 end
 
 function VGMAR:FilterModifierGained( filterTable )
-	if IsDevMode() then
+	--if IsDevMode() then
 		--DeepPrintTable( filterTable )
-	end
+	--end
 	--[[
 	entindex_parent_const           	= (number)
 	entindex_ability_const          	= (number)
@@ -1549,7 +1549,7 @@ function VGMAR:OnThink()
 						local player = PlayerResource:GetPlayer(playerID)
 						local wisp = CreateUnitByName("npc_dota_hero_wisp", heroent:GetAbsOrigin(), true, heroent, heroent, heroent:GetTeamNumber())
 						wisp:SetControllableByPlayer(playerID, false)
-						for i=2,heroent:GetLevel() do
+						for 2,heroent:GetLevel(),1 do
 							wisp:HeroLevelUp(false)
 						end
 						wisp:AddAbility("vgmar_ca_wisp_tether")
@@ -1601,7 +1601,7 @@ function VGMAR:OnThink()
 					local companionnum = self:GetCompanionNum( nil, -1, heroent:entindex())
 					local companionowner = self.companionheroes[companionnum].ownerhero
 					if heroent:GetLevel() < companionowner:GetLevel() then
-						for i=1,companionowner:GetLevel()-heroent:GetLevel() do
+						for 1,companionowner:GetLevel()-heroent:GetLevel(),1 do
 							heroent:HeroLevelUp(false)
 						end
 					end
@@ -2380,8 +2380,8 @@ function VGMAR:FilterDamage( filterTable )
 						ParticleManager:SetParticleControlEnt(static_pfx, 0, selectedcreeps[j], PATTACH_POINT_FOLLOW, "attach_hitloc", selectedcreeps[j]:GetAbsOrigin(), true)
 						ParticleManager:SetParticleControl(static_pfx, 1, victim:GetAbsOrigin() + Vector(0,0,500))
 						ParticleManager:ReleaseParticleIndex(static_pfx)
-						local damage = (selectedcreeps[j]:GetMaxHealth()/100) * (#creeps * 4)
-						ApplyDamage({attacker = victim, victim = selectedcreeps[j], ability = nil, damage = damage, damage_type = DAMAGE_TYPE_PURE})
+						local dmg = (selectedcreeps[j]:GetMaxHealth()/100) * (#creeps * 4)
+						ApplyDamage({attacker = victim, victim = selectedcreeps[j], ability = nil, damage = dmg, damage_type = DAMAGE_TYPE_PURE})
 					end
 					AddFOWViewer(2, victim:GetAbsOrigin(), 500, 2.0, false)
 					victim:EmitSound("Hero_Zuus.ArcLightning.Cast")

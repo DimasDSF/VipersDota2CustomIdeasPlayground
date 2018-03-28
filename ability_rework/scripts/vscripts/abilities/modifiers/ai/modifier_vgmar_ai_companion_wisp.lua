@@ -385,16 +385,10 @@ end
 function modifier_vgmar_ai_companion_wisp:DeclareFunctions()
 	local funcs = {
 		MODIFIER_PROPERTY_DISABLE_AUTOATTACK,
-		MODIFIER_EVENT_ON_DEATH,
 		MODIFIER_EVENT_ON_RESPAWN,
 	}
  
 	return funcs
-end
-
-function modifier_vgmar_ai_companion_wisp:OnDeath( kv )
-	if IsServer() and kv.unit == self:GetCaster() then
-	end
 end
 
 function modifier_vgmar_ai_companion_wisp:OnRespawn( kv )
