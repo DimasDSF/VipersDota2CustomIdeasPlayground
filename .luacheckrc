@@ -1,5 +1,4 @@
 allow_defined_top = true
-no-max-line-length = true
 
 globals = { -- these globals can be set and accessed.
 -- "GameMode",
