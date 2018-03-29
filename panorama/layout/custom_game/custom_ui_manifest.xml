@@ -21,6 +21,19 @@
                 "message": data.message
             })
         })
+		
+		var Parent = $.GetContextPanel().GetParent().GetParent()
+		var hudElements = Parent.FindChildTraverse("HUDElements");
+		
+		var BuffBar = hudElements.FindChildTraverse("lower_hud").FindChildTraverse("buffs")
+		BuffBar.style.width = "100%";
+		BuffBar.style.marginLeft = "35%";
+
+		var DeBuffBar = hudElements.FindChildTraverse("lower_hud").FindChildTraverse("debuffs")
+		DeBuffBar.style.width = "100%";
+		DeBuffBar.style.marginBottom = "40.5%";
+		DeBuffBar.style.marginLeft = "35%";
+		DeBuffBar.style.flowChildren = "right";
 	</script>
 
 	<Panel>

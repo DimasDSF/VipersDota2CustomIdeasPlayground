@@ -86,7 +86,7 @@ end
 function modifier_vgmar_i_spellshield:OnIntervalThink()
 	if IsServer() then
 		local parent = self:GetParent()
-		if self:GetStackCount() > 0 and (parent:IsSilenced() or parent:IsStunned() or parent:IsRooted()) then
+		if self:GetStackCount() > 0 and (parent:IsSilenced() or ((parent:IsStunned() or parent:IsRooted()) and parent:FindModifierByName("modifier_nyx_assassin_burrow") == nil)) then
 			self:SetStackCount( self:GetStackCount() - 1 )
 			if self:GetRemainingTime() <= 0 then
 				self:SetDuration( self.cooldown, true )
