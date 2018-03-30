@@ -2,8 +2,8 @@ local RADIANT_TEAM_MAX_PLAYERS = 1
 local DIRE_TEAM_MAX_PLAYERS = 8
 local RUNE_SPAWN_TIME = 120
 local VGMAR_DEBUG = true
-local VGMAR_GIVE_DEBUG_ITEMS = true
-local VGMAR_BOT_FILL = true
+local VGMAR_GIVE_DEBUG_ITEMS = false
+local VGMAR_BOT_FILL = false
 local VGMAR_LOG_BALANCE = false
 local VGMAR_LOG_BALANCE_INTERVAL = 120
 --///////////////////////////////////////////
@@ -92,6 +92,7 @@ function VGMAR:Init()
 	local itemscustomkvnum = 0
 	local itemskverrornum = 0
 	local itemscustomkverrornum = 0
+	local erroreditems = {}
 	for k,v in pairs(LoadKeyValues("scripts/npc/items.txt")) do
 		if k and v and k~="Version" then
 			if v["ID"] then
@@ -100,7 +101,8 @@ function VGMAR:Init()
 				self.ItemKVs[v["ID"]] = k
 			else
 				itemskverrornum = itemskverrornum + 1
-				print("Item: "..k.."Has no ID!!!")
+				print("Item: "..k.." Has no ID!!!")
+				table.insert(erroreditems, k)
 			end
 		end
 	end
@@ -111,13 +113,20 @@ function VGMAR:Init()
 				itemscustomkvnum = itemscustomkvnum + 1
 				self.ItemKVs[v["ID"]] = k
 			else
-				print("Item: "..k.."Has no ID!!!")
+				print("Item: "..k.." Has no ID!!!")
+				table.insert(erroreditems, k)
 			end
 		end
 	end
 	print("Added "..itemskvnum.." Items and "..itemscustomkvnum.." Custom Items to KVTable")
 	if itemskverrornum > 0 or itemscustomkverrornum > 0 then
 		print("Encountered Errors: items.txt: "..itemskverrornum.." item_custom.txt: "..itemscustomkverrornum)
+		LogLib:WriteLog("error", 0, false, "----------------")
+		LogLib:WriteLog("error", 0, true, "Error parsing Item IDs")
+		LogLib:WriteLog("error", 1, false, "Items Missing IDs")
+		for i=1,#erroreditems do
+			LogLib:WriteLog("error", 2, false, i..". "..erroreditems[i])
+		end
 	end
 	
 	--CustomAbilitiesValues
@@ -288,6 +297,20 @@ function VGMAR:Init()
 		tiny_toss = false
 	}
 	
+	self.spellshieldpurgeignore = {
+		["modifier_nyx_assassin_burrow"] = {silence = false, stun = false, root = true},
+		["modifier_life_stealer_infest"] = {silence = false, stun = false, root = true},
+		["modifier_life_stealer_assimilate"] = {silence = false, stun = false, root = true},
+		["modifier_phoenix_supernova_hiding"] = {silence = false, stun = false, root = true},
+		["modifier_legion_commander_duel"] = {silence = true, stun = false, root = false},
+		["modifier_obsidian_destroyer_astral_imprisonment_prison"] = {silence = false, stun = true, root = false},
+		["modifier_shadow_demon_disruption"] = {silence = false, stun = true, root = false},
+		["modifier_winter_wyvern_cold_embrace"] = {silence = false, stun = true, root = false},
+		["modifier_winter_wyvern_winters_curse_aura"] = {silence = false, stun = true, root = false},
+		["modifier_brewmaster_primal_split"] = {silence = false, stun = true, root = false},
+		["modifier_necrolyte_reapers_scythe"] = {silence = false, stun = true, root = false}
+	}
+	
 	self.mode = GameRules:GetGameModeEntity()
 	GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_GOODGUYS, RADIANT_TEAM_MAX_PLAYERS)
     GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_BADGUYS, DIRE_TEAM_MAX_PLAYERS)
@@ -336,10 +359,22 @@ function VGMAR:TestFunction()
 	--dmsg("Msg")
 	--dwarning("Warning")
 	--dhudmsg("Testing\nStuff")
-	dprint("Testing Clamp: (0, 5, 1): "..math.clamp(0, 5, 1))
-	dprint("Testing Scale: (20, 0.5, 80): "..math.scale(20, 0.5, 80))
-	dprint("Testing Scale: (-150, 0.5, 150): "..math.scale(-150, 0.5, 150))
-	dprint("Testing Scale: (-300, 0.5, 0): "..math.scale(-300, 0.5, 0))
+	local herolst = HeroList:GetAllHeroes()
+	for i=1,#herolst do
+		local hero = herolst[i]
+		if hero then
+			local modifiers = hero:FindAllModifiers()
+			dprint(HeroNamesLib:ConvertInternalToHeroName(hero:GetName()).." has "..#modifiers.." modifiers")
+			dprint("Stunned: "..tostring(hero:IsStunned()).." Silenced: "..tostring(hero:IsSilenced()).." Rooted: "..tostring(hero:IsRooted()))
+			if #modifiers > 0 then
+				dprint("----------")
+				for j=1,#modifiers do
+					dprint(j.."."..modifiers[j]:GetName())
+				end
+				dprint("----------")
+			end
+		end
+	end
 end
 
 function VGMAR:GetItemByID(id)

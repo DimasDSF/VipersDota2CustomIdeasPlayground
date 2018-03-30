@@ -86,22 +86,34 @@ end
 function modifier_vgmar_i_spellshield:OnIntervalThink()
 	if IsServer() then
 		local parent = self:GetParent()
-		if self:GetStackCount() > 0 and (parent:IsSilenced() or ((parent:IsStunned() or parent:IsRooted()) and parent:FindModifierByName("modifier_nyx_assassin_burrow") == nil)) then
-			self:SetStackCount( self:GetStackCount() - 1 )
-			if self:GetRemainingTime() <= 0 then
-				self:SetDuration( self.cooldown, true )
+		if self:GetStackCount() > 0 then
+			local ingorestun = false
+			local ignoreroot = false
+			local ignoresilence = false
+			for k,v in pairs(GameRules.VGMAR.spellshieldpurgeignore) do
+				if parent:FindModifierByName(k) ~= nil then
+					ignorestun = ignorestun or v.stun
+					ignoreroot = ignoreroot or v.root
+					ignoresilence = ignoresilence or v.silence
+				end
 			end
-			local pfx = ParticleManager:CreateParticle("particles/items4_fx/combo_breaker_spell.vpcf", PATTACH_POINT_FOLLOW, self:GetParent())
-			ParticleManager:SetParticleControl(pfx, 0, self:GetParent():GetAbsOrigin() + Vector(0,0,0))
-			ParticleManager:SetParticleControl(pfx, 1, self:GetParent():GetAbsOrigin() + Vector(0,0,70))
-			local pfx2 = ParticleManager:CreateParticle("particles/econ/items/outworld_devourer/od_shards_exile/od_shards_exile_prison_end.vpcf" , PATTACH_ROOTBONE_FOLLOW, self:GetParent())
-			ParticleManager:ReleaseParticleIndex(pfx)
-			ParticleManager:ReleaseParticleIndex(pfx2)
-			EmitSoundOn("Item.LotusOrb.Destroy", self:GetParent())
-			EmitSoundOn("DOTA_Item.Nullifier.Slow", self:GetParent())
-			parent:Purge(false, true, false, true, false)
-			if self:GetStackCount() < 1 and parent:HasModifier("modifier_vgmar_i_spellshield_active") then
-				parent:FindModifierByName("modifier_vgmar_i_spellshield_active"):Destroy()
+			if (parent:IsSilenced() and ignoresilence == false) or (parent:IsStunned() and ingorestun == false) or (parent:IsRooted() and ignoreroot == false) then
+				self:SetStackCount( self:GetStackCount() - 1 )
+				if self:GetRemainingTime() <= 0 then
+					self:SetDuration( self.cooldown, true )
+				end
+				local pfx = ParticleManager:CreateParticle("particles/items4_fx/combo_breaker_spell.vpcf", PATTACH_POINT_FOLLOW, self:GetParent())
+				ParticleManager:SetParticleControl(pfx, 0, self:GetParent():GetAbsOrigin() + Vector(0,0,0))
+				ParticleManager:SetParticleControl(pfx, 1, self:GetParent():GetAbsOrigin() + Vector(0,0,70))
+				local pfx2 = ParticleManager:CreateParticle("particles/econ/items/outworld_devourer/od_shards_exile/od_shards_exile_prison_end.vpcf" , PATTACH_ROOTBONE_FOLLOW, self:GetParent())
+				ParticleManager:ReleaseParticleIndex(pfx)
+				ParticleManager:ReleaseParticleIndex(pfx2)
+				EmitSoundOn("Item.LotusOrb.Destroy", self:GetParent())
+				EmitSoundOn("DOTA_Item.Nullifier.Slow", self:GetParent())
+				parent:Purge(false, true, false, true, false)
+				if self:GetStackCount() < 1 and parent:HasModifier("modifier_vgmar_i_spellshield_active") then
+					parent:FindModifierByName("modifier_vgmar_i_spellshield_active"):Destroy()
+				end
 			end
 		end
 		if self:GetRemainingTime() <= 0 and self:GetStackCount() < self.maxstacks then

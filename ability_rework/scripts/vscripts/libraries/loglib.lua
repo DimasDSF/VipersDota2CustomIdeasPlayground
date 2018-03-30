@@ -8,7 +8,8 @@ local LOG_EXT = ".log"
 local logtypetexttable = {
 	["balance"] = "BalanceLog",
 	["info"] = "InfoLog",
-	["warning"] = "WarningLog"
+	["warning"] = "WarningLog",
+	["error"] = "ErrorLog"
 }
 
 function LogLib:Init()
