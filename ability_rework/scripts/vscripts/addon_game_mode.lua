@@ -74,8 +74,6 @@ function VGMAR:Init()
 	self.direcourierup3given = false
 	self.direcourierup4given = false
 	self.customitemsreminderfinished = false
-	self.companionheroes = {}
-	self.playercompanionsnum = {}
 	self.ItemKVs = {}
 	self.direancientfailsafetimestamp = 0
 	self.auramodifieraffectedlist = {}
@@ -142,11 +140,6 @@ function VGMAR:Init()
 	LinkLuaModifier("modifier_vgmar_i_criticalmastery_visual", "abilities/modifiers/modifier_vgmar_i_criticalmastery_visual", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_purgefield_visual", "abilities/modifiers/modifier_vgmar_i_purgefield_visual", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_truesight", "abilities/modifiers/modifier_vgmar_i_truesight", LUA_MODIFIER_MOTION_NONE)
-	LinkLuaModifier("modifier_vgmar_ai_companion_wisp", "abilities/modifiers/ai/modifier_vgmar_ai_companion_wisp", LUA_MODIFIER_MOTION_NONE)
-	LinkLuaModifier("modifier_vgmar_ai_companion_respawntime", "abilities/modifiers/ai/modifier_vgmar_ai_companion_respawntime", LUA_MODIFIER_MOTION_NONE)
-	LinkLuaModifier("modifier_vgmar_ai_companion_wisp_force_retether", "abilities/modifiers/ai/modifier_vgmar_ai_companion_wisp_force_retether", LUA_MODIFIER_MOTION_NONE)
-	LinkLuaModifier("modifier_vgmar_ai_companion_midas_usage", "abilities/modifiers/ai/modifier_vgmar_ai_companion_midas_usage", LUA_MODIFIER_MOTION_NONE)
-	LinkLuaModifier("modifier_vgmar_ai_companion_wisp_force_stop", "abilities/modifiers/ai/modifier_vgmar_ai_companion_wisp_force_stop", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_fervor", "abilities/modifiers/modifier_vgmar_i_fervor", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_cdreduction", "abilities/modifiers/modifier_vgmar_i_cdreduction", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_midas_greed", "abilities/modifiers/modifier_vgmar_i_midas_greed", LUA_MODIFIER_MOTION_NONE)
@@ -183,7 +176,6 @@ function VGMAR:Init()
 	LinkLuaModifier("modifier_vgmar_i_arcane_intellect", "abilities/modifiers/modifier_vgmar_i_arcane_intellect", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_poison_dagger", "abilities/modifiers/modifier_vgmar_i_poison_dagger", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_poison_dagger_debuff", "abilities/modifiers/modifier_vgmar_i_poison_dagger", LUA_MODIFIER_MOTION_NONE)
-	LinkLuaModifier("modifier_vgmar_ai_companion_wisp_item_usage", "abilities/modifiers/ai/modifier_vgmar_ai_companion_wisp_item_usage", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_util_give_debugitems", "abilities/util/modifiers/modifier_vgmar_util_give_debugitems", LUA_MODIFIER_MOTION_NONE)
 	
 	self.essenceauraignoredabilities = {
@@ -345,7 +337,6 @@ function VGMAR:Init()
 	--ListenToGameEvent( "dota_player_used_ability", Dynamic_Wrap( VGMAR, 'OnPlayerUsedAbility' ), self )
 	Convars:RegisterConvar('vgmar_devmode', "0", "Set to 1 to show debug info.  Set to 0 to disable.", 0)
 	Convars:RegisterConvar('vgmar_blockbotcontrol', "1", "Set to 0 to enable controlling bots", 0)
-	Convars:RegisterConvar('vgmar_enablecompanion_fullcontrol', "0", "Set to 1 to enable controlling a companion", 0)
 	Convars:RegisterCommand('vgmar_reload_test_modifier', Dynamic_Wrap( VGMAR, "ReloadTestModifier" ), "Reload script modifier", 0)
 	Convars:RegisterCommand('vgmar_test', Dynamic_Wrap( VGMAR, "TestFunction" ), "Runs a test function", 0)
 	if VGMAR_DEBUG == true then
@@ -812,9 +803,6 @@ end
 
 function VGMAR:FilterExperienceGained( filterTable )
 	--DeepPrintTable( filterTable )
-	if self.playercompanionsnum[filterTable["player_id_const"]] ~= nil then
-		filterTable["experience"] = filterTable["experience"] + filterTable["experience"] * (self.playercompanionsnum[filterTable["player_id_const"]] * 0.5)
-	end
 	return true
 end
 
@@ -1235,51 +1223,6 @@ function VGMAR:IsHeroBotControlled(hero)
 	return false
 end
 
-function VGMAR:IsUnitACompanion( unit, index )
-	if index == 0 and unit ~= nil then
-		index = unit:entindex()
-	end
-	if index then
-		for i=1,#self.companionheroes do
-			if self.companionheroes[i].index == index then
-				if unit then
-					dprint("Unit: ", unit:GetName(), "index: ", index, "Is A Companion")
-				else
-					dprint("index: ", index, "Is A Companion")
-				end
-				return true
-			end
-		end
-	end
-	return false
-end
-
-function VGMAR:GetCompanionNum( ownerhero, ownerid, index )
-	if ownerhero == nil and ownerid >= 0 then
-		ownerhero = PlayerResource:GetPlayer(ownerid):GetAssignedHero()
-	end
-	if ownerid < 0 and ownerhero ~= nil then
-		ownerid = ownerhero:GetPlayerID()
-	end
-	dprint("Attempting to find a companion with index: ", index)
-	for i=1,#self.companionheroes do
-		if index and self.companionheroes[i].index == index then
-			dprint("GetCompanionNum got a match on Index: ", index, "with: ", i)
-			return i
-		end
-		if ownerhero ~= nil and self.companionheroes[i].ownerhero == ownerhero then
-			dprint("GetCompanionNum got a match on OwnerHero: ", HeroNamesLib:ConvertInternalToHeroName(ownerhero:GetName()), "with: ", i)
-			return i
-		end
-		if ownerid >= 0 and self.companionheroes[i].ownerid == ownerid then
-			dprint("GetCompanionNum got a match on OwnerID: ", ownerid, "with: ", i)
-			return i
-		end
-	end
-	dprint("GetCompanionNum Didnt find any match. Returning nil")
-	return 0
-end
-
 function VGMAR:GetTeamAdvantage( radiant, tower, kill, networth )
 	--//////////////////
 	--Team Balance ##BALANCEDEV##
@@ -1572,70 +1515,6 @@ function VGMAR:OnThink()
 						local bloodstone = self:GetItemFromInventoryByName( heroent, "item_bloodstone", false, false, false )
 						if bloodstone ~= nil then
 							bloodstone:SetCurrentCharges(bloodstone:GetCurrentCharges() + 24)
-						end
-					end
-					--Companion System
-					if self:CountUsableItemsInHeroInventory(heroent, "item_bloodstone", false, true, false) >= 2 then
-						self:RemoveNItemsInInventory(heroent, "item_bloodstone", 2)
-						--GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_GOODGUYS, GameRules:GetCustomGameTeamMaxPlayers(DOTA_TEAM_GOODGUYS) + 1)
-						local playerID = heroent:GetPlayerID()
-						local player = PlayerResource:GetPlayer(playerID)
-						local wisp = CreateUnitByName("npc_dota_hero_wisp", heroent:GetAbsOrigin(), true, heroent, heroent, heroent:GetTeamNumber())
-						wisp:SetControllableByPlayer(playerID, false)
-						for j=2,heroent:GetLevel() do
-							wisp:HeroLevelUp(false)
-						end
-						wisp:AddAbility("vgmar_ca_wisp_tether")
-						wisp:SwapAbilities("wisp_tether", "vgmar_ca_wisp_tether", false, true)
-						wisp:RemoveAbility("wisp_tether")
-						wisp:AddAbility("vgmar_ca_wisp_overcharge")
-						wisp:SwapAbilities("wisp_overcharge", "vgmar_ca_wisp_overcharge", false, true)
-						wisp:RemoveAbility("wisp_overcharge")
-						wisp:AddAbility("vgmar_ca_wisp_relocate")
-						wisp:SwapAbilities("wisp_relocate", "vgmar_ca_wisp_relocate", false, true)
-						wisp:RemoveAbility("wisp_relocate")
-						wisp:AddAbility("vgmar_ai_companion_wisp_toggle_autohit"):SetLevel( 1 )
-						wisp:SwapAbilities("wisp_spirits_in", "vgmar_ai_companion_wisp_toggle_autohit", false, true)
-						wisp:RemoveAbility("wisp_spirits_in")
-						wisp:AddAbility("vgmar_ai_companion_wisp_toggle_scepter"):SetLevel( 1 )
-						wisp:SwapAbilities("wisp_spirits_out", "vgmar_ai_companion_wisp_toggle_scepter", false, true)
-						wisp:RemoveAbility("wisp_spirits_out")
-						local tethertoggle = wisp:AddAbility("vgmar_ai_companion_wisp_toggle_tether")
-						tethertoggle:SetLevel( 1 )
-						if tethertoggle:GetToggleState() ~= true then
-							tethertoggle:ToggleAbility()
-						end
-						wisp:SwapAbilities("wisp_spirits", "vgmar_ai_companion_wisp_toggle_tether", false, true)
-						wisp:RemoveAbility("wisp_spirits")
-						Timers:CreateTimer(2,
-						function()
-							self:RemoveNItemsInInventory( wisp, "item_tpscroll", 1 )
-							self:GetItemFromInventoryByName( wisp, "item_travel_boots_2", false, false, false ):EndCooldown()
-						end)
-						wisp:AddItemByName("item_travel_boots_2")
-						wisp:AddItemByName("item_octarine_core")
-						local companion = {type = "wisp", hero = wisp, index = wisp:entindex(), owner = player, ownerhero = heroent, ownerindex = heroent:entindex(), ownerid = playerID}
-						dprint("Saving a Companion to companion List:")
-						dprint("type: wisp, heroindex: ", wisp:entindex(), "ownerhero: ", HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()), "ownerindex: ", heroent:entindex(), "ownerid: ", playerID)
-						if self.playercompanionsnum[playerID] == nil then
-							self.playercompanionsnum[playerID] = 1
-						else
-							self.playercompanionsnum[playerID] = self.playercompanionsnum[playerID] + 1
-						end
-						table.insert(self.companionheroes, companion)
-						wisp:AddNewModifier( wisp, nil, "modifier_vgmar_ai_companion_wisp", {ownerid = playerID, ownerindex = heroent:entindex()})
-					end
-				end
-				
-				--////////////////////
-				--CompanionAutoLevelUp
-				--////////////////////
-				if self:IsUnitACompanion( heroent , 0 ) then
-					local companionnum = self:GetCompanionNum( nil, -1, heroent:entindex())
-					local companionowner = self.companionheroes[companionnum].ownerhero
-					if heroent:GetLevel() < companionowner:GetLevel() then
-						for j=1,companionowner:GetLevel()-heroent:GetLevel() do
-							heroent:HeroLevelUp(false)
 						end
 					end
 				end
@@ -2726,27 +2605,6 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 		end
 	end
 	
-	--CompanionControl
-	if unit and self:IsUnitACompanion( unit , 0 ) then
-		local companionnum = self:GetCompanionNum( nil, -1, unit:entindex())
-		local companionowner = self.companionheroes[companionnum].ownerid
-		if issuer == companionowner then
-			if ability and (ability:GetName() == "vgmar_ca_wisp_relocate" or ability:GetName() == "vgmar_ai_companion_wisp_toggle_autohit" or ability:GetName() == "vgmar_ai_companion_wisp_toggle_scepter" or ability:GetName() == "vgmar_ai_companion_wisp_toggle_tether") then
-				--if ability:GetName() == "vgmar_ai_companion_wisp_toggle_autohit" or ability:GetName() == "vgmar_ai_companion_wisp_toggle_scepter" then
-				--	unit:AddNewModifier( unit, nil, "modifier_vgmar_ai_companion_wisp_force_retether", {ownerindex = unit:entindex(), ownerid = companionowner})
-				--end
-				return true
-			else
-				if Convars:GetInt("vgmar_enablecompanion_fullcontrol") == 0 then
-					return false
-				end
-			end
-		elseif issuer ~= companionowner then
-			self:DisplayClientError(issuer, "You are not allowed to control other players Companions")
-			return false
-		end
-	end
-	
 	--Riki No Enemy Ult Before lvl4 scepters
 	if unit and unit:IsRealHero() then
 		if ability and ability:GetName() == "riki_tricks_of_the_trade" then
@@ -2884,6 +2742,7 @@ function VGMAR:OnGameStateChanged( keys )
 						return 5.0
 					end
 				end
+				--Giving Debug Items
 				if IsDevMode() and VGMAR_GIVE_DEBUG_ITEMS == true then
 					local heroes = HeroList:GetAllHeroes()
 					local radiantheroes = {}
