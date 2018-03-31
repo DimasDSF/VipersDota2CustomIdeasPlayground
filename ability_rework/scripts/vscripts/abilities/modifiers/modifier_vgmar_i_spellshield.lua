@@ -87,7 +87,7 @@ function modifier_vgmar_i_spellshield:OnIntervalThink()
 	if IsServer() then
 		local parent = self:GetParent()
 		if self:GetStackCount() > 0 then
-			local ingorestun = false
+			local ignorestun = false
 			local ignoreroot = false
 			local ignoresilence = false
 			for k,v in pairs(GameRules.VGMAR.spellshieldpurgeignore) do
@@ -97,7 +97,7 @@ function modifier_vgmar_i_spellshield:OnIntervalThink()
 					ignoresilence = ignoresilence or v.silence
 				end
 			end
-			if (parent:IsSilenced() and ignoresilence == false) or (parent:IsStunned() and ingorestun == false) or (parent:IsRooted() and ignoreroot == false) then
+			if (parent:IsSilenced() and ignoresilence == false) or (parent:IsStunned() and ignorestun == false) or (parent:IsRooted() and ignoreroot == false) then
 				self:SetStackCount( self:GetStackCount() - 1 )
 				if self:GetRemainingTime() <= 0 then
 					self:SetDuration( self.cooldown, true )
