@@ -229,7 +229,13 @@ function VGMAR:Init()
 		templar_assassin_trap = true,
 		tiny_toss_tree = true,
 		life_stealer_control = true,
-		tiny_toss = false
+		tiny_toss = false,
+		death_prophet_spirit_siphon = false,
+		broodmother_spin_web = false,
+		gyrocopter_homing_missile = false,
+		shadow_demon_demonic_purge = false,
+		morphling_waveform = false,
+		shadow_demon_disruption = false
 	}
 
 	self.arcaneintignoredabilities = {
@@ -286,7 +292,13 @@ function VGMAR:Init()
 		life_stealer_control = true,
 		obsidian_destroyer_astral_imprisonment = false,
 		sniper_shrapnel = false,
-		tiny_toss = false
+		tiny_toss = false,
+		death_prophet_spirit_siphon = false,
+		broodmother_spin_web = false,
+		gyrocopter_homing_missile = false,
+		shadow_demon_demonic_purge = false,
+		morphling_waveform = false,
+		shadow_demon_disruption = false
 	}
 	
 	self.spellshieldpurgeignore = {
