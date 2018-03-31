@@ -550,7 +550,7 @@ local modifierdatatable = {
 	["modifier_vgmar_i_castrange"] = {range = 250, manaregen = 1.25, bonusmana = 400},
 	["modifier_vgmar_i_spellamp"] = {percentage = 10, costpercentage = 10, bonusint = 16},
 	["modifier_vgmar_i_cdreduction"] = {percentage = 25, bonusmana = 905, bonushealth = 905, intbonus = 25, spelllifestealhero = 25, spelllifestealcreep = 5},
-	["modifier_vgmar_i_essence_aura"] = {radius = 1000, bonusmana = 900, restorechance = 25, restoreamount = 20},
+	["modifier_vgmar_i_essence_aura"] = {radius = 1000, bonusmana = 900, restorechancemax = 30, restorechancemin = 10, restoremax = 1, restoremin = 0.2, restoreamount = 20},
 	["modifier_vgmar_i_spellshield"] = {resistance = 35, cooldown = 12, maxstacks = 2},
 	["modifier_vgmar_i_fervor"] = {maxstacks = 15, asperstack = 15},
 	["modifier_vgmar_i_essence_shift"] = {reductionprimary = 1, reductionsecondary = 0, increaseprimary = 1, increasesecondary = 0, hitsperstackinc = 1, hitsperstackred = 2, duration = 40, durationtarget = 40},

@@ -79,10 +79,12 @@ function modifier_vgmar_i_midas_greed:OnAbilityFullyCast( event )
 			local hAbility = event.ability
 			if hAbility ~= nil then
 				if hAbility:GetName() == "item_hand_of_midas" then
-					if self.killscount < self.bonus_gold_cap * self.killsperstack then
+					if self.killscount + self.midasusestacks * self.killsperstack > self.bonus_gold_cap * self.killsperstack then
+						self.killscount = self.bonus_gold_cap * self.killsperstack
+					else
 						self.killscount = self.killscount + self.killsperstack * self.midasusestacks
-						self:SetStackCount( math.floor(self.killscount / self.killsperstack) )
 					end
+					self:SetStackCount( math.floor(self.killscount / self.killsperstack) )
 				end
 			end
 		end

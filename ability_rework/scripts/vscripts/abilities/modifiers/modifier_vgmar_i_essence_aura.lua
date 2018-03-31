@@ -45,7 +45,10 @@ function modifier_vgmar_i_essence_aura:OnCreated(kv)
 	if IsServer() then
 		self.radius = kv.radius or 0
 		self.bonusmana = kv.bonusmana
-		self.restorechance = kv.restorechance
+		self.restorechancemax = kv.restorechancemax
+		self.restorechancemin = kv.restorechancemin
+		self.restoremax = kv.restoremax
+		self.restoremin = kv.restoremin
 		self.restoreamount = kv.restoreamount
 	else
 		self.clientvalues = CustomNetTables:GetTableValue("client_side_ability_values", "modifier_vgmar_i_essence_aura")

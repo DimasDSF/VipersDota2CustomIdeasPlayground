@@ -128,6 +128,7 @@ function modifier_vgmar_i_ogre_tester:OnIntervalThink()
 		end
 		
 		local parent = self:GetParent()
+		self:statprint("restorechance: "..math.scale(30, math.map(math.clamp(0.2, parent:GetMana()/parent:GetMaxMana(), 1), 0.2, 1, 0, 1), 10))
 		--ParticleTest
 		--[[if self.p1 == nil then
 			self.p1 = ParticleManager:CreateParticle("particles/units/heroes/hero_razor/razor_rain_storm.vpcf", PATTACH_WORLDORIGIN, parent)
@@ -140,11 +141,11 @@ function modifier_vgmar_i_ogre_tester:OnIntervalThink()
 			ParticleManager:SetParticleControl(self.p2, 0, parent:GetAbsOrigin() + Vector(0,0,500))
 		end--]]
 		--if self.p3 == nil then --"particles/econ/items/sven/sven_warcry_ti5/sven_spell_warcry_ti_5.vpcf"
-		local p3 = ParticleManager:CreateParticle("particles/items4_fx/combo_breaker_spell.vpcf", PATTACH_POINT_FOLLOW, parent)
-		ParticleManager:SetParticleControl(p3, 0, parent:GetAbsOrigin() + Vector(0,0,0))
-		ParticleManager:SetParticleControl(p3, 1, parent:GetAbsOrigin() + Vector(0,0,70))
+		--local p3 = ParticleManager:CreateParticle("particles/items4_fx/combo_breaker_spell.vpcf", PATTACH_POINT_FOLLOW, parent)
+		--ParticleManager:SetParticleControl(p3, 0, parent:GetAbsOrigin() + Vector(0,0,0))
+		--ParticleManager:SetParticleControl(p3, 1, parent:GetAbsOrigin() + Vector(0,0,70))
 		--ParticleManager:SetParticleControl(p3, 2, parent:GetAbsOrigin() + Vector(0,0,100))
-		ParticleManager:ReleaseParticleIndex(p3)
+		--ParticleManager:ReleaseParticleIndex(p3)
 		--end
 		--self:ForceRefresh()
 	end
