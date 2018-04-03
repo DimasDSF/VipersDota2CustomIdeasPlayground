@@ -47,7 +47,6 @@ function modifier_vgmar_i_thirst:OnCreated(kv)
 		self.maxbasems = kv.maxbasems
 		self.maxperhero = kv.maxperhero
 		self.particle = nil
-		
 	else
 		self.clientvalues = CustomNetTables:GetTableValue("client_side_ability_values", "modifier_vgmar_i_thirst")
 	end
@@ -63,7 +62,13 @@ function modifier_vgmar_i_thirst:OnIntervalThink()
 		end
 		local stacks = 0
 		if aurarecievers ~= nil then
+			--print("Thirst")
 			for i=1,#aurarecievers do
+				--[[print("-------------------")
+				print("Integrity Check: Child Holder: "..HeroNamesLib:ConvertInternalToHeroName(aurarecievers[i]:GetParent():GetName()).." Parent Holder: "..HeroNamesLib:ConvertInternalToHeroName(GameRules.VGMAR:FindAuraParent(aurarecievers[i]):GetParent():GetName()))
+				print("Getting stack count from "..HeroNamesLib:ConvertInternalToHeroName(aurarecievers[i]:GetParent():GetName()))
+				print("Stack Count: "..aurarecievers[i]:GetStackCount())
+				print("-------------------")--]]
 				stacks = stacks + math.min(self.maxperhero, aurarecievers[i]:GetStackCount())
 			end
 		end

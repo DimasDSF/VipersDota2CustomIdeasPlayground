@@ -14,6 +14,10 @@ function math.clamp(min, value, max)
 	return value
 end
 
+function math.isNaN(input)
+	return input ~= input
+end
+
 function string.split(input)
 	local output = {}
 	for i in string.gmatch(input, "%S+") do

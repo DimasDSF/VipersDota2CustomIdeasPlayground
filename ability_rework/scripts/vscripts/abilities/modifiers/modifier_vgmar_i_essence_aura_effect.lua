@@ -54,7 +54,7 @@ function modifier_vgmar_i_essence_aura_effect:OnAbilityExecuted(kv)
 		if kv.unit == parent then
 			if kv.ability and kv.ability:IsToggle() == false and kv.ability:IsItem() == false and (GameRules.VGMAR.essenceauraignoredabilities[kv.ability:GetName()] == nil or GameRules.VGMAR.essenceauraignoredabilities[kv.ability:GetName()] ~= true) then
 				local restorechance = math.scale(self.restorechancemax, math.map(math.clamp(self.restoremin, parent:GetMana()/parent:GetMaxMana(), self.restoremax), self.restoremin, self.restoremax, 0, 1), self.restorechancemin)
-				print("self.restorechancemax: "..self.restorechancemax.." self.restorechancemin: "..self.restorechancemin.." self.restoremin: "..self.restoremin.." self.restoremax: "..self.restoremax.." restorechance: "..restorechance)
+				--print("self.restorechancemax: "..self.restorechancemax.." self.restorechancemin: "..self.restorechancemin.." self.restoremin: "..self.restoremin.." self.restoremax: "..self.restoremax.." restorechance: "..restorechance)
 				if math.random(0, 100) <= restorechance then
 					local restoredmana = math.floor((parent:GetMaxMana() / 100) * self.restoreamount)
 					if parent:GetMana() + restoredmana > parent:GetMaxMana() then

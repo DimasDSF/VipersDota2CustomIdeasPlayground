@@ -55,38 +55,40 @@ function AbilitySlotsLib:OnAbilityLearned( keys )
 	for i=1,HeroList:GetHeroCount() do
 		if heroes[i] and heroes[i]:GetPlayerOwner() == player then
 			playerhero = heroes[i]
+			break
 		end
-		if playerhero and playerhero:FindAbilityByName(abilityname) then
-			--print("Testing Assigned Hero For AbilitySlotsLib")
-			--print("Player ", playerhero:GetPlayerID(), "Hero is: ", playerhero:GetName())
-			if abilityname == AbilitySlotsLib:GetTalent( playerhero:GetName(), 10, true ) then
-				--print("Removing Lvl10 Left Talent: ", AbilitySlotsLib:GetTalent( playerhero:GetName(), 10, false ))
-				AbilitySlotsLib:ReplaceWithGenericHidden( playerhero, AbilitySlotsLib:GetTalent( playerhero:GetName(), 10, false ), true )
-			elseif abilityname == AbilitySlotsLib:GetTalent( playerhero:GetName(), 10, false ) then
-				--print("Removing Lvl10 Right Talent: ", AbilitySlotsLib:GetTalent( playerhero:GetName(), 10, true ))
-				AbilitySlotsLib:ReplaceWithGenericHidden( playerhero, AbilitySlotsLib:GetTalent( playerhero:GetName(), 10, true ), true )
-			end
-			if abilityname == AbilitySlotsLib:GetTalent( playerhero:GetName(), 15, true ) then
-				--print("Removing Lvl15 Left Talent: ", AbilitySlotsLib:GetTalent( playerhero:GetName(), 15, false ))
-				AbilitySlotsLib:ReplaceWithGenericHidden( playerhero, AbilitySlotsLib:GetTalent( playerhero:GetName(), 15, false ), true )
-			elseif abilityname == AbilitySlotsLib:GetTalent( playerhero:GetName(), 15, false ) then
-				--print("Removing Lvl15 Right Talent: ", AbilitySlotsLib:GetTalent( playerhero:GetName(), 15, true ))
-				AbilitySlotsLib:ReplaceWithGenericHidden( playerhero, AbilitySlotsLib:GetTalent( playerhero:GetName(), 15, true ), true )
-			end
-			if abilityname == AbilitySlotsLib:GetTalent( playerhero:GetName(), 20, true ) then
-				--print("Removing Lvl20 Left Talent: ", AbilitySlotsLib:GetTalent( playerhero:GetName(), 20, false ))
-				AbilitySlotsLib:ReplaceWithGenericHidden( playerhero, AbilitySlotsLib:GetTalent( playerhero:GetName(), 20, false ), true )
-			elseif abilityname == AbilitySlotsLib:GetTalent( playerhero:GetName(), 20, false ) then
-				--print("Removing Lvl20 Right Talent: ", AbilitySlotsLib:GetTalent( playerhero:GetName(), 20, true ))
-				AbilitySlotsLib:ReplaceWithGenericHidden( playerhero, AbilitySlotsLib:GetTalent( playerhero:GetName(), 20, true ), true )
-			end
-			if abilityname == AbilitySlotsLib:GetTalent( playerhero:GetName(), 25, true ) then
-				--print("Removing Lvl25 Left Talent: ", AbilitySlotsLib:GetTalent( playerhero:GetName(), 25, false ))
-				AbilitySlotsLib:ReplaceWithGenericHidden( playerhero, AbilitySlotsLib:GetTalent( playerhero:GetName(), 25, false ), true )
-			elseif abilityname == AbilitySlotsLib:GetTalent( playerhero:GetName(), 25, false ) then
-				--print("Removing Lvl25 Right Talent: ", AbilitySlotsLib:GetTalent( playerhero:GetName(), 25, true ))
-				AbilitySlotsLib:ReplaceWithGenericHidden( playerhero, AbilitySlotsLib:GetTalent( playerhero:GetName(), 25, true ), true )
-			end
+	end
+	if playerhero and playerhero:FindAbilityByName(abilityname) then
+		local printdebug = true
+		--print("Testing Assigned Hero For AbilitySlotsLib")
+		if printdebug then print("Player ", playerhero:GetPlayerID(), "Hero is: ", playerhero:GetName()) end
+		if abilityname == AbilitySlotsLib:GetTalent( playerhero:GetName(), 10, true ) then
+			if printdebug then print("Removing Lvl10 Left Talent: ", AbilitySlotsLib:GetTalent( playerhero:GetName(), 10, false )) end
+			AbilitySlotsLib:ReplaceWithGenericHidden( playerhero, AbilitySlotsLib:GetTalent( playerhero:GetName(), 10, false ), true )
+		elseif abilityname == AbilitySlotsLib:GetTalent( playerhero:GetName(), 10, false ) then
+			if printdebug then print("Removing Lvl10 Right Talent: ", AbilitySlotsLib:GetTalent( playerhero:GetName(), 10, true )) end
+			AbilitySlotsLib:ReplaceWithGenericHidden( playerhero, AbilitySlotsLib:GetTalent( playerhero:GetName(), 10, true ), true )
+		end
+		if abilityname == AbilitySlotsLib:GetTalent( playerhero:GetName(), 15, true ) then
+			if printdebug then print("Removing Lvl15 Left Talent: ", AbilitySlotsLib:GetTalent( playerhero:GetName(), 15, false )) end
+			AbilitySlotsLib:ReplaceWithGenericHidden( playerhero, AbilitySlotsLib:GetTalent( playerhero:GetName(), 15, false ), true )
+		elseif abilityname == AbilitySlotsLib:GetTalent( playerhero:GetName(), 15, false ) then
+			if printdebug then print("Removing Lvl15 Right Talent: ", AbilitySlotsLib:GetTalent( playerhero:GetName(), 15, true )) end
+			AbilitySlotsLib:ReplaceWithGenericHidden( playerhero, AbilitySlotsLib:GetTalent( playerhero:GetName(), 15, true ), true )
+		end
+		if abilityname == AbilitySlotsLib:GetTalent( playerhero:GetName(), 20, true ) then
+			if printdebug then print("Removing Lvl20 Left Talent: ", AbilitySlotsLib:GetTalent( playerhero:GetName(), 20, false )) end
+			AbilitySlotsLib:ReplaceWithGenericHidden( playerhero, AbilitySlotsLib:GetTalent( playerhero:GetName(), 20, false ), true )
+		elseif abilityname == AbilitySlotsLib:GetTalent( playerhero:GetName(), 20, false ) then
+			if printdebug then print("Removing Lvl20 Right Talent: ", AbilitySlotsLib:GetTalent( playerhero:GetName(), 20, true )) end
+			AbilitySlotsLib:ReplaceWithGenericHidden( playerhero, AbilitySlotsLib:GetTalent( playerhero:GetName(), 20, true ), true )
+		end
+		if abilityname == AbilitySlotsLib:GetTalent( playerhero:GetName(), 25, true ) then
+			if printdebug then print("Removing Lvl25 Left Talent: ", AbilitySlotsLib:GetTalent( playerhero:GetName(), 25, false )) end
+			AbilitySlotsLib:ReplaceWithGenericHidden( playerhero, AbilitySlotsLib:GetTalent( playerhero:GetName(), 25, false ), true )
+		elseif abilityname == AbilitySlotsLib:GetTalent( playerhero:GetName(), 25, false ) then
+			if printdebug then print("Removing Lvl25 Right Talent: ", AbilitySlotsLib:GetTalent( playerhero:GetName(), 25, true )) end
+			AbilitySlotsLib:ReplaceWithGenericHidden( playerhero, AbilitySlotsLib:GetTalent( playerhero:GetName(), 25, true ), true )
 		end
 	end
 end
@@ -205,14 +207,14 @@ function AbilitySlotsLib:ReplaceWithGenericHidden( hero, ability, addtolistonfai
 				hero:RemoveAbility(ability)
 				--print("Setting ability index: "..abilityindex)
 				newability:SetAbilityIndex(abilityindex)
-				--print("Successfully replaced", ability, "with a hidden talent")
+				print("Successfully replaced", ability, "with a hidden talent")
 				return true
 			else
 				return false
 			end
 		else
 			if addtolistonfail == true then
-				--print("Failed to replace", ability, "with a hidden talent. Adding to Queue")
+				print("Failed to replace", ability, "with a hidden talent. Adding to Queue")
 				self:AddTalentToReplaceLaterList( hero, ability )
 				return false
 			end

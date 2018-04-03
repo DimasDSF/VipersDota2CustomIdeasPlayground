@@ -8831,7 +8831,7 @@
 
 		// Casting
 		//-------------------------------------------------------------------------------------------------------------
-		"AbilityCastRange"				"300 300 300 300 1500"
+		"AbilityCastRange"				"1000 1000 1000 1000 1500"
 		"AbilityCastPoint"				"0.3"
 		"AbilityChannelTime"			"4 5 6 7 8"
 		"AbilityCastAnimation"		"ACT_DOTA_CAST_ABILITY_4"
@@ -11617,7 +11617,7 @@
 		"ID"					"5190"														// unique ID number for this ability.  Do not change this once established or it will invalidate collected stats.
 		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_UNIT_TARGET"
 		"AbilityUnitTargetTeam"			"DOTA_UNIT_TARGET_TEAM_ENEMY"
-		"AbilityUnitTargetType"			"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
+		"AbilityUnitTargetType"			"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_CREEP"
 		"AbilityUnitDamageType"			"DAMAGE_TYPE_PHYSICAL"	
 		"AbilityUnitTargetFlags"		"DOTA_UNIT_TARGET_FLAG_MAGIC_IMMUNE_ENEMIES"
 		"SpellImmunityType"				"SPELL_IMMUNITY_ENEMIES_NO"
@@ -32196,7 +32196,7 @@
 		//-------------------------------------------------------------------------------------------------------------		
 		"AbilityCastAnimation"			"ACT_DOTA_CAST_ABILITY_4"
 
-		"AbilityCooldown"				"40 30 20"
+		"AbilityCooldown"				"40 35 30"
 		
 		// Cost
 		//-------------------------------------------------------------------------------------------------------------
@@ -32252,7 +32252,7 @@
 		// General
 		//-------------------------------------------------------------------------------------------------------------
 		"ID"							"8340"														// unique ID number for this ability.  Do not change this once established or it will invalidate collected stats.		
-		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_POINT | DOTA_ABILITY_BEHAVIOR_AOE"
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_POINT | DOTA_ABILITY_BEHAVIOR_AOE | DOTA_ABILITY_BEHAVIOR_NORMAL_WHEN_STOLEN"
 		"AbilityType"					"DOTA_ABILITY_TYPE_ULTIMATE"
 		"AbilityUnitTargetTeam"			"DOTA_UNIT_TARGET_TEAM_ENEMY"
 		"SpellImmunityType"				"SPELL_IMMUNITY_ENEMIES_NO"
@@ -32297,11 +32297,6 @@
 				"return_travel_speed"	"500"
 			}
 			"05"
-			{
-				"var_type"				"FIELD_FLOAT"
-				"initial_delay"			"0.8"
-			}	
-			"06"
 			{
 				"var_type"				"FIELD_FLOAT"
 				"starting_height"		"300"
@@ -32918,7 +32913,7 @@
 		
 		// Time		
 		//-------------------------------------------------------------------------------------------------------------
-		"AbilityCooldown"				"90.0"
+		"AbilityCooldown"				"200.0"
 		
 		// Special
 		//-------------------------------------------------------------------------------------------------------------
@@ -32927,7 +32922,7 @@
 			"01"
 			{
 				"var_type"		"FIELD_FLOAT"
-				"duration"		"0.0"
+				"duration"		"2.0"
 			}
 		}
 	}
@@ -32942,11 +32937,10 @@
 		"ID"					"5210"														// unique ID number for this ability.  Do not change this once established or it will invalidate collected stats.
 		"AbilityType"					"DOTA_ABILITY_TYPE_BASIC"
 		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_IMMEDIATE | DOTA_ABILITY_BEHAVIOR_DONT_CANCEL_MOVEMENT | DOTA_ABILITY_BEHAVIOR_IGNORE_BACKSWING"
-		"MaxLevel"						"4"
-		"AbilityCastAnimation"			"ACT_INVALID"
+		
 		// Time		
 		//-------------------------------------------------------------------------------------------------------------
-		"AbilityCooldown"				"90.0 70.0 50.0 30.0"
+		"AbilityCooldown"				"90.0"
 		
 		// Special
 		//-------------------------------------------------------------------------------------------------------------
@@ -32955,12 +32949,12 @@
 			"01"
 			{
 				"var_type"		"FIELD_FLOAT"
-				"duration"		"4.0 8.0 12.0 16.0"
+				"duration"		"4.0"
 			}
 			"02"
 			{
 				"var_type"			"FIELD_INTEGER"
-				"movement_speed"	"800 1000 1200 1400"
+				"movement_speed"	"800"
 			}
 			"03"
 			{
@@ -32968,7 +32962,8 @@
 				"damage_absorb"	"250"
 			}
 		}
-
+		
+		"MaxLevel"		"1"
 	}
 
 	//=================================================================================================================

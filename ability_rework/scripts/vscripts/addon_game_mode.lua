@@ -6,11 +6,10 @@ local VGMAR_GIVE_DEBUG_ITEMS = false
 local VGMAR_BOT_FILL = false
 local VGMAR_LOG_BALANCE = false
 local VGMAR_LOG_BALANCE_INTERVAL = 120
+local MAX_COURIER_LVL = 5
+local COURIER_UPGRADE_TIME = 3
+local BOT_COURIER_UPGRADE_INTERVAL = 10
 --///////////////////////////////////////////
---/////////////WORKSHOP_FUCKOVER/////////////
---Change to true before releasing to workshop
---///////////////////////////////////////////
-local WORKSHOP_FUCKOVER = true
 
 if VGMAR == nil then
 	VGMAR = class({})
@@ -59,20 +58,19 @@ function VGMAR:Init()
 	self.istimescalereset = 0
 	self.direcourieruplevel = 1
 	self.radiantcourieruplevel = 1
-	self.radiantcourierlvldown = false
-	self.direcourierlvldown = false
-	self.radiantcourierlvlup = false
-	self.direcourierlvlup = false
+	self.couriersinit = 0
+	self.couriergiven = false
+	self.direcourieruptable = {}
+	for i=1,MAX_COURIER_LVL-1,1 do
+		local courup = {lvl = i, upgradetime = BOT_COURIER_UPGRADE_INTERVAL*i, done = false}
+		table.insert( self.direcourieruptable, courup )
+	end
 	self.lastrunetype = -1
 	self.currunenum = 1
 	self.removedrunenum = math.random(1,2)
 	self.botsInLateGameMode = false
 	self.backdoorstatustable = {}
 	self.backdoortimertable = {}
-	self.couriergiven = false
-	self.direcourierup2given = false
-	self.direcourierup3given = false
-	self.direcourierup4given = false
 	self.customitemsreminderfinished = false
 	self.ItemKVs = {}
 	self.direancientfailsafetimestamp = 0
@@ -133,11 +131,9 @@ function VGMAR:Init()
 	
 	LinkLuaModifier("modifier_vgmar_util_dominator_ability_purger", "abilities/util/modifiers/modifier_vgmar_util_dominator_ability_purger.lua", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_util_creep_ability_updater", "abilities/util/modifiers/modifier_vgmar_util_creep_ability_updater", LUA_MODIFIER_MOTION_NONE)
-	LinkLuaModifier("modifier_vgmar_i_deathskiss_visual", "abilities/modifiers/modifier_vgmar_i_deathskiss_visual", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_spellshield", "abilities/modifiers/modifier_vgmar_i_spellshield", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_kingsaegis_cooldown", "abilities/modifiers/modifier_vgmar_i_kingsaegis_cooldown", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_kingsaegis_active", "abilities/modifiers/modifier_vgmar_i_kingsaegis_active", LUA_MODIFIER_MOTION_NONE)
-	LinkLuaModifier("modifier_vgmar_i_criticalmastery_visual", "abilities/modifiers/modifier_vgmar_i_criticalmastery_visual", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_purgefield_visual", "abilities/modifiers/modifier_vgmar_i_purgefield_visual", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_truesight", "abilities/modifiers/modifier_vgmar_i_truesight", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_fervor", "abilities/modifiers/modifier_vgmar_i_fervor", LUA_MODIFIER_MOTION_NONE)
@@ -177,6 +173,9 @@ function VGMAR:Init()
 	LinkLuaModifier("modifier_vgmar_i_poison_dagger", "abilities/modifiers/modifier_vgmar_i_poison_dagger", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_poison_dagger_debuff", "abilities/modifiers/modifier_vgmar_i_poison_dagger", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_util_give_debugitems", "abilities/util/modifiers/modifier_vgmar_util_give_debugitems", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_courier_burst", "abilities/modifiers/modifier_vgmar_courier_burst.lua", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_courier_burst_effect", "abilities/modifiers/modifier_vgmar_courier_burst.lua", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_courier_burst_charge", "abilities/modifiers/modifier_vgmar_courier_burst.lua", LUA_MODIFIER_MOTION_NONE)
 	
 	self.essenceauraignoredabilities = {
 		nyx_assassin_burrow = true,
@@ -312,7 +311,8 @@ function VGMAR:Init()
 		["modifier_winter_wyvern_cold_embrace"] = {silence = false, stun = true, root = false},
 		["modifier_winter_wyvern_winters_curse_aura"] = {silence = false, stun = true, root = false},
 		["modifier_brewmaster_primal_split"] = {silence = false, stun = true, root = false},
-		["modifier_necrolyte_reapers_scythe"] = {silence = false, stun = true, root = false}
+		["modifier_necrolyte_reapers_scythe"] = {silence = false, stun = true, root = false},
+		["modifier_item_mask_of_madness_berserk"] = {silence = true, stun = false, root = false}
 	}
 	
 	self.mode = GameRules:GetGameModeEntity()
@@ -351,6 +351,7 @@ function VGMAR:Init()
 	Convars:RegisterConvar('vgmar_blockbotcontrol', "1", "Set to 0 to enable controlling bots", 0)
 	Convars:RegisterCommand('vgmar_reload_test_modifier', Dynamic_Wrap( VGMAR, "ReloadTestModifier" ), "Reload script modifier", 0)
 	Convars:RegisterCommand('vgmar_test', Dynamic_Wrap( VGMAR, "TestFunction" ), "Runs a test function", 0)
+	Convars:RegisterCommand('vgmar_forcebalancelog', Dynamic_Wrap( VGMAR, "LogBalance" ), "Forces a balance log print", 0)
 	if VGMAR_DEBUG == true then
 		Convars:SetInt("vgmar_devmode", 1)
 	end
@@ -528,8 +529,8 @@ function VGMAR:LogBalance()
 	LogLib:WriteLog("balance", 3, false, "Average Dire: "..avgdirenw)
 	--Tower Kill Data
 	LogLib:WriteLog("balance", 2, false, "Towers: ")
-	LogLib:WriteLog("balance", 3, false, "Towers Killed by Radiant: "..self.towerskilledrad)
-	LogLib:WriteLog("balance", 3, false, "Towers Killed by Dire: "..self.towerskilleddire)
+	LogLib:WriteLog("balance", 3, false, "Towers Killed by Radiant: "..GameRules.VGMAR.towerskilledrad)
+	LogLib:WriteLog("balance", 3, false, "Towers Killed by Dire: "..GameRules.VGMAR.towerskilleddire)
 	--Kills Data
 	LogLib:WriteLog("balance", 2, false, "Kills: ")
 	LogLib:WriteLog("balance", 3, false, "Radiant Kills: "..PlayerResource:GetTeamKills(2))
@@ -550,8 +551,8 @@ function VGMAR:LogBalance()
 	LogLib:WriteLog("balance", 3, false, "Average Dire: "..avgxpdire)
 	--Advantage Formula Output
 	LogLib:WriteLog("balance", 2, false, "Advantage Formula Output")
-	LogLib:WriteLog("balance", 3, false, "Radiant: "..self:GetTeamAdvantage(true, true, true, true))
-	LogLib:WriteLog("balance", 3, false, "Dire: "..self:GetTeamAdvantage(false, true, true, true))
+	LogLib:WriteLog("balance", 3, false, "Radiant: "..GameRules.VGMAR:GetTeamAdvantage(true, true, true, true))
+	LogLib:WriteLog("balance", 3, false, "Dire: "..GameRules.VGMAR:GetTeamAdvantage(false, true, true, true))
 end
 
 local MaxMoveSpeed = 550
@@ -581,6 +582,17 @@ local modifierdatatable = {
 	["modifier_vgmar_i_thirst"] = {threshold = 75, visionthreshold = 50, maxperhero = 50, visionrange = 10, visionduration = 0.2, giverealvision = 0, givemodelvision = 1, msperstack = 2, maxbasems = MaxMoveSpeed, radius = 5000},
 	["modifier_vgmar_i_poison_dagger"] = {cooldown = 15, maxstacks = 4, aoestacks = 2, minenemiesforaoe = 3, aoedmgperc = 50, damage = 30, initialdamageperc = 50, aoeradius = 500, duration = 20, interval = 1.0},
 	["modifier_vgmar_i_ogre_tester"] = {}
+}
+
+local table_modifier_vgmar_courier_burst_var = {
+	distanceperlevel = 400,
+	msperlevel = 100,
+	rechargepertickperlevel = 0.01,
+	rechargedelay = 30,
+	rechargedelayperlvl = 3,
+	maxcharge = 10,
+	ticktime = 0.1,
+	basems = 460
 }
 
 local missclickproofabilities = {
@@ -841,6 +853,7 @@ end
 function VGMAR:AddAuraChildren(caster, auraent, child)
 	local exists = false
 	local id = -1
+	self:UpdateAuraChildParentTable()
 	for i=1,#self.auramodifieraffectedlist do
 		if self.auramodifieraffectedlist[i].aura == auraent then
 			exists = true
@@ -849,14 +862,8 @@ function VGMAR:AddAuraChildren(caster, auraent, child)
 	end
 	if exists == true then
 		local childrentable = self.auramodifieraffectedlist[id].children
-		local newchildrentable = {}
-		for j=1,#childrentable do
-			if childrentable[j]:IsNull() == false then
-				table.insert(newchildrentable, childrentable[j])
-			end
-		end
-		table.insert(newchildrentable, child)
-		local aura = {caster = caster, aura = auraent, children = newchildrentable, mfd = false}
+		table.insert(childrentable, child)
+		local aura = {caster = caster, aura = auraent, children = childrentable, mfd = false}
 		self.auramodifieraffectedlist[id] = aura
 	else
 		local newchildrentable = {}
@@ -918,13 +925,20 @@ end
 function VGMAR:FindAuraChildren(parent)
 	if parent ~= nil then
 		self:UpdateAuraChildParentTable()
+		dprint("Number of auramodifieraffectedlist: "..#self.auramodifieraffectedlist)
 		for i=1,#self.auramodifieraffectedlist do
 			if self.auramodifieraffectedlist[i].aura ~= nil then
 				if self.auramodifieraffectedlist[i].aura:IsNull() == false then
 					if #self.auramodifieraffectedlist[i].children > 0 then
 						return self.auramodifieraffectedlist[i].children
+					else
+						dprint("Aura "..i.." from auramodifieraffectedlist has 0 children")
 					end
+				else
+					dprint("Aura "..i.." from auramodifieraffectedlist IsNull() == true")
 				end
+			else
+				dprint("Aura: "..i.." from auramodifieraffectedlist == nil")
 			end
 		end
 	end
@@ -1873,16 +1887,16 @@ function VGMAR:OnThink()
 					local couriers = Entities:FindAllByClassname("npc_dota_courier")
 					for j=1,#couriers do
 						if couriers[j]:GetTeamNumber() == heroent:GetTeamNumber() then
-							local courierburstability = couriers[j]:FindAbilityByName("courier_burst")
-							if courierburstability and courierburstability:GetLevel() >= 1 then
-								if couriers[j]:GetTeamNumber() == 2 and self.radiantcourieruplevel < 4 then
+							local courierburstmod = couriers[j]:FindModifierByName("modifier_vgmar_courier_burst")
+							if courierburstmod and courierburstmod:GetStackCount() >= 1 then
+								if couriers[j]:GetTeamNumber() == 2 and self.radiantcourieruplevel < MAX_COURIER_LVL then
 									self:RemoveNItemsInInventory(heroent, "item_flying_courier", 1)
-									courierburstability:SetLevel(self.radiantcourieruplevel + 1)
-									self.radiantcourieruplevel = courierburstability:GetLevel()
-								elseif couriers[j]:GetTeamNumber() == 3 and self.direcourieruplevel < 4 then
+									couriers[j]:AddNewModifier(couriers[j], nil, "modifier_vgmar_courier_burst", {level = self.radiantcourieruplevel + 1})
+									self.radiantcourieruplevel = courierburstmod:GetStackCount()
+								elseif couriers[j]:GetTeamNumber() == 3 and self.direcourieruplevel < MAX_COURIER_LVL then
 									self:RemoveNItemsInInventory(heroent, "item_flying_courier", 1)
-									courierburstability:SetLevel(self.direcourieruplevel + 1)
-									self.direcourieruplevel = courierburstability:GetLevel()
+									couriers[j]:AddNewModifier(couriers[j], nil, "modifier_vgmar_courier_burst", {level = self.direcourieruplevel + 1})
+									self.direcourieruplevel = courierburstmod:GetStackCount()
 								end
 							end
 						end
@@ -1891,42 +1905,32 @@ function VGMAR:OnThink()
 				--/////////////////
 				--BotCourierUpgrade
 				--/////////////////
-				if self:TimeIsLaterThan(12, 0) and self.direcourierup2given == false and self:GetCourierBurstLevel( nil, 3 ) >= 1 then
-					if heroent:GetTeamNumber() == 3 and self:GetHeroFreeInventorySlots(heroent, true, false) > 0 then
-						heroent:AddItemByName("item_flying_courier")
-						dprint("Giving ", heroent:GetName(), " having ", self:GetHeroFreeInventorySlots(heroent, true, false), " empty slots 1st courier upgrade")
-						self.direcourierup2given = true
-					end
-				elseif self:TimeIsLaterThan(24, 0) and self.direcourierup3given == false and self:GetCourierBurstLevel( nil, 3 ) >= 1 then
-					if heroent:GetTeamNumber() == 3 and self:GetHeroFreeInventorySlots(heroent, true, false) > 0 then
-						heroent:AddItemByName("item_flying_courier")
-						dprint("Giving ", heroent:GetName(), " having ", self:GetHeroFreeInventorySlots(heroent, true, false), " empty slots 2nd courier upgrade")
-						self.direcourierup3given = true
-					end
-				elseif self:TimeIsLaterThan(38, 0) and self.direcourierup4given == false and self:GetCourierBurstLevel( nil, 3 ) >= 1 then
-					if heroent:GetTeamNumber() == 3 and self:GetHeroFreeInventorySlots(heroent, true, false) > 0 then
-						heroent:AddItemByName("item_flying_courier")
-						dprint("Giving ", heroent:GetName(), " having ", self:GetHeroFreeInventorySlots(heroent, true, false), " empty slots 3rd courier upgrade")
-						self.direcourierup4given = true
+				for k,v in ipairs(self.direcourieruptable) do
+					if v.done == false and self:TimeIsLaterThan(v.upgradetime, 0) and self:GetCourierBurstLevel( nil, 3 ) >= v.lvl then
+						if heroent:GetTeamNumber() == 3 and self:GetHeroFreeInventorySlots(heroent, true, false) > 0 then
+							heroent:AddItemByName("item_flying_courier")
+							dprint("Giving ".. HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." having "..self:GetHeroFreeInventorySlots(heroent, true, false).." empty slots lvl "..v.lvl.." courier upgrade")
+							v.done = true
+						end
 					end
 				end
 			end
-			--//////////////////
-			--CourierLevelVisual
-			--//////////////////
-			local couriers = Entities:FindAllByClassname("npc_dota_courier")
-			for j=1,#couriers do
-				if not couriers[j]:HasModifier("modifier_vgmar_util_courier_level") then
-					if couriers[j]:FindAbilityByName("vgmar_util_courier_level") ~= nil then
-						local spellshieldcooldownability = couriers[j]:FindAbilityByName("vgmar_util_courier_level")
-						spellshieldcooldownability:ApplyDataDrivenModifier(couriers[j], couriers[j], "modifier_vgmar_util_courier_level", {})
-					else
-						local spellshieldcooldownability = couriers[j]:AddAbility("vgmar_util_courier_level")
-						spellshieldcooldownability:ApplyDataDrivenModifier(couriers[j], couriers[j], "modifier_vgmar_util_courier_level", {})
+			--///////////
+			--CourierInit
+			--///////////
+			if self:TimeIsLaterThan(COURIER_UPGRADE_TIME, 0) and self.couriersinit < 2 then
+				local couriers = Entities:FindAllByClassname("npc_dota_courier")
+				for j=1,#couriers do
+					if not couriers[j]:HasModifier("modifier_vgmar_courier_burst") then
+						if couriers[j]:GetTeamNumber() == 2 then
+							couriers[j]:AddNewModifier(couriers[j], nil, "modifier_vgmar_courier_burst", table_modifier_vgmar_courier_burst_var)
+							couriers[j]:AddNewModifier(couriers[j], nil, "modifier_vgmar_courier_burst", {level = self.radiantcourieruplevel})
+						elseif couriers[j]:GetTeamNumber() == 3 then
+							couriers[j]:AddNewModifier(couriers[j], nil, "modifier_vgmar_courier_burst", table_modifier_vgmar_courier_burst_var)
+							couriers[j]:AddNewModifier(couriers[j], nil, "modifier_vgmar_courier_burst", {level = self.direcourieruplevel})
+						end
+						self.couriersinit = self.couriersinit + 1
 					end
-				end
-				if couriers[j]:FindAbilityByName("courier_burst"):GetLevel() > 0 then
-					couriers[j]:SetModifierStackCount("modifier_vgmar_util_courier_level", couriers[j], couriers[j]:FindAbilityByName("courier_burst"):GetLevel())
 				end
 			end
 		end
@@ -2007,38 +2011,6 @@ function VGMAR:OnThink()
 			end
 			if gametimefloor >= -5 then
 				self.customitemsreminderfinished = true
-			end
-		end
-		
-		--////////////////////
-		--CourierBurstLevelFix
-		--////////////////////
-		if self.radiantcourierlvlup == false or self.direcourierlvlup == false then
-			local couriers = Entities:FindAllByClassname("npc_dota_courier")
-			for i=1,#couriers do
-				if GameRules:State_Get() == DOTA_GAMERULES_STATE_PRE_GAME or self:TimeIsLaterThan( 3, 5 ) == false then
-					if couriers[i]:GetTeamNumber() == 2 and self.radiantcourierlvldown == false then
-						couriers[i]:FindAbilityByName("courier_burst"):SetLevel( 0 )
-						couriers[i]:FindAbilityByName("courier_shield"):SetLevel( 0 )
-						self.radiantcourierlvldown = true
-					elseif couriers[i]:GetTeamNumber() == 3 and self.direcourierlvldown == false then
-						couriers[i]:FindAbilityByName("courier_burst"):SetLevel( 0 )
-						couriers[i]:FindAbilityByName("courier_shield"):SetLevel( 0 )
-						self.direcourierlvldown = true
-					end
-				elseif self:TimeIsLaterThan( 3, 5 ) and GameRules:State_Get() > DOTA_GAMERULES_STATE_PRE_GAME then
-					if couriers[i]:GetTeamNumber() == 2 and self.radiantcourierlvlup == false then
-						couriers[i]:FindAbilityByName("courier_burst"):SetLevel( 1 )
-						couriers[i]:FindAbilityByName("courier_shield"):SetLevel( 1 )
-						self.radiantcourierlvlup = true
-					elseif couriers[i]:GetTeamNumber() == 3 and self.direcourierlvlup == false then
-						couriers[i]:FindAbilityByName("courier_burst"):SetLevel( 1 )
-						couriers[i]:FindAbilityByName("courier_shield"):SetLevel( 1 )
-						self.direcourierlvlup = true
-					end
-					self.radiantcourierlvldown = true
-					self.direcourierlvldown = true
-				end
 			end
 		end
 		
@@ -2357,9 +2329,9 @@ function VGMAR:GetCourierBurstLevel( hero, teamnumber )
 	if hero ~= nil then
 		local courier = self:GetHerosCourier( hero )
 		if courier then
-			local courierburstability = courier:FindAbilityByName("courier_burst")
+			local courierburstability = courier:FindModifierByName("modifier_vgmar_courier_burst")
 			if courierburstability then
-				return courierburstability:GetLevel()
+				return courierburstability:GetStackCount()
 			end
 		end
 	elseif hero == nil and teamnumber ~= nil then
@@ -2367,9 +2339,9 @@ function VGMAR:GetCourierBurstLevel( hero, teamnumber )
 		if #couriers > 0 then
 			for i=1,#couriers do
 				if couriers[i]:GetTeamNumber() == teamnumber then
-					local courierburstability = couriers[i]:FindAbilityByName("courier_burst")
+					local courierburstability = couriers[i]:FindModifierByName("modifier_vgmar_courier_burst")
 					if courierburstability then
-						return courierburstability:GetLevel()
+						return courierburstability:GetStackCount()
 					end
 				end
 			end
@@ -2399,7 +2371,7 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 	--//////////
 	local itempurchaseblocklist = {
 		["item_courier"] = { radiant = {true, "This item cannot be purchased"}, dire = {false, nil} },
-		["item_flying_courier"] = { radiant = {self.radiantcourieruplevel >= 4, "Courier is at max level"}, dire = {self.direcourieruplevel >= 4, "Courier is at max level"} }
+		["item_flying_courier"] = { radiant = {self.radiantcourieruplevel >= MAX_COURIER_LVL, "Courier is at max level"}, dire = {self.direcourieruplevel >= MAX_COURIER_LVL, "Courier is at max level"} }
 	}
 	
 	if order_type == 16 then
@@ -2627,26 +2599,7 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 				end
 			end
 		end
-	end
-	
-	--////////////////
-	--AutoCourierBurst
-	--////////////////
-	if unit and unit:GetClassname() == "npc_dota_courier" then
-		local burstability = unit:FindAbilityByName("courier_burst")
-		if unit:GetTeamNumber() == 2 and ability and (ability:GetName() == "courier_take_stash_and_transfer_items" or ability:GetName() == "courier_shield" or ability:GetName() == "courier_burst") then
-			if burstability and burstability:GetCooldownTimeRemaining() == 0 then
-				burstability:CastAbility()
-				unit:FindAbilityByName("courier_shield"):EndCooldown()
-				unit:FindAbilityByName("courier_shield"):StartCooldown(burstability:GetCooldown(burstability:GetLevel() - 1))
-			end
-		elseif unit:GetTeamNumber() == 3 and burstability:GetLevel() > 2 then
-			if burstability and burstability:GetCooldownTimeRemaining() == 0 then
-				burstability:CastAbility()
-			end
-		end
-	end
-	
+	end	
 	return true
 end
 
