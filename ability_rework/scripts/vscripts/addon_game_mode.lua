@@ -16,10 +16,10 @@ if VGMAR == nil then
 end
 
 require('libraries/timers')
+require('libraries/extensions')
 require('libraries/heronames')
 require('libraries/heroabilityslots')
 require('libraries/loglib')
-require('libraries/extensions')
 
 function Precache( ctx )
 	--Precaching Custom Ability sounds (and all used heros' sounds :fp:)
