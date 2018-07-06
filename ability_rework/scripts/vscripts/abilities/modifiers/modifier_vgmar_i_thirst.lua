@@ -11,7 +11,7 @@ end
 --------------------------------------------------------------------------------
 
 function modifier_vgmar_i_thirst:IsHidden()
-	return self:GetStackCount() <= 0
+	return true
 end
 
 function modifier_vgmar_i_thirst:IsPurgable()
@@ -39,104 +39,25 @@ function modifier_vgmar_i_thirst:OnCreated(kv)
 		self.radius = kv.radius
 		self.threshold = kv.threshold / 100
 		self.visionthreshold = kv.visionthreshold / 100
+		self.damagethreshold = kv.damagethreshold / 100
 		self.visionrange = kv.visionrange
 		self.visionduration = kv.visionduration
 		self.giverealvision = kv.giverealvision
 		self.givemodelvision = kv.givemodelvision
-		self.msperstack = kv.msperstack
-		self.maxbasems = kv.maxbasems
-		self.maxperhero = kv.maxperhero
+		self.damagethreshold = kv.damagethreshold
+		self.damageperstack = kv.damageperstack
 		self.particle = nil
 	else
 		self.clientvalues = CustomNetTables:GetTableValue("client_side_ability_values", "modifier_vgmar_i_thirst")
 	end
-	self:StartIntervalThink(0.2)
 end
 
-function modifier_vgmar_i_thirst:OnIntervalThink()
-	local parent = self:GetParent()
-	if IsServer() then
-		local aurarecievers = {}
-		if GameRules.VGMAR:FindAuraChildren(self) ~= nil then
-			aurarecievers = GameRules.VGMAR:FindAuraChildren(self)
-		end
-		local stacks = 0
-		if aurarecievers ~= nil then
-			--print("Thirst")
-			for i=1,#aurarecievers do
-				--[[print("-------------------")
-				print("Integrity Check: Child Holder: "..HeroNamesLib:ConvertInternalToHeroName(aurarecievers[i]:GetParent():GetName()).." Parent Holder: "..HeroNamesLib:ConvertInternalToHeroName(GameRules.VGMAR:FindAuraParent(aurarecievers[i]):GetParent():GetName()))
-				print("Getting stack count from "..HeroNamesLib:ConvertInternalToHeroName(aurarecievers[i]:GetParent():GetName()))
-				print("Stack Count: "..aurarecievers[i]:GetStackCount())
-				print("-------------------")--]]
-				stacks = stacks + math.min(self.maxperhero, aurarecievers[i]:GetStackCount())
-			end
-		end
-		if self:GetStackCount() ~= stacks then
-			self:SetStackCount(stacks)
-		end
-		if self:GetStackCount() > 0 then
-			if self.particle == nil then
-				self.particle = ParticleManager:CreateParticle("particles/units/heroes/hero_bloodseeker/bloodseeker_thirst_owner.vpcf", PATTACH_ABSORIGIN_FOLLOW, self:GetParent())
-			end
-		else
-			if self.particle ~= nil then
-				ParticleManager:DestroyParticle(self.particle, false)
-				ParticleManager:ReleaseParticleIndex(self.particle)
-				self.particle = nil
-			end
-		end
-	end
-end
-
+--self.particle = ParticleManager:CreateParticle("particles/units/heroes/hero_bloodseeker/bloodseeker_thirst_owner.vpcf", PATTACH_ABSORIGIN_FOLLOW, self:GetParent())
 function modifier_vgmar_i_thirst:DeclareFunctions()
 	local funcs = {
-		MODIFIER_PROPERTY_MOVESPEED_MAX,
-        MODIFIER_PROPERTY_MOVESPEED_LIMIT,
-		MODIFIER_PROPERTY_MOVESPEED_BONUS_CONSTANT,
 		MODIFIER_PROPERTY_TOOLTIP
     }
     return funcs
-end
-
-function modifier_vgmar_i_thirst:GetModifierMoveSpeed_Max( params )
-    if IsServer() then
-		if self:GetStackCount() <= 0 then
-			return self.maxbasems
-		else
-			return self.maxbasems + (self:GetStackCount() * self.msperstack)
-		end
-	else
-		if self:GetStackCount() <= 0 then
-			return self.clientvalues.maxbasems
-		else
-			return self.clientvalues.maxbasems + (self:GetStackCount() * self.clientvalues.msperstack)
-		end
-	end
-end
-
-function modifier_vgmar_i_thirst:GetModifierMoveSpeed_Limit( params )
-	if IsServer() then
-		if self:GetStackCount() <= 0 then
-			return self.maxbasems
-		else
-			return self.maxbasems + (self:GetStackCount() * self.msperstack)
-		end
-	else
-		if self:GetStackCount() <= 0 then
-			return self.clientvalues.maxbasems
-		else
-			return self.clientvalues.maxbasems + (self:GetStackCount() * self.clientvalues.msperstack)
-		end
-	end
-end
-
-function modifier_vgmar_i_thirst:GetModifierMoveSpeedBonus_Constant()
-	if IsServer() then
-		return self:GetStackCount() * self.msperstack
-	else
-		return self:GetStackCount() * self.clientvalues.msperstack
-	end
 end
 
 function modifier_vgmar_i_thirst:OnTooltip()
@@ -180,6 +101,8 @@ function modifier_vgmar_i_thirst_debuff:OnCreated(kv)
 		self.visionduration = self:GetCaster():FindModifierByName("modifier_vgmar_i_thirst").visionduration
 		self.giverealvision = self:GetCaster():FindModifierByName("modifier_vgmar_i_thirst").giverealvision
 		self.givemodelvision = self:GetCaster():FindModifierByName("modifier_vgmar_i_thirst").givemodelvision
+		self.damagethreshold = self:GetCaster():FindModifierByName("modifier_vgmar_i_thirst").damagethreshold
+		self.damageperstack = self:GetCaster():FindModifierByName("modifier_vgmar_i_thirst").damageperstack
 		self.particle = nil
 		self:StartIntervalThink(0.1)
 	end
@@ -187,7 +110,8 @@ end
 
 function modifier_vgmar_i_thirst_debuff:DeclareFunctions()
 	local funcs = {
-		MODIFIER_PROPERTY_PROVIDES_FOW_POSITION
+		MODIFIER_PROPERTY_PROVIDES_FOW_POSITION,
+		MODIFIER_EVENT_ON_ATTACKED
     }
     return funcs
 end
@@ -200,6 +124,18 @@ function modifier_vgmar_i_thirst_debuff:GetModifierProvidesFOWVision()
 			end
 		end
 		return 0
+	end
+end
+
+function modifier_vgmar_i_thirst_debuff:OnAttacked(kv)
+	if IsServer() then
+		local parent = self:GetParent()
+		local caster = self:GetCaster()
+		if kv.target == self:GetParent() and kv.attacker == self:GetCaster() and parent:GetHealth()/parent:GetMaxHealth() <= self.damagethreshold then
+			local damage = self.damageperstack * self:GetStackCount()
+			SendOverheadEventMessage(nil, OVERHEAD_ALERT_DAMAGE, self:GetParent(), damage, nil)
+			ApplyDamage({victim = parent, attacker = caster, ability = nil, damage = damage, damage_type = DAMAGE_TYPE_PURE})
+		end
 	end
 end
 

@@ -59,7 +59,7 @@ function AbilitySlotsLib:OnAbilityLearned( keys )
 		end
 	end
 	if playerhero and playerhero:FindAbilityByName(abilityname) then
-		local printdebug = true
+		local printdebug = false
 		--print("Testing Assigned Hero For AbilitySlotsLib")
 		if printdebug then print("Player ", playerhero:GetPlayerID(), "Hero is: ", playerhero:GetName()) end
 		if abilityname == AbilitySlotsLib:GetTalent( playerhero:GetName(), 10, true ) then

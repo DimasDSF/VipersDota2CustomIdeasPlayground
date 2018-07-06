@@ -9,6 +9,11 @@ local VGMAR_LOG_BALANCE_INTERVAL = 120
 local MAX_COURIER_LVL = 5
 local COURIER_UPGRADE_TIME = 3
 local BOT_COURIER_UPGRADE_INTERVAL = 10
+--/////////////////////////
+-- Think Function Interval
+--/////////////////////////
+local VGMAR_GTHINK_TIME = 1
+--/////////////////////////
 --///////////////////////////////////////////
 
 if VGMAR == nil then
@@ -23,8 +28,6 @@ require('libraries/loglib')
 
 function Precache( ctx )
 	--Precaching Custom Ability sounds (and all used heros' sounds :fp:)
-	
-	PrecacheUnitByNameSync("npc_dota_hero_wisp", ctx)
 	
 	--Warning! Hero Names should be in internal format ex. OD is obsidian_destroyer
 	local herosoundprecachelist = {
@@ -74,7 +77,6 @@ function VGMAR:Init()
 	self.customitemsreminderfinished = false
 	self.ItemKVs = {}
 	self.direancientfailsafetimestamp = 0
-	self.auramodifieraffectedlist = {}
 	self.balancelogprinttimestamp = 0
 	self.towerskilleddire = 0
 	self.towerskilledrad = 0
@@ -172,6 +174,13 @@ function VGMAR:Init()
 	LinkLuaModifier("modifier_vgmar_i_arcane_intellect", "abilities/modifiers/modifier_vgmar_i_arcane_intellect", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_poison_dagger", "abilities/modifiers/modifier_vgmar_i_poison_dagger", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_poison_dagger_debuff", "abilities/modifiers/modifier_vgmar_i_poison_dagger", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_scorching_light", "abilities/modifiers/modifier_vgmar_i_scorching_light", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_scorching_light_debuff", "abilities/modifiers/modifier_vgmar_i_scorching_light", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_scorching_light_debuff_lingering", "abilities/modifiers/modifier_vgmar_i_scorching_light", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_scorching_light_vision", "abilities/modifiers/modifier_vgmar_i_scorching_light", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_b_fountain_anticamp", "abilities/modifiers/modifier_vgmar_b_fountain_anticamp", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_b_fountain_anticamp_debuff", "abilities/modifiers/modifier_vgmar_b_fountain_anticamp", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_b_fountain_anticamp_debuff_lingering", "abilities/modifiers/modifier_vgmar_b_fountain_anticamp", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_util_give_debugitems", "abilities/util/modifiers/modifier_vgmar_util_give_debugitems", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_courier_burst", "abilities/modifiers/modifier_vgmar_courier_burst.lua", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_courier_burst_effect", "abilities/modifiers/modifier_vgmar_courier_burst.lua", LUA_MODIFIER_MOTION_NONE)
@@ -514,6 +523,8 @@ function VGMAR:LogBalance()
 	end
 	LogLib:WriteLog("balance", 0, false, "")
 	LogLib:WriteLog("balance", 1, false, "Team Data:")
+	LogLib:WriteLog("balance", 2, false, "Radiant Players: "..radiantheroes)
+	LogLib:WriteLog("balance", 2, false, "Dire Players: "..direheroes)
 	LogLib:WriteLog("balance", 2, false, "Networth: ")
 	LogLib:WriteLog("balance", 3, false, "Full Radiant: "..radiantteamnetworth)
 	LogLib:WriteLog("balance", 3, false, "Full Dire: "..direteamnetworth)
@@ -579,8 +590,10 @@ local modifierdatatable = {
 	["modifier_vgmar_i_truesight"] = {radius = 900},
 	["modifier_item_ultimate_scepter_consumed"] = {bonus_all_stats = 10, bonus_health = 175, bonus_mana = 175},
 	["modifier_vgmar_i_arcane_intellect"] = {percentage = 10, multpercast = 0.2, bonusint = 25},
-	["modifier_vgmar_i_thirst"] = {threshold = 75, visionthreshold = 50, maxperhero = 50, visionrange = 10, visionduration = 0.2, giverealvision = 0, givemodelvision = 1, msperstack = 2, maxbasems = MaxMoveSpeed, radius = 5000},
+	["modifier_vgmar_i_thirst"] = {threshold = 75, visionthreshold = 50, damagethreshold = 75, visionrange = 10, visionduration = 0.2, giverealvision = 0, givemodelvision = 1, damageperstack = 3, radius = 5000},
 	["modifier_vgmar_i_poison_dagger"] = {cooldown = 15, maxstacks = 4, aoestacks = 2, minenemiesforaoe = 3, aoedmgperc = 50, damage = 30, initialdamageperc = 50, aoeradius = 500, duration = 20, interval = 1.0},
+	["modifier_vgmar_i_scorching_light"] = {radius = 700, interval = 1.0, visioninterval = 5.0, initialdamage = 60, damageincpertick = 5, maxdamage = 600, missrate = 17, visiondelay = 3, minvision = 0, maxvision = 400, maxillusionstacks = 3, lingerduration = 3.0},
+	["modifier_vgmar_b_fountain_anticamp"] = {radius = 2000, interval = 1.0, strpertick = 2, intpertick = 1, agipertick = 1, lingerduration = 15.0},
 	["modifier_vgmar_i_ogre_tester"] = {}
 }
 
@@ -782,7 +795,14 @@ function VGMAR:DisplayClientError(pid, message)
     end
 end
 
+--//////////////////////////////////////////////
+--TODO: Change rune spawn interval to be 1minute
+-- Remove Powerup Runes if spawntime%2 != 0
+-- Remove Bounty Runes if spawntime%5 != 0
+--//////////////////////////////////////////////
 function VGMAR:FilterRuneSpawn( filterTable )
+	dprint("Rune spawn premodified filterTable")
+	DeepPrintTable( filterTable )
 	local function GetRandomRune( notrune )
 		local runeslist = {
 			0,
@@ -822,6 +842,8 @@ function VGMAR:FilterRuneSpawn( filterTable )
 		self.lastrunetype = filterTable.rune_type
 	end
 	self.currunenum = self.currunenum + 1
+	dprint("Rune spawn aftermodified filterTable")
+	DeepPrintTable( filterTable )
 	return true
 end
 
@@ -850,101 +872,6 @@ function VGMAR:FilterGoldGained( filterTable )
 	return true
 end
 
-function VGMAR:AddAuraChildren(caster, auraent, child)
-	local exists = false
-	local id = -1
-	self:UpdateAuraChildParentTable()
-	for i=1,#self.auramodifieraffectedlist do
-		if self.auramodifieraffectedlist[i].aura == auraent then
-			exists = true
-			id = i
-		end
-	end
-	if exists == true then
-		local childrentable = self.auramodifieraffectedlist[id].children
-		table.insert(childrentable, child)
-		local aura = {caster = caster, aura = auraent, children = childrentable, mfd = false}
-		self.auramodifieraffectedlist[id] = aura
-	else
-		local newchildrentable = {}
-		table.insert(newchildrentable, child)
-		local aura = {caster = caster, aura = auraent, children = newchildrentable, mfd = false}
-		table.insert(self.auramodifieraffectedlist, aura)
-	end
-end
-
-function VGMAR:UpdateAuraChildParentTable()
-	local function MarkForDeletion(n)
-		local auraupdate = {caster = self.auramodifieraffectedlist[n].caster, aura = self.auramodifieraffectedlist[n].aura, children = self.auramodifieraffectedlist[n].children, mfd = true}
-		self.auramodifieraffectedlist[n] = auraupdate
-	end
-	local newauramodifieraffectedlist = {}
-	for i=1,#self.auramodifieraffectedlist do
-		if self.auramodifieraffectedlist[i].aura ~= nil then
-			if self.auramodifieraffectedlist[i].aura:IsNull() == false then
-				local newchildrentable = {}
-				if #self.auramodifieraffectedlist[i].children > 0 then
-					for j=1,#self.auramodifieraffectedlist[i].children do
-						if self.auramodifieraffectedlist[i].children[j]:IsNull() == false then
-							table.insert(newchildrentable, self.auramodifieraffectedlist[i].children[j])
-						end
-					end
-					local auraupdate = {caster = self.auramodifieraffectedlist[i].caster, aura = self.auramodifieraffectedlist[i].aura, children = newchildrentable, mfd = self.auramodifieraffectedlist[i].mfd}
-					self.auramodifieraffectedlist[i] = auraupdate
-				else
-					MarkForDeletion(i)
-				end
-			else
-				MarkForDeletion(i)
-			end
-		end
-		if self.auramodifieraffectedlist[i].mfd == false then
-			local auraupdate = {caster = self.auramodifieraffectedlist[i].caster, aura = self.auramodifieraffectedlist[i].aura, children = self.auramodifieraffectedlist[i].children, mfd = self.auramodifieraffectedlist[i].mfd}
-			table.insert(newauramodifieraffectedlist, auraupdate)
-		end
-	end
-	self.auramodifieraffectedlist = newauramodifieraffectedlist
-end
-
-function VGMAR:FindAuraParent(child)
-	if child ~= nil then
-		self:UpdateAuraChildParentTable()
-		for i=1,#self.auramodifieraffectedlist do
-			if self.auramodifieraffectedlist[i].children ~= nil then
-				for j=1,#self.auramodifieraffectedlist[i].children do
-					if self.auramodifieraffectedlist[i].children[j] == child then
-						return self.auramodifieraffectedlist[i].aura
-					end
-				end
-			end
-		end
-	end
-	return nil				
-end
-
-function VGMAR:FindAuraChildren(parent)
-	if parent ~= nil then
-		self:UpdateAuraChildParentTable()
-		dprint("Number of auramodifieraffectedlist: "..#self.auramodifieraffectedlist)
-		for i=1,#self.auramodifieraffectedlist do
-			if self.auramodifieraffectedlist[i].aura ~= nil then
-				if self.auramodifieraffectedlist[i].aura:IsNull() == false then
-					if #self.auramodifieraffectedlist[i].children > 0 then
-						return self.auramodifieraffectedlist[i].children
-					else
-						dprint("Aura "..i.." from auramodifieraffectedlist has 0 children")
-					end
-				else
-					dprint("Aura "..i.." from auramodifieraffectedlist IsNull() == true")
-				end
-			else
-				dprint("Aura: "..i.." from auramodifieraffectedlist == nil")
-			end
-		end
-	end
-	return nil				
-end
-
 function VGMAR:FilterModifierGained( filterTable )
 	--if IsDevMode() then
 		--DeepPrintTable( filterTable )
@@ -961,26 +888,8 @@ function VGMAR:FilterModifierGained( filterTable )
 	if filterTable["entindex_ability_const"] then
 		ability = EntIndexToHScript(filterTable.entindex_ability_const)
 	end
-	
-	--Custom Aura abilities and modifiers list used to update the list of Aura Recievers
-	--Child Effect<->Parent Aura
-	local auraeffectlist = {
-		["modifier_vgmar_i_thirst_debuff"] = "modifier_vgmar_i_thirst",
-		["modifier_essence_aura_effect"] = "modifier_vgmar_i_essence_aura",
-		["modifier_vgmar_i_manaregen_aura_effect"] = "modifier_vgmar_i_manaregen_aura",
-		["modifier_vgmar_i_vampiric_aura_effect"] = "modifier_vgmar_i_vampiric_aura"
-	}
-	
-	if filterTable.entindex_caster_const then
-		local caster = EntIndexToHScript(filterTable.entindex_caster_const)
-		if caster then
-			local castermodifiers = caster:FindAllModifiers()
-			for i=1,#castermodifiers do
-				if castermodifiers[i] ~= nil and castermodifiers[i]:GetName() == auraeffectlist[filterTable.name_const] then
-					self:AddAuraChildren(caster, castermodifiers[i], EntIndexToHScript(filterTable.entindex_parent_const):FindModifierByName(filterTable.name_const))
-				end
-			end
-		end
+	if filterTable["entindex_parent_const"] then
+		parent = EntIndexToHScript(filterTable.entindex_parent_const)
 	end
 	return true
 end
@@ -1601,7 +1510,7 @@ function VGMAR:OnThink()
 				preventedhero = "npc_dota_hero_troll_warlord",
 				specificcond = true },
 			{spell = "modifier_vgmar_i_kingsaegis_cooldown",
-				items = {itemnames = {"item_stout_shield", "item_vanguard", "item_buckler", "item_aegis"}, itemnum = {1, 1, 1, 1}},
+				items = {itemnames = {"item_pers", "item_refresher_shard", "item_aegis"}, itemnum = {2, 1, 1}},
 				isconsumable = true,
 				ismodifier = true,
 				usemodifierdatatable = true,
@@ -1680,16 +1589,6 @@ function VGMAR:OnThink()
 				backpack = true,
 				preventedhero = "npc_target_dummy",
 				specificcond = heroent:FindModifierByName("modifier_vgmar_i_deathskiss") == nil },
-			{spell = "vgmar_i_purgefield",
-				items = {itemnames = {"item_nullifier", "item_null_talisman"}, itemnum = {1, 3}},
-				isconsumable = true,
-				ismodifier = false,
-				usemodifierdatatable = true,
-				modifierdata = {},
-				usesmultiple = true,
-				backpack = true,
-				preventedhero = "npc_dota_hero_razor",
-				specificcond = true	},
 			{spell = "modifier_vgmar_i_truesight",
 				items = {itemnames = {"item_gem"}, itemnum = {2}},
 				isconsumable = true,
@@ -1790,6 +1689,16 @@ function VGMAR:OnThink()
 				backpack = true,
 				preventedhero = "npc_target_dummy",
 				specificcond = true	},
+			{spell = "modifier_vgmar_i_scorching_light",
+				items = {itemnames = {"item_radiance"}, itemnum = {2}},
+				isconsumable = true,
+				ismodifier = true,
+				usemodifierdatatable = true,
+				modifierdata = {},
+				usesmultiple = true,
+				backpack = true,
+				preventedhero = "npc_target_dummy",
+				specificcond = true },
 			{spell = "modifier_vgmar_i_ogre_tester",
 				items = {itemnames = {"item_ogre_axe"}, itemnum = {2}},
 				isconsumable = false,
@@ -2020,7 +1929,7 @@ function VGMAR:OnThink()
 	elseif GameRules:State_Get() >= DOTA_GAMERULES_STATE_POST_GAME then		-- Safe guard catching any state that may exist beyond DOTA_GAMERULES_STATE_POST_GAME
 		return nil
 	end
-	return 1
+	return VGMAR_GTHINK_TIME
 end
 
 function VGMAR:OnNPCSpawned( event )
@@ -2179,9 +2088,19 @@ function VGMAR:CreepDamage(radiant, min, max)
 	--dprint("Balance: "..rdtext.." C to C Dmg: Unclamped Adv: "..self:GetTeamAdvantage(radiant == false, true, false, false))
 	if self:GetTeamAdvantage(radiant == false, true, false, false) > 1 then
 		--dprint("Balance: "..rdtext.." C to C Dmg: Adv: "..math.clamp(1, self:GetTeamAdvantage(radiant == false, true, false, false), 5).." Remapped: "..math.map(math.clamp(1, self:GetTeamAdvantage(radiant == false, true, false, false), 5), 1, 5, 0.5, 1).." Scaled: "..math.scale(min, math.map(math.clamp(1, self:GetTeamAdvantage(radiant == false, true, false, false), 5), 1, 5, 0.5, 1), max))
+		--[[if radiant then
+			dprint("Radiant C to C DMG mult: "..math.scale(min, math.map(math.clamp(1, self:GetTeamAdvantage(radiant == false, true, false, false), 5), 1, 5, 0.5, 1), max))
+		else
+			dprint("Dire C to C DMG mult: "..math.scale(min, math.map(math.clamp(1, self:GetTeamAdvantage(radiant == false, true, false, false), 5), 1, 5, 0.5, 1), max))
+		end--]]
 		return math.scale(min, math.map(math.clamp(1, self:GetTeamAdvantage(radiant == false, true, false, false), 5), 1, 5, 0.5, 1), max)
 	else
 		--dprint("Balance: "..rdtext.." C to C Dmg: Adv: "..math.clamp(0, self:GetTeamAdvantage(radiant == false, true, false, false), 1).." Remapped: "..math.map(math.clamp(0, self:GetTeamAdvantage(radiant == false, true, false, false), 1), 0, 1, 0, 0.5).." Scaled: "..math.scale(min, math.map(math.clamp(0, self:GetTeamAdvantage(radiant == false, true, false, false), 1), 0, 1, 0, 0.5), max))
+		--[[if radiant then
+			dprint("Radiant C to C DMG mult: "..math.scale(min, math.map(math.clamp(0, self:GetTeamAdvantage(radiant == false, true, false, false), 1), 0, 1, 0, 0.5), max))
+		else
+			dprint("Dire C to C DMG mult: "..math.scale(min, math.map(math.clamp(0, self:GetTeamAdvantage(radiant == false, true, false, false), 1), 0, 1, 0, 0.5), max))
+		end--]]
 		return math.scale(min, math.map(math.clamp(0, self:GetTeamAdvantage(radiant == false, true, false, false), 1), 0, 1, 0, 0.5), max)
 	end
 end
@@ -2196,6 +2115,8 @@ function VGMAR:FilterDamage( filterTable )
 	local attacker = EntIndexToHScript(filterTable.entindex_attacker_const)
 	local damage = filterTable["damage"]
 	
+	local DAMAGEDEBUG = true
+	
 	--Damn 7.07 Makes Creeps SuperDemolishingSquads
 	--Reduce Creep Damage to Buildings
 	if (victim:IsBuilding() or victim:IsTower()) and (attacker:GetClassname() == "npc_dota_creep_lane" or attacker:GetClassname() == "npc_dota_creep_lane") and not attacker:IsDominated() then
@@ -2207,8 +2128,10 @@ function VGMAR:FilterDamage( filterTable )
 		if (victim:GetClassname() == "npc_dota_creep_lane" or victim:GetClassname() == "npc_dota_creep_siege") and (attacker:GetClassname() == "npc_dota_creep_lane" or attacker:GetClassname() == "npc_dota_creep_siege") then
 			--Creep to Creep Damage
 			if attacker:GetTeamNumber() == 2 then --Radiant damage
+				if DAMAGEDEBUG == true then DebugDrawText(attacker:GetAbsOrigin(), "Rad DMGMult: "..self:CreepDamage(true, 0.8, 1.2), false, 2.0) end
 				filterTable["damage"] = filterTable["damage"] * self:CreepDamage(true, 0.8, 1.2) --math.min(1.2,math.max(0.8,self:GetTeamAdvantage(false, true, false, false)))
 			elseif attacker:GetTeamNumber() == 3 then --Dire damage
+				if DAMAGEDEBUG == true then DebugDrawText(attacker:GetAbsOrigin(), "Dire DMGMult: "..self:CreepDamage(false, 0.8, 1.2), false, 2.0) end
 				filterTable["damage"] = filterTable["damage"] * self:CreepDamage(false, 0.8, 1.2) --math.min(1.2,math.max(0.8,self:GetTeamAdvantage(true, true, false, false)))
 			end
 		--[[elseif (attacker:GetClassname() == "npc_dota_creep_lane" or attacker:GetClassname() == "npc_dota_creep_siege") and (victim:IsBuilding() or victim:IsTower()) then
@@ -2783,7 +2706,14 @@ function VGMAR:OnGameStateChanged( keys )
 					end
 				end
 			end)
-		end	
+		end
+		--////////////////////
+		--AntiDireFountainCamp
+		--////////////////////
+		local direfountain = Entities:FindByName(nil, "ent_dota_fountain_bad")
+		if direfountain then
+			direfountain:AddNewModifier(direfountain, nil, "modifier_vgmar_b_fountain_anticamp", modifierdatatable["modifier_vgmar_b_fountain_anticamp"])
+		end
 		--///////////////////////////////
 		--New Implementation of defskills
 		--///////////////////////////////

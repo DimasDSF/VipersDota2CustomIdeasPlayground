@@ -7,6 +7,7 @@ local LOG_DIR = "log/"..GAME_NAME
 local LOG_EXT = ".log"
 local logtypetexttable = {
 	["balance"] = "BalanceLog",
+	["perf"] = "PerformanceLog",
 	["info"] = "InfoLog",
 	["warning"] = "WarningLog",
 	["error"] = "ErrorLog"

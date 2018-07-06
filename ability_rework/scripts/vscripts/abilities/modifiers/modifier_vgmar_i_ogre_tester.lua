@@ -83,6 +83,10 @@ end
 
 function modifier_vgmar_i_ogre_tester:OnIntervalThink()
 	if IsServer() then
+		--[[local modifiers = self:GetParent():FindAllModifiers()
+		for i=1,#modifiers do
+			print(modifiers[i]:GetName())
+		end--]]
 		if self.oldmana == nil then
 			self.oldmana = self:GetParent():GetMana()
 		end

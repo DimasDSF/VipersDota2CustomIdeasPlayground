@@ -232,8 +232,8 @@
 		// Bounty
 		//----------------------------------------------------------------
 		"BountyXP"					"69"		// Experience earn.
-		"BountyGoldMin"				"54"		// Gold earned min.
-		"BountyGoldMax"				"60"		// Gold earned max.
+		"BountyGoldMin"				"48"		// Gold earned min.
+		"BountyGoldMax"				"58"		// Gold earned max.
 
 		// Bounds
 		//----------------------------------------------------------------
@@ -326,7 +326,7 @@
 		//----------------------------------------------------------------
 		"BountyXP"					"22"		// Experience earn.
 		"BountyGoldMin"				"21"		// Gold earned min.
-		"BountyGoldMax"				"29"		// Gold earned max.
+		"BountyGoldMax"				"28"		// Gold earned max.
 
 		// Bounds
 		//----------------------------------------------------------------
@@ -419,7 +419,7 @@
 		//----------------------------------------------------------------
 		"BountyXP"					"22"		// Experience earn.
 		"BountyGoldMin"				"21"		// Gold earned min.
-		"BountyGoldMax"				"29"		// Gold earned max.
+		"BountyGoldMax"				"28"		// Gold earned max.
 
 		// Bounds
 		//----------------------------------------------------------------
@@ -511,8 +511,8 @@
 		// Bounty
 		//----------------------------------------------------------------
 		"BountyXP"					"69"		// Experience earn.
-		"BountyGoldMin"				"54"		// Gold earned min.
-		"BountyGoldMax"				"60"		// Gold earned max.
+		"BountyGoldMin"				"48"		// Gold earned min.
+		"BountyGoldMax"				"58"		// Gold earned max.
 
 		// Bounds
 		//----------------------------------------------------------------
@@ -605,7 +605,7 @@
 		//----------------------------------------------------------------
 		"BountyXP"					"22"		// Experience earn.
 		"BountyGoldMin"				"21"		// Gold earned min.
-		"BountyGoldMax"				"29"		// Gold earned max.
+		"BountyGoldMax"				"28"		// Gold earned max.
 
 		// Bounds
 		//----------------------------------------------------------------
@@ -698,7 +698,7 @@
 		//----------------------------------------------------------------
 		"BountyXP"					"22"		// Experience earn.
 		"BountyGoldMin"				"21"		// Gold earned min.
-		"BountyGoldMax"				"29"		// Gold earned max.
+		"BountyGoldMax"				"28"		// Gold earned max.
 
 		// Bounds
 		//----------------------------------------------------------------
@@ -790,8 +790,8 @@
 		// Bounty
 		//----------------------------------------------------------------
 		"BountyXP"					"57"		// Experience earn.
-		"BountyGoldMin"				"37"		// Gold earned min.
-		"BountyGoldMax"				"43"		// Gold earned max.
+		"BountyGoldMin"				"35"		// Gold earned min.
+		"BountyGoldMax"				"41"		// Gold earned max.
 
 		// Bounds
 		//----------------------------------------------------------------
@@ -883,8 +883,8 @@
 		// Bounty
 		//----------------------------------------------------------------
 		"BountyXP"					"25"		// Experience earn.
-		"BountyGoldMin"				"19"		// Gold earned min.
-		"BountyGoldMax"				"27"		// Gold earned max.
+		"BountyGoldMin"				"18"		// Gold earned min.
+		"BountyGoldMax"				"26"		// Gold earned max.
 
 		// Bounds
 		//----------------------------------------------------------------
@@ -976,8 +976,8 @@
 		// Bounty
 		//----------------------------------------------------------------
 		"BountyXP"					"25"		// Experience earn.
-		"BountyGoldMin"				"19"		// Gold earned min.
-		"BountyGoldMax"				"27"		// Gold earned max.
+		"BountyGoldMin"				"18"		// Gold earned min.
+		"BountyGoldMax"				"26"		// Gold earned max.
 
 		// Bounds
 		//----------------------------------------------------------------
@@ -1069,8 +1069,8 @@
 		// Bounty
 		//----------------------------------------------------------------
 		"BountyXP"					"57"		// Experience earn.
-		"BountyGoldMin"				"37"		// Gold earned min.
-		"BountyGoldMax"				"43"		// Gold earned max.
+		"BountyGoldMin"				"35"		// Gold earned min.
+		"BountyGoldMax"				"41"		// Gold earned max.
 
 		// Bounds
 		//----------------------------------------------------------------
@@ -1162,8 +1162,8 @@
 		// Bounty
 		//----------------------------------------------------------------
 		"BountyXP"					"25"		// Experience earn.
-		"BountyGoldMin"				"19"		// Gold earned min.
-		"BountyGoldMax"				"27"		// Gold earned max.
+		"BountyGoldMin"				"18"		// Gold earned min.
+		"BountyGoldMax"				"26"		// Gold earned max.
 
 		// Bounds
 		//----------------------------------------------------------------
@@ -1255,8 +1255,8 @@
 		// Bounty
 		//----------------------------------------------------------------
 		"BountyXP"					"25"		// Experience earn.
-		"BountyGoldMin"				"19"		// Gold earned min.
-		"BountyGoldMax"				"27"		// Gold earned max.
+		"BountyGoldMin"				"18"		// Gold earned min.
+		"BountyGoldMax"				"26"		// Gold earned max.
 
 		// Bounds
 		//----------------------------------------------------------------
@@ -3187,8 +3187,8 @@
 
 		// Bounty
 		//----------------------------------------------------------------
-		"BountyGoldMin"				"125"		// Gold earned min.
-		"BountyGoldMax"				"125"		// Gold earned max.
+		"BountyGoldMin"				"75"		// Gold earned min.
+		"BountyGoldMax"				"75"		// Gold earned max.
 
 		// Bounds
 		//----------------------------------------------------------------
@@ -3295,8 +3295,8 @@
 
 		// Status
 		//----------------------------------------------------------------
-		"StatusHealth"				"1500"		// Base health.
-		"StatusHealthRegen"			"0"			// Health regeneration rate.
+		"StatusHealth"				"1750"		// Base health.
+		"StatusHealthRegen"			"5"			// Health regeneration rate.
 		"StatusMana"				"0"			// Base mana.
 		"StatusManaRegen"			"0"			// Mana regeneration rate.
 
@@ -3367,8 +3367,8 @@
 
 		// Bounty
 		//----------------------------------------------------------------
-		"BountyGoldMin"				"125"		// Gold earned min.
-		"BountyGoldMax"				"125"		// Gold earned max.
+		"BountyGoldMin"				"75"		// Gold earned min.
+		"BountyGoldMax"				"75"		// Gold earned max.
 
 		// Bounds
 		//----------------------------------------------------------------
@@ -3475,8 +3475,8 @@
 
 		// Status
 		//----------------------------------------------------------------
-		"StatusHealth"				"1500"		// Base health.
-		"StatusHealthRegen"			"0"			// Health regeneration rate.
+		"StatusHealth"				"1750"		// Base health.
+		"StatusHealthRegen"			"5"			// Health regeneration rate.
 		"StatusMana"				"0"			// Base mana.
 		"StatusManaRegen"			"0"			// Mana regeneration rate.
 
@@ -3564,7 +3564,7 @@
 
 		// Status
 		//----------------------------------------------------------------
-		"StatusHealth"				"1500"		// Base health.
+		"StatusHealth"				"2000"		// Base health.
 		"StatusHealthRegen"			"5"		// Health regeneration rate.
 		"StatusMana"				"0"			// Base mana.
 		"StatusManaRegen"			"0"			// Mana regeneration rate.
@@ -3653,7 +3653,7 @@
 
 		// Status
 		//----------------------------------------------------------------
-		"StatusHealth"				"1500"		// Base health.
+		"StatusHealth"				"2000"		// Base health.
 		"StatusHealthRegen"			"5"		// Health regeneration rate.
 		"StatusMana"				"0"			// Base mana.
 		"StatusManaRegen"			"0"			// Mana regeneration rate.
@@ -3742,7 +3742,7 @@
 
 		// Status
 		//----------------------------------------------------------------
-		"StatusHealth"				"1500"		// Base health.
+		"StatusHealth"				"2000"		// Base health.
 		"StatusHealthRegen"			"5"		// Health regeneration rate.
 		"StatusMana"				"0"			// Base mana.
 		"StatusManaRegen"			"0"			// Mana regeneration rate.
@@ -4099,7 +4099,7 @@
 
 		// Status
 		//----------------------------------------------------------------
-		"StatusHealth"				"1500"		// Base health.
+		"StatusHealth"				"2000"		// Base health.
 		"StatusHealthRegen"			"5"		// Health regeneration rate.
 		"StatusMana"				"0"			// Base mana.
 		"StatusManaRegen"			"0"			// Mana regeneration rate.
@@ -4189,7 +4189,7 @@
 
 		// Status
 		//----------------------------------------------------------------
-		"StatusHealth"				"1500"		// Base health.
+		"StatusHealth"				"2000"		// Base health.
 		"StatusHealthRegen"			"5"		// Health regeneration rate.
 		"StatusMana"				"0"			// Base mana.
 		"StatusManaRegen"			"0"			// Mana regeneration rate.
@@ -4277,7 +4277,7 @@
 
 		// Status
 		//----------------------------------------------------------------
-		"StatusHealth"				"1500"		// Base health.
+		"StatusHealth"				"2000"		// Base health.
 		"StatusHealthRegen"			"5"		// Health regeneration rate.
 		"StatusMana"				"0"			// Base mana.
 		"StatusManaRegen"			"0"			// Mana regeneration rate.
@@ -4635,7 +4635,7 @@
 		// Status
 		//----------------------------------------------------------------
 		"StatusHealth"				"4250"		// Base health.
-		"StatusHealthRegen"			"8"			// Health regeneration rate.
+		"StatusHealthRegen"			"12"			// Health regeneration rate.
 		"StatusMana"				"0"			// Base mana.
 		"StatusManaRegen"			"0"			// Mana regeneration rate.
 
@@ -4725,7 +4725,7 @@
 		// Status
 		//----------------------------------------------------------------
 		"StatusHealth"				"4250"		// Base health.
-		"StatusHealthRegen"			"8"			// Health regeneration rate.
+		"StatusHealthRegen"			"12"			// Health regeneration rate.
 		"StatusMana"				"0"			// Base mana.
 		"StatusManaRegen"			"0"			// Mana regeneration rate.
 
@@ -9681,8 +9681,8 @@
 	
 		// Bounty
 		//----------------------------------------------------------------
-		"BountyGoldMin"				"175"		// Gold earned min.
-		"BountyGoldMax"				"175"		// Gold earned max.
+		"BountyGoldMin"				"125"		// Gold earned min.
+		"BountyGoldMax"				"125"		// Gold earned max.
 
 			// Status
 		//----------------------------------------------------------------
@@ -9891,8 +9891,8 @@
 		// Attack
 		//----------------------------------------------------------------
 		"AttackCapabilities"		"DOTA_UNIT_CAP_RANGED_ATTACK"
-		"AttackDamageMin"			"40"			// Damage range min.
-		"AttackDamageMax"			"40"			// Damage range max.
+		"AttackDamageMin"			"50"			// Damage range min.
+		"AttackDamageMax"			"50"			// Damage range max.
 		"AttackDamageType"			"DAMAGE_TYPE_ArmorPhysical"
 		"AttackRate"				"1.5"		// Speed of attack.
 		"AttackAnimationPoint"		"0.3"		// Normalized time in animation cycle to attack.
@@ -9969,8 +9969,8 @@
 		// Attack
 		//----------------------------------------------------------------
 		"AttackCapabilities"		"DOTA_UNIT_CAP_RANGED_ATTACK"
-		"AttackDamageMin"			"70"			// Damage range min.
-		"AttackDamageMax"			"70"			// Damage range max.
+		"AttackDamageMin"			"75"			// Damage range min.
+		"AttackDamageMax"			"75"			// Damage range max.
 		"AttackDamageType"			"DAMAGE_TYPE_ArmorPhysical"
 		"AttackRate"				"1.5"		// Speed of attack.
 		"AttackAnimationPoint"		"0.3"		// Normalized time in animation cycle to attack.
@@ -10459,8 +10459,8 @@
 		// Bounty
 		//----------------------------------------------------------------
 		"BountyXP"					"12"		// Experience earn.
-		"BountyGoldMin"				"22"		// Gold earned min.
-		"BountyGoldMax"				"36"		// Gold earned max.
+		"BountyGoldMin"				"20"		// Gold earned min.
+		"BountyGoldMax"				"26"		// Gold earned max.
 
 		// Bounds
 		//----------------------------------------------------------------
@@ -10476,7 +10476,7 @@
 		// Status
 		//----------------------------------------------------------------
 		"StatusHealth"				"180"		// Base health.
-		"StatusHealthRegen"			"0.25"		// Health regeneration rate.
+		"StatusHealthRegen"			"4"		// Health regeneration rate.
 		"StatusMana"				"0"			// Base mana.
 		"StatusManaRegen"			"0"			// Mana regeneration rate.
 
@@ -10540,8 +10540,8 @@
 		// Bounty
 		//----------------------------------------------------------------
 		"BountyXP"					"12"		// Experience earn.
-		"BountyGoldMin"				"22"		// Gold earned min.
-		"BountyGoldMax"				"36"		// Gold earned max.
+		"BountyGoldMin"				"20"		// Gold earned min.
+		"BountyGoldMax"				"26"		// Gold earned max.
 
 		// Bounds
 		//----------------------------------------------------------------
@@ -10557,7 +10557,7 @@
 		// Status
 		//----------------------------------------------------------------
 		"StatusHealth"				"200"		// Base health.
-		"StatusHealthRegen"			"0.25"		// Health regeneration rate.
+		"StatusHealthRegen"			"4"		// Health regeneration rate.
 		"StatusMana"				"0"			// Base mana.
 		"StatusManaRegen"			"0"			// Mana regeneration rate.
 
@@ -10621,8 +10621,8 @@
 		// Bounty
 		//----------------------------------------------------------------
 		"BountyXP"					"12"		// Experience earn.
-		"BountyGoldMin"				"22"		// Gold earned min.
-		"BountyGoldMax"				"36"		// Gold earned max.
+		"BountyGoldMin"				"20"		// Gold earned min.
+		"BountyGoldMax"				"26"		// Gold earned max.
 
 		// Bounds
 		//----------------------------------------------------------------
@@ -10638,7 +10638,7 @@
 		// Status
 		//----------------------------------------------------------------
 		"StatusHealth"				"220"		// Base health.
-		"StatusHealthRegen"			"0.25"		// Health regeneration rate.
+		"StatusHealthRegen"			"4"		// Health regeneration rate.
 		"StatusMana"				"0"			// Base mana.
 		"StatusManaRegen"			"0"			// Mana regeneration rate.
 
@@ -10702,8 +10702,8 @@
 		// Bounty
 		//----------------------------------------------------------------
 		"BountyXP"					"12"		// Experience earn.
-		"BountyGoldMin"				"22"		// Gold earned min.
-		"BountyGoldMax"				"36"		// Gold earned max.
+		"BountyGoldMin"				"20"		// Gold earned min.
+		"BountyGoldMax"				"26"		// Gold earned max.
 
 		// Bounds
 		//----------------------------------------------------------------
@@ -10719,7 +10719,7 @@
 		// Status
 		//----------------------------------------------------------------
 		"StatusHealth"				"240"		// Base health.
-		"StatusHealthRegen"			"0.25"		// Health regeneration rate.
+		"StatusHealthRegen"			"4"		// Health regeneration rate.
 		"StatusMana"				"0"			// Base mana.
 		"StatusManaRegen"			"0"			// Mana regeneration rate.
 
@@ -11004,14 +11004,14 @@
 
 		// Armor
 		//----------------------------------------------------------------
-		"ArmorPhysical"				"8"			// Physical protection.
+		"ArmorPhysical"				"0"			// Physical protection.
 		"MagicalResistance"				"50"		// Magical protection.
 
 		// Attack
 		//----------------------------------------------------------------
 		"AttackCapabilities"		"DOTA_UNIT_CAP_MELEE_ATTACK"
-		"AttackDamageMin"			"18"		// Damage range min.
-		"AttackDamageMax"			"19"		// Damage range max.
+		"AttackDamageMin"			"14"		// Damage range min.
+		"AttackDamageMax"			"16"		// Damage range max.
 		"AttackDamageType"			"DAMAGE_TYPE_ArmorPhysical"
 		"AttackRate"				"1.35"		// Speed of attack.
 		"AttackAnimationPoint"		"0.5"		// Normalized time in animation cycle to attack.
@@ -11022,9 +11022,9 @@
 
 		// Bounty
 		//----------------------------------------------------------------
-		"BountyXP"					"31"		// Experience earn.
-		"BountyGoldMin"				"11"		// Gold earned min.
-		"BountyGoldMax"				"13"		// Gold earned max.
+		"BountyXP"					"9"		// Experience earn.
+		"BountyGoldMin"				"9"		// Gold earned min.
+		"BountyGoldMax"				"9"		// Gold earned max.
 
 		// Bounds
 		//----------------------------------------------------------------
@@ -11039,7 +11039,7 @@
 
 		// Status
 		//----------------------------------------------------------------
-		"StatusHealth"				"250"		// Base health.
+		"StatusHealth"				"280"		// Base health.
 		"StatusHealthRegen"			"2.0"		// Health regeneration rate.
 		"StatusMana"				"0"			// Base mana.
 		"StatusManaRegen"			"0"			// Mana regeneration rate.
@@ -11085,7 +11085,7 @@
 
 		// Armor
 		//----------------------------------------------------------------
-		"ArmorPhysical"				"8"			// Physical protection.
+		"ArmorPhysical"				"0"			// Physical protection.
 		"MagicalResistance"				"50"		// Magical protection.
 
 		// Attack
@@ -11103,9 +11103,9 @@
 
 		// Bounty
 		//----------------------------------------------------------------
-		"BountyXP"					"20"		// Experience earn.
-		"BountyGoldMin"				"16"		// Gold earned min.
-		"BountyGoldMax"				"21"		// Gold earned max.
+		"BountyXP"					"3"		// Experience earn.
+		"BountyGoldMin"				"3"		// Gold earned min.
+		"BountyGoldMax"				"3"		// Gold earned max.
 
 		// Bounds
 		//----------------------------------------------------------------
@@ -11242,7 +11242,7 @@
 		// Armor
 		//----------------------------------------------------------------
 		"ArmorPhysical"				"1"			// Physical protection.
-		"MagicalResistance"				"0"			// Magical protection.
+		"MagicalResistance"				"50"			// Magical protection.
 
 		// Attack
 		//----------------------------------------------------------------
@@ -11259,9 +11259,9 @@
 
 		// Bounty
 		//----------------------------------------------------------------
-		"BountyXP"					"15"		// Experience earn.
-		"BountyGoldMin"				"15"			// Gold earned min.
-		"BountyGoldMax"				"15"		// Gold earned max.
+		"BountyXP"					"5"		// Experience earn.
+		"BountyGoldMin"				"5"			// Gold earned min.
+		"BountyGoldMax"				"5"		// Gold earned max.
 
 		// Bounds
 		//----------------------------------------------------------------
@@ -11393,8 +11393,8 @@
 		// Attack
 		//----------------------------------------------------------------
 		"AttackCapabilities"		"DOTA_UNIT_CAP_MELEE_ATTACK"
-		"AttackDamageMin"			"65"		// Damage range min.
-		"AttackDamageMax"			"65"		// Damage range max.
+		"AttackDamageMin"			"75"		// Damage range min.
+		"AttackDamageMax"			"75"		// Damage range max.
 		"AttackDamageType"			"DAMAGE_TYPE_ArmorPhysical"
 		"AttackRate"				"2.0"			// Speed of attack.
 		"AttackAnimationPoint"		"0.6"		// Normalized time in animation cycle to attack.
@@ -11423,7 +11423,7 @@
 
 		// Status
 		//----------------------------------------------------------------
-		"StatusHealth"				"5500"		// Base health.
+		"StatusHealth"				"6000"		// Base health.
 		"StatusHealthRegen"			"20"		// Health regeneration rate.
 		"StatusMana"				"0"		// Base mana.
 		"StatusManaRegen"			"0"		// Mana regeneration rate.
@@ -11815,7 +11815,7 @@
 
 		// Status
 		//----------------------------------------------------------------
-		"StatusHealth"				"1500"		// Base health.
+		"StatusHealth"				"2000"		// Base health.
 		"StatusHealthRegen"			"50"		// Health regeneration rate.
 		"StatusMana"				"0"			// Base mana.
 		"StatusManaRegen"			"0"			// Mana regeneration rate.		 
@@ -11896,7 +11896,7 @@
 
 		// Status
 		//----------------------------------------------------------------
-		"StatusHealth"				"2000"		// Base health.
+		"StatusHealth"				"3000"		// Base health.
 		"StatusHealthRegen"			"75"		// Health regeneration rate.
 		"StatusMana"				"0"			// Base mana.
 		"StatusManaRegen"			"0"			// Mana regeneration rate.		 
@@ -12059,7 +12059,7 @@
 
 		// Status
 		//----------------------------------------------------------------
-		"StatusHealth"				"1125"		// Base health.
+		"StatusHealth"				"1500"		// Base health.
 		"StatusHealthRegen"			"50"		// Health regeneration rate.
 		"StatusMana"				"0"			// Base mana.
 		"StatusManaRegen"			"0"			// Mana regeneration rate.		 
@@ -12139,7 +12139,7 @@
 
 		// Status
 		//----------------------------------------------------------------
-		"StatusHealth"				"1500"		// Base health.
+		"StatusHealth"				"2250"		// Base health.
 		"StatusHealthRegen"			"75"		// Health regeneration rate.
 		"StatusMana"				"0"			// Base mana.
 		"StatusManaRegen"			"0"			// Mana regeneration rate.		 
@@ -14419,8 +14419,8 @@
 		// Bounty
 		//----------------------------------------------------------------
 		"BountyXP"					"0"	// Experience earn.
-		"BountyGoldMin"				"1"		// Gold earned min.
-		"BountyGoldMax"				"1"		// Gold earned max.
+		"BountyGoldMin"				"25"		// Gold earned min.
+		"BountyGoldMax"				"25"		// Gold earned max.
 
 		// Movement
 		//----------------------------------------------------------------
@@ -15127,8 +15127,8 @@
 		// Attack
 		//----------------------------------------------------------------
 		"AttackCapabilities"		"DOTA_UNIT_CAP_MELEE_ATTACK"
-		"AttackDamageMin"			"15"		// Damage range min.
-		"AttackDamageMax"			"19"		// Damage range max.	
+		"AttackDamageMin"			"24"		// Damage range min.
+		"AttackDamageMax"			"28"		// Damage range max.	
 		"AttackRate"				"1.2"		// Speed of attack.
 		"AttackAnimationPoint"		"0.33"		// Normalized time in animation cycle to attack.
 		"AttackAcquisitionRange"	"500"		// Range within a target can be acquired.
@@ -15155,7 +15155,7 @@
 
 		// Status
 		//----------------------------------------------------------------
-		"StatusHealth"				"200"		// Base health.
+		"StatusHealth"				"230"		// Base health.
 		"StatusHealthRegen"			"0.5"		// Health regeneration rate.
 		"StatusMana"				"0"			// Base mana.
 		"StatusManaRegen"			"0"			// Mana regeneration rate.		 
@@ -15201,8 +15201,8 @@
 		// Attack
 		//----------------------------------------------------------------
 		"AttackCapabilities"		"DOTA_UNIT_CAP_MELEE_ATTACK"
-		"AttackDamageMin"			"26"		// Damage range min.
-		"AttackDamageMax"			"30"		// Damage range max.	
+		"AttackDamageMin"			"32"		// Damage range min.
+		"AttackDamageMax"			"36"		// Damage range max.	
 		"AttackRate"				"1.1"		// Speed of attack.
 		"AttackAnimationPoint"		"0.33"		// Normalized time in animation cycle to attack.
 		"AttackAcquisitionRange"	"500"		// Range within a target can be acquired.
@@ -15230,7 +15230,7 @@
 
 		// Status
 		//----------------------------------------------------------------
-		"StatusHealth"				"240"		// Base health.
+		"StatusHealth"				"260"		// Base health.
 		"StatusHealthRegen"			"0.5"		// Health regeneration rate.
 		"StatusMana"				"0"			// Base mana.
 		"StatusManaRegen"			"0"			// Mana regeneration rate.		 
@@ -15276,8 +15276,8 @@
 		// Attack
 		//----------------------------------------------------------------
 		"AttackCapabilities"		"DOTA_UNIT_CAP_MELEE_ATTACK"
-		"AttackDamageMin"			"35"		// Damage range min.
-		"AttackDamageMax"			"39"		// Damage range max.	
+		"AttackDamageMin"			"40"		// Damage range min.
+		"AttackDamageMax"			"44"		// Damage range max.	
 		"AttackRate"				"1.0"		// Speed of attack.
 		"AttackAnimationPoint"		"0.33"		// Normalized time in animation cycle to attack.
 		"AttackAcquisitionRange"	"500"		// Range within a target can be acquired.
@@ -15304,7 +15304,7 @@
 
 		// Status
 		//----------------------------------------------------------------
-		"StatusHealth"				"280"		// Base health.
+		"StatusHealth"				"290"		// Base health.
 		"StatusHealthRegen"			"0.5"		// Health regeneration rate.
 		"StatusMana"				"0"			// Base mana.
 		"StatusManaRegen"			"0"			// Mana regeneration rate.		 
@@ -15350,8 +15350,8 @@
 		// Attack
 		//----------------------------------------------------------------
 		"AttackCapabilities"		"DOTA_UNIT_CAP_MELEE_ATTACK"
-		"AttackDamageMin"			"44"		// Damage range min.
-		"AttackDamageMax"			"48"		// Damage range max.	
+		"AttackDamageMin"			"48"		// Damage range min.
+		"AttackDamageMax"			"52"		// Damage range max.	
 		"AttackRate"				"0.9"		// Speed of attack.
 		"AttackAnimationPoint"		"0.33"		// Normalized time in animation cycle to attack.
 		"AttackAcquisitionRange"	"500"		// Range within a target can be acquired.
