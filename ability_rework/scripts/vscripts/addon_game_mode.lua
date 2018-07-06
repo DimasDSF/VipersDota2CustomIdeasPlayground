@@ -885,6 +885,7 @@ function VGMAR:FilterModifierGained( filterTable )
 	]]--
 	local modifiername = filterTable["name_const"]
 	local ability = nil
+	local parent = nil
 	if filterTable["entindex_ability_const"] then
 		ability = EntIndexToHScript(filterTable.entindex_ability_const)
 	end
