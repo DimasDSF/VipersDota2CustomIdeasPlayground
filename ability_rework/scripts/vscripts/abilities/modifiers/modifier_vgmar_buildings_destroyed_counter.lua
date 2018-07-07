@@ -32,18 +32,6 @@ function modifier_vgmar_buildings_destroyed_counter:OnCreated(kv)
 	end
 end
 
-function modifier_vgmar_buildings_destroyed_counter:OnRefresh(kv)
-	if IsServer() then
-	end
-end
-
-function modifier_vgmar_buildings_destroyed_counter:OnIntervalThink()
-	local parent = self:GetParent()
-	if IsServer() then
-		
-	end
-end
-
 function modifier_vgmar_buildings_destroyed_counter:DeclareFunctions()
 	local funcs = {
 		MODIFIER_EVENT_ON_BUILDING_KILLED
