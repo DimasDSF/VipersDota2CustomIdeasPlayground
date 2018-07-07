@@ -80,6 +80,8 @@ function VGMAR:Init()
 	self.balancelogprinttimestamp = 0
 	self.towerskilleddire = 0
 	self.towerskilledrad = 0
+	self.direanc = Entities:FindByName(nil, "dota_badguys_fort")
+	self.radiantanc = Entities:FindByName(nil, "dota_goodguys_fort")
 	self.direthronedefparticle1 = nil
 	self.direthronedefparticle2 = nil
 	self.direthronedefparticletimestamp = 0
@@ -185,7 +187,48 @@ function VGMAR:Init()
 	LinkLuaModifier("modifier_vgmar_courier_burst", "abilities/modifiers/modifier_vgmar_courier_burst.lua", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_courier_burst_effect", "abilities/modifiers/modifier_vgmar_courier_burst.lua", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_courier_burst_charge", "abilities/modifiers/modifier_vgmar_courier_burst.lua", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_buildings_destroyed_counter", "abilities/modifiers/modifier_vgmar_buildings_destroyed_counter.lua", LUA_MODIFIER_MOTION_NONE)
 	
+	self.buildingadvantagevaluelist = {
+		["dota_badguys_tower1_mid"] = 1,
+		["dota_badguys_tower1_top"] = 1,
+		["dota_badguys_tower1_bot"] = 1,
+		["dota_badguys_tower2_mid"] = 2,
+		["dota_badguys_tower2_top"] = 2,
+		["dota_badguys_tower2_bot"] = 2,
+		["dota_badguys_tower3_mid"] = 2,
+		["dota_badguys_tower3_top"] = 2,
+		["dota_badguys_tower3_bot"] = 2,
+		["bad_rax_melee_mid"] = 3,
+		["bad_rax_range_mid"] = 3,
+		["bad_rax_melee_top"] = 3,
+		["bad_rax_range_top"] = 3,
+		["bad_rax_melee_bot"] = 3,
+		["bad_rax_range_bot"] = 3,
+		["bad_healer_7"] = 2,
+		["bad_healer_6"] = 2,
+		["dota_badguys_tower4_top"] = 4,
+		["dota_badguys_tower4_bot"] = 4,
+		["dota_goodguys_tower1_mid"] = 1,
+		["dota_goodguys_tower1_top"] = 1,
+		["dota_goodguys_tower1_bot"] = 1,
+		["dota_goodguys_tower2_mid"] = 2,
+		["dota_goodguys_tower2_top"] = 2,
+		["dota_goodguys_tower2_bot"] = 2,
+		["dota_goodguys_tower3_mid"] = 2,
+		["dota_goodguys_tower3_top"] = 2,
+		["dota_goodguys_tower3_bot"] = 2,
+		["good_rax_melee_mid"] = 3,
+		["good_rax_range_mid"] = 3,
+		["good_rax_melee_top"] = 3,
+		["good_rax_range_top"] = 3,
+		["good_rax_melee_bot"] = 3,
+		["good_rax_range_bot"] = 3,
+		["good_healer_7"] = 2,
+		["good_healer_6"] = 2,
+		["dota_goodguys_tower4_top"] = 4,
+		["dota_goodguys_tower4_bot"] = 4
+	}
 	self.essenceauraignoredabilities = {
 		nyx_assassin_burrow = true,
 		nyx_assassin_unburrow = true,
@@ -1130,23 +1173,6 @@ function VGMAR:OnTowerKilled( keys )
 		self.botsInLateGameMode = true
 		GameRules:GetGameModeEntity():SetBotsInLateGame(self.botsInLateGameMode)
 	end
-	--///////////////
-	--Balance system ##BALANCEDEV##
-	--///////////////
-	--Counting Towers
-	if keys.teamnumber == 2 then
-		if self.towerskilleddire ~= nil then
-			self.towerskilleddire = self.towerskilleddire + 1
-		else
-			self.towerskilleddire = 1
-		end
-	elseif keys.teamnumber == 3 then
-		if self.towerskilledrad ~= nil then
-			self.towerskilledrad = self.towerskilledrad + 1
-		else
-			self.towerskilledrad = 1
-		end
-	end
 end
 
 function VGMAR:IsHeroBotControlled(hero)
@@ -1900,6 +1926,19 @@ function VGMAR:OnThink()
 			end
 			self.direthrone:StopSound("Hero_Razor.Storm.Loop")
 			self.direthronedefparticlesactive = false
+		end
+		--////////////////////////////////////////
+		--Updating Radiant And Dire Buildings Down
+		--////////////////////////////////////////
+		if self.radiantanc ~= nil and self.radiantanc ~= nil then
+			local towerskilleddire = self.radiantanc:FindModifierByName("modifier_vgmar_buildings_destroyed_counter"):GetStackCount()
+			local towerskilledrad = self.direanc:FindModifierByName("modifier_vgmar_buildings_destroyed_counter"):GetStackCount()
+			self.towerskilleddire = towerskilleddire
+			self.towerskilledrad = towerskilledrad
+		else
+			self.direanc = Entities:FindByName(nil, "dota_badguys_fort")
+			self.radiantanc = Entities:FindByName(nil, "dota_goodguys_fort")
+			
 		end
 	end
 	if GameRules:State_Get() >= DOTA_GAMERULES_STATE_PRE_GAME then
@@ -2712,6 +2751,14 @@ function VGMAR:OnGameStateChanged( keys )
 		--AntiDireFountainCamp
 		--////////////////////
 		local direfountain = Entities:FindByName(nil, "ent_dota_fountain_bad")
+		self.direanc = Entities:FindByName(nil, "dota_badguys_fort")
+		self.radiantanc = Entities:FindByName(nil, "dota_goodguys_fort")
+		if self.direanc then
+			self.direanc:AddNewModifier(self.direanc, nil, "modifier_vgmar_buildings_destroyed_counter", {})
+		end
+		if self.radiantanc then
+			self.radiantanc:AddNewModifier(self.radiantanc, nil, "modifier_vgmar_buildings_destroyed_counter", {})
+		end
 		if direfountain then
 			direfountain:AddNewModifier(direfountain, nil, "modifier_vgmar_b_fountain_anticamp", modifierdatatable["modifier_vgmar_b_fountain_anticamp"])
 		end
