@@ -3,7 +3,7 @@ local DIRE_TEAM_MAX_PLAYERS = 8
 local RUNE_SPAWN_TIME = 120
 local VGMAR_DEBUG = true
 local VGMAR_GIVE_DEBUG_ITEMS = false
-local VGMAR_BOT_FILL = false
+local VGMAR_BOT_FILL = true
 local VGMAR_LOG_BALANCE = false
 local VGMAR_LOG_BALANCE_INTERVAL = 120
 local MAX_COURIER_LVL = 5
@@ -76,17 +76,11 @@ function VGMAR:Init()
 	self.backdoortimertable = {}
 	self.customitemsreminderfinished = false
 	self.ItemKVs = {}
-	self.direancientfailsafetimestamp = 0
 	self.balancelogprinttimestamp = 0
 	self.towerskilleddire = 0
 	self.towerskilledrad = 0
 	self.direanc = Entities:FindByName(nil, "dota_badguys_fort")
 	self.radiantanc = Entities:FindByName(nil, "dota_goodguys_fort")
-	self.direthronedefparticle1 = nil
-	self.direthronedefparticle2 = nil
-	self.direthronedefparticletimestamp = 0
-	self.direthronedefparticlesactive = false
-	self.direthrone = nil
 	
 	local itemskvnum = 0
 	local itemscustomkvnum = 0
@@ -188,6 +182,7 @@ function VGMAR:Init()
 	LinkLuaModifier("modifier_vgmar_courier_burst_effect", "abilities/modifiers/modifier_vgmar_courier_burst.lua", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_courier_burst_charge", "abilities/modifiers/modifier_vgmar_courier_burst.lua", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_buildings_destroyed_counter", "abilities/modifiers/modifier_vgmar_buildings_destroyed_counter.lua", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_anticreep_protection", "abilities/modifiers/modifier_vgmar_anticreep_protection.lua", LUA_MODIFIER_MOTION_NONE)
 	
 	self.buildingadvantagevaluelist = {
 		["dota_badguys_tower1_mid"] = 1,
@@ -446,16 +441,17 @@ local debugitems = {
 	["item_kaya"] = 3,
 	["item_aether_lens"] = 3,
 	["item_ultimate_scepter"] = 2,
-	["item_mystic_staff"] = 2,
+	["item_mystic_staff"] = 0,
 	["item_soul_booster"] = 2,
-	["item_butterfly"] = 1,
-	["item_eagle"] = 1,
-	["item_orb_of_venom"] = 2,
-	["item_demon_edge"] = 2,
-	["item_yasha"] = 1,
-	["item_dragon_lance"] = 4,
+	["item_butterfly"] = 0,
+	["item_eagle"] = 0,
+	["item_orb_of_venom"] = 0,
+	["item_demon_edge"] = 0,
+	["item_yasha"] = 0,
+	["item_dragon_lance"] = 3,
 	["item_mask_of_madness"] = 1,
-	["item_gloves"] = 2
+	["item_gloves"] = 2,
+	["item_tome_of_knowledge"] = 15
 }
 
 --Creep -> Building Damage Multiplier
@@ -637,6 +633,7 @@ local modifierdatatable = {
 	["modifier_vgmar_i_poison_dagger"] = {cooldown = 15, maxstacks = 4, aoestacks = 2, minenemiesforaoe = 3, aoedmgperc = 50, damage = 30, initialdamageperc = 50, aoeradius = 500, duration = 20, interval = 1.0},
 	["modifier_vgmar_i_scorching_light"] = {radius = 700, interval = 1.0, visioninterval = 5.0, initialdamage = 60, damageincpertick = 5, maxdamage = 600, missrate = 17, visiondelay = 3, minvision = 0, maxvision = 400, maxillusionstacks = 3, lingerduration = 3.0},
 	["modifier_vgmar_b_fountain_anticamp"] = {radius = 2000, interval = 1.0, strpertick = 2, intpertick = 1, agipertick = 1, lingerduration = 15.0},
+	["modifier_vgmar_anticreep_protection"] = {radius = 1800, strikeinterval = 2.0, activeduration = 5.0, dmgpercentpercreep = 5.0},
 	["modifier_vgmar_i_ogre_tester"] = {}
 }
 
@@ -844,8 +841,8 @@ end
 -- Remove Bounty Runes if spawntime%5 != 0
 --//////////////////////////////////////////////
 function VGMAR:FilterRuneSpawn( filterTable )
-	dprint("Rune spawn premodified filterTable")
-	DeepPrintTable( filterTable )
+	--dprint("Rune spawn premodified filterTable")
+	--DeepPrintTable( filterTable )
 	local function GetRandomRune( notrune )
 		local runeslist = {
 			0,
@@ -885,8 +882,8 @@ function VGMAR:FilterRuneSpawn( filterTable )
 		self.lastrunetype = filterTable.rune_type
 	end
 	self.currunenum = self.currunenum + 1
-	dprint("Rune spawn aftermodified filterTable")
-	DeepPrintTable( filterTable )
+	--dprint("Rune spawn aftermodified filterTable")
+	--DeepPrintTable( filterTable )
 	return true
 end
 
@@ -1906,27 +1903,6 @@ function VGMAR:OnThink()
 				self:LogBalance()
 			end
 		end
-		--///////////////////////////////
-		--Dire Defensive Particle Removal
-		--///////////////////////////////
-		if GameRules:GetGameTime() >= self.direthronedefparticletimestamp + 5 and self.direthronedefparticlesactive == true then
-			if self.direthronedefparticle1 ~= nil then
-				ParticleManager:DestroyParticle(self.direthronedefparticle1, false)
-				ParticleManager:ReleaseParticleIndex(self.direthronedefparticle1)
-				ParticleManager:DestroyParticle(self.direthronedefparticle1_1, false)
-				ParticleManager:ReleaseParticleIndex(self.direthronedefparticle1_1)
-				ParticleManager:DestroyParticle(self.direthronedefparticle1_2, false)
-				ParticleManager:ReleaseParticleIndex(self.direthronedefparticle1_2)
-				self.direthronedefparticle1 = nil
-			end
-			if self.direthronedefparticle2 ~= nil then
-				ParticleManager:DestroyParticle(self.direthronedefparticle2, false)
-				ParticleManager:ReleaseParticleIndex(self.direthronedefparticle2)
-				self.direthronedefparticle2 = nil
-			end
-			self.direthrone:StopSound("Hero_Razor.Storm.Loop")
-			self.direthronedefparticlesactive = false
-		end
 		--////////////////////////////////////////
 		--Updating Radiant And Dire Buildings Down
 		--////////////////////////////////////////
@@ -2188,67 +2164,6 @@ function VGMAR:FilterDamage( filterTable )
 			elseif attacker:GetTeamNumber() == 3 then --Dire damage
 				filterTable["damage"] = filterTable["damage"] * math.min(1.2,math.max(0.8,self:GetTeamAdvantage(true, true, false, false)))
 			end--]]
-		end
-	end
-	
-	--//////////////////////////
-	--Bot Ancient Defence System
-	--//////////////////////////
-	if victim:GetName() == "dota_badguys_fort" then
-		--TimeStamp
-		if GameRules:GetGameTime() > self.direancientfailsafetimestamp + 2 then
-			--Checking for radiant heroes
-			local enemyheroes = FindUnitsInRadius(victim:GetTeamNumber(), victim:GetOrigin(), nil, 1600, DOTA_UNIT_TARGET_TEAM_ENEMY, DOTA_UNIT_TARGET_HERO, 0, FIND_CLOSEST, false)
-			if #enemyheroes < 1 then
-				local creeps = FindUnitsInRadius(victim:GetTeamNumber(), victim:GetOrigin(), nil, 1800, DOTA_UNIT_TARGET_TEAM_ENEMY, DOTA_UNIT_TARGET_CREEP, 0, FIND_CLOSEST, false)
-				local selectedcreeps = {}
-				for i=1,#creeps do
-					if creeps[i]:IsDominated() == false and creeps[i]:GetClassname() == "npc_dota_creep_lane" or creeps[i]:GetClassname() == "npc_dota_creep_siege" then
-						table.insert(selectedcreeps, creeps[i])
-					end
-				end
-				if self.direthronedefparticle1 == nil then
-					self.direthronedefparticle1 = ParticleManager:CreateParticle("particles/units/heroes/hero_razor/razor_rain_storm.vpcf", PATTACH_WORLDORIGIN, victim)
-					ParticleManager:SetParticleControl(self.direthronedefparticle1, 0, victim:GetAbsOrigin() + Vector(0,0,200))
-					ParticleManager:SetParticleControl(self.direthronedefparticle1, 2, victim:GetAbsOrigin() + Vector(0,0,200))
-					self.direthronedefparticle1_1 = ParticleManager:CreateParticle("particles/units/heroes/hero_razor/razor_rain_storm.vpcf", PATTACH_WORLDORIGIN, victim)
-					ParticleManager:SetParticleControl(self.direthronedefparticle1_1, 0, victim:GetAbsOrigin() + Vector(0,0,200))
-					ParticleManager:SetParticleControl(self.direthronedefparticle1_1, 2, victim:GetAbsOrigin() + Vector(0,0,200))
-					self.direthronedefparticle1_2 = ParticleManager:CreateParticle("particles/units/heroes/hero_razor/razor_rain_storm.vpcf", PATTACH_WORLDORIGIN, victim)
-					ParticleManager:SetParticleControl(self.direthronedefparticle1_2, 0, victim:GetAbsOrigin() + Vector(0,0,200))
-					ParticleManager:SetParticleControl(self.direthronedefparticle1_2, 2, victim:GetAbsOrigin() + Vector(0,0,200))
-				end
-				if self.direthronedefparticle2 == nil then
-					self.direthronedefparticle2 = ParticleManager:CreateParticle("particles/econ/items/outworld_devourer/od_shards_exile_gold/od_shards_exile_prison_top_orb_gold.vpcf", PATTACH_WORLDORIGIN, victim)
-					ParticleManager:SetParticleControl(self.direthronedefparticle2, 0, victim:GetAbsOrigin() + Vector(0,0,350))
-				end
-				if self.direthronedefparticlesactive == false then
-					victim:EmitSound("Hero_Razor.Storm.Cast")
-					victim:EmitSound("Hero_Razor.Storm.Loop")
-					self.direthrone = victim
-					local direthronedefparticle3 = ParticleManager:CreateParticle("particles/econ/items/sven/sven_warcry_ti5/sven_spell_warcry_ti_5.vpcf", PATTACH_POINT_FOLLOW, victim)
-					ParticleManager:SetParticleControl(direthronedefparticle3, 0, victim:GetAbsOrigin() + Vector(0,0,400))
-					victim:EmitSound("Hero_Zuus.LightningBolt")
-					ParticleManager:ReleaseParticleIndex(direthronedefparticle3)
-					self.direthronedefparticlesactive = true
-				end
-				if #selectedcreeps > 0 then
-					for j=1,#selectedcreeps do
-						--particles/items_fx/chain_lightning.vpcf
-						local static_pfx = ParticleManager:CreateParticle("particles/econ/events/ti6/maelstorm_ti6.vpcf", PATTACH_ABSORIGIN_FOLLOW, victim)
-						ParticleManager:SetParticleControlEnt(static_pfx, 0, selectedcreeps[j], PATTACH_POINT_FOLLOW, "attach_hitloc", selectedcreeps[j]:GetAbsOrigin(), true)
-						ParticleManager:SetParticleControl(static_pfx, 1, victim:GetAbsOrigin() + Vector(0,0,500))
-						ParticleManager:ReleaseParticleIndex(static_pfx)
-						local dmg = (selectedcreeps[j]:GetMaxHealth()/100) * (#creeps * 4)
-						ApplyDamage({attacker = victim, victim = selectedcreeps[j], ability = nil, damage = dmg, damage_type = DAMAGE_TYPE_PURE})
-					end
-					AddFOWViewer(2, victim:GetAbsOrigin(), 500, 2.0, false)
-					victim:EmitSound("Hero_Zuus.ArcLightning.Cast")
-					attacker:EmitSound("Hero_Zuus.ArcLightning.Target")
-				end
-				self.direancientfailsafetimestamp = GameRules:GetGameTime()
-				self.direthronedefparticletimestamp = GameRules:GetGameTime()
-			end
 		end
 	end
 
@@ -2755,6 +2670,7 @@ function VGMAR:OnGameStateChanged( keys )
 		self.radiantanc = Entities:FindByName(nil, "dota_goodguys_fort")
 		if self.direanc then
 			self.direanc:AddNewModifier(self.direanc, nil, "modifier_vgmar_buildings_destroyed_counter", {})
+			self.direanc:AddNewModifier(self.direanc, nil, "modifier_vgmar_anticreep_protection", modifierdatatable["modifier_vgmar_anticreep_protection"])
 		end
 		if self.radiantanc then
 			self.radiantanc:AddNewModifier(self.radiantanc, nil, "modifier_vgmar_buildings_destroyed_counter", {})

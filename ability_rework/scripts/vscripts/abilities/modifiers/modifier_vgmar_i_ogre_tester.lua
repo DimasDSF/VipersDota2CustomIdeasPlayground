@@ -70,6 +70,7 @@ function modifier_vgmar_i_ogre_tester:OnCreated(kv)
 	if IsServer() then
 		self:StartIntervalThink( 1 )
 		self.crit = false
+		self.mci = 0.5
 		--self.p1 = nil
 		--self.p2 = nil
 		--self.p3 = nil
@@ -130,9 +131,6 @@ function modifier_vgmar_i_ogre_tester:OnIntervalThink()
 			end
 			self.oldgold = PlayerResource:GetGold(self:GetParent():GetPlayerOwnerID())
 		end
-		
-		local parent = self:GetParent()
-		self:statprint("restorechance: "..math.scale(30, math.map(math.clamp(0.2, parent:GetMana()/parent:GetMaxMana(), 1), 0.2, 1, 0, 1), 10))
 		--ParticleTest
 		--[[if self.p1 == nil then
 			self.p1 = ParticleManager:CreateParticle("particles/units/heroes/hero_razor/razor_rain_storm.vpcf", PATTACH_WORLDORIGIN, parent)
@@ -176,6 +174,8 @@ end
 function modifier_vgmar_i_ogre_tester:DeclareFunctions()
 	local funcs = {
 		MODIFIER_EVENT_ON_DEATH,
+		--MODIFIER_EVENT_ON_ABILITY_EXECUTED,
+		--MODIFIER_EVENT_ON_ABILITY_START,
 		MODIFIER_PROPERTY_TRANSLATE_ACTIVITY_MODIFIERS,
     }
     return funcs
@@ -184,6 +184,24 @@ end
 function modifier_vgmar_i_ogre_tester:GetActivityTranslationModifiers()
 	return "injured"
 end
+
+--[[ManaCost Modification
+function modifier_vgmar_i_ogre_tester:OnAbilityExecuted(kv)
+	if kv.ability:IsItem() == false then
+		kv.unit:ReduceMana((kv.ability:GetManaCost(-1) * self.mci) - kv.ability:GetManaCost(-1))
+	end
+end
+
+function modifier_vgmar_i_ogre_tester:OnAbilityStart(kv)
+	if kv.ability:IsItem() == false then
+		print("Ability: "..kv.ability:GetName().."\nRequired Mana: "..kv.ability:GetManaCost(-1) * self.mci.."\nAvailable Mana: "..kv.unit:GetMana())
+		if kv.ability:GetManaCost(-1) * self.mci > kv.unit:GetMana() then
+			print("Not Enough Mana, Interrupting")
+			kv.unit:Interrupt()
+			GameRules.VGMAR:DisplayClientError(kv.unit:GetPlayerID(), "Not Enough Mana")
+		end
+	end
+end--]]
 
 function modifier_vgmar_i_ogre_tester:OnDeath(kv)
 	local function nonnilprint(var)
