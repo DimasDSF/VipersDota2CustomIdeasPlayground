@@ -31,6 +31,9 @@ function modifier_vgmar_i_arcane_intellect:OnCreated(kv)
 		self.percentage = kv.percentage
 		self.multpercast = kv.multpercast
 		self.bonusint = kv.bonusint
+		self.minimalcooldown = kv.minimalcooldown
+		self.csmaxmana = kv.csmaxmana
+		self.csminmana = kv.csminmana
 		self.caststacks = 0
 		self:StartIntervalThink( 0.5 )
 	else
@@ -39,7 +42,9 @@ function modifier_vgmar_i_arcane_intellect:OnCreated(kv)
 end
 
 function modifier_vgmar_i_arcane_intellect:OnIntervalThink()
-	self:SetStackCount( math.floor(((self.percentage/100) * self:GetParent():GetIntellect()) + math.floor(self.caststacks)) )
+	if IsServer() then
+		self:SetStackCount( math.floor(((self.percentage/100) * self:GetParent():GetIntellect()) + (math.floor(self.caststacks) * math.truncate(math.max(math.map(self:GetParent():GetMana(), self.csminmana, self.csmaxmana, 0, 1), 0), 1))) )
+	end
 end
 
 function modifier_vgmar_i_arcane_intellect:DeclareFunctions()
@@ -68,7 +73,7 @@ function modifier_vgmar_i_arcane_intellect:OnAbilityFullyCast( kv )
 	if IsServer() then
 		if kv.unit == self:GetParent() then
 			if kv.ability and kv.ability:IsToggle() == false and kv.ability:IsItem() == false and (GameRules.VGMAR.arcaneintignoredabilities[kv.ability:GetName()] == nil or GameRules.VGMAR.arcaneintignoredabilities[kv.ability:GetName()] ~= true) then
-				if kv.ability:GetCooldown(kv.ability:GetLevel()) > 3 or GameRules.VGMAR.arcaneintignoredabilities[kv.ability:GetName()] == false then
+				if kv.ability:GetCooldown(kv.ability:GetLevel()) >= self.minimalcooldown or GameRules.VGMAR.arcaneintignoredabilities[kv.ability:GetName()] == false then
 					self.caststacks = self.caststacks + self.multpercast
 				end
 			end

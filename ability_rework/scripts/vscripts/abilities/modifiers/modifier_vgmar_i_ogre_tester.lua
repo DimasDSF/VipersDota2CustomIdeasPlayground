@@ -181,6 +181,7 @@ function modifier_vgmar_i_ogre_tester:DeclareFunctions()
     return funcs
 end
 
+
 function modifier_vgmar_i_ogre_tester:GetActivityTranslationModifiers()
 	return "injured"
 end

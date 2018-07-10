@@ -72,7 +72,7 @@ function modifier_vgmar_anticreep_protection:OnAttacked(kv)
 				self.striketimestamp = GameRules:GetGameTime()
 				local enemyheroes = FindUnitsInRadius(parent:GetTeamNumber(), parent:GetOrigin(), nil, self.radius, DOTA_UNIT_TARGET_TEAM_ENEMY, DOTA_UNIT_TARGET_HERO, 0, FIND_CLOSEST, false)
 				if #enemyheroes < 1 then
-					if self:GetRemainingTime() > 0 then
+					if self:GetRemainingTime() > 0 and self.cpsactive then
 						local creeps = FindUnitsInRadius(parent:GetTeamNumber(), parent:GetOrigin(), nil, self.radius + 200, DOTA_UNIT_TARGET_TEAM_ENEMY, DOTA_UNIT_TARGET_CREEP, 0, FIND_CLOSEST, false)
 						local selectedcreeps = {}
 						for i=1,#creeps do
@@ -94,14 +94,20 @@ function modifier_vgmar_anticreep_protection:OnAttacked(kv)
 					else
 						--creating status particles
 						--RainStorm
-						self.particle1 = ParticleManager:CreateParticle("particles/units/heroes/hero_razor/razor_rain_storm.vpcf", PATTACH_WORLDORIGIN, parent)
+						if self.particle1 == nil then
+							self.particle1 = ParticleManager:CreateParticle("particles/units/heroes/hero_razor/razor_rain_storm.vpcf", PATTACH_WORLDORIGIN, parent)
+						end
 						ParticleManager:SetParticleControl(self.particle1, 0, parent:GetAbsOrigin() + Vector(0,0,200))
 						ParticleManager:SetParticleControl(self.particle1, 2, parent:GetAbsOrigin() + Vector(0,0,200))
-						self.particle1_1 = ParticleManager:CreateParticle("particles/units/heroes/hero_razor/razor_rain_storm.vpcf", PATTACH_WORLDORIGIN, parent)
+						if self.particle1_1 == nil then
+							self.particle1_1 = ParticleManager:CreateParticle("particles/units/heroes/hero_razor/razor_rain_storm.vpcf", PATTACH_WORLDORIGIN, parent)
+						end
 						ParticleManager:SetParticleControl(self.particle1_1, 0, parent:GetAbsOrigin() + Vector(0,0,200))
 						ParticleManager:SetParticleControl(self.particle1_1, 2, parent:GetAbsOrigin() + Vector(0,0,200))
 						--Orb
-						self.particle2 = ParticleManager:CreateParticle("particles/econ/items/outworld_devourer/od_shards_exile_gold/od_shards_exile_prison_top_orb_gold.vpcf", PATTACH_WORLDORIGIN, parent)
+						if self.particle2 == nil then
+							self.particle2 = ParticleManager:CreateParticle("particles/econ/items/outworld_devourer/od_shards_exile_gold/od_shards_exile_prison_top_orb_gold.vpcf", PATTACH_WORLDORIGIN, parent)
+						end
 						ParticleManager:SetParticleControl(self.particle2, 0, parent:GetAbsOrigin() + Vector(0,0,350))
 						--Lightning
 						parent:EmitSound("Hero_Razor.Storm.Cast")

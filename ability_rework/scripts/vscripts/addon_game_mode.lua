@@ -1,9 +1,10 @@
 local RADIANT_TEAM_MAX_PLAYERS = 1
 local DIRE_TEAM_MAX_PLAYERS = 8
-local RUNE_SPAWN_TIME = 120
+local RUNE_SPAWN_TIME_POWERUP = 2
+local RUNE_SPAWN_TIME_BOUNTY = 5
 local VGMAR_DEBUG = true
 local VGMAR_GIVE_DEBUG_ITEMS = false
-local VGMAR_BOT_FILL = true
+local VGMAR_BOT_FILL = false
 local VGMAR_LOG_BALANCE = false
 local VGMAR_LOG_BALANCE_INTERVAL = 120
 local MAX_COURIER_LVL = 5
@@ -81,6 +82,8 @@ function VGMAR:Init()
 	self.towerskilledrad = 0
 	self.direanc = Entities:FindByName(nil, "dota_badguys_fort")
 	self.radiantanc = Entities:FindByName(nil, "dota_goodguys_fort")
+	self.lastrunefixtimestamp = -1
+	self.realbountyrunes = {}
 	
 	local itemskvnum = 0
 	local itemscustomkvnum = 0
@@ -366,9 +369,10 @@ function VGMAR:Init()
 	GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_GOODGUYS, RADIANT_TEAM_MAX_PLAYERS)
     GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_BADGUYS, DIRE_TEAM_MAX_PLAYERS)
 	GameRules:SetStrategyTime( 0.0 )
-	GameRules:SetShowcaseTime( 0.0 )
+	GameRules:SetShowcaseTime( 5.0 )
 	GameRules:SetCustomGameSetupAutoLaunchDelay( 5 )
-	GameRules:SetRuneSpawnTime(RUNE_SPAWN_TIME)
+	--RuneSpawnTime set to 60 to workaround BaseCustomGameAPI Bug forcing all runes to spawn at RuneSpawnTime
+	GameRules:SetRuneSpawnTime( 60 )
 	GameRules:SetRuneMinimapIconScale( 1 )
 	self.mode:SetRecommendedItemsDisabled(true)
 	if VGMAR_BOT_FILL == true then
@@ -387,6 +391,7 @@ function VGMAR:Init()
 	self.mode:SetModifierGainedFilter( Dynamic_Wrap( VGMAR, "FilterModifierGained" ), self)
 	self.mode:SetModifyGoldFilter(Dynamic_Wrap( VGMAR, "FilterGoldGained" ), self)
 	self.mode:SetModifyExperienceFilter( Dynamic_Wrap( VGMAR, "FilterExperienceGained" ), self)
+	self.mode:SetBountyRunePickupFilter( Dynamic_Wrap( VGMAR, "FilterBountyRunePickup" ), self)
 
 	ListenToGameEvent( "npc_spawned", Dynamic_Wrap( VGMAR, "OnNPCSpawned" ), self )
 	ListenToGameEvent( "dota_player_learned_ability", Dynamic_Wrap( VGMAR, "OnPlayerLearnedAbility" ), self)
@@ -613,7 +618,7 @@ local modifierdatatable = {
 	["modifier_vgmar_i_castrange"] = {range = 250, manaregen = 1.25, bonusmana = 400},
 	["modifier_vgmar_i_spellamp"] = {percentage = 10, costpercentage = 10, bonusint = 16},
 	["modifier_vgmar_i_cdreduction"] = {percentage = 25, bonusmana = 905, bonushealth = 905, intbonus = 25, spelllifestealhero = 25, spelllifestealcreep = 5},
-	["modifier_vgmar_i_essence_aura"] = {radius = 1000, bonusmana = 900, restorechancemax = 30, restorechancemin = 10, restoremax = 1, restoremin = 0.2, restoreamount = 20},
+	["modifier_vgmar_i_essence_aura"] = {radius = 1000, bonusmana = 900, restorechancemax = 20, restorechancemin = 5, restoremax = 1, restoremin = 0.15, restoreamount = 20},
 	["modifier_vgmar_i_spellshield"] = {resistance = 35, cooldown = 12, maxstacks = 2},
 	["modifier_vgmar_i_fervor"] = {maxstacks = 15, asperstack = 15},
 	["modifier_vgmar_i_essence_shift"] = {reductionprimary = 1, reductionsecondary = 0, increaseprimary = 1, increasesecondary = 0, hitsperstackinc = 1, hitsperstackred = 2, duration = 40, durationtarget = 40},
@@ -626,9 +631,9 @@ local modifierdatatable = {
 	["modifier_vgmar_i_critical_mastery"] = {critdmgpercentage = 250, critchance = 100},
 	["modifier_vgmar_i_atrophy"] = {radius = 1000, dmgpercreep = 1, dmgperhero = 5, stack_duration = 240, stack_duration_scepter = -1, max_stacks = 1000, initial_stacks = 0},
 	["modifier_vgmar_i_deathskiss"] = {critdmgpercentage = 20000, critchance = 1.0},
-	["modifier_vgmar_i_truesight"] = {radius = 900},
+	["modifier_vgmar_i_truesight"] = {maxrange = 1300, minrange = 200, maxtime = 180},
 	["modifier_item_ultimate_scepter_consumed"] = {bonus_all_stats = 10, bonus_health = 175, bonus_mana = 175},
-	["modifier_vgmar_i_arcane_intellect"] = {percentage = 10, multpercast = 0.2, bonusint = 25},
+	["modifier_vgmar_i_arcane_intellect"] = {percentage = 10, multpercast = 0.2, bonusint = 25, csmaxmana = 6000, csminmana = 0, minimalcooldown = 1},
 	["modifier_vgmar_i_thirst"] = {threshold = 75, visionthreshold = 50, damagethreshold = 75, visionrange = 10, visionduration = 0.2, giverealvision = 0, givemodelvision = 1, damageperstack = 3, radius = 5000},
 	["modifier_vgmar_i_poison_dagger"] = {cooldown = 15, maxstacks = 4, aoestacks = 2, minenemiesforaoe = 3, aoedmgperc = 50, damage = 30, initialdamageperc = 50, aoeradius = 500, duration = 20, interval = 1.0},
 	["modifier_vgmar_i_scorching_light"] = {radius = 700, interval = 1.0, visioninterval = 5.0, initialdamage = 60, damageincpertick = 5, maxdamage = 600, missrate = 17, visiondelay = 3, minvision = 0, maxvision = 400, maxillusionstacks = 3, lingerduration = 3.0},
@@ -843,47 +848,87 @@ end
 function VGMAR:FilterRuneSpawn( filterTable )
 	--dprint("Rune spawn premodified filterTable")
 	--DeepPrintTable( filterTable )
-	local function GetRandomRune( notrune )
-		local runeslist = {
-			0,
-			1,
-			2,
-			3,
-			4,
-			6
-		}
-		
-		local rune = notrune
-		
-		while rune == notrune do
-			rune = runeslist[math.random(#runeslist)]
+	if (math.round(GameRules:GetDOTATime(false, false)/60)%RUNE_SPAWN_TIME_POWERUP == 0) then
+		local function GetRandomRune( notrune )
+			local runeslist = {
+				0,
+				1,
+				2,
+				3,
+				4,
+				6
+			}
+			
+			local rune = notrune
+			
+			while rune == notrune do
+				rune = runeslist[math.random(#runeslist)]
+			end
+			return rune
 		end
-		return rune
-	end
-	filterTable.rune_type = GetRandomRune( -1 )
-	if self.currunenum > 2 then
-		self.currunenum = 1
-		self.removedrunenum = math.random(1,2)
-	end
+		filterTable.rune_type = GetRandomRune( -1 )
+		if self.currunenum > 2 then
+			self.currunenum = 1
+			self.removedrunenum = math.random(1,2)
+		end
 
-	if filterTable.rune_type == self.lastrunetype then
-		filterTable.rune_type = GetRandomRune( self.lastrunetype )
-	end
-	if GameRules:GetDOTATime(false, false) < 10 then
-		filterTable.rune_type = DOTA_RUNE_INVALID
-	end
-	if GameRules:GetDOTATime(false, false) < 2400 then
-		if self.currunenum == self.removedrunenum then
+		if filterTable.rune_type == self.lastrunetype then
+			filterTable.rune_type = GetRandomRune( self.lastrunetype )
+		end
+		if GameRules:GetDOTATime(false, false) < 10 then
 			filterTable.rune_type = DOTA_RUNE_INVALID
 		end
-	end
+		if GameRules:GetDOTATime(false, false) < 2400 then
+			if self.currunenum == self.removedrunenum then
+				filterTable.rune_type = DOTA_RUNE_INVALID
+			end
+		end
 
-	if filterTable.rune_type ~= -1 then
-		self.lastrunetype = filterTable.rune_type
+		if filterTable.rune_type ~= -1 then
+			self.lastrunetype = filterTable.rune_type
+		end
+		self.currunenum = self.currunenum + 1
+		--dprint("Rune spawn aftermodified filterTable")
+		--DeepPrintTable( filterTable )
+	else
+		filterTable.rune_type = DOTA_RUNE_INVALID
 	end
-	self.currunenum = self.currunenum + 1
-	--dprint("Rune spawn aftermodified filterTable")
-	--DeepPrintTable( filterTable )
+	if math.round(GameRules:GetDOTATime(false, false)/60) > self.lastrunefixtimestamp then
+		self.lastrunefixtimestamp = math.round(GameRules:GetDOTATime(false, false)/60)
+		Timers:CreateTimer(FrameTime(), function()
+			if (math.round(GameRules:GetDOTATime(false, false)/60)%RUNE_SPAWN_TIME_BOUNTY == 0) then
+				local bountyrunes = {}
+				bountyrunes = Entities:FindAllByModel("models/props_gameplay/rune_goldxp.vmdl")
+				self.realbountyrunes = {}
+				--dprint("Adding "..#bountyrunes.." Bounty Runes to the list of legitimately spawned bounty runes")
+				if #bountyrunes > 0 then
+					for i=1,#bountyrunes do
+						table.insert(self.realbountyrunes, bountyrunes[i]:GetEntityIndex())
+					end
+					--DeepPrintTable(self.realbountyrunes)
+				end
+			else
+				--dprint("Runes Spawned at "..math.round(GameRules:GetDOTATime(false, false)/60))
+				local bountyrunes = {}
+				bountyrunes = Entities:FindAllByModel("models/props_gameplay/rune_goldxp.vmdl")
+				--dprint("Found "..#bountyrunes.." Bounty Runes")
+				if #bountyrunes > 0 then
+					for i=1,#bountyrunes do
+						local bruneisreal = false
+						for j=1,#self.realbountyrunes do
+							if bountyrunes[i]:GetEntityIndex() == self.realbountyrunes[j] then
+								bruneisreal = true
+							end
+						end
+						if bruneisreal == false then
+							--dprint("Removing a newly spawned bounty rune "..bountyrunes[i]:GetEntityIndex())
+							bountyrunes[i]:Destroy()
+						end
+					end
+				end
+			end
+		end)
+	end
 	return true
 end
 
@@ -909,6 +954,29 @@ function VGMAR:FilterGoldGained( filterTable )
 		end
 	end
 	--dprint("PostModification Table: HeroId: ", filterTable["player_id_const"], "Gold: ", filterTable["gold"])
+	return true
+end
+
+function VGMAR:FilterBountyRunePickup( filterTable )
+	--[[
+	player_id_const (number)
+	xp_bounty (number)
+	gold_bounty (number)
+	]]--
+	local playerteam = PlayerResource:GetTeam(filterTable.player_id_const)
+	local goldbounty = 0
+	local xpbounty = 0
+	if playerteam == 2 then
+		--radiant
+		goldbounty = (filterTable.gold_bounty * 5)/self.n_players_radiant
+		xpbounty = (filterTable.xp_bounty * 5)/self.n_players_radiant
+	elseif playerteam == 3 then
+		--dire
+		goldbounty = (filterTable.gold_bounty * 5)/self.n_players_dire
+		xpbounty = (filterTable.xp_bounty * 5)/self.n_players_dire
+	end
+	filterTable.gold_bounty = goldbounty
+	filterTable.xp_bounty = xpbounty
 	return true
 end
 
@@ -2274,6 +2342,11 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 				end
 			end
 		end
+	end
+	
+	--Preventing players from picking up nonlegit bounty runes
+	if order_type == 15 and GameRules:GetDOTATime(false, false)%60 <= 0.5 then
+		return false
 	end
 	
 	--///////////////////////

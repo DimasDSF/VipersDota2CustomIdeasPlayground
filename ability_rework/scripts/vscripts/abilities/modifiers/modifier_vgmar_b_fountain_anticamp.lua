@@ -94,9 +94,14 @@ function modifier_vgmar_b_fountain_anticamp_debuff:DeclareFunctions()
 	local funcs = {
 		MODIFIER_PROPERTY_STATS_AGILITY_BONUS,
 		MODIFIER_PROPERTY_STATS_INTELLECT_BONUS,
-		MODIFIER_PROPERTY_STATS_STRENGTH_BONUS
+		MODIFIER_PROPERTY_STATS_STRENGTH_BONUS,
+		MODIFIER_PROPERTY_COOLDOWN_PERCENTAGE_STACKING
     }
     return funcs
+end
+
+function modifier_vgmar_b_fountain_anticamp_debuff:GetModifierPercentageCooldownStacking()
+	return self:GetStackCount() * -1
 end
 
 function modifier_vgmar_b_fountain_anticamp_debuff:GetModifierBonusStats_Agility()
@@ -186,9 +191,14 @@ function modifier_vgmar_b_fountain_anticamp_debuff_lingering:DeclareFunctions()
 	local funcs = {
 		MODIFIER_PROPERTY_STATS_AGILITY_BONUS,
 		MODIFIER_PROPERTY_STATS_INTELLECT_BONUS,
-		MODIFIER_PROPERTY_STATS_STRENGTH_BONUS
+		MODIFIER_PROPERTY_STATS_STRENGTH_BONUS,
+		MODIFIER_PROPERTY_COOLDOWN_PERCENTAGE_STACKING
     }
     return funcs
+end
+
+function modifier_vgmar_b_fountain_anticamp_debuff_lingering:GetModifierPercentageCooldownStacking()
+	return self:GetStackCount() * -1
 end
 
 function modifier_vgmar_b_fountain_anticamp_debuff_lingering:GetModifierBonusStats_Agility()
