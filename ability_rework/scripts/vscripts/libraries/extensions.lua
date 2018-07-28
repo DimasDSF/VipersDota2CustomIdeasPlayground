@@ -32,10 +32,10 @@ function math.truncate(input, num)
 end
 
 --string
-function string.split(input)
+function string.split(input, delimiter)
 	local output = {}
-	for i in string.gmatch(input, "%S+") do
-		table.insert(output, i)
-	end
-	return output
+    for match in input:gmatch("([^"..delimiter.."]+)") do
+        table.insert(output, match)
+    end
+    return output
 end

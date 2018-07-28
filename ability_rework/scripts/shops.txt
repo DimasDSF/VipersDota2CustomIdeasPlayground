@@ -14,8 +14,9 @@
 		"item"		"item_tome_of_knowledge"
 		"item"		"item_dust"
 		"item"		"item_courier"
-		"item"		"item_flying_courier"
-		"item"		"item_bottle"		
+		"item"		"item_flying_courier_upgrade"
+		"item"		"item_bottle"
+		"item"		"item_buyback_cooldown_reset"
 	}
 
 	"attributes"

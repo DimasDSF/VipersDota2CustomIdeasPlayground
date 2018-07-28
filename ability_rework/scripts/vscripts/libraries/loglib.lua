@@ -17,7 +17,7 @@ function LogLib:Init()
 	if IsDedicatedServer() then
 		print("[LogLib] : Disabled due to being run on a Dedicated Server")
 	else
-		local gamestartdate = string.split(string.gsub(GetSystemDate(), "/", " "))
+		local gamestartdate = string.split(GetSystemDate(), "/")
 		self.GameStartDate = gamestartdate[2].."."..gamestartdate[1].."."..gamestartdate[3]
 		self.GameStartTime = string.gsub(GetSystemTime(), ":", " ")
 		print("[LogLib] : Initiated")

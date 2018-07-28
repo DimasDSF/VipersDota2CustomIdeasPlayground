@@ -385,7 +385,10 @@ function VGMAR:Init()
 	self.mode:SetRuneEnabled( DOTA_RUNE_REGENERATION, true )
 	self.mode:SetRuneEnabled( DOTA_RUNE_ARCANE, true )
 	self.mode:SetRuneEnabled( DOTA_RUNE_BOUNTY, true )
-	self.mode:SetRuneSpawnFilter( Dynamic_Wrap( VGMAR, "FilterRuneSpawn" ), self )
+	self.mode:SetUseDefaultDOTARuneSpawnLogic(true)
+	self.mode:SetPowerRuneSpawnInterval(RUNE_SPAWN_TIME_POWERUP * 60)
+	self.mode:SetBountyRuneSpawnInterval(RUNE_SPAWN_TIME_BOUNTY * 60)
+	--self.mode:SetRuneSpawnFilter( Dynamic_Wrap( VGMAR, "FilterRuneSpawn" ), self )
 	self.mode:SetExecuteOrderFilter( Dynamic_Wrap( VGMAR, "ExecuteOrderFilter" ), self )
 	self.mode:SetDamageFilter( Dynamic_Wrap( VGMAR, "FilterDamage" ), self )
 	self.mode:SetModifierGainedFilter( Dynamic_Wrap( VGMAR, "FilterModifierGained" ), self)
@@ -613,7 +616,7 @@ end
 local MaxMoveSpeed = 550
 
 local modifierdatatable = {
-	["modifier_vgmar_i_manaregen_aura"] = {radius = 4000, bonusmanaself = 400, bonusmanaallies = 300, regenself = 4, regenallies = 3},
+	["modifier_vgmar_i_manaregen_aura"] = {radius = 4000, bonusmanaself = 400, bonusmanaallies = 300, regenself = 1.5, regenallies = 1},
 	["modifier_vgmar_i_attackrange"] = {range = 140, bonusstr = 12, bonusagi = 12},
 	["modifier_vgmar_i_castrange"] = {range = 250, manaregen = 1.25, bonusmana = 400},
 	["modifier_vgmar_i_spellamp"] = {percentage = 10, costpercentage = 10, bonusint = 16},
@@ -840,11 +843,6 @@ function VGMAR:DisplayClientError(pid, message)
     end
 end
 
---//////////////////////////////////////////////
---TODO: Change rune spawn interval to be 1minute
--- Remove Powerup Runes if spawntime%2 != 0
--- Remove Bounty Runes if spawntime%5 != 0
---//////////////////////////////////////////////
 function VGMAR:FilterRuneSpawn( filterTable )
 	--dprint("Rune spawn premodified filterTable")
 	--DeepPrintTable( filterTable )
@@ -1461,6 +1459,19 @@ function VGMAR:OnThink()
 						heroent:PickupRune(closestrune)
 					end
 					
+					--TODO: Add teamAdvantage into the buyback cooldown reset price calculation for bots
+					--Buyback Cooldown Reset
+					if heroent:IsAlive() == false then
+						local bbcost = heroent:GetBuybackCost(false)
+						--check for 2.1x buyback cost to be sure that the bot has excess amount of gold to actually want to buyback afterwards
+						if heroent:GetGold() > (bbcost * 2.1) and heroent:GetBuybackCooldownTime() > GameRules:GetGameTime() then
+							heroent:SpendGold(bbcost, 2)
+							heroent:SetBuybackCooldownTime( 0 )
+							dprint("Resetting Buyback Cooldown for "..HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()))
+							dprint("Buyback Cost: "..heroent:GetBuybackCost(false).." Gold Remaining: "..(heroent:GetGold() - heroent:GetBuybackCost(false)))
+						end
+					end
+					
 					--///////////////////
 					--[[--BotShrineActivation
 					--///////////////////
@@ -1642,11 +1653,11 @@ function VGMAR:OnThink()
 				preventedhero = "npc_target_dummy",
 				specificcond = true },
 			{spell = "modifier_vgmar_i_manaregen_aura",
-				items = {itemnames = {"item_infused_raindrop"}, itemnum = {4}},
+				items = {itemnames = {"item_infused_raindrop", "item_energy_booster"}, itemnum = {2, 1}},
 				isconsumable = true,
 				ismodifier = true,
 				usemodifierdatatable = true,
-				modifierdata = {radius = 4000, bonusmanaself = 400, bonusmanaallies = 300, regenself = 4, regenallies = 3},
+				modifierdata = {radius = 4000, bonusmanaself = 400, bonusmanaallies = 300, regenself = 1.5, regenallies = 1},
 				usesmultiple = true,
 				backpack = true,
 				preventedhero = "npc_target_dummy",
@@ -1884,18 +1895,18 @@ function VGMAR:OnThink()
 				--///////////////////
 				--CourierBurstUpgrade
 				--///////////////////
-				if self:HeroHasUsableItemInInventory(heroent, "item_flying_courier", false, true, true) then
+				if self:HeroHasUsableItemInInventory(heroent, "item_flying_courier_upgrade", false, true, true) then
 					local couriers = Entities:FindAllByClassname("npc_dota_courier")
 					for j=1,#couriers do
 						if couriers[j]:GetTeamNumber() == heroent:GetTeamNumber() then
 							local courierburstmod = couriers[j]:FindModifierByName("modifier_vgmar_courier_burst")
 							if courierburstmod and courierburstmod:GetStackCount() >= 1 then
 								if couriers[j]:GetTeamNumber() == 2 and self.radiantcourieruplevel < MAX_COURIER_LVL then
-									self:RemoveNItemsInInventory(heroent, "item_flying_courier", 1)
+									self:RemoveNItemsInInventory(heroent, "item_flying_courier_upgrade", 1)
 									couriers[j]:AddNewModifier(couriers[j], nil, "modifier_vgmar_courier_burst", {level = self.radiantcourieruplevel + 1})
 									self.radiantcourieruplevel = courierburstmod:GetStackCount()
 								elseif couriers[j]:GetTeamNumber() == 3 and self.direcourieruplevel < MAX_COURIER_LVL then
-									self:RemoveNItemsInInventory(heroent, "item_flying_courier", 1)
+									self:RemoveNItemsInInventory(heroent, "item_flying_courier_upgrade", 1)
 									couriers[j]:AddNewModifier(couriers[j], nil, "modifier_vgmar_courier_burst", {level = self.direcourieruplevel + 1})
 									self.direcourieruplevel = courierburstmod:GetStackCount()
 								end
@@ -1909,7 +1920,7 @@ function VGMAR:OnThink()
 				for k,v in ipairs(self.direcourieruptable) do
 					if v.done == false and self:TimeIsLaterThan(v.upgradetime, 0) and self:GetCourierBurstLevel( nil, 3 ) >= v.lvl then
 						if heroent:GetTeamNumber() == 3 and self:GetHeroFreeInventorySlots(heroent, true, false) > 0 then
-							heroent:AddItemByName("item_flying_courier")
+							heroent:AddItemByName("item_flying_courier_upgrade")
 							dprint("Giving ".. HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." having "..self:GetHeroFreeInventorySlots(heroent, true, false).." empty slots lvl "..v.lvl.." courier upgrade")
 							v.done = true
 						end
@@ -1993,6 +2004,8 @@ function VGMAR:OnThink()
 		local customitemreminderlist = {
 			[-90] = "<font color='honeydew'>Remember, this gamemode has multiple scripted item abilities</font>",
 			[-80] = "<font color='honeydew'>Use information Icon above your minimap</font>",
+			[-70] = "<font color='honeydew'>You can reset your buyback cooldown by buying an item at the base shop.</font>",
+			[-65] = "<font color='honeydew'>Bots can also do that.",
 			[-5] = "<font color='lime'>GLHF</font>"
 		}
 		
@@ -2317,7 +2330,7 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 	--//////////
 	local itempurchaseblocklist = {
 		["item_courier"] = { radiant = {true, "This item cannot be purchased"}, dire = {false, nil} },
-		["item_flying_courier"] = { radiant = {self.radiantcourieruplevel >= MAX_COURIER_LVL, "Courier is at max level"}, dire = {self.direcourieruplevel >= MAX_COURIER_LVL, "Courier is at max level"} }
+		["item_flying_courier_upgrade"] = { radiant = {self.radiantcourieruplevel >= MAX_COURIER_LVL, "Courier is at max level"}, dire = {self.direcourieruplevel >= MAX_COURIER_LVL, "Courier is at max level"} }
 	}
 	
 	if order_type == 16 then
@@ -2344,10 +2357,32 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 		end
 	end
 	
-	--Preventing players from picking up nonlegit bounty runes
+	--Buyback Cooldown Reset
+	if order_type == 16 then
+		if self:GetItemByID(filterTable["entindex_ability"]) == "item_buyback_cooldown_reset" then
+			local hero = PlayerResource:GetPlayer(issuer):GetAssignedHero()
+			dprint("Buyback Cooldown: "..hero:GetBuybackCooldownTime().." Cost: "..hero:GetBuybackCost(true).." Cost(f): "..hero:GetBuybackCost(false))
+			dprint("GameTime: "..GameRules:GetGameTime())
+			local bbcost = hero:GetBuybackCost(false)
+			if hero:GetBuybackCooldownTime() > GameRules:GetGameTime() and hero:GetGold() > bbcost then
+				hero:SpendGold(bbcost, 2)
+				hero:SetBuybackCooldownTime( 0 )
+				GameRules:SendCustomMessageToTeam("<font color='limegreen'>"..HeroNamesLib:ConvertInternalToHeroName(hero:GetName()).."</font><font color='honeydew'>".." has reset their buyback cooldown for </font><font color='gold'>"..bbcost.."</font>", DOTA_TEAM_GOODGUYS, DOTA_TEAM_GOODGUYS, DOTA_TEAM_GOODGUYS)
+			else
+				if hero:GetBuybackCooldownTime() < GameRules:GetGameTime() then
+					self:DisplayClientError(issuer, "Buyback is not on cooldown")
+				elseif hero:GetGold() < bbcost then
+					self:DisplayClientError(issuer, "Not enough gold to reset Buyback Cooldown")
+				end
+			end
+			return false
+		end
+	end
+	
+	--[[--Preventing players from picking up nonlegit bounty runes
 	if order_type == 15 and GameRules:GetDOTATime(false, false)%60 <= 0.5 then
 		return false
-	end
+	end--]]
 	
 	--///////////////////////
 	--SecondCourierPrevention
