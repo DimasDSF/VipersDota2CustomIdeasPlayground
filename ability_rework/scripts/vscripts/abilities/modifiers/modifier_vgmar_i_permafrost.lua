@@ -269,5 +269,5 @@ function modifier_vgmar_i_permafrost_debuff_lingering:OnRemoved()
 end
 
 function modifier_vgmar_i_permafrost_debuff_lingering:OnIntervalThink()
-	StartSoundEvent("Hero_Ancient_Apparition.IceBlastRelease.Tick", parent)
+	StartSoundEvent("Hero_Ancient_Apparition.IceBlastRelease.Tick", self:GetParent())
 end
