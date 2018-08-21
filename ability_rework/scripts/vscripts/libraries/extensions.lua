@@ -122,7 +122,7 @@ function _DeepPrintTable(debugInstance, prefix, isOuterScope, chaseMetaTables )
 	end
 end
 
-function debug.PrintTable(debugOver)
+function debug.PrintTable(debugOver, prefix)
 	local prefix = prefix or ""
 	local string_accum = ""
 	
