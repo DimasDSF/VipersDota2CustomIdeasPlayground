@@ -48,6 +48,14 @@ function modifier_vgmar_i_truesight:OnCreated(kv)
 	end
 end
 
+function modifier_vgmar_i_truesight:GetEffectName()
+	return "particles/econ/events/fall_major_2015/compendium_points_fall_ambient_2015_twinkle.vpcf"
+end
+
+function modifier_vgmar_i_truesight:GetEffectAttachType()
+	return PATTACH_ROOTBONE_FOLLOW
+end
+
 function modifier_vgmar_i_truesight:DeclareFunctions()
 	local funcs = {
 		MODIFIER_EVENT_ON_RESPAWN,

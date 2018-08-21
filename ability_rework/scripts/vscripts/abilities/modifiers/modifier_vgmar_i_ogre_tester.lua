@@ -69,8 +69,7 @@ end
 function modifier_vgmar_i_ogre_tester:OnCreated(kv) 
 	if IsServer() then
 		self:StartIntervalThink( 1 )
-		self.crit = false
-		self.mci = 0.5
+		--self.mci = 0.5
 		--self.p1 = nil
 		--self.p2 = nil
 		--self.p3 = nil
@@ -81,6 +80,12 @@ function modifier_vgmar_i_ogre_tester:OnRefresh( kv )
 	--if IsServer() then
 	--end
 end
+
+--[[function modifier_vgmar_i_ogre_tester:OnSpentMana( event )
+	if IsServer() then
+		DeepPrintTable(event)
+	end
+end--]]
 
 function modifier_vgmar_i_ogre_tester:OnIntervalThink()
 	if IsServer() then
@@ -131,7 +136,18 @@ function modifier_vgmar_i_ogre_tester:OnIntervalThink()
 			end
 			self.oldgold = PlayerResource:GetGold(self:GetParent():GetPlayerOwnerID())
 		end
+		--OrientationTest
+		--local orientation = -self:GetParent():GetForwardVector()
+		--self:statprint(HeroNamesLib:ConvertInternalToHeroName(self:GetParent():GetName()).." -FVector: "..orientation[1]..","..orientation[2]..","..orientation[3])
 		--ParticleTest
+		--Complex Particle Test
+		if self.p1 == nil then
+			self.p1 = ParticleManager:CreateParticle("particles/econ/items/antimage/antimage_weapon_basher_ti5/am_manaburn_basher_ti_5.vpcf", PATTACH_ABSORIGIN_FOLLOW, self:GetParent())
+			--ParticleManager:SetParticleControlEnt( self.p1, 0, self:GetParent(), PATTACH_POINT_FOLLOW, "attach_attack1", Vector(0,0,0), true )
+			--ParticleManager:SetParticleControlEnt( self.p1, 1, self:GetParent(), PATTACH_POINT_FOLLOW, "attach_attack2", Vector(0,0,0), true )
+			--ParticleManager:SetParticleControlEnt( self.p1, 2, self:GetParent(), PATTACH_POINT_FOLLOW, "attach_hitloc", self:GetParent():GetOrigin(), true )
+			--ParticleManager:SetParticleControl(self.p1, 16, Vector(1,0,0))
+		end
 		--[[if self.p1 == nil then
 			self.p1 = ParticleManager:CreateParticle("particles/units/heroes/hero_razor/razor_rain_storm.vpcf", PATTACH_WORLDORIGIN, parent)
 			ParticleManager:SetParticleControl(self.p1, 0, parent:GetAbsOrigin() + Vector(0,0,200))
@@ -153,8 +169,57 @@ function modifier_vgmar_i_ogre_tester:OnIntervalThink()
 	end
 end
 
+--Quick Particle Test
+--[[function modifier_vgmar_i_ogre_tester:GetEffectName()
+	return "particles/econ/events/winter_major_2016/radiant_fountain_regen_wm_lvl2_a5.vpcf"
+end
+
+--[[
+	AttachTypes:
+	PATTACH_ABSORIGIN
+	PATTACH_ABSORIGIN_FOLLOW
+	PATTACH_OVERHEAD_FOLLOW
+	PATTACH_ROOTBONE_FOLLOW
+]]--
+function modifier_vgmar_i_ogre_tester:GetEffectAttachType()
+	return PATTACH_ABSORIGIN_FOLLOW
+end--]]
+
+function modifier_vgmar_i_ogre_tester:OnAttackLanded(kv)
+	--[[if kv.attacker == self:GetParent() then
+		local aAO = kv.attacker:GetOrigin()
+		local tAO = kv.target:GetOrigin()
+		DebugDrawLine(aAO, tAO, 128, 255, 255, true, 2)
+		local AtTV = (tAO-aAO):Normalized()
+		DebugDrawLine(tAO, tAO + AtTV*150, 255, 0, 0, true, 2)
+		local particle = "particles/units/heroes/hero_phantom_assassin/phantom_assassin_crit_impact.vpcf"
+		local pfx = ParticleManager:CreateParticle(particle, PATTACH_CUSTOMORIGIN, kv.attacker)
+		ParticleManager:SetParticleControlEnt( pfx, 0, kv.target, PATTACH_POINT_FOLLOW, "attach_hitloc", kv.target:GetOrigin(), true )
+		ParticleManager:SetParticleControl( pfx, 1, kv.target:GetOrigin() )
+		ParticleManager:SetParticleControlForward( pfx, 1, -AtTV )
+		ParticleManager:SetParticleControlEnt( pfx, 10, kv.target, PATTACH_ABSORIGIN_FOLLOW, nil, kv.target:GetOrigin(), true )
+		ParticleManager:ReleaseParticleIndex( pfx )
+	end--]]
+end
+
+function modifier_vgmar_i_ogre_tester:OnTakeDamage( event )
+	if IsServer() then
+		if event.unit == self:GetParent() then
+			--for i,v in ipairs(event) do
+			--	print(i.." : "..v)
+			--end
+			debug.PrintTable(event)
+		end
+	end
+end
+
 function modifier_vgmar_i_ogre_tester:OnRemoved()
-	--if IsServer() then
+	if IsServer() then
+		if self.p1 ~= nil then
+			ParticleManager:DestroyParticle(self.p1, false)
+			ParticleManager:ReleaseParticleIndex(self.p1)
+			self.p1 = nil
+		end
 		--ParticleManager:DestroyParticle(self.p1, false)
 		--self:GetParent():StopSound("Hero_Razor.Storm.Loop")
 		--ParticleManager:DestroyParticle(self.p2, false)
@@ -162,7 +227,7 @@ function modifier_vgmar_i_ogre_tester:OnRemoved()
 		--ParticleManager:ReleaseParticleIndex(self.p1)
 		--ParticleManager:ReleaseParticleIndex(self.p2)
 		--ParticleManager:ReleaseParticleIndex(self.p3)
-	--end
+	end
 end
 
 function modifier_vgmar_i_ogre_tester:OnDestroy()
@@ -174,6 +239,9 @@ end
 function modifier_vgmar_i_ogre_tester:DeclareFunctions()
 	local funcs = {
 		MODIFIER_EVENT_ON_DEATH,
+		MODIFIER_EVENT_ON_ATTACK_LANDED,
+		MODIFIER_EVENT_ON_TAKEDAMAGE,
+		--MODIFIER_EVENT_ON_SPENT_MANA,
 		--MODIFIER_EVENT_ON_ABILITY_EXECUTED,
 		--MODIFIER_EVENT_ON_ABILITY_START,
 		MODIFIER_PROPERTY_TRANSLATE_ACTIVITY_MODIFIERS,

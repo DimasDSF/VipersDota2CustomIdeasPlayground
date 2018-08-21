@@ -104,17 +104,15 @@ function modifier_vgmar_i_deathskiss_active:OnAttackLanded(kv)
 		else
 			StartSoundEvent("Hero_PhantomAssassin.Spatter", kv.target)
 		end
-		local pfx = ParticleManager:CreateParticle(particle, PATTACH_POINT, kv.attacker)
-		ParticleManager:SetParticleControl(pfx, 0, kv.target:GetAbsOrigin() + Vector(0,0,50))
-		ParticleManager:SetParticleControl(pfx, 1, kv.target:GetAbsOrigin() + Vector(0,0,50))
-		
-		local line = kv.attacker:GetAbsOrigin() - kv.target:GetAbsOrigin()
-		
-		local damagepower = math.min(math.max(kv.damage / 2000, 0.5), 0.8)
-		local circlecap = (Vector(line.x, line.y, 0)/line:Length2D())*2
-		ParticleManager:SetParticleControlOrientation(pfx,0,circlecap*damagepower, Vector(0,0,0), Vector(0,0,0))
-		ParticleManager:SetParticleControlOrientation(pfx,1,circlecap*damagepower, Vector(0,0,0), Vector(0,0,0))
-		ParticleManager:ReleaseParticleIndex(pfx)
+		local pfx = ParticleManager:CreateParticle(particle, PATTACH_CUSTOMORIGIN, kv.attacker)
+		local aAO = kv.attacker:GetOrigin()
+		local tAO = kv.target:GetOrigin()
+		local AtTV = (tAO-aAO):Normalized()
+		ParticleManager:SetParticleControlEnt( pfx, 0, kv.target, PATTACH_POINT_FOLLOW, "attach_hitloc", kv.target:GetOrigin(), true )
+		ParticleManager:SetParticleControl( pfx, 1, kv.target:GetOrigin() )
+		ParticleManager:SetParticleControlForward( pfx, 1, -AtTV )
+		ParticleManager:SetParticleControlEnt( pfx, 10, kv.target, PATTACH_ABSORIGIN_FOLLOW, nil, kv.target:GetOrigin(), true )
+		ParticleManager:ReleaseParticleIndex( pfx )
 		StartSoundEvent(soundevnt, kv.target)
 		self:Destroy()
 	end

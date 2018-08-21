@@ -4,7 +4,7 @@ local RUNE_SPAWN_TIME_POWERUP = 2
 local RUNE_SPAWN_TIME_BOUNTY = 5
 local VGMAR_DEBUG = true
 local VGMAR_GIVE_DEBUG_ITEMS = false
-local VGMAR_BOT_FILL = false
+local VGMAR_BOT_FILL = true
 local VGMAR_LOG_BALANCE = false
 local VGMAR_LOG_BALANCE_INTERVAL = 120
 local MAX_COURIER_LVL = 5
@@ -40,7 +40,9 @@ function Precache( ctx )
 		"antimage",
 		"razor",
 		"wisp",
-		"zuus"
+		"zuus",
+		"medusa",
+		"ancient_apparition"
 	}
 	
 	for i=1,#herosoundprecachelist do
@@ -177,7 +179,15 @@ function VGMAR:Init()
 	LinkLuaModifier("modifier_vgmar_i_scorching_light_debuff", "abilities/modifiers/modifier_vgmar_i_scorching_light", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_scorching_light_debuff_lingering", "abilities/modifiers/modifier_vgmar_i_scorching_light", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_scorching_light_vision", "abilities/modifiers/modifier_vgmar_i_scorching_light", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_permafrost", "abilities/modifiers/modifier_vgmar_i_permafrost", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_permafrost_debuff", "abilities/modifiers/modifier_vgmar_i_permafrost", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_permafrost_debuff_lingering", "abilities/modifiers/modifier_vgmar_i_permafrost", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_manashield", "abilities/modifiers/modifier_vgmar_i_manashield", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_manashield_stun", "abilities/modifiers/modifier_vgmar_i_manashield", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_b_fountain_anticamp", "abilities/modifiers/modifier_vgmar_b_fountain_anticamp", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_b_fountain_anticamp_debuff_break", "abilities/modifiers/modifier_vgmar_b_fountain_anticamp", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_b_fountain_anticamp_debuff_silence", "abilities/modifiers/modifier_vgmar_b_fountain_anticamp", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_b_fountain_anticamp_debuff_blindness", "abilities/modifiers/modifier_vgmar_b_fountain_anticamp", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_b_fountain_anticamp_debuff", "abilities/modifiers/modifier_vgmar_b_fountain_anticamp", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_b_fountain_anticamp_debuff_lingering", "abilities/modifiers/modifier_vgmar_b_fountain_anticamp", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_util_give_debugitems", "abilities/util/modifiers/modifier_vgmar_util_give_debugitems", LUA_MODIFIER_MOTION_NONE)
@@ -441,24 +451,25 @@ function VGMAR:GetItemByID(id)
 end
 
 local debugitems = {
-	["item_shivas_guard"] = 0,
-	["item_assault"] = 1,
+	["item_shivas_guard"] = 3,
+	["item_assault"] = 0,
 	["item_sheepstick"] = 0,
 	["item_travel_boots_2"] = 1,
 	["item_octarine_core"] = 3,
 	["item_kaya"] = 3,
 	["item_aether_lens"] = 3,
 	["item_ultimate_scepter"] = 2,
-	["item_mystic_staff"] = 0,
-	["item_soul_booster"] = 2,
+	["item_mystic_staff"] = 2,
+	["item_energy_booster"] = 2,
+	["item_soul_booster"] = 0,
 	["item_butterfly"] = 0,
 	["item_eagle"] = 0,
 	["item_orb_of_venom"] = 0,
 	["item_demon_edge"] = 0,
 	["item_yasha"] = 0,
 	["item_dragon_lance"] = 3,
-	["item_mask_of_madness"] = 1,
-	["item_gloves"] = 2,
+	["item_mask_of_madness"] = 0,
+	["item_gloves"] = 0,
 	["item_tome_of_knowledge"] = 15
 }
 
@@ -639,8 +650,10 @@ local modifierdatatable = {
 	["modifier_vgmar_i_arcane_intellect"] = {percentage = 10, multpercast = 0.2, bonusint = 25, csmaxmana = 6000, csminmana = 0, minimalcooldown = 1},
 	["modifier_vgmar_i_thirst"] = {threshold = 75, visionthreshold = 50, damagethreshold = 75, visionrange = 10, visionduration = 0.2, giverealvision = 0, givemodelvision = 1, damageperstack = 3, radius = 5000},
 	["modifier_vgmar_i_poison_dagger"] = {cooldown = 15, maxstacks = 4, aoestacks = 2, minenemiesforaoe = 3, aoedmgperc = 50, damage = 30, initialdamageperc = 50, aoeradius = 500, duration = 20, interval = 1.0},
-	["modifier_vgmar_i_scorching_light"] = {radius = 700, interval = 1.0, visioninterval = 5.0, initialdamage = 60, damageincpertick = 5, maxdamage = 600, missrate = 17, visiondelay = 3, minvision = 0, maxvision = 400, maxillusionstacks = 3, lingerduration = 3.0},
-	["modifier_vgmar_b_fountain_anticamp"] = {radius = 2000, interval = 1.0, strpertick = 2, intpertick = 1, agipertick = 1, lingerduration = 15.0},
+	["modifier_vgmar_i_scorching_light"] = {radius = 700, interval = 1.0, visioninterval = 5.0, initialdamage = 60, damageincpertick = 2, maxdamage = 300, missrate = 17, visiondelay = 3, minvision = 0, maxvision = 400, maxillusionstacks = 3, lingerduration = 3.0},
+	["modifier_vgmar_i_permafrost"] = {radius = 600, interval = 1.0, attackspeedperstack = -5, movespeedperstack = -5, bonusarmor = 25, bonusint = 60, maxstacks = 20, freezedmg = 150, lingerduration = 3},
+	["modifier_vgmar_i_manashield"] = {minmana = 0.5, lowmana = 0.55, maxtotalmana = 6000, mindmgfraction = 30, maxdmgfraction = 90, stunradius = 600, stunduration = 3, stundamage = 200, rechargetime = 60, bonusarmor = 15, bonusint = 20},
+	["modifier_vgmar_b_fountain_anticamp"] = {radius = 2000, interval = 1.0, strpertick = 4, intpertick = 2, agipertick = 2, disablepassivestick = 20, silencetick = 40, blindnessendtick = 60, blindnessrange = 200, lingerduration = 30.0},
 	["modifier_vgmar_anticreep_protection"] = {radius = 1800, strikeinterval = 2.0, activeduration = 5.0, dmgpercentpercreep = 5.0},
 	["modifier_vgmar_i_ogre_tester"] = {}
 }
@@ -1802,6 +1815,26 @@ function VGMAR:OnThink()
 				backpack = true,
 				preventedhero = "npc_target_dummy",
 				specificcond = true },
+			{spell = "modifier_vgmar_i_permafrost",
+				items = {itemnames = {"item_shivas_guard"}, itemnum = {2}},
+				isconsumable = true,
+				ismodifier = true,
+				usemodifierdatatable = true,
+				modifierdata = {},
+				usesmultiple = true,
+				backpack = true,
+				preventedhero = "npc_target_dummy",
+				specificcond = true },
+			{spell = "modifier_vgmar_i_manashield",
+				items = {itemnames = {"item_shivas_guard", "item_energy_booster"}, itemnum = {1,2}},
+				isconsumable = true,
+				ismodifier = true,
+				usemodifierdatatable = true,
+				modifierdata = {},
+				usesmultiple = true,
+				backpack = true,
+				preventedhero = "npc_target_dummy",
+				specificcond = true },
 			{spell = "modifier_vgmar_i_ogre_tester",
 				items = {itemnames = {"item_ogre_axe"}, itemnum = {2}},
 				isconsumable = false,
@@ -2481,13 +2514,13 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 					local maxmissclickchance = 20
 					local maxminute = 40
 					local currentminute = math.floor(GameRules:GetDOTATime(false, false)/60)
-					local idlechance = math.scale( minidlechance, math.clamp(0, (currentminute/maxminute), 1), maxidlechance)
-					local missclickchance = math.scale( minmissclickchance, math.clamp(0, (currentminute/maxminute), 1), maxmissclickchance)
+					local idlechance = math.scale( maxidlechance, math.clamp(0, (currentminute/maxminute), 1), minidlechance)
+					local missclickchance = math.scale( maxmissclickchance, math.clamp(0, (currentminute/maxminute), 1), minmissclickchance)
 					local missclickrange = 150
 					--Deny an order
 					if missclickproofabilities[EntIndexToHScript(filterTable.entindex_ability):GetName()] == nil or missclickproofabilities[EntIndexToHScript(filterTable.entindex_ability):GetName()] ~= true then
 						if math.random(1,100) <= idlechance then
-							dprint("Making PlayerID: "..issuer.." not cast an ability: "..ability:GetName())
+							dprint("Making PlayerID: "..issuer.." not cast an ability: "..ability:GetName().." probability: "..idlechance)
 							return false
 						else
 							if order_type == 6 then
@@ -2511,7 +2544,7 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 								end
 								if #filteredmissclicktargets > 0 then
 									if math.random(1,100) <= missclickchance then
-										dprint("Making PlayerID: "..issuer.." missclick a unit target ability: "..ability:GetName())
+										dprint("Making PlayerID: "..issuer.." missclick a unit target ability: "..ability:GetName().." probability: "..missclickchance)
 										local newtar = filteredmissclicktargets[math.random(1,#filteredmissclicktargets)]
 										if IsDevMode() then
 											DebugDrawLine(unit:GetOrigin(), target:GetOrigin(), 128, 255, 255, true, 2)
@@ -2525,7 +2558,7 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 								end
 							elseif order_type == 5 then
 								if math.random(1,100) <= missclickchance then
-									dprint("Making PlayerID: "..issuer.." missclick a ground point ability: "..ability:GetName())
+									dprint("Making PlayerID: "..issuer.." missclick a ground point ability: "..ability:GetName().." probability: "..missclickchance)
 									local TargetVector = Vector(filterTable["position_x"], filterTable["position_y"], filterTable["position_z"])
 									local newx = filterTable["position_x"] + math.random(-1*missclickrange, missclickrange)
 									local newy = filterTable["position_y"] + math.random(-1*missclickrange, missclickrange)
