@@ -1711,6 +1711,7 @@
 		"ItemPermanent"					"0"
 		"SideShop"						"0"
 		"IsTempestDoubleClonable"		"0"
+		"ItemInitiallySellable"			"1"
 		"ItemSellable"					"0"
 		"ShouldBeInitiallySuggested"	"1"
 
@@ -5226,7 +5227,7 @@
 			"06"
 			{
 				"var_type"				"FIELD_FLOAT"
-				"mana_cost_tooltip"		"180"
+				"mana_cost_tooltip"		"120"
 			}
 		}
 	}
@@ -5295,7 +5296,7 @@
 			"06"
 			{
 				"var_type"				"FIELD_FLOAT"
-				"mana_cost_tooltip"		"180"
+				"mana_cost_tooltip"		"140"
 			}
 		}
 	}
@@ -5364,7 +5365,7 @@
 			"06"
 			{
 				"var_type"				"FIELD_FLOAT"
-				"mana_cost_tooltip"		"180"
+				"mana_cost_tooltip"		"160"
 			}
 		}
 	}
@@ -5499,7 +5500,7 @@
 			"06"
 			{
 				"var_type"				"FIELD_FLOAT"
-				"mana_cost_tooltip"		"180"
+				"mana_cost_tooltip"		"200"
 			}
 		}
 	}
@@ -12235,7 +12236,37 @@
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
 	}
+	
+	"item_pocket_roshan"
+	{
+		// General
+		//-------------------------------------------------------------------------------------------------------------
+		"ID"							"1032"														// unique ID number for this item.  Do not change this once established or it will invalidate collected stats.
+		
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_IMMEDIATE | DOTA_ABILITY_BEHAVIOR_NO_TARGET"
 
+		// Stats
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityCastPoint"				"0.0"
+		"AbilityCooldown"				"60.0"
+		"AbilityManaCost"				"0"
+
+		// Item Info
+		//-------------------------------------------------------------------------------------------------------------
+		"ItemCost"						"1000"
+		"ItemQuality"					"rare"
+		"ItemPurchasable"				"0"
+		"IsTempestDoubleClonable"		"0"
+
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"summon_duration"		"60"
+			}
+		}
+	}
 	// next free ID: 268
 
 }
