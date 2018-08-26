@@ -372,7 +372,9 @@ function VGMAR:Init()
 		["modifier_winter_wyvern_winters_curse_aura"] = {silence = false, stun = true, root = false},
 		["modifier_brewmaster_primal_split"] = {silence = false, stun = true, root = false},
 		["modifier_necrolyte_reapers_scythe"] = {silence = false, stun = true, root = false},
-		["modifier_item_mask_of_madness_berserk"] = {silence = true, stun = false, root = false}
+		["modifier_item_mask_of_madness_berserk"] = {silence = true, stun = false, root = false},
+		["modifier_grimstroke_spirit_walk_buff"] = {silence = true, stun = false, root = false},
+		["modifier_vgmar_b_fountain_anticamp_debuff_silence"] = {silence = true, stun = false, root = false}
 	}
 	
 	self.mode = GameRules:GetGameModeEntity()
@@ -2508,11 +2510,11 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 					-- TODO: Make percentage depend on time
 					-- max->min earlygame->lategame
 					-- 20->10 0->50+
-					local minidlechance = 10
-					local maxidlechance = 20
-					local minmissclickchance = 10
-					local maxmissclickchance = 20
-					local maxminute = 40
+					local minidlechance = 5
+					local maxidlechance = 25
+					local minmissclickchance = 5
+					local maxmissclickchance = 25
+					local maxminute = 60
 					local currentminute = math.floor(GameRules:GetDOTATime(false, false)/60)
 					local idlechance = math.scale( maxidlechance, math.clamp(0, (currentminute/maxminute), 1), minidlechance)
 					local missclickchance = math.scale( maxmissclickchance, math.clamp(0, (currentminute/maxminute), 1), minmissclickchance)

@@ -117,7 +117,8 @@ local intnametoheroname = {
 	["npc_dota_hero_arc_warden"]		=	"Arc Warden",
 	["npc_dota_hero_monkey_king"]		=	"Monkey King",
 	["npc_dota_hero_pangolier"]			=	"Pangolier",
-	["npc_dota_hero_dark_willow"]		=	"Dark Willow"
+	["npc_dota_hero_dark_willow"]		=	"Dark Willow",
+	["npc_dota_hero_grimstroke"]		=	"Grimstroke"
 }
 
 function HeroNamesLib:ConvertInternalToHeroName( internal )
