@@ -244,11 +244,10 @@ function modifier_vgmar_i_ogre_tester:DeclareFunctions()
 		--MODIFIER_EVENT_ON_SPENT_MANA,
 		--MODIFIER_EVENT_ON_ABILITY_EXECUTED,
 		--MODIFIER_EVENT_ON_ABILITY_START,
-		MODIFIER_PROPERTY_TRANSLATE_ACTIVITY_MODIFIERS,
+		MODIFIER_PROPERTY_TRANSLATE_ACTIVITY_MODIFIERS
     }
     return funcs
 end
-
 
 function modifier_vgmar_i_ogre_tester:GetActivityTranslationModifiers()
 	return "injured"

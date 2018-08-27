@@ -6,6 +6,7 @@ local VGMAR_DEBUG = true
 local VGMAR_GIVE_DEBUG_ITEMS = false
 local VGMAR_BOT_FILL = true
 local VGMAR_LOG_BALANCE = false
+local VGMAR_LOG_BALANCE_GAMEEND = true
 local VGMAR_LOG_BALANCE_INTERVAL = 120
 local MAX_COURIER_LVL = 5
 local COURIER_UPGRADE_TIME = 3
@@ -194,6 +195,7 @@ function VGMAR:Init()
 	LinkLuaModifier("modifier_vgmar_courier_burst", "abilities/modifiers/modifier_vgmar_courier_burst.lua", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_courier_burst_effect", "abilities/modifiers/modifier_vgmar_courier_burst.lua", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_courier_burst_charge", "abilities/modifiers/modifier_vgmar_courier_burst.lua", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_crai_courier_shield", "abilities/modifiers/ai/modifier_vgmar_crai_courier_shield.lua", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_buildings_destroyed_counter", "abilities/modifiers/modifier_vgmar_buildings_destroyed_counter.lua", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_anticreep_protection", "abilities/modifiers/modifier_vgmar_anticreep_protection.lua", LUA_MODIFIER_MOTION_NONE)
 	
@@ -599,9 +601,9 @@ function VGMAR:LogBalance()
 	LogLib:WriteLog("balance", 3, false, "Average Radiant: "..avgradiantnw)
 	LogLib:WriteLog("balance", 3, false, "Average Dire: "..avgdirenw)
 	--Tower Kill Data
-	LogLib:WriteLog("balance", 2, false, "Towers: ")
-	LogLib:WriteLog("balance", 3, false, "Towers Killed by Radiant: "..GameRules.VGMAR.towerskilledrad)
-	LogLib:WriteLog("balance", 3, false, "Towers Killed by Dire: "..GameRules.VGMAR.towerskilleddire)
+	LogLib:WriteLog("balance", 2, false, "Buildings: ")
+	LogLib:WriteLog("balance", 3, false, "Buildings Killed by Radiant: "..GameRules.VGMAR.towerskilledrad)
+	LogLib:WriteLog("balance", 3, false, "Buildings Killed by Dire: "..GameRules.VGMAR.towerskilleddire)
 	--Kills Data
 	LogLib:WriteLog("balance", 2, false, "Kills: ")
 	LogLib:WriteLog("balance", 3, false, "Radiant Kills: "..PlayerResource:GetTeamKills(2))
@@ -658,6 +660,14 @@ local modifierdatatable = {
 	["modifier_vgmar_b_fountain_anticamp"] = {radius = 2000, interval = 1.0, strpertick = 4, intpertick = 2, agipertick = 2, disablepassivestick = 20, silencetick = 40, blindnessendtick = 60, blindnessrange = 200, lingerduration = 30.0},
 	["modifier_vgmar_anticreep_protection"] = {radius = 1800, strikeinterval = 2.0, activeduration = 5.0, dmgpercentpercreep = 5.0},
 	["modifier_vgmar_i_ogre_tester"] = {}
+}
+
+local table_modifier_vgmar_crai_courier_shield = {
+	maxattentiondistance = 1500,
+	minadmult = 0.2,
+	maxadmult = 1.0,
+	startattackchance = 50,
+	hitattackchance = 80
 }
 
 local table_modifier_vgmar_courier_burst_var = {
@@ -1975,6 +1985,8 @@ function VGMAR:OnThink()
 						elseif couriers[j]:GetTeamNumber() == 3 then
 							couriers[j]:AddNewModifier(couriers[j], nil, "modifier_vgmar_courier_burst", table_modifier_vgmar_courier_burst_var)
 							couriers[j]:AddNewModifier(couriers[j], nil, "modifier_vgmar_courier_burst", {level = self.direcourieruplevel})
+							--Add Bot Courier Shield AI Controller
+							couriers[j]:AddNewModifier(couriers[j], nil, "modifier_vgmar_crai_courier_shield", table_modifier_vgmar_crai_courier_shield)
 						end
 						self.couriersinit = self.couriersinit + 1
 					end
@@ -2368,6 +2380,44 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 		["item_flying_courier_upgrade"] = { radiant = {self.radiantcourieruplevel >= MAX_COURIER_LVL, "Courier is at max level"}, dire = {self.direcourieruplevel >= MAX_COURIER_LVL, "Courier is at max level"} }
 	}
 	
+	--[[
+		[0] = "DOTA_UNIT_ORDER_NONE",
+		[1] = "DOTA_UNIT_ORDER_MOVE_TO_POSITION",
+		[2] = "DOTA_UNIT_ORDER_MOVE_TO_TARGET",
+		[3] = "DOTA_UNIT_ORDER_ATTACK_MOVE",
+		[4] = "DOTA_UNIT_ORDER_ATTACK_TARGET",
+		[5] = "DOTA_UNIT_ORDER_CAST_POSITION",
+		[6] = "DOTA_UNIT_ORDER_CAST_TARGET",
+		[7] = "DOTA_UNIT_ORDER_CAST_TARGET_TREE",
+		[8] = "DOTA_UNIT_ORDER_CAST_NO_TARGET", 
+		[9] = "DOTA_UNIT_ORDER_CAST_TOGGLE",
+		[10] = "DOTA_UNIT_ORDER_HOLD_POSITION",
+		[11] = "DOTA_UNIT_ORDER_TRAIN_ABILITY",
+		[12] = "DOTA_UNIT_ORDER_DROP_ITEM",
+		[13] = "DOTA_UNIT_ORDER_GIVE_ITEM",
+		[14] = "DOTA_UNIT_ORDER_PICKUP_ITEM",
+		[15] = "DOTA_UNIT_ORDER_PICKUP_RUNE",
+		[16] = "DOTA_UNIT_ORDER_PURCHASE_ITEM",
+		[17] = "DOTA_UNIT_ORDER_SELL_ITEM",
+		[18] = "DOTA_UNIT_ORDER_DISASSEMBLE_ITEM",
+		[19] = "DOTA_UNIT_ORDER_MOVE_ITEM",
+		[20] = "DOTA_UNIT_ORDER_CAST_TOGGLE_AUTO",
+		[21] = "DOTA_UNIT_ORDER_STOP",
+		[22] = "DOTA_UNIT_ORDER_TAUNT",
+		[23] = "DOTA_UNIT_ORDER_BUYBACK",
+		[24] = "DOTA_UNIT_ORDER_GLYPH",
+		[25] = "DOTA_UNIT_ORDER_EJECT_ITEM_FROM_STASH",
+		[26] = "DOTA_UNIT_ORDER_CAST_RUNE",
+		[27] = "DOTA_UNIT_ORDER_PING_ABILITY",
+		[28] = "DOTA_UNIT_ORDER_MOVE_TO_DIRECTION",
+		[29] = "DOTA_UNIT_ORDER_PATROL",
+		[30] = "DOTA_UNIT_ORDER_VECTOR_TARGET_POSITION",
+		[31] = "DOTA_UNIT_ORDER_RADAR",
+		[32] = "DOTA_UNIT_ORDER_SET_ITEM_COMBINE_LOCK",
+		[33] = "DOTA_UNIT_ORDER_CONTINUE",
+		[34] = "DOTA_UNIT_ORDER_VECTOR_TARGET_CANCELED",
+		[35] = "DOTA_UNIT_ORDER_CAST_RIVER_PAINT"
+	]]--
 	if order_type == 16 then
 		--dprint("Purchase Order Detected.")
 		--dprint("Item ID: ", filterTable["entindex_ability"])
@@ -2507,13 +2557,10 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 				--Bot Action Miss Simulation
 				--//////////////////////////
 				if order_type == 5 or order_type == 6 or order_type == 8 or order_type == 9 then
-					-- TODO: Make percentage depend on time
-					-- max->min earlygame->lategame
-					-- 20->10 0->50+
 					local minidlechance = 5
-					local maxidlechance = 25
+					local maxidlechance = 30
 					local minmissclickchance = 5
-					local maxmissclickchance = 25
+					local maxmissclickchance = 30
 					local maxminute = 60
 					local currentminute = math.floor(GameRules:GetDOTATime(false, false)/60)
 					local idlechance = math.scale( maxidlechance, math.clamp(0, (currentminute/maxminute), 1), minidlechance)
@@ -2938,6 +2985,15 @@ function VGMAR:OnGameStateChanged( keys )
 		if IsServer() and self.istimescalereset == 0 then
 			Convars:SetFloat("host_timescale", 1.0)
 			self.istimescalereset = 1
+		end
+	elseif state == DOTA_GAMERULES_STATE_POST_GAME then
+		if IsServer() and VGMAR_LOG_BALANCE_GAMEEND then
+			LogLib:WriteLog("balance", 0, false, "------------------------")
+			LogLib:WriteLog("balance", 0, false, "------------------------")
+			LogLib:WriteLog("balance", 0, false, "      Game End Log      ")
+			LogLib:WriteLog("balance", 0, false, "------------------------")
+			LogLib:WriteLog("balance", 0, false, "------------------------")
+			self:LogBalance()
 		end
 	end
 end

@@ -123,7 +123,7 @@ function modifier_vgmar_i_spellshield:OnIntervalThink()
 			self:SetStackCount( self:GetStackCount() + 1 )
 		end
 		
-		if self:GetStackCount() >= 1 then
+		if self:GetStackCount() >= 1 and parent:PassivesDisabled() == false then
 			if not parent:HasModifier("modifier_vgmar_i_spellshield_active") then
 				parent:AddNewModifier(parent, nil, "modifier_vgmar_i_spellshield_active", {})
 			end
