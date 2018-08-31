@@ -1,0 +1,98 @@
+"DOTAHeroes"
+{
+	//=================================================================================================================
+	// HERO: Warlock
+	//=================================================================================================================
+	"npc_dota_hero_warlock"
+	{
+		"BotImplemented"		"1"
+		"Bot"
+		{
+			"Loadout"
+			{
+				"item_tango"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_circlet"		"ITEM_CORE"
+				"item_mantle"		"ITEM_CORE"
+				"item_recipe_null_talisman"	"ITEM_CORE"
+				"item_null_talisman"	"ITEM_DERIVED"
+
+				"item_boots"				"ITEM_CORE"
+				"item_energy_booster"		"ITEM_CORE"
+				"item_arcane_boots"			"ITEM_DERIVED"
+
+				"item_point_booster"		"ITEM_LUXURY"
+				"item_ogre_axe"		"ITEM_LUXURY"
+				"item_staff_of_wizardry"		"ITEM_LUXURY"
+				"item_blade_of_alacrity"		"ITEM_LUXURY"
+				"item_ultimate_scepter"		"ITEM_DERIVED"
+
+				"item_void_stone"		"ITEM_EXTENSION"
+				"item_ring_of_health"	"ITEM_EXTENSION"
+				"item_pers"				"ITEM_DERIVED"
+				"item_void_stone"		"ITEM_EXTENSION"
+				"item_ring_of_health"	"ITEM_EXTENSION"
+				"item_pers"				"ITEM_DERIVED"
+				"item_recipe_refresher"	"ITEM_EXTENSION"
+				"item_refresher"		"ITEM_DERIVED"
+
+				"item_mystic_staff"		"ITEM_LUXURY"
+				"item_vitality_booster"	"ITEM_LUXURY"
+				"item_energy_booster"	"ITEM_LUXURY"
+				"item_point_booster"	"ITEM_LUXURY"
+				"item_soul_booster"		"ITEM_DERIVED"
+				"item_recipe_octarine_core" "ITEM_LUXURY"
+				"item_octarine_core"	"ITEM_DERIVED"
+
+				"item_mystic_staff"		"ITEM_LUXURY"
+				"item_platemail"		"ITEM_LUXURY"
+				"item_recipe_shivas_guard"		"ITEM_LUXURY"
+				
+				"item_void_stone"		"ITEM_LUXURY"
+				"item_mystic_staff"		"ITEM_LUXURY"
+				"item_ultimate_orb"		"ITEM_LUXURY"
+				"item_sheepstick"		"ITEM_DERIVED"
+			}
+
+			"Build"
+			{
+				"1"		"warlock_shadow_word"
+				"2"		"warlock_fatal_bonds"
+				"3"		"warlock_shadow_word"
+				"4"		"warlock_fatal_bonds"
+				"5"		"warlock_shadow_word"
+				"6"		"warlock_rain_of_chaos"
+				"7"		"warlock_shadow_word"
+				"8"		"warlock_fatal_bonds"
+				"9"		"warlock_fatal_bonds"
+				"10"		"special_bonus_cast_range_150"
+				"11"		"warlock_upheaval"
+				"12"		"warlock_rain_of_chaos"
+				"13"		"warlock_upheaval"
+				"14"		"warlock_upheaval"
+				"15"		"special_bonus_exp_boost_60"
+				"16"		"warlock_upheaval"
+				"17"		""
+				"18"		"warlock_rain_of_chaos"
+				"19"		""
+				"20"		"special_bonus_unique_warlock_4"
+				"21"		""
+				"22"		""
+				"23"		""
+				"24"		""
+				"25"		"special_bonus_unique_warlock_2"
+			}
+			"HeroType"		"DOTA_BOT_PURE_SUPPORT | DOTA_BOT_PUSH_SUPPORT"
+			"AggressionFactor"		"0.800000"
+			"LaningInfo"
+			{
+				"SoloDesire"		"0"
+				"RequiresBabysit"		"0"
+				"ProvidesBabysit"		"2"
+				"SurvivalRating"		"0"
+				"RequiresFarm"		"1"
+				"ProvidesSetup"		"0"
+				"RequiresSetup"		"1"
+			}
+		}
+	}
+}

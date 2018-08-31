@@ -1,0 +1,98 @@
+"DOTAHeroes"
+{
+	//=================================================================================================================
+	// HERO: Tiny
+	//=================================================================================================================
+	"npc_dota_hero_tiny"
+	{
+		"BotImplemented"		"1"
+		"Bot"
+		{
+			"Loadout"
+			{
+				"item_tango"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_tango"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_clarity"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_clarity"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_branches"		"ITEM_CORE"
+				"item_branches"		"ITEM_CORE"
+
+				"item_boots"		"ITEM_CORE"
+
+				"item_magic_stick"		"ITEM_CORE"
+				"item_recipe_magic_wand"		"ITEM_CORE"
+				"item_magic_wand"		"ITEM_DERIVED | ITEM_SELLABLE"
+
+				"item_belt_of_strength"	"ITEM_CORE"
+				"item_gloves"			"ITEM_CORE"
+				"item_power_treads"		"ITEM_DERIVED"
+
+				"item_blink"		"ITEM_CORE"
+				
+				"item_shadow_amulet"		"ITEM_CORE"
+				"item_claymore"				"ITEM_EXTENSION"
+				"item_invis_sword"			"ITEM_DERIVED"
+
+				"item_ogre_axe"			"ITEM_EXTENSION"
+				"item_quarterstaff"		"ITEM_EXTENSION"
+				"item_sobi_mask"		"ITEM_EXTENSION"
+				"item_robe"				"ITEM_EXTENSION"
+				"item_oblivion_staff"	"ITEM_EXTENSION | ITEM_DERIVED"
+				"item_echo_sabre"		"ITEM_DERIVED"
+				
+				"item_ultimate_orb"			"ITEM_EXTENSION"
+				"item_recipe_silver_edge"	"ITEM_EXTENSION"
+				"item_silver_edge"			"ITEM_DERIVED"
+
+				"item_mystic_staff"		"ITEM_LUXURY"
+				"item_void_stone"		"ITEM_LUXURY"
+				"item_ultimate_orb"		"ITEM_LUXURY"
+				"item_sheepstick"		"ITEM_DERIVED"
+
+				"item_vitality_booster"		"ITEM_LUXURY"
+				"item_reaver"		"ITEM_LUXURY"
+				"item_vitality_booster"		"ITEM_LUXURY"
+				"item_heart"		"ITEM_DERIVED"
+			}
+			"Build"
+			{
+				"1"		"tiny_avalanche"
+				"2"		"tiny_toss"
+				"3"		"tiny_avalanche"
+				"4"		"tiny_toss"
+				"5"		"tiny_toss"
+				"6"		"tiny_grow"
+				"7"		"tiny_toss"
+				"8"		"tiny_avalanche"
+				"9"		"tiny_avalanche"
+				"10"		"special_bonus_attack_damage_30"
+				"11"		"tiny_craggy_exterior"
+				"12"		"tiny_grow"
+				"13"		"tiny_craggy_exterior"
+				"14"		"tiny_craggy_exterior"
+				"15"		"special_bonus_unique_tiny"
+				"16"		"tiny_craggy_exterior"
+				"17"		""
+				"18"		"tiny_grow"
+				"19"		""
+				"20"		"special_bonus_unique_tiny_4"
+				"21"		""
+				"22"		""
+				"23"		""
+				"24"		""
+				"25"		"special_bonus_unique_tiny_2"
+			}
+			"LaningInfo"
+			{
+				"SoloDesire"		"1"
+				"RequiresBabysit"		"0"
+				"ProvidesBabysit"		"1"
+				"SurvivalRating"		"1"
+				"RequiresFarm"		"1"
+				"ProvidesSetup"		"2"
+				"RequiresSetup"		"0"
+			}
+			"HeroType"		"DOTA_BOT_GANKER | DOTA_BOT_TANK | DOTA_BOT_STUN_SUPPORT"
+		}
+	}
+}

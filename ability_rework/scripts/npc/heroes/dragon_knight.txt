@@ -1,0 +1,97 @@
+"DOTAHeroes"
+{
+	//=================================================================================================================
+	// HERO: Dragon Knight
+	//=================================================================================================================
+	"npc_dota_hero_dragon_knight"
+	{
+		"BotImplemented"		"1"
+		"Bot"
+		{
+			"Loadout"
+			{
+				"item_branches"		"ITEM_CORE | ITEM_SELLABLE"
+				"item_branches"		"ITEM_CORE | ITEM_SELLABLE"
+				"item_tango"		"ITEM_CORE | ITEM_SELLABLE"
+				"item_flask"		"ITEM_CORE | ITEM_SELLABLE"
+				"item_stout_shield"	"ITEM_CORE | ITEM_SELLABLE"
+
+				"item_boots"			"ITEM_CORE"
+				"item_belt_of_strength"	"ITEM_CORE"
+				"item_gloves"			"ITEM_CORE"
+				"item_power_treads"		"ITEM_DERIVED"
+
+				"item_shadow_amulet"		"ITEM_CORE"
+				"item_claymore"				"ITEM_EXTENSION"
+				"item_invis_sword"			"ITEM_DERIVED"
+
+				"item_ogre_axe"		"ITEM_LUXURY"
+				"item_mithril_hammer"		"ITEM_LUXURY"
+				"item_recipe_black_king_bar"		"ITEM_LUXURY"
+				"item_black_king_bar"		"ITEM_DERIVED"
+
+				"item_platemail"		"ITEM_LUXURY"
+				"item_hyperstone"		"ITEM_LUXURY"
+				"item_chainmail"		"ITEM_LUXURY"
+				"item_recipe_assault"		"ITEM_LUXURY"
+				"item_assault_cuirass"		"ITEM_DERIVED"
+				
+				"item_ultimate_orb"			"ITEM_EXTENSION"
+				"item_recipe_silver_edge"	"ITEM_EXTENSION"
+				"item_silver_edge"			"ITEM_DERIVED"
+
+				"item_lifesteal"		"ITEM_LUXURY"
+				"item_reaver"			"ITEM_LUXURY"
+				"item_claymore"			"ITEM_LUXURY"
+				"item_satanic"			"ITEM_DERIVED"
+
+				"item_broadsword"		"ITEM_LUXURY"
+				"item_blades_of_attack"		"ITEM_LUXURY"
+				"item_recipe_lesser_crit"		"ITEM_LUXURY"
+				"item_lesser_crit"		"ITEM_DERIVED"
+				"item_demon_edge"		"ITEM_LUXURY"
+				"item_recipe_greater_crit"		"ITEM_LUXURY"
+				"item_greater_crit"		"ITEM_DERIVED"
+			}
+			"Build"
+			{
+				"1"		"dragon_knight_breathe_fire"
+				"2"		"dragon_knight_dragon_blood"
+				"3"		"dragon_knight_breathe_fire"
+				"4"		"dragon_knight_dragon_blood"
+				"5"		"dragon_knight_breathe_fire"
+				"6"		"dragon_knight_elder_dragon_form"
+				"7"		"dragon_knight_dragon_tail"
+				"8"		"dragon_knight_breathe_fire"
+				"9"		"dragon_knight_dragon_blood"
+				"10"		"special_bonus_mp_regen_2"
+				"11"		"dragon_knight_dragon_blood"
+				"12"		"dragon_knight_elder_dragon_form"
+				"13"		"dragon_knight_dragon_tail"
+				"14"		"dragon_knight_dragon_tail"
+				"15"		"special_bonus_attack_damage_30"
+				"16"		"dragon_knight_dragon_tail"
+				"17"		""
+				"18"		"dragon_knight_elder_dragon_form"
+				"19"		""
+				"20"		"special_bonus_unique_dragon_knight"
+				"21"		""
+				"22"		""
+				"23"		""
+				"24"		""
+				"25"		"special_bonus_strength_40"
+			}
+			"HeroType"		"DOTA_BOT_TANK | DOTA_BOT_SEMI_CARRY | DOTA_BOT_STUN_SUPPORT"
+			"LaningInfo"
+			{
+				"SoloDesire"		"0"
+				"RequiresBabysit"		"1"
+				"ProvidesBabysit"		"1"
+				"SurvivalRating"		"1"
+				"RequiresFarm"		"2"
+				"ProvidesSetup"		"2"
+				"RequiresSetup"		"1"
+			}
+		}
+	}
+}

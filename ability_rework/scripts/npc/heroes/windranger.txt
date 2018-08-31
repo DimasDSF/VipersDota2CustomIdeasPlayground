@@ -1,0 +1,98 @@
+"DOTAHeroes"
+{
+	//=================================================================================================================
+	// HERO: Windrunner
+	//=================================================================================================================
+	"npc_dota_hero_windrunner"
+	{
+		"BotImplemented"		"1"
+		"Bot"
+		{
+			"Loadout"
+			{
+				"item_tango"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_tango"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_clarity"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_clarity"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_boots"		"ITEM_CORE"
+				"item_magic_stick"		"ITEM_CORE | ITEM_SELLABLE"
+				"item_blades_of_attack"		"ITEM_CORE"
+				"item_blades_of_attack"		"ITEM_CORE"
+				"item_phase_boots"		"ITEM_DERIVED"
+
+				"item_javelin"				"ITEM_EXTENSION"
+				"item_mithril_hammer"		"ITEM_EXTENSION"
+				"item_maelstrom"			"ITEM_DERIVED"
+				
+				"item_blink"		"ITEM_CORE"
+
+				"item_quarterstaff"		"ITEM_EXTENSION"
+				"item_sobi_mask"		"ITEM_EXTENSION"
+				"item_robe"		"ITEM_EXTENSION"
+				"item_oblivion_staff"		"ITEM_DERIVED"
+				"item_quarterstaff"		"ITEM_EXTENSION"
+				"item_sobi_mask"		"ITEM_EXTENSION"
+				"item_robe"		"ITEM_EXTENSION"
+				"item_oblivion_staff"		"ITEM_DERIVED"
+				"item_recipe_orchid"		"ITEM_EXTENSION"
+				"item_orchid"		"ITEM_DERIVED"
+				
+				"item_hyperstone"		"ITEM_LUXURY"
+				"item_recipe_mjollnir"	"ITEM_LUXURY"
+				"item_mjollnir"			"ITEM_DERIVED"
+
+				"item_point_booster"		"ITEM_LUXURY"
+				"item_blade_of_alacrity"		"ITEM_LUXURY"
+				"item_ogre_axe"		"ITEM_LUXURY"
+				"item_staff_of_wizardry"		"ITEM_LUXURY"
+				"item_ultimate_scepter"		"ITEM_DERIVED"
+				
+				"item_broadsword"			"ITEM_LUXURY"
+				"item_blades_of_attack"		"ITEM_LUXURY"
+				"item_recipe_lesser_crit"	"ITEM_LUXURY"
+				"item_lesser_crit"			"ITEM_DERIVED"
+				"item_recipe_bloodthorn"	"ITEM_LUXURY"
+				"item_bloodthorn"			"ITEM_DERIVED"
+			}
+			"Build"
+			{
+				"1"		"windrunner_windrun"
+				"2"		"windrunner_powershot"
+				"3"		"windrunner_powershot"
+				"4"		"windrunner_shackleshot"
+				"5"		"windrunner_powershot"
+				"6"		"windrunner_focusfire"
+				"7"		"windrunner_powershot"
+				"8"		"windrunner_shackleshot"
+				"9"		"windrunner_shackleshot"
+				"10"		"special_bonus_unique_windranger_2"
+				"11"		"windrunner_shackleshot"
+				"12"		"windrunner_focusfire"
+				"13"		"windrunner_windrun"
+				"14"		"windrunner_windrun"
+				"15"		"special_bonus_unique_windranger_3"
+				"16"		"windrunner_windrun"
+				"17"		""
+				"18"		"windrunner_focusfire"
+				"19"		""
+				"20"		"special_bonus_unique_windranger"
+				"21"		""
+				"22"		""
+				"23"		""
+				"24"		""
+				"25"		"special_bonus_cooldown_reduction_30"
+			}
+			"LaningInfo"
+			{
+				"SoloDesire"		"0"
+				"RequiresBabysit"		"0"
+				"ProvidesBabysit"		"2"
+				"SurvivalRating"		"1"
+				"RequiresFarm"		"1"
+				"ProvidesSetup"		"1"
+				"RequiresSetup"		"0"
+			}
+			"HeroType"		"DOTA_BOT_GANKER | DOTA_BOT_STUN_SUPPORT"
+		}
+	}
+}

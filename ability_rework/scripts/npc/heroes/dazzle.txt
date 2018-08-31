@@ -1,0 +1,96 @@
+"DOTAHeroes"
+{
+	//=================================================================================================================
+	// HERO: Dazzle
+	//=================================================================================================================
+	"npc_dota_hero_dazzle"
+	{
+		"BotImplemented"		"1"
+		"Bot"
+		{
+			"Loadout"
+			{
+				"item_tango"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_tango"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_clarity"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_clarity"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+
+				"item_branches"		"ITEM_CORE"
+				"item_branches"		"ITEM_CORE"
+				"item_magic_stick"		"ITEM_CORE"
+				"item_recipe_magic_wand"		"ITEM_CORE"
+				"item_magic_wand"		"ITEM_DERIVED | ITEM_SELLABLE"
+
+				"item_boots"		"ITEM_CORE"
+				"item_energy_booster"		"ITEM_EXTENSION"
+				"item_arcane_boots"		"ITEM_DERIVED"
+
+				"item_ring_of_regen"      "ITEM_EXTENSION"
+				"item_staff_of_wizardry"  "ITEM_EXTENSION"
+				"item_recipe_force_staff" "ITEM_EXTENSION"
+				"item_force_staff" "ITEM_EXTENSION | ITEM_DERIVED"
+
+				"item_staff_of_wizardry" 	"ITEM_EXTENSION"
+				"item_void_stone" 			"ITEM_EXTENSION"
+				"item_wind_lace"			"ITEM_EXTENSION"
+				"item_recipe_cyclone"		"ITEM_EXTENSION"
+				"item_cyclone"				"ITEM_DERIVED | ITEM_SELLABLE"
+				
+				"item_energy_booster"		"ITEM_CORE"
+				"item_void_stone"		"ITEM_CORE"
+				"item_recipe_aether_lens"	"ITEM_CORE"
+				"item_aether_lens"			"ITEM_DERIVED"
+
+				"item_ultimate_orb"		"ITEM_LUXURY"
+				"item_void_stone"		"ITEM_LUXURY"
+				"item_mystic_staff"		"ITEM_LUXURY"
+				"item_sheepstick"		"ITEM_DERIVED"
+
+				"item_point_booster"		"ITEM_LUXURY"
+				"item_blade_of_alacrity"		"ITEM_LUXURY"
+				"item_ogre_axe"		"ITEM_LUXURY"
+				"item_staff_of_wizardry"		"ITEM_LUXURY"
+				"item_ultimate_scepter"		"ITEM_DERIVED"
+			}
+			"Build"
+			{
+				"1"		"dazzle_poison_touch"
+				"2"		"dazzle_shadow_wave"
+				"3"		"dazzle_shadow_wave"
+				"4"		"dazzle_shallow_grave"
+				"5"		"dazzle_shadow_wave"
+				"6"		"dazzle_weave"
+				"7"		"dazzle_shadow_wave"
+				"8"		"dazzle_shallow_grave"
+				"9"		"dazzle_shallow_grave"
+				"10"		"special_bonus_hp_200"
+				"11"		"dazzle_shallow_grave"
+				"12"		"dazzle_weave"
+				"13"		"dazzle_poison_touch"
+				"14"		"dazzle_poison_touch"
+				"15"		"special_bonus_cast_range_125"
+				"16"		"dazzle_poison_touch"
+				"17"		""
+				"18"		"dazzle_weave"
+				"19"		""
+				"20"		"special_bonus_movement_speed_50"
+				"21"		""
+				"22"		""
+				"23"		""
+				"24"		""
+				"25"		"special_bonus_unique_dazzle_1"
+			}
+			"HeroType"		"DOTA_BOT_PURE_SUPPORT"
+			"LaningInfo"
+			{
+				"SoloDesire"		"0"
+				"RequiresBabysit"		"0"
+				"ProvidesBabysit"		"2"
+				"SurvivalRating"		"2"
+				"RequiresFarm"		"0"
+				"ProvidesSetup"		"1"
+				"RequiresSetup"		"0"
+			}
+		}
+	}
+}

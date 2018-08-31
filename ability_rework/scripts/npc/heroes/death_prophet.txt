@@ -1,0 +1,108 @@
+"DOTAHeroes"
+{
+	//=================================================================================================================
+	// HERO: Death Prophet
+	//=================================================================================================================
+	"npc_dota_hero_death_prophet"
+	{
+		"BotImplemented"		"1"
+		"Bot"
+		{
+			"Loadout"
+			{
+				"item_tango"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_mantle"		"ITEM_CORE"
+				"item_circlet"		"ITEM_CORE"
+				"item_recipe_null_talisman"		"ITEM_CORE"
+				"item_null_talisman"		"ITEM_DERIVED"
+
+				"item_boots"		"ITEM_CORE"
+				"item_blades_of_attack"		"ITEM_CORE"
+				"item_blades_of_attack"		"ITEM_CORE"
+				"item_phase_boots"		"ITEM_DERIVED"
+
+				"item_mantle"		"ITEM_EXTENSION"
+				"item_circlet"		"ITEM_EXTENSION"
+				"item_recipe_null_talisman"		"ITEM_EXTENSION"
+				"item_null_talisman"		"ITEM_DERIVED"
+
+				"item_helm_of_iron_will"	"ITEM_EXTENSION"
+				"item_recipe_veil_of_discord"	"ITEM_EXTENSION"
+				"item_veil_of_discord"		"ITEM_DERIVED | ITEM_SELLABLE"
+
+				"item_wind_lace"		"ITEM_EXTENSION"
+				"item_void_stone"		"ITEM_EXTENSION"
+				"item_staff_of_wizardry"		"ITEM_EXTENSION"
+				"item_recipe_cyclone"		"ITEM_EXTENSION"
+				"item_cyclone"		"ITEM_DERIVED | ITEM_SELLABLE"
+				
+				"item_ogre_axe"		"ITEM_EXTENSION"
+				"item_mithril_hammer"		"ITEM_EXTENSION"
+				"item_recipe_black_king_bar"		"ITEM_EXTENSION"
+				"item_black_king_bar"		"ITEM_DERIVED"
+
+				"item_ultimate_orb"		"ITEM_LUXURY"
+				"item_void_stone"		"ITEM_LUXURY"
+				"item_mystic_staff"		"ITEM_LUXURY"
+				"item_sheepstick"		"ITEM_DERIVED"
+				
+				"item_vitality_booster"		"ITEM_EXTENSION"
+				"item_energy_booster"		"ITEM_EXTENSION"
+				"item_recipe_aeon_disk"		"ITEM_EXTENSION"
+				"item_aeon_disk"		"ITEM_DERIVED"
+
+				"item_mystic_staff"		"ITEM_LUXURY"
+				"item_vitality_booster"	"ITEM_LUXURY"
+				"item_energy_booster"	"ITEM_LUXURY"
+				"item_point_booster"	"ITEM_LUXURY"
+				"item_soul_booster"		"ITEM_DERIVED"
+				"item_recipe_octarine_core" "ITEM_LUXURY"
+				"item_octarine_core"	"ITEM_DERIVED"
+
+				"item_platemail"		"ITEM_LUXURY"
+				"item_mystic_staff"		"ITEM_LUXURY"
+				"item_recipe_shivas_guard"		"ITEM_LUXURY"
+				"item_shivas_guard"		"ITEM_DERIVED"
+			}
+			"Build"
+			{
+				"1"		"death_prophet_carrion_swarm"
+				"2"		"death_prophet_spirit_siphon"
+				"3"		"death_prophet_spirit_siphon"
+				"4"		"death_prophet_carrion_swarm"
+				"5"		"death_prophet_spirit_siphon"
+				"6"		"death_prophet_exorcism"
+				"7"		"death_prophet_spirit_siphon"
+				"8"		"death_prophet_carrion_swarm"
+				"9"		"death_prophet_carrion_swarm"
+				"10"		"special_bonus_attack_damage_50"
+				"11"		"death_prophet_silence"
+				"12"		"death_prophet_exorcism"
+				"13"		"death_prophet_silence"
+				"14"		"death_prophet_silence"
+				"15"		"special_bonus_cast_range_150"
+				"16"		"death_prophet_silence"
+				"17"		""
+				"18"		"death_prophet_exorcism"
+				"19"		""
+				"20"		"special_bonus_hp_500"
+				"21"		""
+				"22"		""
+				"23"		""
+				"24"		""
+				"25"		"special_bonus_unique_death_prophet_4"
+			}
+			"HeroType"		"DOTA_BOT_PUSH_SUPPORT"
+			"LaningInfo"
+			{
+				"SoloDesire"		"2"
+				"RequiresBabysit"		"0"
+				"ProvidesBabysit"		"2"
+				"SurvivalRating"		"0"
+				"RequiresFarm"		"2"
+				"ProvidesSetup"		"0"
+				"RequiresSetup"		"0"
+			}
+		}
+	}
+}

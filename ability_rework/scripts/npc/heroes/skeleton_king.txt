@@ -1,0 +1,101 @@
+"DOTAHeroes"
+{
+	//=================================================================================================================
+	// HERO: Skeleton King
+	//=================================================================================================================
+	"npc_dota_hero_skeleton_king"
+	{
+		"BotImplemented"		"1"
+		"Bot"
+		{
+			"Loadout"
+			{
+				"item_tango"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_flask"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_stout_shield"	"ITEM_CORE | ITEM_SELLABLE"
+				"item_branches"		"ITEM_CORE"
+				"item_branches"		"ITEM_CORE"
+
+				"item_quelling_blade"	"ITEM_CORE | ITEM_SELLABLE"
+				"item_boots"			"ITEM_CORE"
+
+				"item_magic_stick"		"ITEM_CORE"
+				"item_recipe_magic_wand"			"ITEM_CORE"
+				"item_magic_wand"		"ITEM_DERIVED | ITEM_SELLABLE"
+
+				"item_belt_of_strength"		"ITEM_EXTENSION"
+				"item_gloves"				"ITEM_EXTENSION"
+				"item_power_treads"			"ITEM_DERIVED"
+
+				"item_robe"					"ITEM_CORE"
+				"item_chainmail"			"ITEM_CORE"
+				"item_broadsword"			"ITEM_CORE"
+				"item_blade_mail" 			"ITEM_CORE | ITEM_DERIVED"
+
+				"item_blink"		"ITEM_CORE"
+
+				"item_ogre_axe"			"ITEM_LUXURY"
+				"item_quarterstaff"		"ITEM_LUXURY"
+				"item_sobi_mask"		"ITEM_LUXURY"
+				"item_robe"				"ITEM_LUXURY"
+				"item_oblivion_staff"	"ITEM_LUXURY | ITEM_DERIVED"
+				"item_echo_sabre"		"ITEM_DERIVED | ITEM_SELLABLE"
+
+				"item_blight_stone"			"ITEM_LUXURY"
+				"item_mithril_hammer"		"ITEM_LUXURY"
+				"item_mithril_hammer"		"ITEM_LUXURY"
+				"item_desolator"			"ITEM_DERIVED"
+
+				"item_ogre_axe"					"ITEM_EXTENSION"
+				"item_mithril_hammer"			"ITEM_EXTENSION"
+				"item_recipe_black_king_bar"	"ITEM_EXTENSION"
+				"item_black_king_bar"			"ITEM_DERIVED"
+				
+				"item_platemail"		"ITEM_LUXURY"
+				"item_hyperstone"		"ITEM_LUXURY"
+				"item_chainmail"		"ITEM_LUXURY"
+				"item_recipe_assault"	"ITEM_LUXURY"
+				"item_assault"			"ITEM_DERIVED"
+			}
+			"Build"
+			{
+				"1"		"skeleton_king_hellfire_blast"
+				"2"		"skeleton_king_vampiric_aura"
+				"3"		"skeleton_king_hellfire_blast"
+				"4"		"skeleton_king_mortal_strike"
+				"5"		"skeleton_king_hellfire_blast"
+				"6"		"skeleton_king_reincarnation"
+				"7"		"skeleton_king_hellfire_blast"
+				"8"		"skeleton_king_mortal_strike"
+				"9"		"skeleton_king_mortal_strike"
+				"10"		"special_bonus_attack_speed_20"
+				"11"		"skeleton_king_mortal_strike"
+				"12"		"skeleton_king_reincarnation"
+				"13"		"skeleton_king_vampiric_aura"
+				"14"		"skeleton_king_vampiric_aura"
+				"15"		"special_bonus_strength_15"
+				"16"		"skeleton_king_vampiric_aura"
+				"17"		""
+				"18"		"skeleton_king_reincarnation"
+				"19"		""
+				"20"		"special_bonus_unique_wraith_king_1"
+				"21"		""
+				"22"		""
+				"23"		""
+				"24"		""
+				"25"		"special_bonus_unique_wraith_king_4"
+			}
+			"HeroType"		"DOTA_BOT_TANK | DOTA_BOT_SEMI_CARRY"
+			"LaningInfo"
+			{
+				"SoloDesire"		"0"
+				"RequiresBabysit"		"1"
+				"ProvidesBabysit"		"0"
+				"SurvivalRating"		"1"
+				"RequiresFarm"		"2"
+				"ProvidesSetup"		"2"
+				"RequiresSetup"		"0"
+			}
+		}
+	}
+}

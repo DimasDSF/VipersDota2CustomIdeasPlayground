@@ -1,0 +1,94 @@
+"DOTAHeroes"
+{
+	//=================================================================================================================
+	// HERO: Earthshaker
+	//=================================================================================================================
+	"npc_dota_hero_earthshaker"
+	{
+		"BotImplemented"		"1"
+		"Bot"
+		{
+			"Loadout"
+			{
+				"item_tango"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_clarity"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_clarity"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				
+				"item_branches"		"ITEM_CORE"
+				"item_branches"		"ITEM_CORE"
+				"item_magic_stick"	"ITEM_CORE"
+				"item_recipe_magic_wand"		"ITEM_CORE"
+				"item_magic_wand"	"ITEM_DERIVED | ITEM_SELLABLE"
+
+				"item_boots"			"ITEM_CORE"
+				"item_energy_booster"	"ITEM_CORE"
+				"item_arcane_boots"		"ITEM_DERIVED"
+
+				"item_blink"		"ITEM_CORE"
+
+				"item_staff_of_wizardry" 	"ITEM_EXTENSION"
+				"item_void_stone" 			"ITEM_EXTENSION"
+				"item_wind_lace"			"ITEM_EXTENSION"
+				"item_recipe_cyclone"		"ITEM_EXTENSION"
+				"item_cyclone"				"ITEM_DERIVED | ITEM_SELLABLE"
+
+				"item_shadow_amulet"		"ITEM_CORE"
+				"item_claymore"				"ITEM_EXTENSION"
+				"item_invis_sword"			"ITEM_DERIVED"
+
+				"item_ogre_axe"		"ITEM_EXTENSION"
+				"item_mithril_hammer"		"ITEM_EXTENSION"
+				"item_recipe_black_king_bar"		"ITEM_EXTENSION"
+
+				"item_void_stone"		"ITEM_EXTENSION"
+				"item_ultimate_orb"		"ITEM_EXTENSION"
+				"item_mystic_staff"		"ITEM_EXTENSION"
+				"item_sheepstick"		"ITEM_DERIVED"
+
+				"item_vitality_booster"		"ITEM_EXTENSION"
+				"item_energy_booster"		"ITEM_EXTENSION"
+				"item_recipe_aeon_disk"		"ITEM_EXTENSION"
+				"item_aeon_disk"		"ITEM_DERIVED"
+			}
+			"Build"
+			{
+				"1"		"earthshaker_fissure"
+				"2"		"earthshaker_enchant_totem"
+				"3"		"earthshaker_aftershock"
+				"4"		"earthshaker_aftershock"
+				"5"		"earthshaker_aftershock"
+				"6"		"earthshaker_echo_slam"
+				"7"		"earthshaker_aftershock"
+				"8"		"earthshaker_fissure"
+				"9"		"earthshaker_fissure"
+				"10"		"special_bonus_mp_250"
+				"11"		"earthshaker_fissure"
+				"12"		"earthshaker_echo_slam"
+				"13"		"earthshaker_enchant_totem"
+				"14"		"earthshaker_enchant_totem"
+				"15"		"special_bonus_movement_speed_30"
+				"16"		"earthshaker_enchant_totem"
+				"17"		""
+				"18"		"earthshaker_echo_slam"
+				"19"		""
+				"20"		"special_bonus_unique_earthshaker_3"
+				"21"		""
+				"22"		""
+				"23"		""
+				"24"		""
+				"25"		"special_bonus_unique_earthshaker"
+			}
+			"LaningInfo"
+			{
+				"SoloDesire"		"0"
+				"RequiresBabysit"		"0"
+				"ProvidesBabysit"		"1"
+				"SurvivalRating"		"1"
+				"RequiresFarm"		"0"
+				"ProvidesSetup"		"2"
+				"RequiresSetup"		"0"
+			}
+			"HeroType"		"DOTA_BOT_STUN_SUPPORT"
+		}
+	}
+}

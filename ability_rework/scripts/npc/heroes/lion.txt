@@ -1,0 +1,90 @@
+"DOTAHeroes"
+{
+	//=================================================================================================================
+	// HERO: Lion
+	//=================================================================================================================
+	"npc_dota_hero_lion"
+	{
+		"BotImplemented"		"1"
+		"Bot"
+		{
+			"Loadout"
+			{
+				"item_tango"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_branches"		"ITEM_CORE"
+				"item_branches"		"ITEM_CORE"
+				"item_magic_stick"		"ITEM_CORE"
+				"item_recipe_magic_wand"		"ITEM_CORE"
+				"item_magic_wand"		"ITEM_DERIVED | ITEM_SELLABLE"
+
+				"item_wind_lace"			"ITEM_CORE"
+				"item_boots"				"ITEM_CORE"
+				"item_ring_of_regen"		"ITEM_CORE"
+				"item_tranquil_boots"		"ITEM_DERIVED"	
+
+				"item_blink"		"ITEM_CORE"
+			
+				"item_energy_booster"		"ITEM_EXTENSION"
+				"item_void_stone"		"ITEM_EXTENSION"
+				"item_recipe_aether_lens"	"ITEM_EXTENSION"
+				"item_aether_lens"			"ITEM_DERIVED"
+
+				"item_void_stone"		"ITEM_LUXURY"
+				"item_mystic_staff"		"ITEM_LUXURY"
+				"item_ultimate_orb"		"ITEM_LUXURY"
+				"item_sheepstick"		"ITEM_DERIVED"
+
+				"item_point_booster"		"ITEM_LUXURY"
+				"item_ogre_axe"		"ITEM_LUXURY"
+				"item_staff_of_wizardry"		"ITEM_LUXURY"
+				"item_blade_of_alacrity"		"ITEM_LUXURY"
+				"item_ultimate_scepter"		"ITEM_DERIVED"
+				
+				"item_staff_of_wizardry"		"ITEM_CORE"
+				"item_wind_lace"		"ITEM_CORE"
+				"item_void_stone"		"ITEM_CORE"
+				"item_recipe_cyclone"		"ITEM_CORE"
+				"item_cyclone"		"ITEM_DERIVED"
+			}
+			"Build"
+			{
+				"1"		"lion_impale"
+				"2"		"lion_voodoo"
+				"3"		"lion_impale"
+				"4"		"lion_mana_drain"
+				"5"		"lion_impale"
+				"6"		"lion_finger_of_death"
+				"7"		"lion_impale"
+				"8"		"lion_mana_drain"
+				"9"		"lion_mana_drain"
+				"10"		"special_bonus_attack_damage_90"
+				"11"		"lion_mana_drain"
+				"12"		"lion_finger_of_death"
+				"13"		"lion_voodoo"
+				"14"		"lion_voodoo"
+				"15"		"special_bonus_gold_income_20"
+				"16"		"lion_voodoo"
+				"17"		""
+				"18"		"lion_finger_of_death"
+				"19"		""
+				"20"		"special_bonus_hp_500"
+				"21"		""
+				"22"		""
+				"23"		""
+				"24"		""
+				"25"		"special_bonus_unique_lion_4"
+			}
+			"HeroType"		"DOTA_BOT_GANKER | DOTA_BOT_STUN_SUPPORT | DOTA_BOT_NUKER"
+			"LaningInfo"
+			{
+				"SoloDesire"		"1"
+				"RequiresBabysit"		"0"
+				"ProvidesBabysit"		"2"
+				"SurvivalRating"		"2"
+				"RequiresFarm"		"1"
+				"ProvidesSetup"		"2"
+				"RequiresSetup"		"0"
+			}
+		}
+	}
+}

@@ -1,0 +1,112 @@
+"DOTAHeroes"
+{
+	//=================================================================================================================
+	// HERO: Vengeful Spirit
+	//=================================================================================================================
+	"npc_dota_hero_vengefulspirit"
+	{
+		"BotImplemented"		"1"
+		"Bot"
+		{
+			"Loadout"
+			{
+				"item_tango"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_clarity"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_branches"		"ITEM_CORE"
+				"item_branches"		"ITEM_CORE"			
+				"item_magic_stick"	"ITEM_CORE"
+				"item_recipe_magic_wand"		"ITEM_CORE"
+				"item_magic_wand"	"ITEM_DERIVED | ITEM_SELLABLE"
+
+				"item_boots"			"ITEM_CORE"				
+
+				"item_slippers"					"ITEM_CORE"
+				"item_circlet"					"ITEM_CORE"
+				"item_recipe_wraith_band"		"ITEM_CORE"
+				"item_wraith_band"				"ITEM_DERIVED"
+
+				"item_belt_of_strength"	"ITEM_CORE"
+				"item_gloves"			"ITEM_CORE"
+				"item_power_treads"		"ITEM_DERIVED"
+
+				"item_chainmail"	"ITEM_CORE"
+				"item_sobi_mask"	"ITEM_CORE"
+				"item_blight_stone"	"ITEM_CORE"
+				"item_medallion_of_courage" "ITEM_DERIVED"
+
+				"item_staff_of_wizardry"	"ITEM_EXTENSION"
+				"item_ring_of_regen"		"ITEM_EXTENSION"
+				"item_recipe_force_staff"	"ITEM_EXTENSION"
+				"item_force_staff"			"ITEM_DERIVED"
+				
+				"item_shadow_amulet"		"ITEM_CORE"
+				"item_claymore"				"ITEM_EXTENSION"
+				"item_invis_sword"			"ITEM_DERIVED"
+
+				"item_energy_booster"		"ITEM_LUXURY"
+				"item_void_stone"		"ITEM_LUXURY"
+				"item_recipe_aether_lens"	"ITEM_LUXURY"
+				"item_aether_lens"			"ITEM_DERIVED"
+				
+				"item_boots_of_elves"	"ITEM_CORE"
+				"item_boots_of_elves"	"ITEM_CORE"
+				"item_ogre_axe"			"ITEM_CORE"
+				"item_dragon_lance"		"ITEM_DERIVED"
+				
+				"item_hurricane_pike"	"ITEM_DERIVED"
+				
+				"item_talisman_of_evasion"	"ITEM_EXTENSION"
+				"item_solar_crest"			"ITEM_DERIVED"
+				
+				"item_ultimate_orb"			"ITEM_EXTENSION"
+				"item_recipe_silver_edge"	"ITEM_EXTENSION"
+				"item_silver_edge"			"ITEM_DERIVED"
+				
+				"item_point_booster"		"ITEM_LUXURY"
+				"item_staff_of_wizardry"		"ITEM_LUXURY"
+				"item_ogre_axe"		"ITEM_LUXURY"
+				"item_blade_of_alacrity"		"ITEM_LUXURY"
+				"item_ultimate_scepter"		"ITEM_DERIVED"
+			}
+			"Build"
+			{
+				"1"		"vengefulspirit_magic_missile"
+				"2"		"vengefulspirit_wave_of_terror"
+				"3"		"vengefulspirit_magic_missile"
+				"4"		"vengefulspirit_command_aura"
+				"5"		"vengefulspirit_magic_missile"
+				"6"		"vengefulspirit_nether_swap"
+				"7"		"vengefulspirit_magic_missile"
+				"8"		"vengefulspirit_wave_of_terror"
+				"9"		"vengefulspirit_wave_of_terror"
+				"10"		"special_bonus_magic_resistance_15"
+				"11"		"vengefulspirit_wave_of_terror"
+				"12"		"vengefulspirit_nether_swap"
+				"13"		"vengefulspirit_command_aura"
+				"14"		"vengefulspirit_command_aura"
+				"15"		"special_bonus_unique_vengeful_spirit_6"
+				"16"		"vengefulspirit_command_aura"
+				"17"		""
+				"18"		"vengefulspirit_nether_swap"
+				"19"		""
+				"20"		"special_bonus_unique_vengeful_spirit_2"
+				"21"		""
+				"22"		""
+				"23"		""
+				"24"		""
+				"25"		"special_bonus_unique_vengeful_spirit_1"
+			}
+			"LaningInfo"
+			{
+				"SoloDesire"		"0"
+				"RequiresBabysit"		"0"
+				"ProvidesBabysit"		"2"
+				"SurvivalRating"		"1"
+				"RequiresFarm"		"1"
+				"ProvidesSetup"		"2"
+				"RequiresSetup"		"0"
+			}
+			"HeroType"		"DOTA_BOT_GANKER | DOTA_BOT_STUN_SUPPORT"
+		}
+	}
+}

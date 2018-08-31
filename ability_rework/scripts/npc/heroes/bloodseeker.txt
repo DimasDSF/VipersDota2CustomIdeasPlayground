@@ -1,0 +1,103 @@
+"DOTAHeroes"
+{
+	//=================================================================================================================
+	// HERO: Bloodseeker
+	//=================================================================================================================
+	"npc_dota_hero_bloodseeker"
+	{
+		"BotImplemented"		"1"
+		"Bot"
+		{
+			"Loadout"
+			{
+				"item_tango"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_stout_shield"		"ITEM_CORE | ITEM_SELLABLE"
+				"item_quelling_blade"		"ITEM_CORE | ITEM_SELLABLE"
+				"item_boots"		"ITEM_CORE"
+				"item_magic_stick"		"ITEM_CORE"
+				"item_branches"		"ITEM_CORE"
+				"item_branches"		"ITEM_CORE"
+				"item_recipe_magic_wand"		"ITEM_CORE"
+				"item_magic_wand"		"ITEM_DERIVED | ITEM_SELLABLE"
+
+				"item_gloves"		"ITEM_EXTENSION"
+				"item_boots_of_elves"		"ITEM_EXTENSION"
+				"item_power_treads"		"ITEM_DERIVED"
+
+				"item_robe"					"ITEM_CORE"
+				"item_chainmail"			"ITEM_CORE"
+				"item_broadsword"			"ITEM_CORE"
+				"item_blade_mail" 			"ITEM_CORE | ITEM_DERIVED"
+
+				"item_shadow_amulet"		"ITEM_CORE"
+				"item_claymore"				"ITEM_EXTENSION"
+				"item_invis_sword"			"ITEM_DERIVED"
+
+				"item_mithril_hammer"		"ITEM_EXTENSION"
+				"item_belt_of_strength"		"ITEM_EXTENSION"
+				"item_recipe_basher"		"ITEM_EXTENSION"
+				"item_basher"		"ITEM_DERIVED"
+
+				"item_ogre_axe"		"ITEM_LUXURY"
+				"item_mithril_hammer"		"ITEM_LUXURY"
+				"item_recipe_black_king_bar"		"ITEM_LUXURY"
+				"item_black_king_bar"		"ITEM_DERIVED"
+
+				"item_ultimate_orb"			"ITEM_EXTENSION"
+				"item_recipe_silver_edge"	"ITEM_EXTENSION"
+				"item_silver_edge"			"ITEM_DERIVED"
+
+				"item_stout_shield"		"ITEM_LUXURY"
+				"item_ring_of_health"		"ITEM_LUXURY"
+				"item_vitality_booster"		"ITEM_LUXURY"
+				"item_vanguard"		"ITEM_DERIVED"
+				"item_recipe_abyssal_blade"	"ITEM_LUXURY"
+				"item_abyssal_blade"		"ITEM_DERIVED"
+
+				"item_eagle"		"ITEM_LUXURY"
+				"item_quarterstaff"		"ITEM_LUXURY"
+				"item_talisman_of_evasion"		"ITEM_LUXURY"
+				"item_butterfly"		"ITEM_DERIVED"
+			}
+			"Build"
+			{
+				"1"		"bloodseeker_bloodrage"
+				"2"		"bloodseeker_thirst"
+				"3"		"bloodseeker_thirst"
+				"4"		"bloodseeker_blood_bath"
+				"5"		"bloodseeker_thirst"
+				"6"		"bloodseeker_rupture"
+				"7"		"bloodseeker_thirst"
+				"8"		"bloodseeker_blood_bath"
+				"9"		"bloodseeker_blood_bath"
+				"10"		"special_bonus_attack_speed_25"
+				"11"		"bloodseeker_blood_bath"
+				"12"		"bloodseeker_rupture"
+				"13"		"bloodseeker_bloodrage"
+				"14"		"bloodseeker_bloodrage"
+				"15"		"special_bonus_hp_300"
+				"16"		"bloodseeker_bloodrage"
+				"17"		""
+				"18"		"bloodseeker_rupture"
+				"19"		""
+				"20"		"special_bonus_lifesteal_25"
+				"21"		""
+				"22"		""
+				"23"		""
+				"24"		""
+				"25"		"special_bonus_unique_bloodseeker_2"
+			}
+			"HeroType"		"DOTA_BOT_SEMI_CARRY | DOTA_BOT_GANKER"
+			"LaningInfo"
+			{
+				"SoloDesire"		"2"
+				"RequiresBabysit"		"1"
+				"ProvidesBabysit"		"0"
+				"SurvivalRating"		"1"
+				"RequiresFarm"		"2"
+				"ProvidesSetup"		"0"
+				"RequiresSetup"		"1"
+			}
+		}
+	}
+}

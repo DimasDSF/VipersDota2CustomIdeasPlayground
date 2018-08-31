@@ -1,0 +1,91 @@
+"DOTAHeroes"
+{
+	//=================================================================================================================
+	// HERO: Bane
+	//=================================================================================================================
+	"npc_dota_hero_bane"
+	{
+		"BotImplemented"		"1"
+		"Bot"
+		{
+			"Loadout"
+			{
+				"item_mantle"		"ITEM_CORE | ITEM_SELLABLE"
+				"item_tango"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_clarity"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_clarity"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_clarity"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_magic_stick"		"ITEM_CORE | ITEM_SELLABLE"
+
+				"item_boots"		"ITEM_CORE"
+				"item_energy_booster"		"ITEM_CORE"
+				"item_arcane_boots"		"ITEM_DERIVED"
+				
+				"item_energy_booster"		"ITEM_CORE"
+				"item_void_stone"		"ITEM_CORE"
+				"item_recipe_aether_lens"	"ITEM_CORE"
+				"item_aether_lens"			"ITEM_DERIVED"
+				
+				"item_staff_of_wizardry"	"ITEM_EXTENSION"
+				"item_ring_of_regen"		"ITEM_EXTENSION"
+				"item_recipe_force_staff"	"ITEM_EXTENSION"
+				"item_force_staff"			"ITEM_DERIVED"
+
+				"item_void_stone"		"ITEM_LUXURY"
+				"item_mystic_staff"		"ITEM_LUXURY"
+				"item_ultimate_orb"		"ITEM_LUXURY"
+				"item_sheepstick"		"ITEM_DERIVED"
+
+				"item_sobi_mask"			"ITEM_EXTENSION"
+				"item_sobi_mask"			"ITEM_EXTENSION"
+				"item_belt_of_strength"		"ITEM_EXTENSION"
+				"item_recipe_necronomicon"	"ITEM_EXTENSION"
+				"item_necronomicon"			"ITEM_DERIVED"
+				"item_recipe_necronomicon"	"ITEM_EXTENSION"
+				"item_necronomicon_2"		"ITEM_DERIVED"
+				"item_recipe_necronomicon"	"ITEM_EXTENSION"
+				"item_necronomicon_3"		"ITEM_DERIVED"
+
+			}
+			"Build"
+			{
+				"1"		"bane_brain_sap"
+				"2"		"bane_nightmare"
+				"3"		"bane_brain_sap"
+				"4"		"bane_nightmare"
+				"5"		"bane_brain_sap"
+				"6"		"bane_fiends_grip"
+				"7"		"bane_brain_sap"
+				"8"		"bane_nightmare"
+				"9"		"bane_nightmare"
+				"10"		"special_bonus_cast_range_100"
+				"11"		"bane_enfeeble"
+				"12"		"bane_fiends_grip"
+				"13"		"bane_enfeeble"
+				"14"		"bane_enfeeble"
+				"15"		"special_bonus_exp_boost_40"		   
+				"16"		"bane_enfeeble"
+				"17"		""
+				"18"		"bane_fiends_grip"
+				"19"		""
+				"20"		"special_bonus_unique_bane_1"
+				"21"		""
+				"22"		""
+				"23"		""
+				"24"		""
+				"25"		"special_bonus_unique_bane_2"
+			}
+			"HeroType"		"DOTA_BOT_GANKER | DOTA_BOT_STUN_SUPPORT"
+			"LaningInfo"
+			{
+				"SoloDesire"		"1"
+				"RequiresBabysit"		"0"
+				"ProvidesBabysit"		"2"
+				"SurvivalRating"		"2"
+				"RequiresFarm"		"1"
+				"ProvidesSetup"		"1"
+				"RequiresSetup"		"0"
+			}
+		}
+	}
+}

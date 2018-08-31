@@ -1,0 +1,102 @@
+"DOTAHeroes"
+{
+	//=================================================================================================================
+	// HERO: Luna
+	//=================================================================================================================
+	"npc_dota_hero_luna"
+	{
+		"BotImplemented"		"1"
+		"Bot"
+		{
+			"Loadout"
+			{
+				"item_flask"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_tango"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_ring_of_protection"		"ITEM_CORE"
+				"item_branches"		"ITEM_CORE"
+				"item_branches"		"ITEM_CORE"
+				"item_magic_stick"		"ITEM_CORE"
+				"item_recipe_magic_wand"		"ITEM_CORE"
+				"item_magic_wand"		"ITEM_DERIVED | ITEM_SELLABLE"
+
+				"item_sobi_mask"		"ITEM_CORE"
+				"item_ring_of_basilius"		"ITEM_DERIVED"
+				"item_boots"		"ITEM_CORE"
+				"item_slippers"		"ITEM_CORE"
+				"item_circlet"		"ITEM_CORE"
+				"item_recipe_wraith_band"		"ITEM_CORE"
+				"item_ring_of_aquila"		"ITEM_DERIVED | ITEM_SELLABLE"
+
+				"item_boots_of_elves"		"ITEM_CORE"
+				"item_gloves"		"ITEM_CORE"
+				"item_power_treads"		"ITEM_DERIVED"
+
+				"item_lifesteal"		"ITEM_CORE"
+				"item_quarterstaff"		"ITEM_CORE"
+				"item_mask_of_madness"	"ITEM_DERIVED | ITEM_SELLABLE"
+
+				"item_blade_of_alacrity"		"ITEM_CORE"
+				"item_boots_of_elves"		"ITEM_CORE"
+				"item_recipe_yasha"		"ITEM_CORE"
+				"item_yasha"		"ITEM_DERIVED"
+				"item_ultimate_orb"		"ITEM_EXTENSION"
+				"item_recipe_manta"		"ITEM_EXTENSION"
+				"item_manta"		"ITEM_DERIVED"
+
+				"item_ogre_axe"		"ITEM_EXTENSION"
+				"item_mithril_hammer"		"ITEM_EXTENSION"
+				"item_recipe_black_king_bar"		"ITEM_EXTENSION"
+				"item_black_king_bar"		"ITEM_DERIVED"
+
+				"item_eagle"		"ITEM_EXTENSION"
+				"item_quarterstaff"		"ITEM_EXTENSION"
+				"item_talisman_of_evasion"		"ITEM_EXTENSION"
+				"item_butterfly"		"ITEM_DERIVED"
+
+				"item_ultimate_orb"		"ITEM_LUXURY"
+				"item_ultimate_orb"		"ITEM_LUXURY"
+				"item_point_booster"	"ITEM_LUXURY"
+				"item_skadi"			"ITEM_DERIVED"
+			}
+			"Build"
+			{
+				"1"		"luna_lunar_blessing"
+				"2"		"luna_lucent_beam"
+				"3"		"luna_lucent_beam"
+				"4"		"luna_moon_glaive"
+				"5"		"luna_lucent_beam"
+				"6"		"luna_eclipse"
+				"7"		"luna_moon_glaive"
+				"8"		"luna_moon_glaive"
+				"9"		"luna_moon_glaive"
+				"10"		"special_bonus_attack_speed_20"
+				"11"		"luna_lucent_beam"
+				"12"		"luna_eclipse"
+				"13"		"luna_lunar_blessing"
+				"14"		"luna_lunar_blessing"
+				"15"		"special_bonus_unique_luna_3"
+				"16"		"luna_lunar_blessing"
+				"17"		""
+				"18"		"luna_eclipse"
+				"19"		""
+				"20"		"special_bonus_all_stats_10"
+				"21"		""
+				"22"		""
+				"23"		""
+				"24"		""
+				"25"		"special_bonus_lifesteal_25"
+			}
+			"HeroType"		"DOTA_BOT_HARD_CARRY"
+			"LaningInfo"
+			{
+				"SoloDesire"		"0"
+				"RequiresBabysit"		"0"
+				"ProvidesBabysit"		"1"
+				"SurvivalRating"		"0"
+				"RequiresFarm"		"2"
+				"ProvidesSetup"		"0"
+				"RequiresSetup"		"2"
+			}
+		}
+	}
+}
