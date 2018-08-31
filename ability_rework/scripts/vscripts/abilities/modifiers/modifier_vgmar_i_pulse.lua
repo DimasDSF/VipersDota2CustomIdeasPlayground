@@ -56,7 +56,7 @@ end
 
 function modifier_vgmar_i_pulse:OnDeath(kv)
 	if IsServer() then
-		if kv.attacker == self:GetCaster() then
+		if kv.attacker == self:GetCaster() and self:GetParent():PassivesDisabled() == false then
 			if kv.unit:IsRealHero() then
 				if (self:GetStackCount() + self.stacksperhero) < self.maxstacks then
 					self:SetStackCount( self:GetStackCount() + self.stacksperhero )

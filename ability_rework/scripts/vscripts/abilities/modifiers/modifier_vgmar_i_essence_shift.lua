@@ -50,7 +50,7 @@ end
 
 function modifier_vgmar_i_essence_shift:OnAttackLanded( event )
 	if IsServer() then
-		if event.attacker == self:GetParent() and not self:GetParent():IsIllusion() then
+		if event.attacker == self:GetParent() and not self:GetParent():IsIllusion() and self:GetParent():PassivesDisabled() == false then
 			if event.target:GetTeamNumber() ~= self:GetCaster():GetTeamNumber() and event.target:IsRealHero() then
 				if self:GetParent():GetPrimaryAttribute() == 0 then
 					event.target:AddNewModifier(self:GetParent(), nil, "modifier_vgmar_i_essence_shift_target_str", {})
@@ -131,8 +131,19 @@ function modifier_vgmar_i_essence_shift_owner_str:DeclareFunctions()
 		MODIFIER_PROPERTY_STATS_STRENGTH_BONUS,
 		MODIFIER_PROPERTY_STATS_INTELLECT_BONUS,
 		MODIFIER_PROPERTY_STATS_AGILITY_BONUS,
+		MODIFIER_EVENT_ON_DEATH
     }
     return funcs
+end
+
+function modifier_vgmar_i_essence_shift_owner_str:OnDeath(event)
+	if IsServer() then
+		if event.unit == self:GetParent() then
+			self:SetDuration( -1, true )
+			self.hitcount = 0
+			self:SetStackCount(0)
+		end
+	end
 end
 
 function modifier_vgmar_i_essence_shift_owner_str:GetModifierBonusStats_Agility()
@@ -234,8 +245,19 @@ function modifier_vgmar_i_essence_shift_owner_agi:DeclareFunctions()
 		MODIFIER_PROPERTY_STATS_STRENGTH_BONUS,
 		MODIFIER_PROPERTY_STATS_INTELLECT_BONUS,
 		MODIFIER_PROPERTY_STATS_AGILITY_BONUS,
+		MODIFIER_EVENT_ON_DEATH
     }
     return funcs
+end
+
+function modifier_vgmar_i_essence_shift_owner_agi:OnDeath(event)
+	if IsServer() then
+		if event.unit == self:GetParent() then
+			self:SetDuration( -1, true )
+			self.hitcount = 0
+			self:SetStackCount(0)
+		end
+	end
 end
 
 function modifier_vgmar_i_essence_shift_owner_agi:GetModifierBonusStats_Agility()
@@ -337,8 +359,19 @@ function modifier_vgmar_i_essence_shift_owner_int:DeclareFunctions()
 		MODIFIER_PROPERTY_STATS_STRENGTH_BONUS,
 		MODIFIER_PROPERTY_STATS_INTELLECT_BONUS,
 		MODIFIER_PROPERTY_STATS_AGILITY_BONUS,
+		MODIFIER_EVENT_ON_DEATH
     }
     return funcs
+end
+
+function modifier_vgmar_i_essence_shift_owner_int:OnDeath(event)
+	if IsServer() then
+		if event.unit == self:GetParent() then
+			self:SetDuration( -1, true )
+			self.hitcount = 0
+			self:SetStackCount(0)
+		end
+	end
 end
 
 function modifier_vgmar_i_essence_shift_owner_int:GetModifierBonusStats_Agility()

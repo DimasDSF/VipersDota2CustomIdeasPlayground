@@ -58,6 +58,7 @@ function modifier_vgmar_i_manashield:DeclareFunctions()
 	local funcs = {
 		MODIFIER_EVENT_ON_TAKEDAMAGE,
 		MODIFIER_EVENT_ON_SPENT_MANA,
+		MODIFIER_EVENT_ON_ABILITY_FULLY_CAST,
 		MODIFIER_PROPERTY_STATS_INTELLECT_BONUS,
 		MODIFIER_PROPERTY_PHYSICAL_ARMOR_BONUS
     }
@@ -110,11 +111,14 @@ function modifier_vgmar_i_manashield:OnTakeDamage( event )
 					end
 				end
 				if parent:GetMana()/parent:GetMaxMana() >= self.minmana then
-					local dmgfraction = math.mapl(parent:GetMana(), self.minmana * parent:GetMaxMana(), self.maxtotalmana, self.mindmgfraction, self.maxdmgfraction)
-					print("[Mana Shield] Damage Fraction: "..dmgfraction)
-					print("[Mana Shield] Mana Spent: "..event.damage/2)
+					local dmgfraction = self.maxdmgfraction
+					if self.minmana * parent:GetMaxMana() < self.maxtotalmana then
+						dmgfraction = math.mapl(parent:GetMana(), self.minmana * parent:GetMaxMana(), self.maxtotalmana, self.mindmgfraction, self.maxdmgfraction)
+					end
+					--print("[Mana Shield] Damage Fraction: "..dmgfraction)
+					--print("[Mana Shield] Mana Spent: "..event.damage)
 					parent:SetHealth(parent:GetHealth() + event.damage * dmgfraction)
-					parent:SetMana(parent:GetMana() - (event.damage/2))
+					parent:SetMana(parent:GetMana() - (event.damage * dmgfraction))
 					StartSoundEvent("Hero_Medusa.ManaShield.Proc", parent)
 					if parent:GetMana()/parent:GetMaxMana() < self.lowmana then
 						local lowmanapfx = ParticleManager:CreateParticle("particles/econ/items/antimage/antimage_weapon_basher_ti5/am_manaburn_basher_ti_5.vpcf", PATTACH_ABSORIGIN_FOLLOW, self:GetParent())
@@ -149,6 +153,21 @@ function modifier_vgmar_i_manashield:OnTakeDamage( event )
 					ParticleManager:ReleaseParticleIndex(oompfx1)
 					ParticleManager:ReleaseParticleIndex(oompfx2)
 					ParticleManager:ReleaseParticleIndex(oompfx3)
+				end
+			end
+		end
+	end
+end
+
+function modifier_vgmar_i_manashield:OnAbilityFullyCast( event )
+	if IsServer() then
+		if event.unit == self:GetParent() then
+			local hAbility = event.ability
+			if hAbility ~= nil then
+				if hAbility:GetName() == "item_refresher" or hAbility:GetName() == "item_refresher_shard" then
+					if self:GetRemainingTime() > 0 then
+						self:SetDuration(0.1, true)
+					end
 				end
 			end
 		end

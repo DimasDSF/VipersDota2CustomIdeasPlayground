@@ -35,6 +35,7 @@ function modifier_vgmar_i_arcane_intellect:OnCreated(kv)
 		self.csmaxmana = kv.csmaxmana
 		self.csminmana = kv.csminmana
 		self.caststacks = 0
+		self.ison = true
 		self:StartIntervalThink( 0.5 )
 	else
 		self.clientvalues = CustomNetTables:GetTableValue("client_side_ability_values", "modifier_vgmar_i_arcane_intellect")
@@ -43,7 +44,17 @@ end
 
 function modifier_vgmar_i_arcane_intellect:OnIntervalThink()
 	if IsServer() then
-		self:SetStackCount( math.floor(((self.percentage/100) * self:GetParent():GetIntellect()) + (math.floor(self.caststacks) * math.truncate(math.max(math.map(self:GetParent():GetMana(), self.csminmana, self.csmaxmana, 0, 1), 0), 1))) )
+		if self:GetParent():PassivesDisabled() == false then
+			self:SetStackCount( math.floor(((self.percentage/100) * self:GetParent():GetIntellect()) + (math.floor(self.caststacks) * math.truncate(math.max(math.map(self:GetParent():GetMana(), self.csminmana, self.csmaxmana, 0, 1), 0), 1))) )
+			if self.ison == false then
+				self:SetDuration(0, true)
+			end
+		else
+			self:SetStackCount( 0 )
+			if self.ison == true then
+				self:SetDuration(0.1, true)
+			end
+		end
 	end
 end
 

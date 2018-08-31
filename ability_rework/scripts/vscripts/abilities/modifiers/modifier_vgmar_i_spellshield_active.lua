@@ -54,6 +54,8 @@ function modifier_vgmar_i_spellshield_active:GetAbsorbSpell(kv)
 				end
 				return 1
 			end
+		else
+			self:Destroy()
 		end
 	end
 end
