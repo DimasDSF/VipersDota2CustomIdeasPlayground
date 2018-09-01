@@ -49,7 +49,7 @@ local creeptobuildingdmgmult = {
 --TODO:Replace static prices in this table with KV read
 --TODO:Make Zeus Bot Use Nimbus
 local botitemskv = {
-	maxbotupgradestatus = 4
+	maxbotupgradestatus = 4,
 	travelbootscost = 2500,
 	travelbootsrecipecost = 2000,
 	moonshardvalues = {consumed_bonus = 60, consumed_bonus_night_vision = 200},
