@@ -68,9 +68,6 @@ function modifier_vgmar_i_scorching_light:OnCreated(kv)
 		end
 		local particle = ParticleManager:CreateParticle("particles/item/radiance/radiance_owner.vpcf", PATTACH_ABSORIGIN_FOLLOW, self:GetParent())
 		ParticleManager:SetParticleControl(particle, 2, Vector(255,195,27))
-		if self:GetParent():IsIllusion() == false then
-			self:GetParent():AddNewModifier(self:GetParent(), nil, "modifier_vgmar_i_scorching_light_vision", {})
-		end
 	else
 		self.clientvalues = CustomNetTables:GetTableValue("client_side_ability_values", "modifier_vgmar_i_scorching_light")
 	end
@@ -91,59 +88,6 @@ function modifier_vgmar_i_scorching_light:OnTooltip()
 	end
 end
 
---------------------------------------------------------------------------------
-
-modifier_vgmar_i_scorching_light_vision = class({})
-
---------------------------------------------------------------------------------
-
-function modifier_vgmar_i_scorching_light_vision:IsHidden()
-	return true
-end
-
-function modifier_vgmar_i_scorching_light_vision:IsPurgable()
-	return false
-end
-
-function modifier_vgmar_i_scorching_light_vision:RemoveOnDeath()
-	return false
-end
-
-function modifier_vgmar_i_scorching_light_vision:OnCreated(kv)
-	if IsServer() then
-		local provider = self:GetParent():FindModifierByName("modifier_vgmar_i_scorching_light")
-		self.minvision = provider.minvision
-		self.maxvision = provider.maxvision
-		self.visioninterval = provider.visioninterval
-		self:StartIntervalThink(self.visioninterval)
-	end
-end
-
-function modifier_vgmar_i_scorching_light_vision:OnIntervalThink()
-	local vision = 0
-	if GameRules:GetDOTATime(false, false) % 240 <= 120 then
-		vision = math.map(GameRules:GetDOTATime(false, false) % 240, 0, 120, self.minvision, self.maxvision)
-	else
-		vision = math.map(GameRules:GetDOTATime(false, false) % 240, 121, 240, self.maxvision, self.minvision)
-	end
-	self:SetStackCount(vision)
-end
-
-function modifier_vgmar_i_scorching_light_vision:DeclareFunctions()
-	local funcs = {
-		MODIFIER_PROPERTY_BONUS_DAY_VISION,
-		MODIFIER_PROPERTY_BONUS_NIGHT_VISION
-    }
-    return funcs
-end
-
-function modifier_vgmar_i_scorching_light_vision:GetBonusDayVision()
-	return self:GetStackCount()
-end
-
-function modifier_vgmar_i_scorching_light_vision:GetBonusNightVision()
-	return self:GetStackCount()
-end
 --------------------------------------------------------------------------------
 
 modifier_vgmar_i_scorching_light_debuff = class({})
