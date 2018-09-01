@@ -1,0 +1,97 @@
+"DOTAHeroes"
+{
+	//=================================================================================================================
+	// HERO: Oracle
+	//=================================================================================================================
+	"npc_dota_hero_oracle"
+	{
+		"BotImplemented"		"1"
+		"Bot"
+		{
+			"Loadout"
+			{
+				"item_tango"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_clarity"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_clarity"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_branches"		"ITEM_CORE"
+				"item_branches"		"ITEM_CORE"
+				"item_boots"		"ITEM_CORE"
+				"item_magic_stick"		"ITEM_CORE"
+				"item_recipe_magic_wand"		"ITEM_CORE"
+				"item_magic_wand"		"ITEM_DERIVED | ITEM_SELLABLE"
+
+				"item_energy_booster"		"ITEM_CORE"
+				"item_arcane_boots"		"ITEM_DERIVED"
+
+				"item_wind_lace"		"ITEM_EXTENSION"
+				"item_void_stone"		"ITEM_EXTENSION"
+				"item_staff_of_wizardry"		"ITEM_EXTENSION"
+				"item_recipe_cyclone"		"ITEM_EXTENSION"
+				"item_cyclone"		"ITEM_DERIVED"
+
+				"item_chainmail"		"ITEM_CORE"
+				"item_sobi_mask"		"ITEM_CORE"
+				"item_blight_stone"		"ITEM_CORE"
+				"item_medallion_of_courage"		"ITEM_DERIVED"
+
+				"item_ultimate_orb"		"ITEM_LUXURY"
+				"item_void_stone"		"ITEM_LUXURY"
+				"item_mystic_staff"		"ITEM_LUXURY"
+				"item_sheepstick"		"ITEM_DERIVED"
+
+				"item_vitality_booster"		"ITEM_EXTENSION"
+				"item_energy_booster"		"ITEM_EXTENSION"
+				"item_recipe_aeon_disk"		"ITEM_EXTENSION"
+				"item_aeon_disk"		"ITEM_DERIVED"
+
+				"item_talisman_of_evasion"	"ITEM_EXTENSION"
+				"item_solar_crest"			"ITEM_DERIVED"
+
+				"item_point_booster"		"ITEM_EXTENSION"
+				"item_ogre_axe"		"ITEM_EXTENSION"
+				"item_staff_of_wizardry"		"ITEM_EXTENSION"
+				"item_blade_of_alacrity"		"ITEM_EXTENSION"
+				"item_ultimate_scepter"		"ITEM_DERIVED"
+			}
+			"Build"
+			{
+				"1"		"oracle_fortunes_end"
+				"2"		"oracle_purifying_flames"
+				"3"		"oracle_purifying_flames"
+				"4"		"oracle_fates_edict"
+				"5"		"oracle_purifying_flames"
+				"6"		"oracle_false_promise"
+				"7"		"oracle_purifying_flames"
+				"8"		"oracle_fortunes_end"
+				"9"		"oracle_fortunes_end"
+				"10"		"special_bonus_exp_boost_25"
+				"11"		"oracle_fortunes_end"
+				"12"		"oracle_false_promise"
+				"13"		"oracle_fates_edict"
+				"14"		"oracle_fates_edict"
+				"15"		"special_bonus_gold_income_15"
+				"16"		"oracle_fates_edict"
+				"17"		""
+				"18"		"oracle_false_promise"
+				"19"		""
+				"20"		"special_bonus_unique_oracle_4"
+				"21"		""
+				"22"		""
+				"23"		""
+				"24"		""
+				"25"		"special_bonus_unique_oracle"
+			}
+			"HeroType"		"DOTA_BOT_PURE_SUPPORT | DOTA_BOT_NUKER"
+			"LaningInfo"
+			{
+				"SoloDesire"		"0"
+				"RequiresBabysit"		"0"
+				"ProvidesBabysit"		"2"
+				"SurvivalRating"		"1"
+				"RequiresFarm"		"0"
+				"ProvidesSetup"		"1"
+				"RequiresSetup"		"0"
+			}
+		}
+	}
+}

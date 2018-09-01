@@ -1,0 +1,103 @@
+"DOTAHeroes"
+{
+	//=================================================================================================================
+	// HERO: Bristleback
+	//=================================================================================================================
+	"npc_dota_hero_bristleback"
+	{
+		"BotImplemented"		"1"
+		"Bot"
+		{
+			"Loadout"
+			{
+				"item_tango"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_clarity"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_stout_shield"		"ITEM_CORE"
+				"item_branches"		"ITEM_CORE"
+				"item_branches"		"ITEM_CORE"
+				"item_boots"		"ITEM_CORE"
+				"item_magic_stick"		"ITEM_CORE"
+				"item_recipe_magic_wand"		"ITEM_CORE"
+				"item_magic_wand"		"ITEM_DERIVED | ITEM_SELLABLE"
+
+				"item_belt_of_strength"		"ITEM_CORE"
+				"item_gloves"		"ITEM_CORE"
+				"item_power_treads"		"ITEM_DERIVED"
+
+				"item_ring_of_health"		"ITEM_CORE"
+				"item_vitality_booster"		"ITEM_EXTENSION"
+				"item_vanguard"		"ITEM_DERIVED"
+
+				"item_cloak"		"ITEM_EXTENSION"
+				"item_ring_of_health"		"ITEM_EXTENSION"
+				"item_ring_of_regen"		"ITEM_EXTENSION"
+				"item_hood_of_defiance"		"ITEM_DERIVED | ITEM_SELLABLE"
+
+				"item_broadsword"		"ITEM_EXTENSION"
+				"item_chainmail"		"ITEM_EXTENSION"
+				"item_robe"		"ITEM_EXTENSION"
+				"item_blade_mail"		"ITEM_DERIVED | ITEM_SELLABLE"
+
+				"item_reaver"		"ITEM_EXTENSION"
+				"item_vitality_booster"		"ITEM_EXTENSION"
+				"item_vitality_booster"		"ITEM_EXTENSION"
+				"item_heart"		"ITEM_DERIVED"
+
+				"item_vitality_booster"	"ITEM_LUXURY"
+				"item_energy_booster"	"ITEM_LUXURY"
+				"item_point_booster"	"ITEM_LUXURY"
+				"item_soul_booster"		"ITEM_DERIVED"
+				"item_mystic_staff"		"ITEM_LUXURY"
+				"item_octarine_core"	"ITEM_DERIVED"
+
+				"item_platemail"		"ITEM_LUXURY"
+				"item_mystic_staff"		"ITEM_LUXURY"
+				"item_recipe_shivas_guard"		"ITEM_LUXURY"
+				"item_shivas_guard"		"ITEM_DERIVED"
+
+				"item_relic"		"ITEM_EXTENSION"
+				"item_recipe_radiance"		"ITEM_EXTENSION"
+				"item_radiance"		"ITEM_DERIVED"
+			}
+			"Build"
+			{
+				"1"		"bristleback_quill_spray"
+				"2"		"bristleback_bristleback"
+				"3"		"bristleback_quill_spray"
+				"4"		"bristleback_bristleback"
+				"5"		"bristleback_quill_spray"
+				"6"		"bristleback_warpath"
+				"7"		"bristleback_quill_spray"
+				"8"		"bristleback_bristleback"
+				"9"		"bristleback_bristleback"
+				"10"		"special_bonus_mp_regen_2"
+				"11"		"bristleback_viscous_nasal_goo"
+				"12"		"bristleback_warpath"
+				"13"		"bristleback_viscous_nasal_goo"
+				"14"		"bristleback_viscous_nasal_goo"
+				"15"		"special_bonus_hp_250"
+				"16"		"bristleback_viscous_nasal_goo"
+				"17"		""
+				"18"		"bristleback_warpath"
+				"19"		""
+				"20"		"special_bonus_hp_regen_20"
+				"21"		""
+				"22"		""
+				"23"		""
+				"24"		""
+				"25"		"special_bonus_spell_lifesteal_15"
+			}
+			"HeroType"		"DOTA_BOT_TANK | DOTA_BOT_SEMI_CARRY"
+			"LaningInfo"
+			{
+				"SoloDesire"		"0"
+				"RequiresBabysit"		"1"
+				"ProvidesBabysit"		"0"
+				"SurvivalRating"		"2"
+				"RequiresFarm"		"1"
+				"ProvidesSetup"		"1"
+				"RequiresSetup"		"1"
+			}
+		}
+	}
+}

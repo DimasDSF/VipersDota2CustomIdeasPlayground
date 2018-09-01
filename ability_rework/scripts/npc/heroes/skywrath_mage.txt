@@ -1,0 +1,112 @@
+"DOTAHeroes"
+{
+	//=================================================================================================================
+	// HERO: Skywrath Mage
+	//=================================================================================================================
+	"npc_dota_hero_skywrath_mage"
+	{
+		"BotImplemented"		"1"
+		"Bot"
+		{
+			"Loadout"
+			{
+				"item_tango"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_flask"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_clarity"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_clarity"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_circlet"		"ITEM_CORE"
+				"item_mantle"		"ITEM_CORE"
+				"item_recipe_null_talisman"	"ITEM_CORE"
+				"item_null_talisman"	"ITEM_DERIVED | ITEM_SELLABLE"
+				
+				"item_boots"		"ITEM_CORE"
+
+				"item_branches"		"ITEM_CORE"
+				"item_branches"		"ITEM_CORE"
+				"item_magic_stick"		"ITEM_CORE"
+				"item_recipe_magic_wand"		"ITEM_CORE"
+				"item_magic_wand"		"ITEM_DERIVED | ITEM_SELLABLE"
+
+				"item_circlet"		"ITEM_CORE"
+				"item_mantle"		"ITEM_CORE"
+				"item_recipe_null_talisman"	"ITEM_CORE"
+				"item_null_talisman"	"ITEM_DERIVED | ITEM_SELLABLE"
+
+				"item_energy_booster"		"ITEM_CORE"
+				"item_arcane_boots"		"ITEM_DERIVED"
+
+				"item_energy_booster"		"ITEM_CORE"
+				"item_void_stone"		"ITEM_CORE"
+				"item_recipe_aether_lens"	"ITEM_CORE"
+				"item_aether_lens"			"ITEM_DERIVED"
+
+				"item_circlet"		"ITEM_LUXURY"
+				"item_gauntlets"	"ITEM_LUXURY"
+				"item_recipe_bracer"	"ITEM_LUXURY"
+				"item_bracer"		"ITEM_DERIVED | ITEM_LUXURY"
+				"item_circlet"		"ITEM_LUXURY"
+				"item_gauntlets"	"ITEM_LUXURY"
+				"item_recipe_bracer"	"ITEM_LUXURY"
+				"item_bracer"		"ITEM_DERIVED | ITEM_LUXURY"
+				"item_staff_of_wizardry"		"ITEM_LUXURY"
+				"item_recipe_rod_of_atos"		"ITEM_LUXURY"
+				"item_rod_of_atos"		"ITEM_DERIVED"
+
+				"item_point_booster"		"ITEM_LUXURY"
+				"item_staff_of_wizardry"		"ITEM_LUXURY"
+				"item_ogre_axe"		"ITEM_LUXURY"
+				"item_blade_of_alacrity"		"ITEM_LUXURY"
+				"item_ultimate_scepter"		"ITEM_DERIVED"
+				
+				"item_vitality_booster"		"ITEM_EXTENSION"
+				"item_energy_booster"		"ITEM_EXTENSION"
+				"item_recipe_aeon_disk"		"ITEM_EXTENSION"
+				"item_aeon_disk"		"ITEM_DERIVED"
+
+				"item_ultimate_orb"		"ITEM_LUXURY"
+				"item_void_stone"		"ITEM_LUXURY"
+				"item_mystic_staff"		"ITEM_LUXURY"
+				"item_sheepstick"		"ITEM_DERIVED"
+			}
+			"Build"
+			{
+				"1"		"skywrath_mage_arcane_bolt"
+				"2"		"skywrath_mage_concussive_shot"
+				"3"		"skywrath_mage_arcane_bolt"
+				"4"		"skywrath_mage_concussive_shot"
+				"5"		"skywrath_mage_arcane_bolt"
+				"6"		"skywrath_mage_mystic_flare"
+				"7"		"skywrath_mage_arcane_bolt"
+				"8"		"skywrath_mage_ancient_seal"
+				"9"		"skywrath_mage_ancient_seal"
+				"10"		"skywrath_mage_ancient_seal"
+				"11"		"skywrath_mage_ancient_seal"
+				"12"		"skywrath_mage_mystic_flare"
+				"13"		"skywrath_mage_concussive_shot"
+				"14"		"skywrath_mage_concussive_shot"
+				"15"		"special_bonus_movement_speed_25"
+				"16"		"special_bonus_unique_skywrath_2"
+				"17"		""
+				"18"		"skywrath_mage_mystic_flare"
+				"19"		""
+				"20"		"special_bonus_unique_skywrath_3"
+				"21"		""
+				"22"		""
+				"23"		""
+				"24"		""
+				"25"		"special_bonus_unique_skywrath_5"
+			}
+			"HeroType"		"DOTA_BOT_GANKER | DOTA_BOT_NUKER"
+			"LaningInfo"
+			{
+				"SoloDesire"		"1"
+				"RequiresBabysit"		"0"
+				"ProvidesBabysit"		"2"
+				"SurvivalRating"		"1"
+				"RequiresFarm"		"1"
+				"ProvidesSetup"		"1"
+				"RequiresSetup"		"0"
+			}
+		}
+	}
+}

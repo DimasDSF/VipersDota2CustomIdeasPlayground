@@ -1,0 +1,90 @@
+"DOTAHeroes"
+{
+	//=================================================================================================================
+	// HERO: Sand King
+	//=================================================================================================================
+	"npc_dota_hero_sand_king"
+	{
+		"BotImplemented"		"1"
+		"Bot"
+		{
+			"Loadout"
+			{
+				"item_flask"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_tango"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_clarity"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_clarity"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_clarity"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_branches"		"ITEM_CORE | ITEM_SELLABLE"
+				"item_branches"		"ITEM_CORE | ITEM_SELLABLE"
+
+				"item_boots"		"ITEM_CORE"
+				"item_ring_of_regen"		"ITEM_EXTENSION"
+				"item_wind_lace"		"ITEM_EXTENSION"
+				"item_tranquil_boots"		"ITEM_DERIVED"
+
+				"item_blink"		"ITEM_CORE"
+
+				"item_energy_booster"		"ITEM_CORE"
+				"item_void_stone"		"ITEM_CORE"
+				"item_recipe_aether_lens"	"ITEM_CORE"
+				"item_aether_lens"			"ITEM_DERIVED"
+				
+				"item_staff_of_wizardry"		"ITEM_CORE"
+				"item_wind_lace"		"ITEM_CORE"
+				"item_void_stone"		"ITEM_CORE"
+				"item_recipe_cyclone"		"ITEM_CORE"
+				"item_cyclone"		"ITEM_DERIVED"
+
+				"item_ogre_axe"		"ITEM_LUXURY"
+				"item_mithril_hammer"		"ITEM_LUXURY"
+				"item_recipe_black_king_bar"		"ITEM_LUXURY"
+				"item_black_king_bar"		"ITEM_DERIVED"
+
+				"item_platemail"		"ITEM_LUXURY"
+				"item_mystic_staff"		"ITEM_LUXURY"
+				"item_recipe_shivas_guard"		"ITEM_LUXURY"
+				"item_shivas_guard"		"ITEM_DERIVED"
+			}
+			"Build"
+			{
+				"1"		"sandking_burrowstrike"
+				"2"		"sandking_caustic_finale"
+				"3"		"sandking_burrowstrike"
+				"4"		"sandking_sand_storm"
+				"5"		"sandking_burrowstrike"
+				"6"		"sandking_epicenter"
+				"7"		"sandking_burrowstrike"
+				"8"		"sandking_sand_storm"
+				"9"		"sandking_sand_storm"
+				"10"		"special_bonus_hp_200"
+				"11"		"sandking_sand_storm"
+				"12"		"sandking_epicenter"
+				"13"		"sandking_caustic_finale"
+				"14"		"sandking_caustic_finale"
+				"15"		"special_bonus_unique_sand_king_2"
+				"16"		"sandking_caustic_finale"
+				"17"		""
+				"18"		"sandking_epicenter"
+				"19"		""
+				"20"		"special_bonus_unique_sand_king"
+				"21"		""
+				"22"		""
+				"23"		""
+				"24"		""
+				"25"		"special_bonus_hp_regen_35"
+			}
+			"HeroType"		"DOTA_BOT_GANKER | DOTA_BOT_STUN_SUPPORT"
+			"LaningInfo"
+			{
+				"SoloDesire"		"0"
+				"RequiresBabysit"		"0"
+				"ProvidesBabysit"		"0"
+				"SurvivalRating"		"2"
+				"RequiresFarm"		"0"
+				"ProvidesSetup"		"2"
+				"RequiresSetup"		"0"
+			}
+		}
+	}
+}

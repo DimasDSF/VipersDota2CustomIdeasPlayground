@@ -1,0 +1,104 @@
+"DOTAHeroes"
+{
+	//=================================================================================================================
+	// HERO: Nevermore
+	//=================================================================================================================
+	"npc_dota_hero_nevermore"
+	{
+		"BotImplemented"		"1"
+		"Bot"
+		{
+			"Loadout"
+			{
+				"item_tango"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_flask"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_branches"		"ITEM_CORE"
+				"item_branches"		"ITEM_CORE"
+				"item_bottle"		"ITEM_CORE | ITEM_SELLABLE"
+				"item_boots"		"ITEM_CORE"
+
+				"item_magic_stick"		"ITEM_CORE"
+				"item_recipe_magic_wand"		"ITEM_CORE"
+				"item_magic_wand"		"ITEM_DERIVED | ITEM_SELLABLE"
+
+				"item_ring_of_protection"		"ITEM_CORE"
+				"item_sobi_mask"		"ITEM_CORE"
+				"item_ring_of_basilius"		"ITEM_DERIVED"
+				"item_slippers"		"ITEM_CORE"
+				"item_circlet"		"ITEM_CORE"
+				"item_recipe_wraith_band"		"ITEM_CORE"
+				"item_ring_of_aquila"		"ITEM_DERIVED | ITEM_SELLABLE"
+
+				"item_gloves"		"ITEM_CORE"
+				"item_boots_of_elves"		"ITEM_CORE"
+				"item_power_treads"		"ITEM_DERIVED"
+
+				"item_shadow_amulet"		"ITEM_CORE"
+				"item_claymore"				"ITEM_EXTENSION"
+				"item_invis_sword"			"ITEM_DERIVED"
+
+				"item_ogre_axe"		"ITEM_EXTENSION"
+				"item_mithril_hammer"		"ITEM_EXTENSION"
+				"item_recipe_black_king_bar"		"ITEM_EXTENSION"
+				"item_black_king_bar"		"ITEM_DERIVED"
+
+				"item_broadsword"		"ITEM_LUXURY"
+				"item_blades_of_attack"		"ITEM_LUXURY"
+				"item_recipe_lesser_crit"		"ITEM_LUXURY"
+				"item_lesser_crit"		"ITEM_DERIVED"
+				"item_demon_edge"		"ITEM_LUXURY"
+				"item_recipe_greater_crit"		"ITEM_LUXURY"
+				"item_greater_crit"		"ITEM_DERIVED"
+
+				"item_ultimate_orb"		"ITEM_LUXURY"
+				"item_ultimate_orb"		"ITEM_LUXURY"
+				"item_point_booster"	"ITEM_LUXURY"
+				"item_skadi"			"ITEM_DERIVED"
+
+				"item_talisman_of_evasion"		"ITEM_LUXURY"
+				"item_quarterstaff"		"ITEM_LUXURY"
+				"item_eagle"		"ITEM_LUXURY"
+				"item_butterfly"		"ITEM_DERIVED"
+			}
+			"Build"
+			{
+				"1"		"nevermore_necromastery"
+				"2"		"nevermore_shadowraze1"
+				"3"		"nevermore_shadowraze1"
+				"4"		"nevermore_necromastery"
+				"5"		"nevermore_shadowraze1"
+				"6"		"nevermore_necromastery"
+				"7"		"nevermore_shadowraze1"
+				"8"		"nevermore_necromastery"
+				"9"		"nevermore_requiem"
+				"10"		"special_bonus_spell_amplify_8"
+				"11"		"nevermore_dark_lord"
+				"12"		"nevermore_requiem"
+				"13"		"nevermore_dark_lord"
+				"14"		"nevermore_dark_lord"
+				"15"		"special_bonus_movement_speed_30"
+				"16"		"nevermore_dark_lord"
+				"17"		""
+				"18"		"nevermore_requiem"
+				"19"		""
+				"20"		"special_bonus_unique_nevermore_1"
+				"21"		""
+				"22"		""
+				"23"		""
+				"24"		""
+				"25"		"special_bonus_cooldown_reduction_40"
+			}
+			"HeroType"		"DOTA_BOT_HARD_CARRY"
+			"LaningInfo"
+			{
+				"SoloDesire"		"2"
+				"RequiresBabysit"		"1"
+				"ProvidesBabysit"		"1"
+				"SurvivalRating"		"1"
+				"RequiresFarm"		"2"
+				"ProvidesSetup"		"0"
+				"RequiresSetup"		"1"
+			}
+		}
+	}
+}

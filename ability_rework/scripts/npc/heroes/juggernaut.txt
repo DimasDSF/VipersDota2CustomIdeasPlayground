@@ -1,0 +1,101 @@
+"DOTAHeroes"
+{
+	//=================================================================================================================
+	// HERO: Juggernaut
+	//=================================================================================================================
+	"npc_dota_hero_juggernaut"
+	{
+		"BotImplemented"		"1"
+		"Bot"
+		{
+			"Loadout"
+			{
+				"item_tango"			"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_flask"			"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_stout_shield"		"ITEM_CORE | ITEM_SELLABLE"
+				"item_recipe_magic_wand"	"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_branches"			"ITEM_CORE | ITEM_SELLABLE"
+
+				"item_quelling_blade"		"ITEM_CORE"
+
+				"item_boots"				"ITEM_CORE"
+				"item_blades_of_attack"		"ITEM_EXTENSION"
+				"item_blades_of_attack"		"ITEM_EXTENSION"
+				"item_phase_boots"			"ITEM_DERIVED"
+
+				"item_ring_of_health"	"ITEM_CORE"
+				"item_void_stone"		"ITEM_CORE"
+				"item_demon_edge"		"ITEM_CORE"
+				"item_recipe_bfury"		"ITEM_CORE"
+				"item_bfury"			"ITEM_DERIVED"
+
+				"item_blade_of_alacrity"	"ITEM_EXTENSION"
+				"item_blade_of_alacrity"	"ITEM_EXTENSION"
+				"item_robe"					"ITEM_EXTENSION"
+				"item_recipe_diffusal_blade"	"ITEM_EXTENSION"
+				"item_diffusal_blade"		"ITEM_DERIVED"
+
+				"item_mithril_hammer"		"ITEM_EXTENSION"
+				"item_belt_of_strength"		"ITEM_EXTENSION"
+				"item_recipe_basher"		"ITEM_EXTENSION"
+				"item_basher"		"ITEM_DERIVED"
+
+				"item_quarterstaff"			"ITEM_LUXURY"
+				"item_eagle"				"ITEM_LUXURY"
+				"item_talisman_of_evasion"	"ITEM_LUXURY"
+				"item_butterfly"			"ITEM_DERIVED"
+
+				"item_ultimate_orb"		"ITEM_LUXURY"
+				"item_ultimate_orb"		"ITEM_LUXURY"
+				"item_point_booster"	"ITEM_LUXURY"
+				"item_skadi"			"ITEM_DERIVED"
+
+				"item_stout_shield"		"ITEM_LUXURY"
+				"item_ring_of_health"		"ITEM_LUXURY"
+				"item_vitality_booster"		"ITEM_LUXURY"
+				"item_vanguard"		"ITEM_DERIVED"
+				"item_recipe_abyssal_blade"	"ITEM_LUXURY"
+				"item_abyssal_blade"		"ITEM_DERIVED"
+			}
+			"Build"
+			{
+				"1"		"juggernaut_blade_fury"
+				"2"		"juggernaut_blade_dance"
+				"3"		"juggernaut_blade_fury"
+				"4"		"juggernaut_healing_ward"
+				"5"		"juggernaut_blade_fury"
+				"6"		"juggernaut_omni_slash"
+				"7"		"juggernaut_blade_fury"
+				"8"		"juggernaut_healing_ward"
+				"9"		"juggernaut_healing_ward"
+				"10"		"special_bonus_all_stats_5"
+				"11"		"juggernaut_healing_ward"
+				"12"		"juggernaut_omni_slash"
+				"13"		"juggernaut_blade_dance"
+				"14"		"juggernaut_blade_dance"
+				"15"		"special_bonus_attack_speed_25"
+				"16"		"juggernaut_blade_dance"
+				"17"		""
+				"18"		"juggernaut_omni_slash"
+				"19"		""
+				"20"		"special_bonus_armor_10"
+				"21"		""
+				"22"		""
+				"23"		""
+				"24"		""
+				"25"		"special_bonus_unique_juggernaut_2"
+			}
+			"LaningInfo"
+			{
+				"SoloDesire"		"0"
+				"RequiresBabysit"		"2"
+				"ProvidesBabysit"		"0"
+				"SurvivalRating"		"1"
+				"RequiresFarm"		"2"
+				"ProvidesSetup"		"0"
+				"RequiresSetup"		"2"
+			}
+			"HeroType"		"DOTA_BOT_GANKER | DOTA_BOT_SEMI_CARRY"
+		}
+	}
+}

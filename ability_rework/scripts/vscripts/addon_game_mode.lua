@@ -16,6 +16,155 @@ local BOT_COURIER_UPGRADE_INTERVAL = 10
 --/////////////////////////
 local VGMAR_GTHINK_TIME = 1
 --/////////////////////////
+
+local debugitems = {
+	["item_shivas_guard"] = 3,
+	["item_assault"] = 0,
+	["item_sheepstick"] = 0,
+	["item_travel_boots_2"] = 1,
+	["item_octarine_core"] = 3,
+	["item_kaya"] = 3,
+	["item_aether_lens"] = 3,
+	["item_ultimate_scepter"] = 2,
+	["item_mystic_staff"] = 2,
+	["item_energy_booster"] = 2,
+	["item_soul_booster"] = 0,
+	["item_butterfly"] = 0,
+	["item_eagle"] = 0,
+	["item_orb_of_venom"] = 0,
+	["item_demon_edge"] = 0,
+	["item_yasha"] = 0,
+	["item_dragon_lance"] = 3,
+	["item_mask_of_madness"] = 0,
+	["item_gloves"] = 0,
+	["item_tome_of_knowledge"] = 15
+}
+
+--Creep -> Building Damage Multiplier
+local creeptobuildingdmgmult = {
+	["npc_dota_creep_lane"] = 0.5,
+	["npc_dota_creep_siege"] = 0.25
+}
+
+--TODO:Replace static prices in this table with KV read
+--TODO:Make Zeus Bot Use Nimbus
+local botitemskv = {
+	maxbotupgradestatus = 4,
+	travelbootscost = 2500,
+	travelbootsrecipecost = 2000,
+	moonshardvalues = {consumed_bonus = 60, consumed_bonus_night_vision = 200},
+	moonshardcost = 4000,
+	moonshardmindmg = 250,
+	aghanimscost = 4200,
+	aghanimsstats = {bonus_all_stats = 10, bonus_health = 175, bonus_mana = 175},
+	noaghsheroes = {
+		["npc_dota_hero_chaos_knight"] = true,
+		["npc_dota_hero_luna"] = true,
+		["npc_dota_hero_riki"] = true,
+		["npc_dota_hero_sniper"] = true,
+		["npc_dota_hero_bristleback"] = true
+	},
+	cheapboots = {
+		"item_phase_boots",
+		"item_power_treads",
+		"item_arcane_boots",
+		"item_tranquil_boots"
+	}
+}
+
+local botupgradepriorities = {
+	["npc_dota_hero_juggernaut"] = {"travel1", "moonshard", "aghs", "travel2"},
+	["npc_dota_hero_kunkka"] = {"travel1", "travel2", "moonshard", "aghs"},
+	["npc_dota_hero_dazzle"] = {"travel1", "aghs", "travel2", "moonshard"},
+	["npc_dota_hero_zuus"] = {"travel1", "aghs", "travel2", "moonshard"},
+	["npc_dota_hero_lion"] = {"travel1", "aghs", "travel2", "moonshard"},
+	["npc_dota_hero_jakiro"] = {"travel1", "aghs", "travel2", "moonshard"},
+	["npc_dota_hero_necrolyte"] = {"travel1", "aghs", "travel2", "moonshard"},
+	["npc_dota_hero_sven"] = {"travel1", "moonshard", "aghs", "travel2"},
+	["npc_dota_hero_axe"] = {"travel1", "travel2", "aghs", "moonshard"},
+	["npc_dota_hero_lina"] = {"travel1", "aghs", "travel2", "moonshard"},
+	["npc_dota_hero_riki"] = {"travel1", "moonshard", "travel2", "aghs"},
+	["npc_dota_hero_crystal_maiden"] = {"travel1", "aghs", "travel2", "moonshard"},
+	["npc_dota_hero_oracle"] = {"travel1", "aghs", "travel2", "moonshard"},
+	["npc_dota_hero_bloodseeker"] = {"travel1", "moonshard", "aghs", "travel2"},
+	["npc_dota_hero_witch_doctor"] = {"travel1", "aghs", "travel2", "moonshard"},
+	["npc_dota_hero_vengefulspirit"] = {"travel1", "aghs", "travel2", "moonshard"},
+	["npc_dota_hero_bristleback"] = {"travel1", "travel2", "moonshard", "aghs"},
+	["npc_dota_hero_skeleton_king"] = {"travel1", "moonshard", "aghs", "travel2"},
+	["npc_dota_hero_tiny"] = {"travel1", "moonshard", "travel2", "aghs"},
+	["npc_dota_hero_chaos_knight"] = {"travel1", "moonshard", "travel2", "aghs"},
+	["npc_dota_hero_phantom_assassin"] = {"travel1", "moonshard", "travel2", "aghs"},
+	["npc_dota_hero_sniper"] = {"travel1", "moonshard", "travel2", "aghs"},
+	["npc_dota_hero_skywrath_mage"] = {"travel1", "aghs", "travel2", "moonshard"},
+	["npc_dota_hero_bounty_hunter"] = {"travel1", "aghs", "travel2", "moonshard"},
+	["npc_dota_hero_lich"] = {"travel1", "aghs", "travel2", "moonshard"},
+	["npc_dota_hero_razor"] = {"travel1", "aghs", "moonshard", "travel2"},
+	["npc_dota_hero_earthshaker"] = {"travel1", "aghs", "travel2", "moonshard"},
+	["npc_dota_hero_death_prophet"] = {"travel1", "travel2", "moonshard", "aghs"},
+	["npc_dota_hero_warlock"] = {"travel1", "aghs", "travel2", "moonshard"},
+	["npc_dota_hero_luna"] = {"travel1", "moonshard", "travel2", "aghs"},
+	["npc_dota_hero_bane"] = {"travel1", "aghs", "travel2", "moonshard"},
+	["npc_dota_hero_tidehunter"] = {"travel1", "aghs", "travel2", "moonshard"},
+	["npc_dota_hero_pudge"] = {"travel1", "aghs", "travel2", "moonshard"},
+	["npc_dota_hero_viper"] = {"travel1", "moonshard", "aghs", "travel2"},
+	["npc_dota_hero_nevermore"] = {"travel1", "aghs", "moonshard", "travel2"},
+	["npc_dota_hero_omniknight"] = {"travel1", "aghs", "travel2", "moonshard"},
+	["npc_dota_hero_windrunner"] = {"travel1", "aghs", "travel2", "moonshard"},
+	["npc_dota_hero_sand_king"] = {"travel1", "aghs", "travel2", "moonshard"},
+	["npc_dota_hero_dragon_knight"] = {"travel1", "moonshard", "travel2", "aghs"},
+	["npc_dota_hero_drow_ranger"] = {"travel1", "aghs", "moonshard", "travel2"}
+}
+
+local modifierdatatable = {
+	["modifier_vgmar_i_manaregen_aura"] = {radius = 4000, bonusmanaself = 400, bonusmanaallies = 300, regenself = 1.5, regenallies = 1},
+	["modifier_vgmar_i_attackrange"] = {range = 140, bonusstr = 12, bonusagi = 12},
+	["modifier_vgmar_i_castrange"] = {range = 250, manaregen = 1.25, bonusmana = 400},
+	["modifier_vgmar_i_spellamp"] = {percentage = 10, costpercentage = 10, bonusint = 16},
+	["modifier_vgmar_i_cdreduction"] = {percentage = 25, bonusmana = 905, bonushealth = 905, intbonus = 25, spelllifestealhero = 25, spelllifestealcreep = 5},
+	["modifier_vgmar_i_essence_aura"] = {radius = 1000, bonusmana = 900, restorechancemax = 20, restorechancemin = 5, restoremax = 1, restoremin = 0.15, restoreamount = 20},
+	["modifier_vgmar_i_spellshield"] = {resistance = 35, cooldown = 12, maxstacks = 2},
+	["modifier_vgmar_i_fervor"] = {maxstacks = 15, asperstack = 15},
+	["modifier_vgmar_i_essence_shift"] = {reductionprimary = 1, reductionsecondary = 0, increaseprimary = 1, increasesecondary = 0, hitsperstackinc = 1, hitsperstackred = 2, duration = 40, durationtarget = 40},
+	["modifier_vgmar_i_pulse"] = {stackspercreep = 1, stacksperhero = 8, duration = 4, hpregenperstack = 1, manaregenperstack = 0.5, maxstacks = 20},
+	["modifier_vgmar_i_greatcleave"] = {cleaveperc = 100, cleavestartrad = 150, cleaveendrad = 300, cleaveradius = 700, bonusdamage = 75},
+	["modifier_vgmar_i_vampiric_aura"] = {radius = 700, lspercent = 30, lspercentranged = 20},
+	["modifier_vgmar_i_multishot"] = {stackscap = 5, shotspercap = 3, attackduration = 1, bonusrange = 140},
+	["modifier_vgmar_i_midas_greed"] = {min_bonus_gold = 0, count_per_kill = 1, reduction_per_tick = 2, bonus_gold_cap = 40, stack_duration = 30, reduction_duration = 2.5, killsperstack = 3, midasusestacks = 2},
+	["modifier_vgmar_i_kingsaegis_cooldown"] = {cooldown = 240, reincarnate_time = 5},
+	["modifier_vgmar_i_critical_mastery"] = {critdmgpercentage = 250, critchance = 100},
+	["modifier_vgmar_i_atrophy"] = {radius = 1000, dmgpercreep = 1, dmgperhero = 5, stack_duration = 240, stack_duration_scepter = -1, max_stacks = 1000, initial_stacks = 0},
+	["modifier_vgmar_i_deathskiss"] = {critdmgpercentage = 20000, critchance = 1.0},
+	["modifier_vgmar_i_truesight"] = {maxrange = 1300, minrange = 200, maxtime = 180},
+	["modifier_item_ultimate_scepter_consumed"] = {bonus_all_stats = 10, bonus_health = 175, bonus_mana = 175},
+	["modifier_vgmar_i_arcane_intellect"] = {percentage = 10, multpercast = 0.2, bonusint = 25, csmaxmana = 6000, csminmana = 0, minimalcooldown = 1},
+	["modifier_vgmar_i_thirst"] = {threshold = 75, visionthreshold = 50, damagethreshold = 75, visionrange = 10, visionduration = 0.2, giverealvision = 0, givemodelvision = 1, damageperstack = 3, radius = 5000},
+	["modifier_vgmar_i_poison_dagger"] = {cooldown = 15, maxstacks = 4, aoestacks = 2, minenemiesforaoe = 3, aoedmgperc = 50, damage = 30, initialdamageperc = 50, aoeradius = 500, duration = 20, interval = 1.0},
+	["modifier_vgmar_i_scorching_light"] = {radius = 700, interval = 1.0, visioninterval = 5.0, initialdamage = 60, damageincpertick = 2, maxdamage = 300, missrate = 17, visiondelay = 3, minvision = 0, maxvision = 400, maxillusionstacks = 3, lingerduration = 3.0},
+	["modifier_vgmar_i_permafrost"] = {radius = 600, interval = 1.0, attackspeedperstack = -5, movespeedperstack = -5, bonusarmor = 25, bonusint = 60, maxstacks = 20, freezedmg = 150, lingerduration = 3},
+	["modifier_vgmar_i_manashield"] = {minmana = 0.5, lowmana = 0.55, maxtotalmana = 6000, mindmgfraction = 30, maxdmgfraction = 90, stunradius = 600, stunduration = 3, stundamage = 200, rechargetime = 60, bonusarmor = 15, bonusint = 20},
+	["modifier_vgmar_b_fountain_anticamp"] = {radius = 2000, interval = 1.0, strpertick = 4, intpertick = 2, agipertick = 2, disablepassivestick = 20, silencetick = 40, blindnessendtick = 60, blindnessrange = 200, lingerduration = 30.0},
+	["modifier_vgmar_anticreep_protection"] = {radius = 1800, strikeinterval = 2.0, activeduration = 5.0, dmgpercentpercreep = 5.0},
+	["modifier_vgmar_i_ogre_tester"] = {}
+}
+
+local table_modifier_vgmar_crai_courier_shield = {
+	maxattentiondistance = 1500,
+	minadmult = 0.2,
+	maxadmult = 1.0,
+	startattackchance = 50,
+	hitattackchance = 80
+}
+
+local table_modifier_vgmar_courier_burst_var = {
+	distanceperlevel = 400,
+	msperlevel = 100,
+	rechargepertickperlevel = 0.01,
+	rechargedelay = 30,
+	rechargedelayperlvl = 3,
+	maxcharge = 10,
+	ticktime = 0.1,
+	basems = 460
+}
 --///////////////////////////////////////////
 
 if VGMAR == nil then
@@ -72,9 +221,9 @@ function VGMAR:Init()
 		local courup = {lvl = i, upgradetime = BOT_COURIER_UPGRADE_INTERVAL*i, done = false}
 		table.insert( self.direcourieruptable, courup )
 	end
-	self.lastrunetype = -1
-	self.currunenum = 1
-	self.removedrunenum = math.random(1,2)
+	--self.lastrunetype = -1
+	--self.currunenum = 1
+	--self.removedrunenum = math.random(1,2)
 	self.botsInLateGameMode = false
 	self.backdoorstatustable = {}
 	self.backdoortimertable = {}
@@ -87,6 +236,8 @@ function VGMAR:Init()
 	self.radiantanc = Entities:FindByName(nil, "dota_goodguys_fort")
 	self.lastrunefixtimestamp = -1
 	self.realbountyrunes = {}
+	self.botupgradestatus = {}
+	self.botitemaghsremoved = {}
 	
 	local itemskvnum = 0
 	local itemscustomkvnum = 0
@@ -454,35 +605,6 @@ function VGMAR:GetItemByID(id)
 	return self.ItemKVs[id]
 end
 
-local debugitems = {
-	["item_shivas_guard"] = 3,
-	["item_assault"] = 0,
-	["item_sheepstick"] = 0,
-	["item_travel_boots_2"] = 1,
-	["item_octarine_core"] = 3,
-	["item_kaya"] = 3,
-	["item_aether_lens"] = 3,
-	["item_ultimate_scepter"] = 2,
-	["item_mystic_staff"] = 2,
-	["item_energy_booster"] = 2,
-	["item_soul_booster"] = 0,
-	["item_butterfly"] = 0,
-	["item_eagle"] = 0,
-	["item_orb_of_venom"] = 0,
-	["item_demon_edge"] = 0,
-	["item_yasha"] = 0,
-	["item_dragon_lance"] = 3,
-	["item_mask_of_madness"] = 0,
-	["item_gloves"] = 0,
-	["item_tome_of_knowledge"] = 15
-}
-
---Creep -> Building Damage Multiplier
-local creeptobuildingdmgmult = {
-	["npc_dota_creep_lane"] = 0.5,
-	["npc_dota_creep_siege"] = 0.25
-}
-
 function IsDevMode()
 	if Convars:GetInt("vgmar_devmode") == 1 then
 		return true
@@ -557,7 +679,16 @@ function VGMAR:LogBalance()
 			end
 			LogLib:WriteLog("balance", 3, false, "Item Networth: "..heronw)
 			radiantteamnetworth = radiantteamnetworth + heronw
-			
+
+			LogLib:WriteLog("balance", 3, false, "Modifiers: ")
+			if allheroes[i]:HasModifier("modifier_item_moon_shard_consumed") then
+				LogLib:WriteLog("balance", 4, false, "- modifier_item_moon_shard_consumed | StackCount: 0")
+			end
+			for k,v in pairs(modifierdatatable) do
+				if allheroes[i]:HasModifier(k) then
+					LogLib:WriteLog("balance", 4, false, "- "..k.." | StackCount: "..allheroes[i]:FindModifierByName(k):GetStackCount())
+				end
+			end
 			radiantXP = radiantXP + allheroes[i]:GetCurrentXP()
 		elseif allheroes[i]:GetTeamNumber() == 3 then
 			direheroes = direheroes + 1
@@ -579,6 +710,16 @@ function VGMAR:LogBalance()
 				end
 			end
 			LogLib:WriteLog("balance", 3, false, "Item Networth: "..heronw)
+			
+			LogLib:WriteLog("balance", 3, false, "Modifiers: ")
+			if allheroes[i]:HasModifier("modifier_item_moon_shard_consumed") then
+				LogLib:WriteLog("balance", 4, false, "- modifier_item_moon_shard_consumed | StackCount: 0")
+			end
+			for k,v in pairs(modifierdatatable) do
+				if allheroes[i]:HasModifier(k) then
+					LogLib:WriteLog("balance", 4, false, "- "..k.." | StackCount: "..allheroes[i]:FindModifierByName(k):GetStackCount())
+				end
+			end
 			direteamnetworth = direteamnetworth + heronw
 			direXP = direXP + allheroes[i]:GetCurrentXP()
 		end
@@ -602,8 +743,8 @@ function VGMAR:LogBalance()
 	LogLib:WriteLog("balance", 3, false, "Average Dire: "..avgdirenw)
 	--Tower Kill Data
 	LogLib:WriteLog("balance", 2, false, "Buildings: ")
-	LogLib:WriteLog("balance", 3, false, "Buildings Killed by Radiant: "..GameRules.VGMAR.towerskilledrad)
-	LogLib:WriteLog("balance", 3, false, "Buildings Killed by Dire: "..GameRules.VGMAR.towerskilleddire)
+	LogLib:WriteLog("balance", 3, false, "Buildings Destroyed by Radiant: "..GameRules.VGMAR.towerskilledrad)
+	LogLib:WriteLog("balance", 3, false, "Buildings Destroyed by Dire: "..GameRules.VGMAR.towerskilleddire)
 	--Kills Data
 	LogLib:WriteLog("balance", 2, false, "Kills: ")
 	LogLib:WriteLog("balance", 3, false, "Radiant Kills: "..PlayerResource:GetTeamKills(2))
@@ -628,58 +769,7 @@ function VGMAR:LogBalance()
 	LogLib:WriteLog("balance", 3, false, "Dire: "..GameRules.VGMAR:GetTeamAdvantage(false, true, true, true))
 end
 
-local MaxMoveSpeed = 550
 
-local modifierdatatable = {
-	["modifier_vgmar_i_manaregen_aura"] = {radius = 4000, bonusmanaself = 400, bonusmanaallies = 300, regenself = 1.5, regenallies = 1},
-	["modifier_vgmar_i_attackrange"] = {range = 140, bonusstr = 12, bonusagi = 12},
-	["modifier_vgmar_i_castrange"] = {range = 250, manaregen = 1.25, bonusmana = 400},
-	["modifier_vgmar_i_spellamp"] = {percentage = 10, costpercentage = 10, bonusint = 16},
-	["modifier_vgmar_i_cdreduction"] = {percentage = 25, bonusmana = 905, bonushealth = 905, intbonus = 25, spelllifestealhero = 25, spelllifestealcreep = 5},
-	["modifier_vgmar_i_essence_aura"] = {radius = 1000, bonusmana = 900, restorechancemax = 20, restorechancemin = 5, restoremax = 1, restoremin = 0.15, restoreamount = 20},
-	["modifier_vgmar_i_spellshield"] = {resistance = 35, cooldown = 12, maxstacks = 2},
-	["modifier_vgmar_i_fervor"] = {maxstacks = 15, asperstack = 15},
-	["modifier_vgmar_i_essence_shift"] = {reductionprimary = 1, reductionsecondary = 0, increaseprimary = 1, increasesecondary = 0, hitsperstackinc = 1, hitsperstackred = 2, duration = 40, durationtarget = 40},
-	["modifier_vgmar_i_pulse"] = {stackspercreep = 1, stacksperhero = 8, duration = 4, hpregenperstack = 1, manaregenperstack = 0.5, maxstacks = 20},
-	["modifier_vgmar_i_greatcleave"] = {cleaveperc = 100, cleavestartrad = 150, cleaveendrad = 300, cleaveradius = 700, bonusdamage = 75},
-	["modifier_vgmar_i_vampiric_aura"] = {radius = 700, lspercent = 30, lspercentranged = 20},
-	["modifier_vgmar_i_multishot"] = {stackscap = 5, shotspercap = 3, attackduration = 1, bonusrange = 140},
-	["modifier_vgmar_i_midas_greed"] = {min_bonus_gold = 0, count_per_kill = 1, reduction_per_tick = 2, bonus_gold_cap = 40, stack_duration = 30, reduction_duration = 2.5, killsperstack = 3, midasusestacks = 2},
-	["modifier_vgmar_i_kingsaegis_cooldown"] = {cooldown = 240, reincarnate_time = 5},
-	["modifier_vgmar_i_critical_mastery"] = {critdmgpercentage = 250, critchance = 100},
-	["modifier_vgmar_i_atrophy"] = {radius = 1000, dmgpercreep = 1, dmgperhero = 5, stack_duration = 240, stack_duration_scepter = -1, max_stacks = 1000, initial_stacks = 0},
-	["modifier_vgmar_i_deathskiss"] = {critdmgpercentage = 20000, critchance = 1.0},
-	["modifier_vgmar_i_truesight"] = {maxrange = 1300, minrange = 200, maxtime = 180},
-	["modifier_item_ultimate_scepter_consumed"] = {bonus_all_stats = 10, bonus_health = 175, bonus_mana = 175},
-	["modifier_vgmar_i_arcane_intellect"] = {percentage = 10, multpercast = 0.2, bonusint = 25, csmaxmana = 6000, csminmana = 0, minimalcooldown = 1},
-	["modifier_vgmar_i_thirst"] = {threshold = 75, visionthreshold = 50, damagethreshold = 75, visionrange = 10, visionduration = 0.2, giverealvision = 0, givemodelvision = 1, damageperstack = 3, radius = 5000},
-	["modifier_vgmar_i_poison_dagger"] = {cooldown = 15, maxstacks = 4, aoestacks = 2, minenemiesforaoe = 3, aoedmgperc = 50, damage = 30, initialdamageperc = 50, aoeradius = 500, duration = 20, interval = 1.0},
-	["modifier_vgmar_i_scorching_light"] = {radius = 700, interval = 1.0, visioninterval = 5.0, initialdamage = 60, damageincpertick = 2, maxdamage = 300, missrate = 17, visiondelay = 3, minvision = 0, maxvision = 400, maxillusionstacks = 3, lingerduration = 3.0},
-	["modifier_vgmar_i_permafrost"] = {radius = 600, interval = 1.0, attackspeedperstack = -5, movespeedperstack = -5, bonusarmor = 25, bonusint = 60, maxstacks = 20, freezedmg = 150, lingerduration = 3},
-	["modifier_vgmar_i_manashield"] = {minmana = 0.5, lowmana = 0.55, maxtotalmana = 6000, mindmgfraction = 30, maxdmgfraction = 90, stunradius = 600, stunduration = 3, stundamage = 200, rechargetime = 60, bonusarmor = 15, bonusint = 20},
-	["modifier_vgmar_b_fountain_anticamp"] = {radius = 2000, interval = 1.0, strpertick = 4, intpertick = 2, agipertick = 2, disablepassivestick = 20, silencetick = 40, blindnessendtick = 60, blindnessrange = 200, lingerduration = 30.0},
-	["modifier_vgmar_anticreep_protection"] = {radius = 1800, strikeinterval = 2.0, activeduration = 5.0, dmgpercentpercreep = 5.0},
-	["modifier_vgmar_i_ogre_tester"] = {}
-}
-
-local table_modifier_vgmar_crai_courier_shield = {
-	maxattentiondistance = 1500,
-	minadmult = 0.2,
-	maxadmult = 1.0,
-	startattackchance = 50,
-	hitattackchance = 80
-}
-
-local table_modifier_vgmar_courier_burst_var = {
-	distanceperlevel = 400,
-	msperlevel = 100,
-	rechargepertickperlevel = 0.01,
-	rechargedelay = 30,
-	rechargedelayperlvl = 3,
-	maxcharge = 10,
-	ticktime = 0.1,
-	basems = 460
-}
 
 local missclickproofabilities = {
 	["item_tpscroll"] = true,
@@ -868,7 +958,7 @@ function VGMAR:DisplayClientError(pid, message)
     end
 end
 
-function VGMAR:FilterRuneSpawn( filterTable )
+--[[function VGMAR:FilterRuneSpawn( filterTable )
 	--dprint("Rune spawn premodified filterTable")
 	--DeepPrintTable( filterTable )
 	if (math.round(GameRules:GetDOTATime(false, false)/60)%RUNE_SPAWN_TIME_POWERUP == 0) then
@@ -953,7 +1043,7 @@ function VGMAR:FilterRuneSpawn( filterTable )
 		end)
 	end
 	return true
-end
+end--]]
 
 function VGMAR:FilterExperienceGained( filterTable )
 	--DeepPrintTable( filterTable )
@@ -1476,9 +1566,9 @@ function VGMAR:OnThink()
 			--Bot Rune Fix
 			--///////////////////////////
 				local heroplayerid = heroent:GetPlayerID()
-				local closestrune = Entities:FindByClassnameNearest("dota_item_rune", heroent:GetOrigin(), 250.0)
 				
 				if PlayerResource:GetConnectionState(heroplayerid) == 1 then
+					local closestrune = Entities:FindByClassnameNearest("dota_item_rune", heroent:GetOrigin(), 250.0)
 					heroent:SetBotDifficulty(3)
 					if closestrune then
 						heroent:PickupRune(closestrune)
@@ -1494,6 +1584,87 @@ function VGMAR:OnThink()
 							heroent:SetBuybackCooldownTime( 0 )
 							dprint("Resetting Buyback Cooldown for "..HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()))
 							dprint("Buyback Cost: "..heroent:GetBuybackCost(false).." Gold Remaining: "..(heroent:GetGold() - heroent:GetBuybackCost(false)))
+						end
+					end
+					
+					--//////////////////////
+					--Bot Progression System
+					--//////////////////////
+					if self.botupgradestatus[heroent:entindex()] == nil then
+						table.insert(self.botupgradestatus, heroent:entindex())
+						self.botupgradestatus[heroent:entindex()] = 1
+					else
+						if self.botupgradestatus[heroent:entindex()] <= botitemskv.maxbotupgradestatus then
+							local bus = self.botupgradestatus[heroent:entindex()]
+							local bup = botupgradepriorities[heroent:GetName()][bus]
+							if bup == "travel1" then
+								if heroent:GetGold() >= heroent:GetBuybackCost(false) + botitemskv.travelbootscost then
+									for j=1,#botitemskv.cheapboots do
+										local boots = self:GetItemFromInventoryByName( heroent, botitemskv.cheapboots[j], false, true, false )
+										if boots ~= nil then
+											local bootsname = boots:GetName()
+											heroent:ModifyGold(boots:GetCost(), true, 0)
+											heroent:RemoveItem(boots)
+											heroent:SpendGold(botitemskv.travelbootscost, 2)
+											heroent:AddItemByName("item_travel_boots")
+											dprint(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Upgraded "..bootsname.." to Travel Boots | Gold Remaining: "..heroent:GetGold())
+											self.botupgradestatus[heroent:entindex()] = self.botupgradestatus[heroent:entindex()] + 1
+										end
+									end
+								end
+							elseif bup == "travel2" then
+								if heroent:GetGold() >= heroent:GetBuybackCost(false) + botitemskv.travelbootsrecipecost then
+									heroent:SpendGold(botitemskv.travelbootsrecipecost, 2)
+									heroent:AddItemByName("item_recipe_travel_boots")
+									dprint(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Upgraded Travel Boots to level 2 | Gold Remaining: "..heroent:GetGold())
+									self.botupgradestatus[heroent:entindex()] = self.botupgradestatus[heroent:entindex()] + 1
+								end
+							elseif bup == "aghs" then
+								if botitemskv.noaghsheroes[heroent:GetName()] == true then
+									self.botupgradestatus[heroent:entindex()] = self.botupgradestatus[heroent:entindex()] + 1
+								else
+									if heroent:GetGold() >= heroent:GetBuybackCost(false) + botitemskv.aghanimscost then
+										local aghs = self:GetItemFromInventoryByName( heroent, "item_ultimate_scepter", false, true, false )
+										if aghs ~= nil and heroent:GetGold() >= heroent:GetBuybackCost(false) + botitemskv.aghanimscost then
+											heroent:ModifyGold(aghs:GetCost(), true, 0)
+											heroent:RemoveItem(aghs)
+											heroent:SpendGold(botitemskv.aghanimscost, 2)
+											heroent:AddNewModifier(heroent, nil, "modifier_item_ultimate_scepter_consumed", botitemskv.aghanimsstats)
+											dprint(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Consumed Aghanims replacing inventory Aghanims | Gold Remaining: "..heroent:GetGold())
+											self.botupgradestatus[heroent:entindex()] = self.botupgradestatus[heroent:entindex()] + 1
+										elseif aghs == nil and heroent:GetGold() >= heroent:GetBuybackCost(false) + botitemskv.aghanimscost * 2 then
+											heroent:SpendGold(botitemskv.aghanimscost * 2, 2)
+											heroent:AddNewModifier(heroent, nil, "modifier_item_ultimate_scepter_consumed", botitemskv.aghanimsstats)
+											dprint(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Consumed Aghanims | Gold Remaining: "..heroent:GetGold())
+											self.botupgradestatus[heroent:entindex()] = self.botupgradestatus[heroent:entindex()] + 1
+										end
+									end
+								end
+							elseif bup == "moonshard" then
+								--TODO:??Make Supports Give Carries moonshards
+								if (heroent:GetGold() >= heroent:GetBuybackCost(false) + botitemskv.moonshardcost and heroent:GetAverageTrueAttackDamage(heroent) > botitemskv.moonshardmindmg) or (heroent:GetGold() >= heroent:GetBuybackCost(false) + botitemskv.moonshardcost * 2) then
+									heroent:SpendGold(botitemskv.moonshardcost, 2)
+									heroent:AddNewModifier(heroent, nil, "modifier_item_moon_shard_consumed", botitemskv.moonshardvalues)
+									dprint(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Consumed Moonshard | Gold Remaining: "..heroent:GetGold())
+									self.botupgradestatus[heroent:entindex()] = self.botupgradestatus[heroent:entindex()] + 1
+								end
+							end
+						end
+					end
+					--//////////////////////////////////////////
+					--Remove Item Aghanim if consumed is present
+					--Edge case when bot builds Aghanims 
+					--after getting an infused one
+					--//////////////////////////////////////////
+					if self.botitemaghsremoved[heroent:entindex()] == nil then
+						if heroent:HasModifier("modifier_item_ultimate_scepter_consumed") and heroent:HasItemInInventory("item_ultimate_scepter") then
+							local aghs = self:GetItemFromInventoryByName( heroent, "item_ultimate_scepter", false, true, false )
+							if aghs ~= nil then
+								heroent:ModifyGold(aghs:GetCost(), true, 0)
+								heroent:RemoveItem(aghs)
+								table.insert(self.botitemaghsremoved, heroent:entindex())
+								self.botitemaghsremoved[heroent:entindex()] = true
+							end
 						end
 					end
 					
@@ -1965,8 +2136,8 @@ function VGMAR:OnThink()
 				for k,v in ipairs(self.direcourieruptable) do
 					if v.done == false and self:TimeIsLaterThan(v.upgradetime, 0) and self:GetCourierBurstLevel( nil, 3 ) >= v.lvl then
 						if heroent:GetTeamNumber() == 3 and self:GetHeroFreeInventorySlots(heroent, true, false) > 0 then
-							heroent:AddItemByName("item_flying_courier_upgrade")
 							dprint("Giving ".. HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." having "..self:GetHeroFreeInventorySlots(heroent, true, false).." empty slots lvl "..v.lvl.." courier upgrade")
+							heroent:AddItemByName("item_flying_courier_upgrade")
 							v.done = true
 						end
 					end
@@ -2473,7 +2644,7 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 	--SecondCourierPrevention
 	--///////////////////////
 	if unit then
-		if unit:IsRealHero() then
+		--[[if unit:IsRealHero() then
 			if ability and ability:GetName() == "item_courier" then
 				if self:GetHerosCourier(unit) ~= nil then
 					self:RemoveNItemsInInventory(unit, "item_courier", 1)
@@ -2483,7 +2654,7 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 					return false
 				end
 			end
-		end
+		end--]]
 		if unit:GetClassname() == "npc_dota_venomancer_plagueward" then
 			if ability and ability:GetName() == "vgmar_util_plague_ward_destroy" then
 				unit:ForceKill(false)
@@ -2523,7 +2694,7 @@ function VGMAR:ExecuteOrderFilter( filterTable )
                             end
                         end
                     end
-
+					
                     --[[-- Stuck at shop trying to get stash items, remove stash items. THIS IS A BAND-AID FIX. IMPROVE AT SOME POINT
                     if unit.StuckCounter > 150 and fixed == false then
                         for slot =  DOTA_STASH_SLOT_1, DOTA_STASH_SLOT_6 do
@@ -2630,7 +2801,7 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 	end
 	
 	--Bot Control Prevention
-	if unit and Convars:GetInt("vgmar_blockbotcontrol") == 1 then
+	if unit and Convars:GetInt("vgmar_blockbotcontrol") == 1 and order_type ~= 27 then
 		local player = PlayerResource:GetPlayer(issuer)
 		if unit:IsRealHero() then
 			local unitPlayerID = unit:GetPlayerID()

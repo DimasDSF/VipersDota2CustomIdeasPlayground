@@ -1,0 +1,113 @@
+"DOTAHeroes"
+{
+	//=================================================================================================================
+	// HERO: Necrolyte
+	//=================================================================================================================
+	"npc_dota_hero_necrolyte"
+	{
+		"BotImplemented"		"1"
+		"Bot"
+		{
+			"Loadout"
+			{
+				"item_tango"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_circlet"		"ITEM_CORE"
+				"item_mantle"		"ITEM_CORE"
+				"item_recipe_null_talisman"	"ITEM_CORE"
+				"item_null_talisman"	"ITEM_DERIVED"
+				
+				"item_branches"		"ITEM_CORE"
+				"item_branches"		"ITEM_CORE"
+				"item_magic_stick"		"ITEM_CORE"
+				"item_recipe_magic_wand"		"ITEM_CORE"
+				"item_magic_wand"		"ITEM_DERIVED | ITEM_SELLABLE"
+
+				"item_boots"				"ITEM_CORE"
+
+				"item_circlet"		"ITEM_CORE"
+				"item_mantle"		"ITEM_CORE"
+				"item_recipe_null_talisman"	"ITEM_CORE"
+				"item_null_talisman"	"ITEM_DERIVED"
+
+				"item_energy_booster"		"ITEM_CORE"
+				"item_arcane_boots"			"ITEM_DERIVED"
+
+				"item_helm_of_iron_will"	"ITEM_EXTENSION"
+				"item_recipe_veil_of_discord"	"ITEM_EXTENSION"
+				"item_veil_of_discord"		"ITEM_DERIVED | ITEM_SELLABLE"
+
+				"item_cloak"		"ITEM_EXTENSION"
+				"item_ring_of_health"		"ITEM_EXTENSION"
+				"item_ring_of_regen"		"ITEM_EXTENSION"
+				"item_hood_of_defiance"		"ITEM_DERIVED"
+
+				"item_point_booster"		"ITEM_LUXURY"
+				"item_ogre_axe"		"ITEM_LUXURY"
+				"item_staff_of_wizardry"		"ITEM_LUXURY"
+				"item_blade_of_alacrity"		"ITEM_LUXURY"
+				"item_ultimate_scepter"		"ITEM_DERIVED"
+
+				"item_branches"		"ITEM_EXTENSION"
+				"item_ring_of_regen"		"ITEM_EXTENSION"
+				"item_recipe_headdress"		"ITEM_EXTENSION"
+				"item_headdress"		"ITEM_DERIVED"
+				"item_recipe_pipe"		"ITEM_EXTENSION"
+				"item_pipe"		"ITEM_DERIVED"
+
+				"item_blink"		"ITEM_LUXURY"
+
+				"item_ultimate_orb"		"ITEM_LUXURY"
+				"item_void_stone"		"ITEM_LUXURY"
+				"item_mystic_staff"		"ITEM_LUXURY"
+				"item_sheepstick"		"ITEM_DERIVED"
+
+				"item_mystic_staff"		"ITEM_LUXURY"
+				"item_vitality_booster"	"ITEM_LUXURY"
+				"item_energy_booster"	"ITEM_LUXURY"
+				"item_point_booster"	"ITEM_LUXURY"
+				"item_soul_booster"		"ITEM_DERIVED"
+				"item_recipe_octarine_core" "ITEM_LUXURY"
+				"item_octarine_core"	"ITEM_DERIVED"
+			}
+			"Build"
+			{
+				"1"		"necrolyte_death_pulse"
+				"2"		"necrolyte_heartstopper_aura"
+				"3"		"necrolyte_death_pulse"
+				"4"		"necrolyte_sadist"
+				"5"		"necrolyte_death_pulse"
+				"6"		"necrolyte_reapers_scythe"
+				"7"		"necrolyte_death_pulse"
+				"8"		"necrolyte_sadist"
+				"9"		"necrolyte_sadist"
+				"10"		"special_bonus_attack_damage_40"
+				"11"		"necrolyte_sadist"
+				"12"		"necrolyte_reapers_scythe"
+				"13"		"necrolyte_heartstopper_aura"
+				"14"		"necrolyte_heartstopper_aura"
+				"15"		"special_bonus_unique_necrophos_4"
+				"16"		"necrolyte_heartstopper_aura"
+				"17"		""
+				"18"		"necrolyte_reapers_scythe"
+				"19"		""
+				"20"		"special_bonus_magic_resistance_20"
+				"21"		""
+				"22"		""
+				"23"		""
+				"24"		""
+				"25"		"special_bonus_unique_necrophos_2"
+			}
+			"HeroType"		"DOTA_BOT_TANK | DOTA_BOT_SEMI_CARRY | DOTA_BOT_PUSH_SUPPORT"
+			"LaningInfo"
+			{
+				"SoloDesire"		"1"
+				"RequiresBabysit"		"0"
+				"ProvidesBabysit"		"2"
+				"SurvivalRating"		"2"
+				"RequiresFarm"		"1"
+				"ProvidesSetup"		"0"
+				"RequiresSetup"		"1"
+			}
+		}
+	}
+}

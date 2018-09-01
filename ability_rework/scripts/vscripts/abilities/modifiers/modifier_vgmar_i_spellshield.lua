@@ -116,7 +116,7 @@ function modifier_vgmar_i_spellshield:OnIntervalThink()
 				end
 			end
 		end
-		if self:GetRemainingTime() <= 0 and self:GetStackCount() < self.maxstacks then
+		if self:GetRemainingTime() <= 0 and self:GetStackCount() < self.maxstacks and parent:PassivesDisabled() == false then
 			if self:GetStackCount() + 1 < self.maxstacks then
 				self:SetDuration( self.cooldown, true )
 			end

@@ -1,0 +1,113 @@
+"DOTAHeroes"
+{
+	//=================================================================================================================
+	// HERO: Drow Ranger
+	//=================================================================================================================
+	"npc_dota_hero_drow_ranger"
+	{
+		"BotImplemented"		"1"
+		"Bot"
+		{
+			"Loadout"
+			{
+				"item_ring_of_protection"	"ITEM_CORE"
+				"item_tango"				"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_flask"				"ITEM_CONSUMABLE | ITEM_SELLABLE"	
+				"item_branches"				"ITEM_CORE | ITEM_SELLABLE"
+				
+				"item_slippers"					"ITEM_CORE"
+				"item_circlet"					"ITEM_CORE"
+				"item_recipe_wraith_band"		"ITEM_CORE"
+				"item_wraith_band"				"ITEM_DERIVED"
+				
+				"item_boots" 		"ITEM_CORE"
+
+				"item_slippers"					"ITEM_CORE"
+				"item_circlet"					"ITEM_CORE"
+				"item_recipe_wraith_band"		"ITEM_CORE"
+				"item_wraith_band"				"ITEM_DERIVED"
+				"item_sobi_mask"				"ITEM_CORE"
+				"item_ring_of_basilius"			"ITEM_DERIVED"
+				"item_ring_of_aquila"			"ITEM_DERIVED | ITEM_SELLABLE"
+
+				"item_gloves"				"ITEM_CORE"
+				"item_boots_of_elves"		"ITEM_CORE"
+				"item_power_treads"			"ITEM_CORE | ITEM_DERIVED"
+
+				"item_boots_of_elves"	"ITEM_CORE"
+				"item_boots_of_elves"	"ITEM_CORE"
+				"item_ogre_axe"			"ITEM_CORE"
+				"item_dragon_lance"		"ITEM_DERIVED"
+				
+				"item_shadow_amulet"		"ITEM_CORE"
+				"item_claymore"				"ITEM_EXTENSION"
+				"item_invis_sword"			"ITEM_DERIVED"
+
+				"item_staff_of_wizardry"	"ITEM_EXTENSION"
+				"item_ring_of_regen"		"ITEM_EXTENSION"
+				"item_recipe_force_staff"	"ITEM_EXTENSION"
+				"item_force_staff"			"ITEM_DERIVED"
+				
+				"item_hurricane_pike"	"ITEM_DERIVED"
+
+				"item_ultimate_orb"			"ITEM_EXTENSION"
+				"item_recipe_silver_edge"	"ITEM_EXTENSION"
+				"item_silver_edge"			"ITEM_DERIVED"
+
+				"item_mithril_hammer"			"ITEM_LUXURY"
+				"item_ogre_axe"					"ITEM_LUXURY"
+				"item_recipe_black_king_bar"	"ITEM_LUXURY"
+				"item_black_king_bar"			"ITEM_LUXURY | ITEM_DERIVED"
+
+				"item_quarterstaff"			"ITEM_CORE"
+				"item_eagle"				"ITEM_EXTENSION"
+				"item_talisman_of_evasion"	"ITEM_EXTENSION"
+				"item_butterfly"			"ITEM_DERIVED"
+
+				"item_reaver"				"ITEM_LUXURY"
+				"item_claymore"				"ITEM_LUXURY"
+				"item_lifesteal"			"ITEM_LUXURY"
+				"item_satanic"				"ITEM_DERIVED"
+			}
+			"Build"
+			{
+				"1"			"drow_ranger_trueshot"
+				"2"			"drow_ranger_frost_arrows"							
+				"3"			"drow_ranger_trueshot"
+				"4"			"drow_ranger_frost_arrows"
+				"5"			"drow_ranger_wave_of_silence"
+				"6"			"drow_ranger_marksmanship"
+				"7"			"drow_ranger_trueshot"
+				"8"			"drow_ranger_trueshot"
+				"9"			"drow_ranger_frost_arrows"
+				"10"		"special_bonus_all_stats_5"
+				"11"		"drow_ranger_frost_arrows"
+				"12"		"drow_ranger_marksmanship"
+				"13"		"drow_ranger_wave_of_silence"
+				"14"		"drow_ranger_wave_of_silence"
+				"15"		"special_bonus_attack_speed_25"
+				"16"		"drow_ranger_wave_of_silence"
+				"17"		""
+				"18"		"drow_ranger_marksmanship"
+				"19"		""
+				"20"		"special_bonus_unique_drow_ranger_3"
+				"21"		""
+				"22"		""
+				"23"		""
+				"24"		""
+				"25"		"special_bonus_unique_drow_ranger_1"
+			}
+			"HeroType"		"DOTA_BOT_HARD_CARRY"
+			"LaningInfo"
+			{
+				"SoloDesire"		"1"
+				"RequiresBabysit"		"0"
+				"ProvidesBabysit"		"2"
+				"SurvivalRating"		"1"
+				"RequiresFarm"		"2"
+				"ProvidesSetup"		"1"
+				"RequiresSetup"		"1"
+			}
+		}
+	}
+}

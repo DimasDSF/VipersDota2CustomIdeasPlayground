@@ -1,0 +1,87 @@
+"DOTAHeroes"
+{
+	//=================================================================================================================
+	// HERO: Zuus
+	//=================================================================================================================
+	"npc_dota_hero_zuus"
+	{
+		"BotImplemented"		"1"
+		"Bot"
+		{
+			"Loadout"
+			{
+				"item_tango"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_clarity"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_clarity"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+
+				"item_boots"			"ITEM_CORE"
+				"item_energy_booster" 	"ITEM_CORE"
+				"item_arcane_boots"		"ITEM_DERIVED"
+
+				"item_energy_booster"		"ITEM_EXTENSION"
+				"item_void_stone"		"ITEM_EXTENSION"
+				"item_recipe_aether_lens"	"ITEM_EXTENSION"
+				"item_aether_lens"			"ITEM_DERIVED"
+				
+				"item_staff_of_wizardry"	"ITEM_EXTENSION"
+				"item_robe"					"ITEM_EXTENSION"
+				"item_recipe_kaya"			"ITEM_EXTENSION"
+				"item_kaya"					"ITEM_DERIVED"
+				
+				"item_blink"				"ITEM_CORE"
+
+				"item_void_stone"		"ITEM_LUXURY"
+				"item_mystic_staff"		"ITEM_LUXURY"
+				"item_ultimate_orb"		"ITEM_LUXURY"
+				"item_sheepstick"		"ITEM_DERIVED"
+				
+				"item_mystic_staff"		"ITEM_LUXURY"
+				"item_vitality_booster"	"ITEM_LUXURY"
+				"item_energy_booster"	"ITEM_LUXURY"
+				"item_point_booster"	"ITEM_LUXURY"
+				"item_soul_booster"		"ITEM_DERIVED"
+				"item_recipe_octarine_core" "ITEM_LUXURY"
+				"item_octarine_core"	"ITEM_DERIVED"
+			}
+			"Build"
+			{
+				"1"		"zuus_arc_lightning" 
+				"2"		"zuus_lightning_bolt"
+				"3"		"zuus_lightning_bolt"
+				"4"		"zuus_arc_lightning"
+				"5"		"zuus_lightning_bolt"
+				"6"		"zuus_thundergods_wrath"
+				"7"		"zuus_lightning_bolt"
+				"8"		"zuus_arc_lightning"
+				"9"		"zuus_arc_lightning"
+				"10"		"special_bonus_exp_boost_25"
+				"11"		"zuus_static_field"
+				"12"		"zuus_thundergods_wrath"
+				"13"		"zuus_static_field"
+				"14"		"zuus_static_field"
+				"15"		"special_bonus_movement_speed_30"
+				"16"		"zuus_static_field"
+				"17"		""
+				"18"		"zuus_thundergods_wrath"
+				"19"		""
+				"20"		"special_bonus_cooldown_reduction_15"
+				"21"		""
+				"22"		""
+				"23"		""
+				"24"		""
+				"25"		"special_bonus_unique_zeus_2"
+			}
+			"LaningInfo"
+			{
+				"SoloDesire"		"1"
+				"RequiresBabysit"		"0"
+				"ProvidesBabysit"		"1"
+				"SurvivalRating"		"0"
+				"RequiresFarm"		"1"
+				"ProvidesSetup"		"0"
+				"RequiresSetup"		"1"
+			}
+			"HeroType"		"DOTA_BOT_GANKER | DOTA_BOT_NUKER"
+		}
+	}
+}

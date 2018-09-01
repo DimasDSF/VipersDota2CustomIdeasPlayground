@@ -51,7 +51,7 @@ end
 function modifier_vgmar_i_essence_aura_effect:OnAbilityExecuted(kv)
 	if IsServer() then
 		local parent = self:GetParent()
-		if kv.unit == parent then
+		if kv.unit == parent and parent:PassivesDisabled() == false then
 			if kv.ability and kv.ability:IsToggle() == false and kv.ability:IsItem() == false and (GameRules.VGMAR.essenceauraignoredabilities[kv.ability:GetName()] == nil or GameRules.VGMAR.essenceauraignoredabilities[kv.ability:GetName()] ~= true) then
 				local restorechance = math.scale(self.restorechancemax, math.map(math.clamp(self.restoremin, parent:GetMana()/parent:GetMaxMana(), self.restoremax), self.restoremin, self.restoremax, 0, 1), self.restorechancemin)
 				--print("self.restorechancemax: "..self.restorechancemax.." self.restorechancemin: "..self.restorechancemin.." self.restoremin: "..self.restoremin.." self.restoremax: "..self.restoremax.." restorechance: "..restorechance)

@@ -136,18 +136,19 @@ function modifier_vgmar_i_ogre_tester:OnIntervalThink()
 			end
 			self.oldgold = PlayerResource:GetGold(self:GetParent():GetPlayerOwnerID())
 		end
+		--self:statprint("AttackDMG: "..self:GetParent():GetAttackDamage().."\nAverage AttackDMG: "..self:GetParent():GetAverageTrueAttackDamage(self:GetParent()))
 		--OrientationTest
 		--local orientation = -self:GetParent():GetForwardVector()
 		--self:statprint(HeroNamesLib:ConvertInternalToHeroName(self:GetParent():GetName()).." -FVector: "..orientation[1]..","..orientation[2]..","..orientation[3])
 		--ParticleTest
 		--Complex Particle Test
-		if self.p1 == nil then
-			self.p1 = ParticleManager:CreateParticle("particles/econ/items/antimage/antimage_weapon_basher_ti5/am_manaburn_basher_ti_5.vpcf", PATTACH_ABSORIGIN_FOLLOW, self:GetParent())
+		--if self.p1 == nil then
+			--self.p1 = ParticleManager:CreateParticle("particles/econ/items/antimage/antimage_weapon_basher_ti5/am_manaburn_basher_ti_5.vpcf", PATTACH_ABSORIGIN_FOLLOW, self:GetParent())
 			--ParticleManager:SetParticleControlEnt( self.p1, 0, self:GetParent(), PATTACH_POINT_FOLLOW, "attach_attack1", Vector(0,0,0), true )
 			--ParticleManager:SetParticleControlEnt( self.p1, 1, self:GetParent(), PATTACH_POINT_FOLLOW, "attach_attack2", Vector(0,0,0), true )
 			--ParticleManager:SetParticleControlEnt( self.p1, 2, self:GetParent(), PATTACH_POINT_FOLLOW, "attach_hitloc", self:GetParent():GetOrigin(), true )
 			--ParticleManager:SetParticleControl(self.p1, 16, Vector(1,0,0))
-		end
+		--end
 		--[[if self.p1 == nil then
 			self.p1 = ParticleManager:CreateParticle("particles/units/heroes/hero_razor/razor_rain_storm.vpcf", PATTACH_WORLDORIGIN, parent)
 			ParticleManager:SetParticleControl(self.p1, 0, parent:GetAbsOrigin() + Vector(0,0,200))

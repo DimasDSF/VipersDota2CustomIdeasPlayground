@@ -1,0 +1,108 @@
+"DOTAHeroes"
+{
+	//=================================================================================================================
+	// HERO: Sniper
+	//=================================================================================================================
+	"npc_dota_hero_sniper"
+	{
+		"BotImplemented"		"1"
+		"Bot"
+		{
+			"Loadout"
+			{
+				"item_tango"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_flask"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_slippers"		"ITEM_CORE"
+				"item_branches"		"ITEM_CORE | ITEM_SELLABLE"
+				"item_branches"		"ITEM_CORE | ITEM_SELLABLE"
+
+				"item_circlet"				"ITEM_CORE"
+				"item_recipe_wraith_band"	"ITEM_CORE"
+				"item_wraith_band"			"ITEM_DERIVED | ITEM_SELLABLE"
+
+				"item_magic_stick"		"ITEM_CORE"
+				"item_recipe_magic_wand"			"ITEM_CORE"
+				"item_magic_wand"		"ITEM_DERIVED | ITEM_SELLABLE"
+
+				"item_boots"			"ITEM_CORE"
+				"item_blades_of_attack"		"ITEM_CORE"
+				"item_blades_of_attack"		"ITEM_CORE"
+				"item_phase_boots"			"ITEM_DERIVED"
+
+				"item_ring_of_protection"	"ITEM_CORE"
+				"item_sobi_mask"			"ITEM_CORE"
+				"item_ring_of_basilius"		"ITEM_DERIVED"
+				"item_ring_of_aquila"		"ITEM_DERIVED | ITEM_SELLABLE"
+
+				"item_ogre_axe"			"ITEM_CORE"
+				"item_boots_of_elves"	"ITEM_CORE"
+				"item_boots_of_elves"	"ITEM_CORE"
+				"item_dragon_lance"		"ITEM_DERIVED"
+
+				"item_lifesteal"		"ITEM_CORE"
+				"item_quarterstaff"		"ITEM_CORE"
+				"item_mask_of_madness"	"ITEM_DERIVED | ITEM_SELLABLE"
+
+				"item_javelin"				"ITEM_EXTENSION"
+				"item_mithril_hammer"		"ITEM_EXTENSION"
+				"item_maelstrom"			"ITEM_DERIVED"
+
+				"item_mithril_hammer"			"ITEM_LUXURY"
+				"item_ogre_axe"					"ITEM_LUXURY"
+				"item_recipe_black_king_bar"	"ITEM_LUXURY"
+				"item_black_king_bar"			"ITEM_DERIVED"
+
+				"item_hyperstone"		"ITEM_LUXURY"
+				"item_recipe_mjollnir"	"ITEM_LUXURY"
+				"item_mjollnir"			"ITEM_DERIVED"
+
+				"item_broadsword"			"ITEM_LUXURY"
+				"item_blades_of_attack"		"ITEM_LUXURY"
+				"item_recipe_lesser_crit"	"ITEM_LUXURY"
+				"item_lesser_crit"			"ITEM_DERIVED"
+				"item_demon_edge"			"ITEM_LUXURY"
+				"item_recipe_greater_crit"	"ITEM_LUXURY"
+				"item_greater_crit"			"ITEM_DERIVED"
+			}
+			"Build"
+			{
+				"1"		"sniper_headshot"
+				"2"		"sniper_shrapnel"
+				"3"		"sniper_shrapnel"
+				"4"		"sniper_take_aim"
+				"5"		"sniper_shrapnel"
+				"6"		"sniper_assassinate"
+				"7"		"sniper_shrapnel"
+				"8"		"sniper_take_aim"
+				"9"		"sniper_take_aim"
+				"10"		"special_bonus_cooldown_reduction_25"
+				"11"		"sniper_take_aim"
+				"12"		"sniper_assassinate"
+				"13"		"sniper_headshot"
+				"14"		"sniper_headshot"
+				"15"		"special_bonus_unique_sniper_1"
+				"16"		"sniper_headshot"
+				"17"		""
+				"18"		"sniper_assassinate"
+				"19"		""
+				"20"		"special_bonus_unique_sniper_4"
+				"21"		""
+				"22"		""
+				"23"		""
+				"24"		""
+				"25"		"special_bonus_attack_range_125"
+			}
+			"LaningInfo"
+			{
+				"SoloDesire"		"1"
+				"RequiresBabysit"		"0"
+				"ProvidesBabysit"		"1"
+				"SurvivalRating"		"0"
+				"RequiresFarm"		"2"
+				"ProvidesSetup"		"0"
+				"RequiresSetup"		"1"
+			}
+			"HeroType"		"DOTA_BOT_HARD_CARRY"
+		}
+	}
+}

@@ -33,7 +33,7 @@ end
 function modifier_vgmar_i_kingsaegis_active:DeclareFunctions()
 	local funcs = {
         MODIFIER_PROPERTY_REINCARNATION,
-		MODIFIER_EVENT_ON_DEATH,
+		MODIFIER_EVENT_ON_DEATH
     }
     return funcs
 end

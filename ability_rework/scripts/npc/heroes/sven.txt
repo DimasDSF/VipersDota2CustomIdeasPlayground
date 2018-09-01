@@ -1,0 +1,105 @@
+"DOTAHeroes"
+{
+	//=================================================================================================================
+	// HERO: Sven
+	//=================================================================================================================
+	"npc_dota_hero_sven"
+	{
+		"BotImplemented"		"1"
+		"Bot"
+		{
+			"Loadout"
+			{
+				"item_tango"			"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_flask"			"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_branches"			"ITEM_CORE | ITEM_SELLABLE"
+				"item_branches"			"ITEM_CORE | ITEM_SELLABLE"
+				"item_stout_shield"		"ITEM_CORE | ITEM_SELLABLE"
+
+				"item_magic_stick"		"ITEM_CORE"
+				"item_recipe_magic_wand"			"ITEM_CORE"
+				"item_magic_wand"		"ITEM_DERIVED"
+
+				"item_boots"			"ITEM_CORE"
+				"item_quelling_blade"	"ITEM_CORE | ITEM_SELLABLE"
+
+				"item_belt_of_strength"	"ITEM_CORE"
+				"item_gloves"			"ITEM_CORE"
+				"item_power_treads"		"ITEM_DERIVED"
+
+				"item_lifesteal"		"ITEM_CORE"
+				"item_quarterstaff"		"ITEM_CORE"
+				"item_mask_of_madness"	"ITEM_DERIVED | ITEM_SELLABLE"
+
+				"item_boots_of_elves"		"ITEM_LUXURY"
+				"item_blade_of_alacrity"	"ITEM_LUXURY"
+				"item_recipe_yasha"	"ITEM_LUXURY"
+				"item_yasha"				"ITEM_DERIVED"
+
+				"item_belt_of_strength"		"ITEM_LUXURY"
+				"item_ogre_axe"				"ITEM_LUXURY"
+				"item_recipe_sange"			"ITEM_LUXURY"
+				"item_sange"				"ITEM_DERIVED"
+
+				"item_sange_and_yasha"		"ITEM_DERIVED"
+
+				"item_blink"		"ITEM_CORE"
+
+				"item_ogre_axe"					"ITEM_EXTENSION"
+				"item_mithril_hammer"			"ITEM_EXTENSION"
+				"item_recipe_black_king_bar"	"ITEM_EXTENSION"
+				"item_black_king_bar"			"ITEM_DERIVED"
+
+				"item_platemail"		"ITEM_EXTENSION"
+				"item_hyperstone"		"ITEM_EXTENSION"
+				"item_chainmail"		"ITEM_EXTENSION"
+				"item_recipe_assault"		"ITEM_EXTENSION"
+				"item_assault"		"ITEM_DERIVED"
+
+				"item_reaver"		"ITEM_LUXURY"
+				"item_claymore"		"ITEM_LUXURY"
+				"item_lifesteal"	"ITEM_LUXURY"
+				"item_satanic"		"ITEM_DERIVED"
+			}
+			"Build"
+			{
+				"1"		"sven_storm_bolt"
+				"2"		"sven_warcry"
+				"3"		"sven_great_cleave"
+				"4"		"sven_great_cleave"
+				"5"		"sven_great_cleave"
+				"6"		"sven_gods_strength"
+				"7"		"sven_great_cleave"
+				"8"		"sven_warcry"
+				"9"		"sven_warcry"
+				"10"		"special_bonus_strength_8"
+				"11"		"sven_warcry"
+				"12"		"sven_gods_strength"
+				"13"		"sven_storm_bolt"
+				"14"		"sven_storm_bolt"
+				"15"		"special_bonus_movement_speed_30"
+				"16"		"sven_storm_bolt"
+				"17"		""
+				"18"		"sven_gods_strength"
+				"19"		""
+				"20"		"special_bonus_lifesteal_25"
+				"21"		""
+				"22"		""
+				"23"		""
+				"24"		""
+				"25"		"special_bonus_unique_sven_2"
+			}
+			"LaningInfo"
+			{
+				"SoloDesire"		"0"
+				"RequiresBabysit"		"1"
+				"ProvidesBabysit"		"0"
+				"SurvivalRating"		"1"
+				"RequiresFarm"		"1"
+				"ProvidesSetup"		"2"
+				"RequiresSetup"		"0"
+			}
+			"HeroType"		"DOTA_BOT_TANK | DOTA_BOT_SEMI_CARRY | DOTA_BOT_STUN_SUPPORT"
+		}
+	}
+}

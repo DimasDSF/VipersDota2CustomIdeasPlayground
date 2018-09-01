@@ -1,0 +1,100 @@
+"DOTAHeroes"
+{
+	//=================================================================================================================
+	// HERO: Chaos Knight
+	//=================================================================================================================
+	"npc_dota_hero_chaos_knight"
+	{
+		"BotImplemented"		"1"
+		"Bot"
+		{
+			"Loadout"
+			{
+				"item_tango"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_flask"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_branches"		"ITEM_CORE"
+				"item_branches"		"ITEM_CORE"
+				"item_boots"		"ITEM_CORE"
+				"item_magic_stick"		"ITEM_EXTENSION"
+				"item_recipe_magic_wand"		"ITEM_EXTENSION"
+				"item_magic_wand"		"ITEM_DERIVED | ITEM_SELLABLE"
+
+				"item_ogre_axe"			"ITEM_CORE"
+				"item_quarterstaff"		"ITEM_CORE"
+				"item_sobi_mask"		"ITEM_CORE"
+				"item_robe"				"ITEM_CORE"
+				"item_oblivion_staff"	"ITEM_CORE | ITEM_DERIVED"
+				"item_echo_sabre"		"ITEM_DERIVED"
+
+				"item_ogre_axe"		"ITEM_EXTENSION"
+				"item_belt_of_strength"		"ITEM_EXTENSION"
+				"item_recipe_sange"		"ITEM_EXTENSION"
+				"item_sange"		"ITEM_DERIVED"
+				"item_talisman_of_evasion"		"ITEM_EXTENSION"
+				"item_heavens_halberd"		"ITEM_DERIVED | ITEM_SELLABLE"
+
+				"item_blade_of_alacrity"		"ITEM_EXTENSION"
+				"item_boots_of_elves"		"ITEM_EXTENSION"
+				"item_recipe_yasha"		"ITEM_EXTENSION"
+				"item_yasha"		"ITEM_DERIVED"
+				"item_ultimate_orb"		"ITEM_EXTENSION"
+				"item_recipe_manta"		"ITEM_EXTENSION"
+				"item_manta"		"ITEM_DERIVED"
+
+				"item_reaver"		"ITEM_LUXURY"
+				"item_vitality_booster"		"ITEM_LUXURY"
+				"item_vitality_booster"		"ITEM_LUXURY"
+				"item_heart"		"ITEM_DERIVED"
+
+				"item_ogre_axe"					"ITEM_EXTENSION"
+				"item_mithril_hammer"			"ITEM_EXTENSION"
+				"item_recipe_black_king_bar"	"ITEM_EXTENSION"
+				"item_black_king_bar"			"ITEM_DERIVED"
+
+				"item_ultimate_orb"		"ITEM_LUXURY"
+				"item_ultimate_orb"		"ITEM_LUXURY"
+				"item_point_booster"	"ITEM_LUXURY"
+				"item_skadi"			"ITEM_DERIVED"
+			}
+			"Build"
+			{
+				"1"		"chaos_knight_chaos_bolt"
+				"2"		"chaos_knight_reality_rift"
+				"3"		"chaos_knight_reality_rift"
+				"4"		"chaos_knight_chaos_strike"
+				"5"		"chaos_knight_reality_rift"
+				"6"		"chaos_knight_phantasm"
+				"7"		"chaos_knight_reality_rift"
+				"8"		"chaos_knight_chaos_bolt"
+				"9"		"chaos_knight_chaos_bolt"
+				"10"		"special_bonus_all_stats_5"
+				"11"		"chaos_knight_chaos_bolt"
+				"12"		"chaos_knight_phantasm"
+				"13"		"chaos_knight_chaos_strike"
+				"14"		"chaos_knight_chaos_strike"
+				"15"		"special_bonus_strength_15"
+				"16"		"chaos_knight_chaos_strike"
+				"17"		""
+				"18"		"chaos_knight_phantasm"
+				"19"		""
+				"20"		"special_bonus_gold_income_25"
+				"21"		""
+				"22"		""
+				"23"		""
+				"24"		""
+				"25"		"special_bonus_unique_chaos_knight_2"
+			}
+			"HeroType"		"DOTA_BOT_SEMI_CARRY | DOTA_BOT_GANKER | DOTA_BOT_TANK"
+			"LaningInfo"
+			{
+				"SoloDesire"		"1"
+				"RequiresBabysit"		"2"
+				"ProvidesBabysit"		"0"
+				"SurvivalRating"		"1"
+				"RequiresFarm"		"2"
+				"ProvidesSetup"		"2"
+				"RequiresSetup"		"0"
+			}
+		}
+	}
+}
