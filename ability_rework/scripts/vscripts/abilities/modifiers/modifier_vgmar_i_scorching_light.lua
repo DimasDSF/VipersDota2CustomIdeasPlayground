@@ -48,8 +48,6 @@ function modifier_vgmar_i_scorching_light:OnCreated(kv)
 			self.missrate = illusionvaluesfkup.missrate
 			self.visiondelay = illusionvaluesfkup.visiondelay
 			self.visioninterval = illusionvaluesfkup.visioninterval
-			self.minvision = illusionvaluesfkup.minvision
-			self.maxvision = illusionvaluesfkup.maxvision
 			self.maxillusionstacks = illusionvaluesfkup.maxillusionstacks
 			self.lingerduration = illusionvaluesfkup.lingerduration
 		else
@@ -61,8 +59,6 @@ function modifier_vgmar_i_scorching_light:OnCreated(kv)
 			self.missrate = kv.missrate
 			self.visiondelay = kv.visiondelay
 			self.visioninterval = kv.visioninterval
-			self.minvision = kv.minvision
-			self.maxvision = kv.maxvision
 			self.maxillusionstacks = kv.maxillusionstacks
 			self.lingerduration = kv.lingerduration
 		end
