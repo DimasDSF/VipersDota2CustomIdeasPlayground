@@ -1,0 +1,22 @@
+"DOTAHeroes"
+{
+	//=================================================================================================================
+	// HERO: Puck
+	//=================================================================================================================
+	"npc_dota_hero_puck"
+	{
+		"Bot"
+		{
+			"HeroType"		"DOTA_BOT_GANKER | DOTA_BOT_STUN_SUPPORT"
+			"LaningInfo"
+			{
+				"SoloDesire"		"1"
+				"RequiresBabysit"		"0"
+				"ProvidesBabysit"		"2"
+				"SurvivalRating"		"2"
+				"RequiresFarm"		"1"
+				"ProvidesSetup"		"1"
+				"RequiresSetup"		"1"
+			}
+		}
+	}

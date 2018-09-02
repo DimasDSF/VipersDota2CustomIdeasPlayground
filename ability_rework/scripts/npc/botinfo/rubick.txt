@@ -1,0 +1,22 @@
+"DOTAHeroes"
+{
+	//=================================================================================================================
+	// HERO: Rubick
+	//=================================================================================================================
+	"npc_dota_hero_rubick"
+	{
+		"Bot"
+		{
+			"HeroType"		"DOTA_BOT_GANKER | DOTA_BOT_PURE_SUPPORT"
+			"LaningInfo"
+			{
+				"SoloDesire"		"1"
+				"RequiresBabysit"		"0"
+				"ProvidesBabysit"		"2"
+				"SurvivalRating"		"0"
+				"RequiresFarm"		"2"
+				"ProvidesSetup"		"1"
+				"RequiresSetup"		"1"
+			}
+		}
+	}

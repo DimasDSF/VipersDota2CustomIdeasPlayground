@@ -1,0 +1,23 @@
+"DOTAHeroes"
+{
+	//=================================================================================================================
+	// HERO: Venomancer
+	//=================================================================================================================
+	"npc_dota_hero_venomancer"
+	{
+		"Bot"
+		{
+
+			"HeroType"		"DOTA_BOT_PUSH_SUPPORT | DOTA_BOT_GANKER"
+			"LaningInfo"
+			{
+				"SoloDesire"		"0"
+				"RequiresBabysit"		"0"
+				"ProvidesBabysit"		"2"
+				"SurvivalRating"		"1"
+				"RequiresFarm"		"1"
+				"ProvidesSetup"		"2"
+				"RequiresSetup"		"0"
+			}
+		}
+	}

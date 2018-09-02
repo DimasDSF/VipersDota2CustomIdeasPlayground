@@ -1,0 +1,22 @@
+"DOTAHeroes"
+{
+	//=================================================================================================================
+	// HERO: Visage
+	//=================================================================================================================
+	"npc_dota_hero_visage"
+	{
+		"Bot"
+		{
+			"HeroType"		"DOTA_BOT_SEMI_CARRY | DOTA_BOT_STUN_SUPPORT"
+			"LaningInfo"
+			{
+				"SoloDesire"		"0"
+				"RequiresBabysit"		"0"
+				"ProvidesBabysit"		"2"
+				"SurvivalRating"		"2"
+				"RequiresFarm"		"1"
+				"ProvidesSetup"		"0"
+				"RequiresSetup"		"2"
+			}
+		}
+	}

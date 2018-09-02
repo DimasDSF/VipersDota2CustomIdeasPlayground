@@ -1,0 +1,22 @@
+"DOTAHeroes"
+{
+	//=================================================================================================================
+	// HERO: Elder Titan
+	//=================================================================================================================
+	"npc_dota_hero_elder_titan"
+	{
+		"Bot"
+		{
+			"HeroType"		"DOTA_BOT_GANKER | DOTA_BOT_TANK"
+			"LaningInfo"
+			{
+				"SoloDesire"		"1"
+				"RequiresBabysit"		"0"
+				"ProvidesBabysit"		"1"
+				"SurvivalRating"		"1"
+				"RequiresFarm"		"0"
+				"ProvidesSetup"		"1"
+				"RequiresSetup"		"0"
+			}
+		}
+	}

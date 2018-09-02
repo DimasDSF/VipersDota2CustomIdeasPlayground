@@ -1,0 +1,23 @@
+"DOTAHeroes"
+{
+	//=================================================================================================================
+	// HERO: Beastmaster
+	//=================================================================================================================
+	"npc_dota_hero_beastmaster"
+	{
+		"Bot"
+		{
+
+			"HeroType"		"DOTA_BOT_STUN_SUPPORT | DOTA_BOT_TANK"
+			"LaningInfo"
+			{
+				"SoloDesire"		"0"
+				"RequiresBabysit"		"1"
+				"ProvidesBabysit"		"1"
+				"SurvivalRating"		"1"
+				"RequiresFarm"		"1"
+				"ProvidesSetup"		"0"
+				"RequiresSetup"		"1"
+			}
+		}
+	}

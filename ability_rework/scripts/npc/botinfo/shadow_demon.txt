@@ -1,0 +1,22 @@
+"DOTAHeroes"
+{
+	//=================================================================================================================
+	// HERO: Shadow Demon
+	//=================================================================================================================
+	"npc_dota_hero_shadow_demon"
+	{
+		"Bot"
+		{
+			"HeroType"		"DOTA_BOT_STUN_SUPPORT | DOTA_BOT_GANKER"
+			"LaningInfo"
+			{
+				"SoloDesire"		"1"
+				"RequiresBabysit"		"0"
+				"ProvidesBabysit"		"2"
+				"SurvivalRating"		"2"
+				"RequiresFarm"		"1"
+				"ProvidesSetup"		"2"
+				"RequiresSetup"		"0"
+			}
+		}
+	}

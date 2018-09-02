@@ -1,0 +1,23 @@
+"DOTAHeroes"
+{
+	//=================================================================================================================
+	// HERO: Tinker
+	//=================================================================================================================
+	"npc_dota_hero_tinker"
+	{
+		"Bot"
+		{
+
+			"HeroType"		"DOTA_BOT_GANKER | DOTA_BOT_PUSH_SUPPORT"
+			"LaningInfo"
+			{
+				"SoloDesire"		"1"
+				"RequiresBabysit"		"0"
+				"ProvidesBabysit"		"2"
+				"SurvivalRating"		"1"
+				"RequiresFarm"		"1"
+				"ProvidesSetup"		"0"
+				"RequiresSetup"		"1"
+			}
+		}
+	}

@@ -1,0 +1,22 @@
+"DOTAHeroes"
+{
+	//=================================================================================================================
+	// HERO: Disruptor
+	//=================================================================================================================
+	"npc_dota_hero_disruptor"
+	{
+		"Bot"
+		{
+			"HeroType"		"DOTA_BOT_PURE_SUPPORT | DOTA_BOT_GANKER"
+			"LaningInfo"
+			{
+				"SoloDesire"		"1"
+				"RequiresBabysit"		"0"
+				"ProvidesBabysit"		"2"
+				"SurvivalRating"		"1"
+				"RequiresFarm"		"1"
+				"ProvidesSetup"		"2"
+				"RequiresSetup"		"0"
+			}
+		}
+	}

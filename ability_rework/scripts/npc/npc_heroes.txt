@@ -317,20 +317,6 @@
 				"SlotText"		"#LoadoutSlot_Taunt"
 			}
 		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_HARD_CARRY"
-			"LaningInfo"
-			{
-				"SoloDesire"		"1"
-				"RequiresBabysit"		"2"
-				"ProvidesBabysit"		"0"
-				"SurvivalRating"		"2"
-				"RequiresFarm"		"2"
-				"ProvidesSetup"		"0"
-				"RequiresSetup"		"1"
-			}
-		}
 	}
 
 	//=================================================================================================================
@@ -482,10 +468,6 @@
 					}
 				}
 			}
-		}
-		"Bot"
-		{
-			"SupportsEasyMode"	"1"
 		}
 	}
 
@@ -998,10 +980,10 @@
 		"Ability17"		"special_bonus_cooldown_reduction_50"
 		"ArmorPhysical"		"-3"
 		"AttackCapabilities"		"DOTA_UNIT_CAP_RANGED_ATTACK"
-		"AttackDamageMin"		"18"
-		"AttackDamageMax"		"29"
+		"AttackDamageMin"		"25"
+		"AttackDamageMax"		"36"
 		"AttackRate"		"1.700000"
-		"AttackAnimationPoint"		"0.700000"
+		"AttackAnimationPoint"		"0.65"
 		"AttackAcquisitionRange"		"800"
 		"AttackRange"		"625"
 		"ProjectileModel"		"particles/units/heroes/hero_drow/drow_base_attack.vpcf"
@@ -1011,12 +993,12 @@
 		"AttributeStrengthGain"		"1.900000"
 		"AttributeBaseIntelligence"		"15"
 		"AttributeIntelligenceGain"		"1.400000"
-		"AttributeBaseAgility"		"26"
-		"AttributeAgilityGain"		"1.900000"
+		"AttributeBaseAgility"		"19"
+		"AttributeAgilityGain"		"2.200000"
 		"StatusHealthRegen"		"1.75"
 		"VisionDaytimeRange"		"1800"
 		"MovementSpeed"		"285"
-		"MovementTurnRate"		"0.700000"
+		"MovementTurnRate"		"0.7000"
 		"HasAggressiveStance"		"0"
 		"BoundsHullName"		"DOTA_HULL_SIZE_HERO"
 		"particle_folder"		"particles/units/heroes/hero_drow"
@@ -1257,10 +1239,6 @@
 				"SlotText"		"#LoadoutSlot_Taunt"
 			}
 		}
-		"Bot"
-		{
-			"SupportsEasyMode"	"1"
-		}
 	}
 	"npc_dota_hero_juggernaut"
 	{
@@ -1442,10 +1420,6 @@
 			"resource"		"resource/UI/Heroes/default.res"
 			"resource"		"resource/UI/Heroes/default.res"
 			"resource"		"resource/UI/Heroes/default.res"
-		}
-		"Bot"
-		{
-			"SupportsEasyMode"	"1"
 		}
 	}
 	"npc_dota_hero_mirana"
@@ -1920,20 +1894,6 @@
 				"DisplayInLoadout"		"0"
 			}
 		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_HARD_CARRY"
-			"LaningInfo"
-			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"1"
-				"ProvidesBabysit"		"1"
-				"SurvivalRating"		"2"
-				"RequiresFarm"		"2"
-				"ProvidesSetup"		"0"
-				"RequiresSetup"		"1"
-			}
-		}
 	}
 	"npc_dota_hero_phantom_lancer"
 	{
@@ -2079,20 +2039,6 @@
 				"SlotName"		"body_head"
 				"SlotText"		"#LoadoutSlot_Head"
 				"DisplayInLoadout" "0"
-			}
-		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_PUSH_SUPPORT | DOTA_BOT_HARD_CARRY"
-			"LaningInfo"
-			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"2"
-				"ProvidesBabysit"		"0"
-				"SurvivalRating"		"2"
-				"RequiresFarm"		"2"
-				"ProvidesSetup"		"0"
-				"RequiresSetup"		"1"
 			}
 		}
 	}
@@ -2241,20 +2187,6 @@
 				"SlotName"		"ambient_effects"
 				"SlotText"		"#LoadoutSlot_Ambient_Effects"
 				"DisplayInLoadout"		"0"
-			}
-		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_GANKER | DOTA_BOT_STUN_SUPPORT"
-			"LaningInfo"
-			{
-				"SoloDesire"		"1"
-				"RequiresBabysit"		"0"
-				"ProvidesBabysit"		"2"
-				"SurvivalRating"		"2"
-				"RequiresFarm"		"1"
-				"ProvidesSetup"		"1"
-				"RequiresSetup"		"1"
 			}
 		}
 	}
@@ -2890,20 +2822,6 @@
 				"SlotText"		"#LoadoutSlot_Taunt"
 			}
 		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_GANKER | DOTA_BOT_SEMI_CARRY"
-			"LaningInfo"
-			{
-				"SoloDesire"		"2"
-				"RequiresBabysit"		"0"
-				"ProvidesBabysit"		"1"
-				"SurvivalRating"		"2"
-				"RequiresFarm"		"2"
-				"ProvidesSetup"		"2"
-				"RequiresSetup"		"0"
-			}
-		}
 	}
 	"npc_dota_hero_sven"
 	{
@@ -3068,10 +2986,6 @@
 		"particle_folder"		"particles/units/heroes/hero_sven"
 		"GameSoundsFile"		"soundevents/game_sounds_heroes/game_sounds_sven.vsndevts"
 		"VoiceFile"		"soundevents/voscripts/game_sounds_vo_sven.vsndevts"
-		"Bot"
-		{
-			"SupportsEasyMode"	"1"
-		}
 	}
 	"npc_dota_hero_tiny"
 	{
@@ -3379,10 +3293,6 @@
 				}
 			}
 		}
-		"Bot"
-		{
-			"SupportsEasyMode"	"1"
-		}
 	}
 	"npc_dota_hero_windrunner"
 	{
@@ -3673,10 +3583,6 @@
 				"MaxPolygonsLOD0"		"550"
 				"MaxPolygonsLOD1"		"400"
 			}
-		}
-		"Bot"
-		{
-			"SupportsEasyMode"	"1"
 		}
 	}
 	"npc_dota_hero_kunkka"
@@ -4129,10 +4035,6 @@
 				}
 			}
 		}
-		"Bot"
-		{
-			"SupportsEasyMode"	"1"
-		}
 	}
 	"npc_dota_hero_lion"
 	{
@@ -4279,10 +4181,6 @@
 				"SlotName"		"taunt"
 				"SlotText"		"#LoadoutSlot_Taunt"
 			}
-		}
-		"Bot"
-		{
-			"SupportsEasyMode"	"1"
 		}
 	}
 	"npc_dota_hero_shadow_shaman"
@@ -4581,20 +4479,6 @@
 				}
 			}
 		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_TANK | DOTA_BOT_GANKER | DOTA_BOT_STUN_SUPPORT"
-			"LaningInfo"
-			{
-				"SoloDesire"		"1"
-				"RequiresBabysit"		"1"
-				"ProvidesBabysit"		"1"
-				"SurvivalRating"		"2"
-				"RequiresFarm"		"2"
-				"ProvidesSetup"		"2"
-				"RequiresSetup"		"0"
-			}
-		}
 	}
 	"npc_dota_hero_tidehunter"
 	{
@@ -4741,10 +4625,6 @@
 				"SlotName"		"taunt"
 				"SlotText"		"#LoadoutSlot_Taunt"
 			}
-		}
-		"Bot"
-		{
-			"SupportsEasyMode"	"1"
 		}
 	}
 	"npc_dota_hero_witch_doctor"
@@ -4908,10 +4788,6 @@
 		"particle_folder"		"particles/units/heroes/hero_witchdoctor"
 		"GameSoundsFile"		"soundevents/game_sounds_heroes/game_sounds_witchdoctor.vsndevts"
 		"VoiceFile"		"soundevents/voscripts/game_sounds_vo_witchdoctor.vsndevts"
-		"Bot"
-		{
-			"SupportsEasyMode"	"1"
-		}
 	}
 	"npc_dota_hero_riki"
 	{
@@ -5213,21 +5089,6 @@
 				"DisplayInLoadout"		"0"
 			}
 		}
-		"Bot"
-		{
-
-			"HeroType"		"DOTA_BOT_PUSH_SUPPORT"
-			"LaningInfo"
-			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"0"
-				"ProvidesBabysit"		"2"
-				"SurvivalRating"		"1"
-				"RequiresFarm"		"1"
-				"ProvidesSetup"		"1"
-				"RequiresSetup"		"0"
-			}
-		}
 	}
 	"npc_dota_hero_tinker"
 	{
@@ -5388,21 +5249,6 @@
 				//do not enable misc for workshop, only Immortal uses this slot
 			}
 		}
-		"Bot"
-		{
-
-			"HeroType"		"DOTA_BOT_GANKER | DOTA_BOT_PUSH_SUPPORT"
-			"LaningInfo"
-			{
-				"SoloDesire"		"1"
-				"RequiresBabysit"		"0"
-				"ProvidesBabysit"		"2"
-				"SurvivalRating"		"1"
-				"RequiresFarm"		"1"
-				"ProvidesSetup"		"0"
-				"RequiresSetup"		"1"
-			}
-		}
 	}
 	"npc_dota_hero_sniper"
 	{
@@ -5549,10 +5395,6 @@
 		"particle_folder"		"particles/units/heroes/hero_sniper"
 		"GameSoundsFile"		"soundevents/game_sounds_heroes/game_sounds_sniper.vsndevts"
 		"VoiceFile"		"soundevents/voscripts/game_sounds_vo_sniper.vsndevts"
-		"Bot"
-		{
-			"SupportsEasyMode"	"1"
-		}
 	}
 	"npc_dota_hero_necrolyte"
 	{
@@ -5609,9 +5451,9 @@
 		"AttributeStrengthGain"		"2.600000"
 		"AttributeBaseIntelligence"		"20"
 		"AttributeIntelligenceGain"		"2.500000"
-		"AttributeBaseAgility"		"15"
-		"AttributeAgilityGain"		"1.200000"
-		"MovementSpeed"		"285"
+		"AttributeBaseAgility"		"12"
+		"AttributeAgilityGain"		"1.300000"
+		"MovementSpeed"		"280"
 		"MovementTurnRate"		"0.500000"
 		"BoundsHullName"		"DOTA_HULL_SIZE_HERO"
 		"ItemSlots"
@@ -5697,10 +5539,6 @@
 					}
 				}
 			}
-		}
-		"Bot"
-		{
-			"SupportsEasyMode"	"1"
 		}
 	}
 	"npc_dota_hero_warlock"
@@ -5884,10 +5722,6 @@
 				"SlotText"		"#LoadoutSlot_Taunt"
 			}
 		}
-		"Bot"
-		{
-			"SupportsEasyMode"	"1"
-		}
 	}
 	"npc_dota_hero_beastmaster"
 	{
@@ -6059,21 +5893,6 @@
 				}
 			}
 		}
-		"Bot"
-		{
-
-			"HeroType"		"DOTA_BOT_STUN_SUPPORT | DOTA_BOT_TANK"
-			"LaningInfo"
-			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"1"
-				"ProvidesBabysit"		"1"
-				"SurvivalRating"		"1"
-				"RequiresFarm"		"1"
-				"ProvidesSetup"		"0"
-				"RequiresSetup"		"1"
-			}
-		}
 	}
 	"npc_dota_hero_queenofpain"
 	{
@@ -6198,20 +6017,6 @@
 				"SlotIndex"		"4"
 				"SlotName"		"taunt"
 				"SlotText"		"#LoadoutSlot_Taunt"
-			}
-		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_GANKER | DOTA_BOT_SEMI_CARRY"
-			"LaningInfo"
-			{
-				"SoloDesire"		"2"
-				"RequiresBabysit"		"0"
-				"ProvidesBabysit"		"2"
-				"SurvivalRating"		"2"
-				"RequiresFarm"		"2"
-				"ProvidesSetup"		"0"
-				"RequiresSetup"		"0"
 			}
 		}
 	}
@@ -6373,21 +6178,6 @@
 				"DisplayInLoadout"		"0"
 			}
 		}
-		"Bot"
-		{
-
-			"HeroType"		"DOTA_BOT_PUSH_SUPPORT | DOTA_BOT_GANKER"
-			"LaningInfo"
-			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"0"
-				"ProvidesBabysit"		"2"
-				"SurvivalRating"		"1"
-				"RequiresFarm"		"1"
-				"ProvidesSetup"		"2"
-				"RequiresSetup"		"0"
-			}
-		}
 	}
 	"npc_dota_hero_faceless_void"
 	{
@@ -6522,21 +6312,6 @@
 						"location"		"attach_hitloc"
 					}
 				}
-			}
-		}
-		"Bot"
-		{
-
-			"HeroType"		"DOTA_BOT_HARD_CARRY"
-			"LaningInfo"
-			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"2"
-				"ProvidesBabysit"		"0"
-				"SurvivalRating"		"1"
-				"RequiresFarm"		"2"
-				"ProvidesSetup"		"0"
-				"RequiresSetup"		"2"
 			}
 		}
 	}
@@ -6715,10 +6490,6 @@
 				"MaxPolygonsLOD1"		"1000"
 			}
 		}
-		"Bot"
-		{
-			"SupportsEasyMode"	"1"
-		}
 	}
 	"npc_dota_hero_death_prophet"
 	{
@@ -6892,10 +6663,6 @@
 				"SlotText"		"#LoadoutSlot_Ambient_Effects"
 				"DisplayInLoadout"		"0"
 			}
-		}
-		"Bot"
-		{
-			"SupportsEasyMode"	"1"
 		}
 	}
 	"npc_dota_hero_phantom_assassin"
@@ -7217,20 +6984,6 @@
 				}
 			}
 		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_PUSH_SUPPORT"
-			"LaningInfo"
-			{
-				"SoloDesire"		"2"
-				"RequiresBabysit"		"0"
-				"ProvidesBabysit"		"2"
-				"SurvivalRating"		"1"
-				"RequiresFarm"		"1"
-				"ProvidesSetup"		"0"
-				"RequiresSetup"		"1"
-			}
-		}
 	}
 	"npc_dota_hero_templar_assassin"
 	{
@@ -7371,20 +7124,6 @@
 				"SlotName"		"ambient_effects"
 				"SlotText"		"#LoadoutSlot_Ambient_Effects"
 				"DisplayInLoadout"		"0"
-			}
-		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_HARD_CARRY"
-			"LaningInfo"
-			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"2"
-				"ProvidesBabysit"		"0"
-				"SurvivalRating"		"2"
-				"RequiresFarm"		"2"
-				"ProvidesSetup"		"0"
-				"RequiresSetup"		"2"
 			}
 		}
 	}
@@ -7531,10 +7270,6 @@
 				"SlotText"		"#LoadoutSlot_Ambient_Effects"
 				"DisplayInLoadout"	"0"
 			}
-		}
-		"Bot"
-		{
-			"SupportsEasyMode"	"1"
 		}
 	}
 	"npc_dota_hero_luna"
@@ -7770,10 +7505,6 @@
 					}
 				}
 			}
-		}
-		"Bot"
-		{
-			"SupportsEasyMode"	"1"
 		}
 		"ItemSlots"
 		{
@@ -8139,20 +7870,6 @@
 				"SlotText"		"#LoadoutSlot_Taunt"
 			}
 		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_GANKER"
-			"LaningInfo"
-			{
-				"SoloDesire"		"2"
-				"RequiresBabysit"		"1"
-				"ProvidesBabysit"		"1"
-				"SurvivalRating"		"1"
-				"RequiresFarm"		"2"
-				"ProvidesSetup"		"1"
-				"RequiresSetup"		"1"
-			}
-		}
 	}
 	"npc_dota_hero_leshrac"
 	{
@@ -8296,20 +8013,6 @@
 				"DisplayInLoadout"		"0"
 			}
 		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_GANKER | DOTA_BOT_PUSH_SUPPORT"
-			"LaningInfo"
-			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"0"
-				"ProvidesBabysit"		"2"
-				"SurvivalRating"		"0"
-				"RequiresFarm"		"2"
-				"ProvidesSetup"		"2"
-				"RequiresSetup"		"1"
-			}
-		}
 	}
 	"npc_dota_hero_furion"
 	{
@@ -8352,8 +8055,8 @@
 		"Ability17"		"special_bonus_unique_furion"
 		"ArmorPhysical"		"1"
 		"AttackCapabilities"		"DOTA_UNIT_CAP_RANGED_ATTACK"
-		"AttackDamageMin"		"32"
-		"AttackDamageMax"		"46"
+		"AttackDamageMin"		"29"
+		"AttackDamageMax"		"43"
 		"AttackRate"		"1.700000"
 		"AttackAnimationPoint"		"0.400000"
 		"AttackAcquisitionRange"		"800"
@@ -8473,20 +8176,6 @@
 				{
 					"0" "npc_dota_furion_treant"
 				}
-			}
-		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_PUSH_SUPPORT | DOTA_BOT_SEMI_CARRY | DOTA_BOT_GANKER"
-			"LaningInfo"
-			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"0"
-				"ProvidesBabysit"		"1"
-				"SurvivalRating"		"0"
-				"RequiresFarm"		"2"
-				"ProvidesSetup"		"0"
-				"RequiresSetup"		"2"
 			}
 		}
 	}
@@ -8639,20 +8328,6 @@
 				"DisplayInLoadout"		"0"
 			}
 		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_TANK | DOTA_BOT_HARD_CARRY | DOTA_BOT_GANKER"
-			"LaningInfo"
-			{
-				"SoloDesire"		"1"
-				"RequiresBabysit"		"0"
-				"ProvidesBabysit"		"1"
-				"SurvivalRating"		"2"
-				"RequiresFarm"		"2"
-				"ProvidesSetup"		"2"
-				"RequiresSetup"		"0"
-			}
-		}
 	}
 	"npc_dota_hero_dark_seer"
 	{
@@ -8801,20 +8476,6 @@
 				"DisplayInLoadout"		"0"
 			}
 		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_PURE_SUPPORT"
-			"LaningInfo"
-			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"0"
-				"ProvidesBabysit"		"1"
-				"SurvivalRating"		"2"
-				"RequiresFarm"		"1"
-				"ProvidesSetup"		"0"
-				"RequiresSetup"		"1"
-			}
-		}
 	}
 	"npc_dota_hero_clinkz"
 	{
@@ -8866,7 +8527,7 @@
 		"ProjectileModel"		"particles/units/heroes/hero_clinkz/clinkz_base_attack.vpcf"
 		"ProjectileSpeed"		"900"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_AGILITY"
-		"AttributeBaseStrength"		"16"
+		"AttributeBaseStrength"		"14"
 		"AttributeStrengthGain"		"1.900000"
 		"AttributeBaseAgility"		"22"
 		"AttributeAgilityGain"		"2.600"
@@ -8969,20 +8630,6 @@
 				"SlotName"		"ambient_effects"
 				"SlotText"		"#LoadoutSlot_Ambient_Effects"
 				"DisplayInLoadout"		"0"
-			}
-		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_SEMI_CARRY | DOTA_BOT_GANKER"
-			"LaningInfo"
-			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"0"
-				"ProvidesBabysit"		"2"
-				"SurvivalRating"		"2"
-				"RequiresFarm"		"2"
-				"ProvidesSetup"		"0"
-				"RequiresSetup"		"2"
 			}
 		}
 	}
@@ -9191,7 +8838,7 @@
 		"AttributeAgilityGain"		"1.800000"
 		"AttributeBaseIntelligence"		"19"
 		"AttributeIntelligenceGain"		"3.100000"
-		"MovementSpeed"		"340"
+		"MovementSpeed"		"325"
 		"MovementTurnRate"		"0.50000"
 		"BoundsHullName"		"DOTA_HULL_SIZE_HERO"
 		"ItemSlots"
@@ -9278,20 +8925,6 @@
 				}
 			}
 		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_PUSH_SUPPORT | DOTA_BOT_GANKER"
-			"LaningInfo"
-			{
-				"SoloDesire"		"1"
-				"RequiresBabysit"		"0"
-				"ProvidesBabysit"		"2"
-				"SurvivalRating"		"1"
-				"RequiresFarm"		"1"
-				"ProvidesSetup"		"0"
-				"RequiresSetup"		"2"
-			}
-		}
 	}
 	"npc_dota_hero_huskar"
 	{
@@ -9323,7 +8956,7 @@
 		"Ability4"		"generic_hidden"
 		"Ability5"		"generic_hidden"
 		"Ability6"		"huskar_life_break"
-		"Ability10"		"special_bonus_hp_175"
+		"Ability10"		"special_bonus_hp_225"
 		"Ability11"		"special_bonus_attack_damage_20"
 		"Ability12"		"special_bonus_unique_huskar_2"
 		"Ability13"		"special_bonus_lifesteal_15"
@@ -9333,8 +8966,8 @@
 		"Ability17"		"special_bonus_unique_huskar_5"
 		"ArmorPhysical"		"-2"
 		"AttackCapabilities"		"DOTA_UNIT_CAP_RANGED_ATTACK"
-		"AttackDamageMin"		"21"
-		"AttackDamageMax"		"30"
+		"AttackDamageMin"		"19"
+		"AttackDamageMax"		"24"
 		"AttackRate"		"1.600000"
 		"AttackAnimationPoint"		"0.400000"
 		"AttackAcquisitionRange"		"800"
@@ -9581,20 +9214,6 @@
 				"SlotText"		"#LoadoutSlot_Taunt"
 			}
 		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_TANK | DOTA_BOT_SEMI_CARRY | DOTA_BOT_GANKER"
-			"LaningInfo"
-			{
-				"SoloDesire"		"1"
-				"RequiresBabysit"		"1"
-				"ProvidesBabysit"		"1"
-				"SurvivalRating"		"2"
-				"RequiresFarm"		"2"
-				"ProvidesSetup"		"2"
-				"RequiresSetup"		"0"
-			}
-		}
 	}
 	"npc_dota_hero_broodmother"
 	{
@@ -9648,7 +9267,7 @@
 		"AttributePrimary"		"DOTA_ATTRIBUTE_AGILITY"
 		"AttributeBaseStrength"		"18"
 		"AttributeStrengthGain"		"2.800000"
-		"AttributeBaseAgility"		"18"
+		"AttributeBaseAgility"		"15"
 		"AttributeAgilityGain"		"2.200000"
 		"AttributeBaseIntelligence"		"18"
 		"AttributeIntelligenceGain"		"2.000000"
@@ -9746,20 +9365,6 @@
 				{
 					"0" "npc_dota_broodmother_spider"
 				}
-			}
-		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_PUSH_SUPPORT | DOTA_BOT_SEMI_CARRY"
-			"LaningInfo"
-			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"0"
-				"ProvidesBabysit"		"1"
-				"SurvivalRating"		"2"
-				"RequiresFarm"		"2"
-				"ProvidesSetup"		"1"
-				"RequiresSetup"		"0"
 			}
 		}
 	}
@@ -10062,20 +9667,6 @@
 				"SlotText"		"#LoadoutSlot_Taunt"
 			}
 		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_HARD_CARRY"
-			"LaningInfo"
-			{
-				"SoloDesire"		"1"
-				"RequiresBabysit"		"1"
-				"ProvidesBabysit"		"2"
-				"SurvivalRating"		"2"
-				"RequiresFarm"		"2"
-				"ProvidesSetup"		"0"
-				"RequiresSetup"		"2"
-			}
-		}
 	}
 	"npc_dota_hero_jakiro"
 	{
@@ -10345,20 +9936,6 @@
 				}
 			}
 		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_GANKER | DOTA_BOT_STUN_SUPPORT"
-			"LaningInfo"
-			{
-				"SoloDesire"		"2"
-				"RequiresBabysit"		"0"
-				"ProvidesBabysit"		"2"
-				"SurvivalRating"		"1"
-				"RequiresFarm"		"1"
-				"ProvidesSetup"		"2"
-				"RequiresSetup"		"0"
-			}
-		}
 	}
 	"npc_dota_hero_chen"
 	{
@@ -10519,20 +10096,6 @@
 			{
 			}
 		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_PURE_SUPPORT"
-			"LaningInfo"
-			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"0"
-				"ProvidesBabysit"		"1"
-				"SurvivalRating"		"0"
-				"RequiresFarm"		"1"
-				"ProvidesSetup"		"0"
-				"RequiresSetup"		"0"
-			}
-		}
 	}
 	"npc_dota_hero_spectre"
 	{
@@ -10677,20 +10240,6 @@
 				"SlotName"		"ambient_effects"
 				"SlotText"		"#LoadoutSlot_Ambient_Effects"
 				"DisplayInLoadout"		"0"
-			}
-		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_HARD_CARRY"
-			"LaningInfo"
-			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"2"
-				"ProvidesBabysit"		"0"
-				"SurvivalRating"		"1"
-				"RequiresFarm"		"2"
-				"ProvidesSetup"		"0"
-				"RequiresSetup"		"2"
 			}
 		}
 	}
@@ -10855,20 +10404,6 @@
 				"SlotText"		"#LoadoutSlot_Taunt"
 			}
 		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_TANK | DOTA_BOT_SEMI_CARRY"
-			"LaningInfo"
-			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"1"
-				"ProvidesBabysit"		"0"
-				"SurvivalRating"		"1"
-				"RequiresFarm"		"2"
-				"ProvidesSetup"		"1"
-				"RequiresSetup"		"0"
-			}
-		}
 	}
 	"npc_dota_hero_ancient_apparition"
 	{
@@ -10999,20 +10534,6 @@
 				"SlotName"		"ambient_effects"
 				"SlotText"		"#LoadoutSlot_Ambient_Effects"
 				"DisplayInLoadout"		"0"
-			}
-		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_PURE_SUPPORT"
-			"LaningInfo"
-			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"0"
-				"ProvidesBabysit"		"2"
-				"SurvivalRating"		"0"
-				"RequiresFarm"		"1"
-				"ProvidesSetup"		"1"
-				"RequiresSetup"		"0"
 			}
 		}
 	}
@@ -11154,20 +10675,6 @@
 				"TextureHeight"		"256"
 				"MaxPolygonsLOD0"		"1000"
 				"MaxPolygonsLOD1"		"500"
-			}
-		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_SEMI_CARRY | DOTA_BOT_GANKER"
-			"LaningInfo"
-			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"2"
-				"ProvidesBabysit"		"0"
-				"SurvivalRating"		"1"
-				"RequiresFarm"		"2"
-				"ProvidesSetup"		"0"
-				"RequiresSetup"		"2"
 			}
 		}
 	}
@@ -11321,20 +10828,6 @@
 				"SlotText"		"#LoadoutSlot_Taunt"
 			}
 		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_GANKER | DOTA_BOT_SEMI_CARRY"
-			"LaningInfo"
-			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"1"
-				"ProvidesBabysit"		"1"
-				"SurvivalRating"		"1"
-				"RequiresFarm"		"2"
-				"ProvidesSetup"		"1"
-				"RequiresSetup"		"2"
-			}
-		}
 	}
 	"npc_dota_hero_gyrocopter"
 	{
@@ -11382,10 +10875,10 @@
 			"Ability4"		"gyrocopter_call_down"
 		}
 
-		"ArmorPhysical"		"1"
+		"ArmorPhysical"		"2"
 		"AttackCapabilities"		"DOTA_UNIT_CAP_RANGED_ATTACK"
-		"AttackDamageMin"		"13"
-		"AttackDamageMax"		"23"
+		"AttackDamageMin"		"18"
+		"AttackDamageMax"		"28"
 		"AttackRate"		"1.700000"
 		"AttackAnimationPoint"		"0.200000"
 		"AttackAcquisitionRange"		"800"
@@ -11395,7 +10888,7 @@
 		"AttributePrimary"		"DOTA_ATTRIBUTE_AGILITY"
 		"AttributeBaseStrength"		"19"
 		"AttributeStrengthGain"		"2.100000"
-		"AttributeBaseAgility"		"24"
+		"AttributeBaseAgility"		"19"
 		"AttributeAgilityGain"		"2.800000"
 		"AttributeBaseIntelligence"		"19"
 		"AttributeIntelligenceGain"		"2.100000"
@@ -11505,20 +10998,6 @@
 		{
 			"Particles"
 			{
-			}
-		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_HARD_CARRY | DOTA_BOT_GANKER"
-			"LaningInfo"
-			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"0"
-				"ProvidesBabysit"		"2"
-				"SurvivalRating"		"0"
-				"RequiresFarm"		"1"
-				"ProvidesSetup"		"0"
-				"RequiresSetup"		"1"
 			}
 		}
 	}
@@ -11688,20 +11167,6 @@
 				"SlotIndex"		"9"
 				"SlotName"		"taunt"
 				"SlotText"		"#LoadoutSlot_Taunt"
-			}
-		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_TANK | DOTA_BOT_HARD_CARRY"
-			"LaningInfo"
-			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"2"
-				"ProvidesBabysit"		"0"
-				"SurvivalRating"		"1"
-				"RequiresFarm"		"2"
-				"ProvidesSetup"		"2"
-				"RequiresSetup"		"0"
 			}
 		}
 	}
@@ -11876,20 +11341,6 @@
 				"SlotText"		"#LoadoutSlot_Taunt"
 			}
 		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_SEMI_CARRY | DOTA_BOT_GANKER"
-			"LaningInfo"
-			{
-				"SoloDesire"		"2"
-				"RequiresBabysit"		"0"
-				"ProvidesBabysit"		"2"
-				"SurvivalRating"		"1"
-				"RequiresFarm"		"2"
-				"ProvidesSetup"		"0"
-				"RequiresSetup"		"1"
-			}
-		}
 	}
 	"npc_dota_hero_silencer"
 	{
@@ -12033,20 +11484,6 @@
 				"SlotText"		"#LoadoutSlot_Taunt"
 			}
 		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_PURE_SUPPORT | DOTA_BOT_SEMI_CARRY"
-			"LaningInfo"
-			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"0"
-				"ProvidesBabysit"		"2"
-				"SurvivalRating"		"0"
-				"RequiresFarm"		"2"
-				"ProvidesSetup"		"0"
-				"RequiresSetup"		"2"
-			}
-		}
 	}
 	"npc_dota_hero_obsidian_destroyer"
 	{
@@ -12186,20 +11623,6 @@
 				"SlotName"		"ambient_effects"
 				"SlotText"		"#LoadoutSlot_Ambient_Effects"
 				"DisplayInLoadout"		"0"
-			}
-		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_HARD_CARRY"
-			"LaningInfo"
-			{
-				"SoloDesire"		"2"
-				"RequiresBabysit"		"0"
-				"ProvidesBabysit"		"2"
-				"SurvivalRating"		"1"
-				"RequiresFarm"		"2"
-				"ProvidesSetup"		"2"
-				"RequiresSetup"		"0"
 			}
 		}
 	}
@@ -12377,20 +11800,6 @@
 				"SlotText"		"#LoadoutSlot_Taunt"
 			}
 		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_HARD_CARRY"
-			"LaningInfo"
-			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"2"
-				"ProvidesBabysit"		"0"
-				"SurvivalRating"		"1"
-				"RequiresFarm"		"2"
-				"ProvidesSetup"		"0"
-				"RequiresSetup"		"2"
-			}
-		}
 	}
 	"npc_dota_hero_brewmaster"
 	{
@@ -12539,20 +11948,6 @@
 				"SlotIndex"		"6"
 				"SlotName"		"taunt"
 				"SlotText"		"#LoadoutSlot_Taunt"
-			}
-		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_TANK | DOTA_BOT_SEMI_CARRY"
-			"LaningInfo"
-			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"1"
-				"ProvidesBabysit"		"0"
-				"SurvivalRating"		"1"
-				"RequiresFarm"		"1"
-				"ProvidesSetup"		"1"
-				"RequiresSetup"		"1"
 			}
 		}
 	}
@@ -12718,20 +12113,6 @@
 				"SlotName"		"ambient_effects"
 				"SlotText"		"#LoadoutSlot_Ambient_Effects"
 				"DisplayInLoadout"		"0"
-			}
-		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_STUN_SUPPORT | DOTA_BOT_GANKER"
-			"LaningInfo"
-			{
-				"SoloDesire"		"1"
-				"RequiresBabysit"		"0"
-				"ProvidesBabysit"		"2"
-				"SurvivalRating"		"2"
-				"RequiresFarm"		"1"
-				"ProvidesSetup"		"2"
-				"RequiresSetup"		"0"
 			}
 		}
 	}
@@ -12901,20 +12282,6 @@
 				"SlotIndex"		"7"
 				"SlotName"		"taunt"
 				"SlotText"		"#LoadoutSlot_Taunt"
-			}
-		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_TANK | DOTA_BOT_SEMI_CARRY"
-			"LaningInfo"
-			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"2"
-				"ProvidesBabysit"		"0"
-				"SurvivalRating"		"1"
-				"RequiresFarm"		"2"
-				"ProvidesSetup"		"1"
-				"RequiresSetup"		"1"
 			}
 		}
 	}
@@ -13180,20 +12547,6 @@
 				"SlotText"		"#LoadoutSlot_Taunt"
 			}
 		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_GANKER | DOTA_BOT_SEMI_CARRY"
-			"LaningInfo"
-			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"1"
-				"ProvidesBabysit"		"0"
-				"SurvivalRating"		"1"
-				"RequiresFarm"		"0"
-				"ProvidesSetup"		"0"
-				"RequiresSetup"		"2"
-			}
-		}
 	}
 	"npc_dota_hero_treant"
 	{
@@ -13334,20 +12687,6 @@
 				"SlotIndex"		"5"
 				"SlotName"		"taunt"
 				"SlotText"		"#LoadoutSlot_Taunt"
-			}
-		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_TANK | DOTA_BOT_PURE_SUPPORT"
-			"LaningInfo"
-			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"1"
-				"ProvidesBabysit"		"1"
-				"SurvivalRating"		"2"
-				"RequiresFarm"		"0"
-				"ProvidesSetup"		"2"
-				"RequiresSetup"		"0"
 			}
 		}
 	}
@@ -13496,20 +12835,6 @@
 				"SlotName"		"ambient_effects"
 				"SlotText"		"#LoadoutSlot_Ambient_Effects"
 				"DisplayInLoadout"		"0"
-			}
-		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_STUN_SUPPORT | DOTA_BOT_GANKER"
-			"LaningInfo"
-			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"0"
-				"ProvidesBabysit"		"2"
-				"SurvivalRating"		"1"
-				"RequiresFarm"		"2"
-				"ProvidesSetup"		"2"
-				"RequiresSetup"		"0"
 			}
 		}
 	}
@@ -13669,20 +12994,6 @@
 				"DisplayInLoadout"		"0"
 			}
 		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_TANK | DOTA_BOT_SEMI_CARRY"
-			"LaningInfo"
-			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"1"
-				"ProvidesBabysit"		"0"
-				"SurvivalRating"		"1"
-				"RequiresFarm"		"1"
-				"ProvidesSetup"		"1"
-				"RequiresSetup"		"0"
-			}
-		}
 	}
 	"npc_dota_hero_rubick"
 	{
@@ -13825,20 +13136,6 @@
 				"SlotName"		"ambient_effects"
 				"SlotText"		"#LoadoutSlot_Ambient_Effects"
 				"DisplayInLoadout"		"0"
-			}
-		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_GANKER | DOTA_BOT_PURE_SUPPORT"
-			"LaningInfo"
-			{
-				"SoloDesire"		"1"
-				"RequiresBabysit"		"0"
-				"ProvidesBabysit"		"2"
-				"SurvivalRating"		"0"
-				"RequiresFarm"		"2"
-				"ProvidesSetup"		"1"
-				"RequiresSetup"		"1"
 			}
 		}
 	}
@@ -13991,20 +13288,6 @@
 				"DisplayInLoadout"		"0"
 			}
 		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_PURE_SUPPORT | DOTA_BOT_GANKER"
-			"LaningInfo"
-			{
-				"SoloDesire"		"1"
-				"RequiresBabysit"		"0"
-				"ProvidesBabysit"		"2"
-				"SurvivalRating"		"1"
-				"RequiresFarm"		"1"
-				"ProvidesSetup"		"2"
-				"RequiresSetup"		"0"
-			}
-		}
 	}
 	"npc_dota_hero_nyx_assassin"
 	{
@@ -14147,20 +13430,6 @@
 				"SlotText"		"#LoadoutSlot_Taunt"
 			}
 		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_GANKER | DOTA_BOT_NUKER"
-			"LaningInfo"
-			{
-				"SoloDesire"		"1"
-				"RequiresBabysit"		"0"
-				"ProvidesBabysit"		"2"
-				"SurvivalRating"		"1"
-				"RequiresFarm"		"1"
-				"ProvidesSetup"		"2"
-				"RequiresSetup"		"0"
-			}
-		}
 	}
 	"npc_dota_hero_naga_siren"
 	{
@@ -14247,20 +13516,6 @@
 						"position"		"1 1 1"
 					}
 				}
-			}
-		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_GANKER | DOTA_BOT_SEMI_CARRY"
-			"LaningInfo"
-			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"1"
-				"ProvidesBabysit"		"0"
-				"SurvivalRating"		"1"
-				"RequiresFarm"		"2"
-				"ProvidesSetup"		"0"
-				"RequiresSetup"		"2"
 			}
 		}
 		"ItemSlots"
@@ -14470,20 +13725,6 @@
 				"DisplayInLoadout"		"0"
 			}
 		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_PUSH_SUPPORT | DOTA_BOT_PURE_SUPPORT"
-			"LaningInfo"
-			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"0"
-				"ProvidesBabysit"		"2"
-				"SurvivalRating"		"1"
-				"RequiresFarm"		"1"
-				"ProvidesSetup"		"0"
-				"RequiresSetup"		"2"
-			}
-		}
 	}
 	"npc_dota_hero_wisp"
 	{
@@ -14518,7 +13759,7 @@
 		"Ability6"		"wisp_relocate"
 		"Ability7"		"wisp_tether_break"
 		"Ability8"		"wisp_spirits_in"
-		"Ability10"		"special_bonus_exp_boost_25"
+		"Ability10"		"special_bonus_exp_boost_20"
 		"Ability11"		"special_bonus_attack_damage_45"
 		"Ability12"		"special_bonus_unique_wisp"
 		"Ability13"		"special_bonus_unique_wisp_5"
@@ -14580,20 +13821,6 @@
 				"SlotName"		"ambient_effects"
 				"SlotText"		"#LoadoutSlot_Ambient_Effects"
 				"DisplayInLoadout"		"0"
-			}
-		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_PURE_SUPPORT"
-			"LaningInfo"
-			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"0"
-				"ProvidesBabysit"		"2"
-				"SurvivalRating"		"2"
-				"RequiresFarm"		"1"
-				"ProvidesSetup"		"0"
-				"RequiresSetup"		"2"
 			}
 		}
 	}
@@ -14728,20 +13955,6 @@
 				"SlotName"		"ambient_effects"
 				"SlotText"		"#LoadoutSlot_Ambient_Effects"
 				"DisplayInLoadout"		"0"
-			}
-		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_SEMI_CARRY | DOTA_BOT_STUN_SUPPORT"
-			"LaningInfo"
-			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"0"
-				"ProvidesBabysit"		"2"
-				"SurvivalRating"		"2"
-				"RequiresFarm"		"1"
-				"ProvidesSetup"		"0"
-				"RequiresSetup"		"2"
 			}
 		}
 	}
@@ -14900,20 +14113,6 @@
 				"DisplayInLoadout"		"0"
 			}
 		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_GANKER | DOTA_BOT_SEMI_CARRY"
-			"LaningInfo"
-			{
-				"SoloDesire"		"1"
-				"RequiresBabysit"		"2"
-				"ProvidesBabysit"		"0"
-				"SurvivalRating"		"2"
-				"RequiresFarm"		"2"
-				"ProvidesSetup"		"0"
-				"RequiresSetup"		"1"
-			}
-		}
 	}
 	"npc_dota_hero_medusa"
 	{
@@ -15057,20 +14256,6 @@
 				"SlotName"		"ambient_effects"
 				"SlotText"		"#LoadoutSlot_Ambient_Effects"
 				"DisplayInLoadout"		"0"
-			}
-		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_TANK | DOTA_BOT_HARD_CARRY"
-			"LaningInfo"
-			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"1"
-				"ProvidesBabysit"		"0"
-				"SurvivalRating"		"1"
-				"RequiresFarm"		"2"
-				"ProvidesSetup"		"0"
-				"RequiresSetup"		"1"
 			}
 		}
 	}
@@ -15222,20 +14407,6 @@
 				"SlotText"		"#LoadoutSlot_Taunt"
 			}
 		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_HARD_CARRY"
-			"LaningInfo"
-			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"2"
-				"ProvidesBabysit"		"0"
-				"SurvivalRating"		"0"
-				"RequiresFarm"		"2"
-				"ProvidesSetup"		"0"
-				"RequiresSetup"		"2"
-			}
-		}
 	}
 	"npc_dota_hero_centaur"
 	{
@@ -15301,20 +14472,6 @@
 		"particle_folder"		"particles/units/heroes/hero_centaur"
 		"GameSoundsFile"		"soundevents/game_sounds_heroes/game_sounds_centaur.vsndevts"
 		"VoiceFile"		"soundevents/voscripts/game_sounds_vo_centaur.vsndevts"
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_SEMI_CARRY | DOTA_BOT_TANK"
-			"LaningInfo"
-			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"1"
-				"ProvidesBabysit"		"0"
-				"SurvivalRating"		"2"
-				"RequiresFarm"		"1"
-				"ProvidesSetup"		"1"
-				"RequiresSetup"		"1"
-			}
-		}
 		"RenderablePortrait"
 		{
 			"Particles"
@@ -15560,20 +14717,6 @@
 				"SlotText"		"#LoadoutSlot_Taunt"
 			}
 		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_TANK | DOTA_BOT_STUN_SUPPORT"
-			"LaningInfo"
-			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"1"
-				"ProvidesBabysit"		"0"
-				"SurvivalRating"		"2"
-				"RequiresFarm"		"1"
-				"ProvidesSetup"		"1"
-				"RequiresSetup"		"1"
-			}
-		}
 	}
 	"npc_dota_hero_shredder"
 	{
@@ -15736,20 +14879,6 @@
 				"SlotName"		"ambient_effects"
 				"SlotText"		"#LoadoutSlot_Ambient_Effects"
 				"DisplayInLoadout"		"0"
-			}
-		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_GANKER | DOTA_BOT_TANK"
-			"LaningInfo"
-			{
-				"SoloDesire"		"1"
-				"RequiresBabysit"		"0"
-				"ProvidesBabysit"		"0"
-				"SurvivalRating"		"2"
-				"RequiresFarm"		"1"
-				"ProvidesSetup"		"1"
-				"RequiresSetup"		"1"
 			}
 		}
 	}
@@ -16081,21 +15210,6 @@
 				"DisplayInLoadout"		"0"
 			}
 		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_GANKER | DOTA_BOT_SEMI_CARRY"
-			"LaningInfo"
-			{
-				"SoloDesire"		"1"
-				"RequiresBabysit"		"0"
-				"ProvidesBabysit"		"2"
-				"SurvivalRating"		"1"
-				"RequiresFarm"		"0"
-				"ProvidesSetup"		"1"
-				"RequiresSetup"		"0"
-			}
-
-		}
 	}
 	"npc_dota_hero_skywrath_mage"
 	{
@@ -16382,20 +15496,6 @@
 				"DisplayInLoadout"		"0"
 			}
 		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_TANK | DOTA_BOT_PURE_SUPPORT"
-			"LaningInfo"
-			{
-				"SoloDesire"		"1"
-				"RequiresBabysit"		"0"
-				"ProvidesBabysit"		"2"
-				"SurvivalRating"		"2"
-				"RequiresFarm"		"1"
-				"ProvidesSetup"		"0"
-				"RequiresSetup"		"1"
-			}
-		}
 	}
 	"npc_dota_hero_elder_titan"
 	{
@@ -16542,20 +15642,6 @@
 				"SlotName"		"summon"
 				"SlotText"		"#LoadoutSlot_ElderTitan_AstralSpirit"
 				"DisplayInLoadout" "0"
-			}
-		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_GANKER | DOTA_BOT_TANK"
-			"LaningInfo"
-			{
-				"SoloDesire"		"1"
-				"RequiresBabysit"		"0"
-				"ProvidesBabysit"		"1"
-				"SurvivalRating"		"1"
-				"RequiresFarm"		"0"
-				"ProvidesSetup"		"1"
-				"RequiresSetup"		"0"
 			}
 		}
 	}
@@ -16707,20 +15793,6 @@
 				{
 					"0" "npc_dota_companion"
 				}
-			}
-		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_TANK | DOTA_BOT_GANKER | DOTA_BOT_SEMI_CARRY"
-			"LaningInfo"
-			{
-				"SoloDesire"		"1"
-				"RequiresBabysit"		"1"
-				"ProvidesBabysit"		"0"
-				"SurvivalRating"		"1"
-				"RequiresFarm"		"1"
-				"ProvidesSetup"		"1"
-				"RequiresSetup"		"0"
 			}
 		}
 	}
@@ -16887,20 +15959,6 @@
 				"SlotText"		"#LoadoutSlot_Taunt"
 			}
 		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_HARD_CARRY"
-			"LaningInfo"
-			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"2"
-				"ProvidesBabysit"		"0"
-				"SurvivalRating"		"2"
-				"RequiresFarm"		"2"
-				"ProvidesSetup"		"0"
-				"RequiresSetup"		"1"
-			}
-		}
 	}
 	"npc_dota_hero_earth_spirit"
 	{
@@ -17064,20 +16122,6 @@
 			"Particles"
 			{
 			}
-		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_GANKER"
-			"LaningInfo"
-			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"0"
-				"ProvidesBabysit"		"0"
-				"SurvivalRating"		"2"
-				"RequiresFarm"		"0"
-				"ProvidesSetup"		"2"
-				"RequiresSetup"		"0"
-			}
 		}	
 	}
 	"npc_dota_hero_terrorblade"
@@ -17236,20 +16280,6 @@
 				"DisplayInLoadout"		"0"
 			}
 		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_HARD_CARRY"
-			"LaningInfo"
-			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"2"
-				"ProvidesBabysit"		"0"
-				"SurvivalRating"		"0"
-				"RequiresFarm"		"2"
-				"ProvidesSetup"		"0"
-				"RequiresSetup"		"1"
-			}
-		}
 	}
 	"npc_dota_hero_phoenix"
 	{
@@ -17381,21 +16411,6 @@
 					"0" "npc_dota_phoenix_sun"
 				}
 			}
-		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_SUPPORT"
-			"LaningInfo"
-			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"0"
-				"ProvidesBabysit"		"2"
-				"SurvivalRating"		"2"
-				"RequiresFarm"		"0"
-				"ProvidesSetup"		"0"
-				"RequiresSetup"		"0"
-			}
-
 		}
 	}
 	"npc_dota_hero_oracle"
@@ -17726,20 +16741,6 @@
 				"SlotText"		"#LoadoutSlot_Taunt"
 			}
 		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_GANKER"
-			"LaningInfo"
-			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"	"0"
-				"ProvidesBabysit"	"1"
-				"SurvivalRating"	"0"
-				"RequiresFarm"		"0"
-				"ProvidesSetup"		"1"
-				"RequiresSetup"		"0"
-			}
-		}
 	}
 
 	//=================================================================================
@@ -17951,20 +16952,6 @@
 				"DisplayInLoadout"		"0"
 			}
 		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_PURE_SUPPORT"
-			"LaningInfo"
-			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"0"
-				"ProvidesBabysit"		"1"
-				"SurvivalRating"		"0"
-				"RequiresFarm"		"0"
-				"ProvidesSetup"		"1"
-				"RequiresSetup"		"0"
-			}
-		}
 	}
 
 	//=================================================================================================================
@@ -18140,20 +17127,6 @@
 				"DisplayInLoadout"		"0"
 			}
 		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_HARD_CARRY"
-			"LaningInfo"
-			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"2"
-				"ProvidesBabysit"		"0"
-				"SurvivalRating"		"0"
-				"RequiresFarm"		"2"
-				"ProvidesSetup"		"0"
-				"RequiresSetup"		"1"
-			}
-		}
 	}
 
 	//=================================================================================================================
@@ -18283,20 +17256,6 @@
 				"SlotName"		"body_head"
 				"SlotText"		"#LoadoutSlot_Head"
 				"DisplayInLoadout" 	"0"
-			}
-		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_TANK | DOTA_BOT_PUSH_SUPPORT"
-			"LaningInfo"
-			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"0"
-				"ProvidesBabysit"		"1"
-				"SurvivalRating"		"1"
-				"RequiresFarm"		"0"
-				"ProvidesSetup"		"1"
-				"RequiresSetup"		"0"
 			}
 		}
 	}
@@ -18432,20 +17391,6 @@
 				"SlotIndex"		"4"
 				"SlotName"		"taunt"
 				"SlotText"		"#LoadoutSlot_Taunt"
-			}
-		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_SEMI_CARRY | DOTA_BOT_GANKER"
-			"LaningInfo"
-			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"2"
-				"ProvidesBabysit"		"0"
-				"SurvivalRating"		"2"
-				"RequiresFarm"		"2"
-				"ProvidesSetup"		"0"
-				"RequiresSetup"		"1"
 			}
 		}
 	}
@@ -18604,20 +17549,6 @@
 				"SlotName"		"ambient_effects"
 				"SlotText"		"#LoadoutSlot_Ambient_Effects"
 				"DisplayInLoadout"		"0"
-			}
-		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_GANKER"
-			"LaningInfo"
-			{
-				"SoloDesire"		"2"
-				"RequiresBabysit"	"1"
-				"ProvidesBabysit"	"1"
-				"SurvivalRating"	"1"
-				"RequiresFarm"		"2"
-				"ProvidesSetup"		"1"
-				"RequiresSetup"		"1"
 			}
 		}
 	}
@@ -18821,7 +17752,7 @@
 		"Complexity"			"2"
 		"Team"					"Bad"
 		"HeroID"				"121"
-		"ModelScale"			"0.81"
+		"ModelScale"			"0.76"
 		"LoadoutScale"			"0.75"
 		"SpectatorLoadoutScale" "0.75"
 		"HeroGlowColor"			"242 200 198"
@@ -18947,20 +17878,6 @@
 				"SlotName"			"ambient_effects"
 				"SlotText"			"#LoadoutSlot_Ambient_Effects"
 				"DisplayInLoadout"	"0"
-			}
-		}
-		"Bot"
-		{
-			"HeroType"		"DOTA_BOT_STUN_SUPPORT | DOTA_BOT_GANKER"
-			"LaningInfo"
-			{
-				"SoloDesire"		"1"
-				"RequiresBabysit"	"0"
-				"ProvidesBabysit"	"2"
-				"SurvivalRating"	"2"
-				"RequiresFarm"		"1"
-				"ProvidesSetup"		"2"
-				"RequiresSetup"		"0"
 			}
 		}
 	}

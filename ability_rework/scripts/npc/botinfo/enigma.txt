@@ -1,0 +1,23 @@
+"DOTAHeroes"
+{
+	//=================================================================================================================
+	// HERO: Enigma
+	//=================================================================================================================
+	"npc_dota_hero_enigma"
+	{
+		"Bot"
+		{
+
+			"HeroType"		"DOTA_BOT_PUSH_SUPPORT"
+			"LaningInfo"
+			{
+				"SoloDesire"		"0"
+				"RequiresBabysit"		"0"
+				"ProvidesBabysit"		"2"
+				"SurvivalRating"		"1"
+				"RequiresFarm"		"1"
+				"ProvidesSetup"		"1"
+				"RequiresSetup"		"0"
+			}
+		}
+	}

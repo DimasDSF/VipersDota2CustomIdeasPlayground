@@ -1,0 +1,22 @@
+"DOTAHeroes"
+{
+	//=================================================================================================================
+	// HERO: Pangolier
+	//=================================================================================================================
+	"npc_dota_hero_pangolier"
+	{
+		"Bot"
+		{
+			"HeroType"		"DOTA_BOT_GANKER"
+			"LaningInfo"
+			{
+				"SoloDesire"		"2"
+				"RequiresBabysit"	"1"
+				"ProvidesBabysit"	"1"
+				"SurvivalRating"	"1"
+				"RequiresFarm"		"2"
+				"ProvidesSetup"		"1"
+				"RequiresSetup"		"1"
+			}
+		}
+	}
