@@ -83,14 +83,16 @@ end
 
 function modifier_vgmar_i_manashield:OnSpentMana( event )
 	if IsServer() then
-		local parent = self:GetParent()
-		if self.shieldparticle ~= nil then
-			if parent:GetMana()/parent:GetMaxMana() < self.minmana then
-				ParticleManager:DestroyParticle(self.shieldparticle, false)
-				ParticleManager:ReleaseParticleIndex(self.shieldparticle)
-				self.shieldparticle = nil
-				StartSoundEvent("Hero_Medusa.ManaShield.Off", parent)
-				self:SetDuration(0.1, true)
+		if event.unit == self:GetParent() then
+			local parent = self:GetParent()
+			if self.shieldparticle ~= nil then
+				if parent:GetMana()/parent:GetMaxMana() < self.minmana then
+					ParticleManager:DestroyParticle(self.shieldparticle, false)
+					ParticleManager:ReleaseParticleIndex(self.shieldparticle)
+					self.shieldparticle = nil
+					StartSoundEvent("Hero_Medusa.ManaShield.Off", parent)
+					self:SetDuration(0.1, true)
+				end
 			end
 		end
 	end

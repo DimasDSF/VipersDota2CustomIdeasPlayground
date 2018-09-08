@@ -18,26 +18,29 @@ local VGMAR_GTHINK_TIME = 1
 --/////////////////////////
 
 local debugitems = {
-	["item_shivas_guard"] = 3,
+	["item_shivas_guard"] = 0,
 	["item_assault"] = 0,
 	["item_sheepstick"] = 0,
+	["item_ogre_axe"] = 2,
 	["item_travel_boots_2"] = 1,
+	["item_diffusal_blade"] = 1,
 	["item_octarine_core"] = 3,
-	["item_kaya"] = 3,
-	["item_aether_lens"] = 3,
+	["item_kaya"] = 0,
+	["item_aether_lens"] = 0,
 	["item_ultimate_scepter"] = 2,
-	["item_mystic_staff"] = 2,
-	["item_energy_booster"] = 2,
-	["item_soul_booster"] = 0,
-	["item_butterfly"] = 0,
-	["item_eagle"] = 0,
-	["item_orb_of_venom"] = 0,
-	["item_demon_edge"] = 0,
+	["item_mystic_staff"] = 0,
+	["item_energy_booster"] = 0,
+	["item_soul_booster"] = 2,
+	["item_butterfly"] = 1,
+	["item_eagle"] = 1,
+	["item_orb_of_venom"] = 2,
+	["item_silver_edge"] = 1,
 	["item_yasha"] = 0,
-	["item_dragon_lance"] = 3,
+	["item_dragon_lance"] = 0,
 	["item_mask_of_madness"] = 0,
 	["item_gloves"] = 0,
-	["item_tome_of_knowledge"] = 15
+	["item_ethereal_blade"] = 1,
+	["item_tome_of_knowledge"] = 1
 }
 
 --Creep -> Building Damage Multiplier
@@ -47,7 +50,6 @@ local creeptobuildingdmgmult = {
 }
 
 --TODO:Replace static prices in this table with KV read
---TODO:Make Zeus Bot Use Nimbus
 local botitemskv = {
 	maxbotupgradestatus = 4,
 	travelbootscost = 2500,
@@ -57,6 +59,8 @@ local botitemskv = {
 	moonshardmindmg = 250,
 	aghanimscost = 4200,
 	aghanimsstats = {bonus_all_stats = 10, bonus_health = 175, bonus_mana = 175},
+	--Heroes that get modified cast mechanics(ex. base:instant cast-> aghs: point target) with aghs
+	--Such interactions disable bots from using the ability
 	noaghsheroes = {
 		["npc_dota_hero_chaos_knight"] = true,
 		["npc_dota_hero_luna"] = true,
@@ -138,7 +142,7 @@ local modifierdatatable = {
 	["modifier_item_ultimate_scepter_consumed"] = {bonus_all_stats = 10, bonus_health = 175, bonus_mana = 175},
 	["modifier_vgmar_i_arcane_intellect"] = {percentage = 10, multpercast = 0.2, bonusint = 25, csmaxmana = 6000, csminmana = 0, minimalcooldown = 1},
 	["modifier_vgmar_i_thirst"] = {threshold = 75, visionthreshold = 50, damagethreshold = 75, visionrange = 10, visionduration = 0.2, giverealvision = 0, givemodelvision = 1, damageperstack = 3, radius = 5000},
-	["modifier_vgmar_i_poison_dagger"] = {cooldown = 15, maxstacks = 4, aoestacks = 2, minenemiesforaoe = 3, aoedmgperc = 50, damage = 30, initialdamageperc = 50, aoeradius = 500, duration = 20, interval = 1.0},
+	["modifier_vgmar_i_poison_dagger"] = {cooldown = 60, potencycooldown = 10, agiperpotency = 20, maxdistance = 1400, hitdamageperc = 140, manaloss = 5, durationperpot = 7, manacostperc = 10, dmgpermana = 0.2, bonusagi = 45, bonusmisschance = 30, daggerspeed = 1000},
 	["modifier_vgmar_i_scorching_light"] = {radius = 700, interval = 1.0, visioninterval = 5.0, initialdamage = 60, damageincpertick = 2, maxdamage = 300, missrate = 17, visiondelay = 3, maxillusionstacks = 3, lingerduration = 3.0},
 	["modifier_vgmar_i_permafrost"] = {radius = 600, interval = 1.0, attackspeedperstack = -5, movespeedperstack = -5, bonusarmor = 25, bonusint = 60, maxstacks = 20, freezedmg = 150, lingerduration = 3},
 	["modifier_vgmar_i_manashield"] = {minmana = 0.5, lowmana = 0.55, maxtotalmana = 6000, mindmgfraction = 30, maxdmgfraction = 90, stunradius = 600, stunduration = 3, stundamage = 200, rechargetime = 60, bonusarmor = 15, bonusint = 20},
@@ -1590,84 +1594,86 @@ function VGMAR:OnThink()
 					--//////////////////////
 					--Bot Progression System
 					--//////////////////////
-					if self.botupgradestatus[heroent:entindex()] == nil then
-						table.insert(self.botupgradestatus, heroent:entindex())
-						self.botupgradestatus[heroent:entindex()] = 1
-					else
-						if self.botupgradestatus[heroent:entindex()] <= botitemskv.maxbotupgradestatus then
-							local bus = self.botupgradestatus[heroent:entindex()]
-							local bup = botupgradepriorities[heroent:GetName()][bus]
-							if bup == "travel1" then
-								if heroent:GetGold() >= heroent:GetBuybackCost(false) + botitemskv.travelbootscost then
-									for j=1,#botitemskv.cheapboots do
-										local boots = self:GetItemFromInventoryByName( heroent, botitemskv.cheapboots[j], false, true, false )
-										if boots ~= nil then
-											local bootsname = boots:GetName()
-											heroent:ModifyGold(boots:GetCost(), true, 0)
-											heroent:RemoveItem(boots)
-											heroent:SpendGold(botitemskv.travelbootscost, 2)
-											heroent:AddItemByName("item_travel_boots")
-											dprint(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Upgraded "..bootsname.." to Travel Boots | Gold Remaining: "..heroent:GetGold())
-											self.botupgradestatus[heroent:entindex()] = self.botupgradestatus[heroent:entindex()] + 1
+					if heroent:IsRealHero() then
+						if self.botupgradestatus[heroent:entindex()] == nil then
+							table.insert(self.botupgradestatus, heroent:entindex())
+							self.botupgradestatus[heroent:entindex()] = 1
+						else
+							if self.botupgradestatus[heroent:entindex()] <= botitemskv.maxbotupgradestatus then
+								local bus = self.botupgradestatus[heroent:entindex()]
+								local uppriolist = botupgradepriorities[heroent:GetName()]
+								local bup = uppriolist[bus]
+								if bup == "travel1" then
+									if heroent:GetGold() >= heroent:GetBuybackCost(false) + botitemskv.travelbootscost then
+										for j=1,#botitemskv.cheapboots do
+											local boots = self:GetItemFromInventoryByName( heroent, botitemskv.cheapboots[j], false, true, false )
+											if boots ~= nil then
+												local bootsname = boots:GetName()
+												heroent:ModifyGold(boots:GetCost(), true, 0)
+												heroent:RemoveItem(boots)
+												heroent:SpendGold(botitemskv.travelbootscost, 2)
+												heroent:AddItemByName("item_travel_boots")
+												dprint(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Upgraded "..bootsname.." to Travel Boots | Gold Remaining: "..heroent:GetGold())
+												self.botupgradestatus[heroent:entindex()] = self.botupgradestatus[heroent:entindex()] + 1
+											end
 										end
 									end
-								end
-							elseif bup == "travel2" then
-								if heroent:GetGold() >= heroent:GetBuybackCost(false) + botitemskv.travelbootsrecipecost then
-									heroent:SpendGold(botitemskv.travelbootsrecipecost, 2)
-									heroent:AddItemByName("item_recipe_travel_boots")
-									dprint(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Upgraded Travel Boots to level 2 | Gold Remaining: "..heroent:GetGold())
-									self.botupgradestatus[heroent:entindex()] = self.botupgradestatus[heroent:entindex()] + 1
-								end
-							elseif bup == "aghs" then
-								if botitemskv.noaghsheroes[heroent:GetName()] == true then
-									self.botupgradestatus[heroent:entindex()] = self.botupgradestatus[heroent:entindex()] + 1
-								else
-									if heroent:GetGold() >= heroent:GetBuybackCost(false) + botitemskv.aghanimscost then
-										local aghs = self:GetItemFromInventoryByName( heroent, "item_ultimate_scepter", false, true, false )
-										if aghs ~= nil and heroent:GetGold() >= heroent:GetBuybackCost(false) + botitemskv.aghanimscost then
-											heroent:ModifyGold(aghs:GetCost(), true, 0)
-											heroent:RemoveItem(aghs)
-											heroent:SpendGold(botitemskv.aghanimscost, 2)
-											heroent:AddNewModifier(heroent, nil, "modifier_item_ultimate_scepter_consumed", botitemskv.aghanimsstats)
-											dprint(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Consumed Aghanims replacing inventory Aghanims | Gold Remaining: "..heroent:GetGold())
-											self.botupgradestatus[heroent:entindex()] = self.botupgradestatus[heroent:entindex()] + 1
-										elseif aghs == nil and heroent:GetGold() >= heroent:GetBuybackCost(false) + botitemskv.aghanimscost * 2 then
-											heroent:SpendGold(botitemskv.aghanimscost * 2, 2)
-											heroent:AddNewModifier(heroent, nil, "modifier_item_ultimate_scepter_consumed", botitemskv.aghanimsstats)
-											dprint(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Consumed Aghanims | Gold Remaining: "..heroent:GetGold())
-											self.botupgradestatus[heroent:entindex()] = self.botupgradestatus[heroent:entindex()] + 1
+								elseif bup == "travel2" then
+									if heroent:GetGold() >= heroent:GetBuybackCost(false) + botitemskv.travelbootsrecipecost then
+										heroent:SpendGold(botitemskv.travelbootsrecipecost, 2)
+										heroent:AddItemByName("item_recipe_travel_boots")
+										dprint(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Upgraded Travel Boots to level 2 | Gold Remaining: "..heroent:GetGold())
+										self.botupgradestatus[heroent:entindex()] = self.botupgradestatus[heroent:entindex()] + 1
+									end
+								elseif bup == "aghs" then
+									if botitemskv.noaghsheroes[heroent:GetName()] == true then
+										self.botupgradestatus[heroent:entindex()] = self.botupgradestatus[heroent:entindex()] + 1
+									else
+										if heroent:GetGold() >= heroent:GetBuybackCost(false) + botitemskv.aghanimscost then
+											local aghs = self:GetItemFromInventoryByName( heroent, "item_ultimate_scepter", false, true, false )
+											if aghs ~= nil and heroent:GetGold() >= heroent:GetBuybackCost(false) + botitemskv.aghanimscost then
+												heroent:ModifyGold(aghs:GetCost(), true, 0)
+												heroent:RemoveItem(aghs)
+												heroent:SpendGold(botitemskv.aghanimscost, 2)
+												heroent:AddNewModifier(heroent, nil, "modifier_item_ultimate_scepter_consumed", botitemskv.aghanimsstats)
+												dprint(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Consumed Aghanims replacing inventory Aghanims | Gold Remaining: "..heroent:GetGold())
+												self.botupgradestatus[heroent:entindex()] = self.botupgradestatus[heroent:entindex()] + 1
+											elseif aghs == nil and heroent:GetGold() >= heroent:GetBuybackCost(false) + botitemskv.aghanimscost * 2 then
+												heroent:SpendGold(botitemskv.aghanimscost * 2, 2)
+												heroent:AddNewModifier(heroent, nil, "modifier_item_ultimate_scepter_consumed", botitemskv.aghanimsstats)
+												dprint(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Consumed Aghanims | Gold Remaining: "..heroent:GetGold())
+												self.botupgradestatus[heroent:entindex()] = self.botupgradestatus[heroent:entindex()] + 1
+											end
 										end
 									end
+								elseif bup == "moonshard" then
+									--TODO:??Make Supports Give Carries moonshards
+									if (heroent:GetGold() >= heroent:GetBuybackCost(false) + botitemskv.moonshardcost and heroent:GetAverageTrueAttackDamage(heroent) > botitemskv.moonshardmindmg) or (heroent:GetGold() >= heroent:GetBuybackCost(false) + botitemskv.moonshardcost * 2) then
+										heroent:SpendGold(botitemskv.moonshardcost, 2)
+										heroent:AddNewModifier(heroent, nil, "modifier_item_moon_shard_consumed", botitemskv.moonshardvalues)
+										dprint(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Consumed Moonshard | Gold Remaining: "..heroent:GetGold())
+										self.botupgradestatus[heroent:entindex()] = self.botupgradestatus[heroent:entindex()] + 1
+									end
 								end
-							elseif bup == "moonshard" then
-								--TODO:??Make Supports Give Carries moonshards
-								if (heroent:GetGold() >= heroent:GetBuybackCost(false) + botitemskv.moonshardcost and heroent:GetAverageTrueAttackDamage(heroent) > botitemskv.moonshardmindmg) or (heroent:GetGold() >= heroent:GetBuybackCost(false) + botitemskv.moonshardcost * 2) then
-									heroent:SpendGold(botitemskv.moonshardcost, 2)
-									heroent:AddNewModifier(heroent, nil, "modifier_item_moon_shard_consumed", botitemskv.moonshardvalues)
-									dprint(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Consumed Moonshard | Gold Remaining: "..heroent:GetGold())
-									self.botupgradestatus[heroent:entindex()] = self.botupgradestatus[heroent:entindex()] + 1
+							end
+						end
+						--//////////////////////////////////////////
+						--Remove Item Aghanim if consumed is present
+						--Edge case when bot builds Aghanims 
+						--after getting an infused one
+						--//////////////////////////////////////////
+						if self.botitemaghsremoved[heroent:entindex()] == nil then
+							if heroent:HasModifier("modifier_item_ultimate_scepter_consumed") and heroent:HasItemInInventory("item_ultimate_scepter") then
+								local aghs = self:GetItemFromInventoryByName( heroent, "item_ultimate_scepter", false, true, false )
+								if aghs ~= nil then
+									heroent:ModifyGold(aghs:GetCost(), true, 0)
+									heroent:RemoveItem(aghs)
+									table.insert(self.botitemaghsremoved, heroent:entindex())
+									self.botitemaghsremoved[heroent:entindex()] = true
 								end
 							end
 						end
 					end
-					--//////////////////////////////////////////
-					--Remove Item Aghanim if consumed is present
-					--Edge case when bot builds Aghanims 
-					--after getting an infused one
-					--//////////////////////////////////////////
-					if self.botitemaghsremoved[heroent:entindex()] == nil then
-						if heroent:HasModifier("modifier_item_ultimate_scepter_consumed") and heroent:HasItemInInventory("item_ultimate_scepter") then
-							local aghs = self:GetItemFromInventoryByName( heroent, "item_ultimate_scepter", false, true, false )
-							if aghs ~= nil then
-								heroent:ModifyGold(aghs:GetCost(), true, 0)
-								heroent:RemoveItem(aghs)
-								table.insert(self.botitemaghsremoved, heroent:entindex())
-								self.botitemaghsremoved[heroent:entindex()] = true
-							end
-						end
-					end
-					
 					--///////////////////
 					--[[--BotShrineActivation
 					--///////////////////

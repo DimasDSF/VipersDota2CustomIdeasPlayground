@@ -69,7 +69,7 @@ end
 function modifier_vgmar_crai_courier_shield:OnAttackStart(event)
 	if IsServer() then
 		if event.target == self:GetParent() then
-			if self:GetShieldStatusActive() then
+			if self:GetShieldStatusActive() and event.attacker:IsInvisible() == false then
 				if math.random(0,100) <= self:GetAttentionChance(self.startattackchance) then
 					self.ability:CastAbility()
 				end

@@ -5,7 +5,7 @@ modifier_vgmar_i_poison_dagger = class({})
 --------------------------------------------------------------------------------
 
 function modifier_vgmar_i_poison_dagger:GetTexture()
-	return "queenofpain_shadow_strike"
+	return "custom/mana_dagger"
 end
 
 --------------------------------------------------------------------------------
@@ -38,15 +38,18 @@ end
 function modifier_vgmar_i_poison_dagger:OnCreated( kv )
 	if IsServer() then
 		self.cooldown = kv.cooldown
-		self.maxstacks = kv.maxstacks
-		self.aoestacks = kv.aoestacks
-		self.minenemiesforaoe = kv.minenemiesforaoe
-		self.aoedmgperc = kv.aoedmgperc / 100
-		self.damage = kv.damage
-		self.aoeradius = kv.aoeradius
-		self.initialdamageperc = kv.initialdamageperc / 100
-		self.duration = kv.duration
-		self.interval = kv.interval
+		self.potencycooldown = kv.potencycooldown
+		self.agiperpotency = kv.agiperpotency
+		self.maxdistance = kv.maxdistance
+		self.hitdamageperc = kv.hitdamageperc / 100
+		self.manaloss = kv.manaloss
+		self.durationperpot = kv.durationperpot
+		self.manacostperc = kv.manacostperc / 100
+		self.dmgpermana = kv.dmgpermana
+		self.bonusagi = kv.bonusagi
+		self.bonusmisschance = kv.bonusmisschance
+		self.daggerspeed = kv.daggerspeed
+		self.stacks = 0
 		self:SetStackCount( 0 )
 		self:SetDuration( self.cooldown, true )
 		self:StartIntervalThink( 0.25 )
@@ -55,103 +58,71 @@ function modifier_vgmar_i_poison_dagger:OnCreated( kv )
 	end
 end
 
+function modifier_vgmar_i_poison_dagger:GetModifierBonusStats_Agility()
+	if IsServer() then
+		return self.bonusagi
+	else
+		return self.clientvalues.bonusagi
+	end
+end
+
 function modifier_vgmar_i_poison_dagger:DeclareFunctions()
 	local funcs = {
-        MODIFIER_EVENT_ON_ATTACK_LANDED,
+		MODIFIER_EVENT_ON_ORDER,
+		MODIFIER_PROPERTY_STATS_AGILITY_BONUS,
+		MODIFIER_PROPERTY_EVASION_CONSTANT,
 		MODIFIER_PROPERTY_TOOLTIP
     }
     return funcs
 end
 
-function modifier_vgmar_i_poison_dagger:OnAttackLanded( event )
+function modifier_vgmar_i_poison_dagger:GetModifierEvasion_Constant()
 	if IsServer() then
-		if event.attacker == self:GetParent() then
-			if self:GetStackCount() > 0 and self:GetParent():HasModifier("modifier_vgmar_util_multishot_active") == false then
-				if event.target:GetTeamNumber() ~= self:GetParent():GetTeamNumber() and not (event.target:IsTower() or event.target:IsBuilding()) then
-					local nearbyenemies = FindUnitsInRadius(self:GetParent():GetTeamNumber(), self:GetParent():GetAbsOrigin(), nil, self.aoeradius, DOTA_UNIT_TARGET_TEAM_ENEMY, DOTA_UNIT_TARGET_HERO + DOTA_UNIT_TARGET_CREEP, DOTA_UNIT_TARGET_FLAG_FOW_VISIBLE, FIND_CLOSEST, false)
-					local targetent = nil
-					if event.target:GetHealth() > event.damage then
-						if event.target:FindModifierByName("modifier_vgmar_i_poison_dagger_debuff") == nil or (event.target:FindModifierByName("modifier_vgmar_i_poison_dagger_debuff") and event.target:FindModifierByName("modifier_vgmar_i_poison_dagger_debuff"):GetRemainingTime() < 3/4 * self.duration) then
-							targetent = event.target
-						end
-					else
-						for i=1,#nearbyenemies do
-							if nearbyenemies[i] ~= event.target and nearbyenemies[i]:IsAlive() then
-								targetent = nearbyenemies[i]
-								break
+		return self.bonusmisschance
+	else
+		return self.clientvalues.bonusmisschance
+	end
+end
+
+function modifier_vgmar_i_poison_dagger:OnOrder(event)
+	if IsServer() then
+		if event.unit == self:GetParent() then
+			if event.order_type == 4 and self:GetStackCount() > 0 and event.target ~= nil then
+				if event.target:GetTeamNumber() ~= self:GetParent():GetTeamNumber() and event.target:IsHero() then
+					if (event.unit:GetAbsOrigin() - event.target:GetAbsOrigin()):Length2D() <= self.maxdistance then
+						local target = event.target
+						local info = {
+							Target = target,
+							Source = self:GetParent(),
+							Ability = nil,
+							EffectName = "particles/units/heroes/hero_phantom_assassin/phantom_assassin_stifling_dagger.vpcf",
+							bDodgeable = false,
+							bProvidesVision = true,
+							iMoveSpeed = self.daggerspeed,
+							iVisionRadius = 100,
+							iVisionTeamNumber = self:GetParent():GetTeamNumber(),
+							iSourceAttachment = DOTA_PROJECTILE_ATTACHMENT_ATTACK_1,
+						}
+						ProjectileManager:CreateTrackingProjectile( info )
+						EmitSoundOn("Hero_PhantomAssassin.Dagger.Cast", self:GetParent())
+						local traveltime = ((target:GetOrigin() - self:GetParent():GetOrigin()):Length2D())/self.daggerspeed
+						self:SetDuration( self.cooldown, true )
+						self.stacks = self:GetStackCount()
+						self:SetStackCount(0)
+						Timers:CreateTimer(traveltime, function()
+							if target:IsAlive() then
+								local damageTable = {
+									victim = target,
+									attacker = self:GetParent(),
+									damage = self:GetParent():GetAttackDamage() * self.hitdamageperc,
+									damage_type = DAMAGE_TYPE_PHYSICAL,
+								}
+								ApplyDamage(damageTable)
+								target:AddNewModifier(self:GetParent(), nil, "modifier_vgmar_i_poison_dagger_debuff", {stacks = self.stacks})
+								self.stacks = 0
+								EmitSoundOn("Hero_PhantomAssassin.Dagger.Target", target)
 							end
-						end
-					end
-					if targetent then
-						local targets = {}
-						local settozero = false
-						local blocksound = false
-						table.insert(targets, targetent)
-						if self:GetStackCount() >= self.aoestacks and #nearbyenemies > self.minenemiesforaoe then
-							for i=1,#nearbyenemies do
-								table.insert(targets, nearbyenemies[i])
-							end
-							if #targets > 1 then
-								settozero = true
-							end
-						end
-						for j=1,#targets do
-							local info = {
-								Target = targets[j],
-								Source = self:GetParent(),
-								Ability = nil,
-								EffectName = "particles/units/heroes/hero_phantom_assassin/phantom_assassin_stifling_dagger.vpcf",
-								bDodgeable = false,
-								bProvidesVision = true,
-								iMoveSpeed = 1000,
-								iVisionRadius = 0,
-								iVisionTeamNumber = self:GetParent():GetTeamNumber(),
-								iSourceAttachment = DOTA_PROJECTILE_ATTACHMENT_ATTACK_1,
-							}
-							ProjectileManager:CreateTrackingProjectile( info )
-							if blocksound == false then
-								EmitSoundOn("Hero_PhantomAssassin.Dagger.Cast", self:GetParent())
-							end
-							if #targets > 1 then
-								blocksound = true
-							end
-							local traveltime = ((targets[j]:GetOrigin() - self:GetParent():GetOrigin()):Length2D())/1000
-							Timers:CreateTimer(traveltime, function()
-								if targets[j]:IsAlive() then
-									local aoedmgmult = 1.0
-									if #targets > 1 then
-										aoedmgmult = self.aoedmgperc
-									end
-									local damageTable = {
-										victim = targets[j],
-										attacker = self:GetParent(),
-										damage = self:GetParent():GetAttackDamage() * self.initialdamageperc * aoedmgmult,
-										damage_type = DAMAGE_TYPE_PHYSICAL,
-									}
-									ApplyDamage(damageTable)
-									targets[j]:AddNewModifier(self:GetParent(), nil, "modifier_vgmar_i_poison_dagger_debuff", {})
-									EmitSoundOn("Hero_PhantomAssassin.Dagger.Target", targets[j])
-								end
-							end)
-							if settozero == false then
-								if (self:GetStackCount() - 1) >= 0 then
-									self:SetStackCount(self:GetStackCount() - 1)
-								end
-								if self:GetRemainingTime() <= 0 then
-									self:SetDuration( self.cooldown, true )
-								end
-							end
-						end
-						if settozero == true then
-							if (self:GetStackCount() - self.aoestacks) >= 0 then
-								self:SetStackCount(self:GetStackCount() - self.aoestacks)
-							else
-								self:SetStackCount(0)
-							end
-							if self:GetRemainingTime() <= 0 then
-								self:SetDuration( self.cooldown, true )
-							end
-						end
+						end)
 					end
 				end
 			end
@@ -160,16 +131,15 @@ function modifier_vgmar_i_poison_dagger:OnAttackLanded( event )
 end
 
 function modifier_vgmar_i_poison_dagger:OnTooltip()
-	return self.clientvalues.cooldown
+	return self.clientvalues.durationperpot * self:GetStackCount()
 end
 
 function modifier_vgmar_i_poison_dagger:OnIntervalThink()
 	if IsServer() then
 		local parent = self:GetParent()
-		if self:GetRemainingTime() <= 0 and self:GetStackCount() < self.maxstacks then
-			if self:GetStackCount() + 1 < self.maxstacks then
-				self:SetDuration( self.cooldown, true )
-			end
+		local maxstacks = math.floor(parent:GetAgility() / self.agiperpotency)
+		if self:GetRemainingTime() <= 0 and self:GetStackCount() < maxstacks and parent:IsAlive() then
+			self:SetDuration( self.potencycooldown, true )
 			self:SetStackCount( self:GetStackCount() + 1 )
 		end
 	end
@@ -180,7 +150,7 @@ end
 modifier_vgmar_i_poison_dagger_debuff = class({})
 
 function modifier_vgmar_i_poison_dagger_debuff:GetTexture()
-	return "queenofpain_shadow_strike"
+	return "custom/mana_dagger"
 end
 
 --------------------------------------------------------------------------------
@@ -210,11 +180,13 @@ end
 function modifier_vgmar_i_poison_dagger_debuff:OnCreated( kv )
 	if IsServer() then
 		local provider = self:GetCaster():FindModifierByName("modifier_vgmar_i_poison_dagger")
-		self.damage = provider.damage
-		self.duration = provider.duration
-		self.interval = provider.interval
+		self:SetStackCount(kv.stacks)
+		self.duration = provider.durationperpot * self:GetStackCount()
+		self.manaloss = provider.manaloss
+		self.manacostperc = provider.manacostperc
+		self.dmgpermana = provider.dmgpermana
 		self:SetDuration( self.duration, true )
-		self:StartIntervalThink( self.interval )
+		self:StartIntervalThink( 1 )
 		self.particle = ParticleManager:CreateParticle("particles/units/heroes/hero_queenofpain/queen_shadow_strike_debuff.vpcf", PATTACH_ABSORIGIN_FOLLOW, self:GetParent())
 		self.particle2 = ParticleManager:CreateParticle("particles/items2_fx/orb_of_venom.vpcf", PATTACH_ABSORIGIN_FOLLOW, self:GetParent())
 		--ParticleManager:SetParticleControl(self.particle, 0, self:GetParent():GetAbsOrigin())
@@ -228,23 +200,49 @@ end
 function modifier_vgmar_i_poison_dagger_debuff:OnRefresh( kv )
 	if IsServer() then
 		local provider = self:GetCaster():FindModifierByName("modifier_vgmar_i_poison_dagger")
-		self.duration = provider.duration
-		self:SetDuration( self.duration, true )
+		if kv.stacks > self:GetStackCount() then
+			self:SetStackCount(kv.stacks)
+		end
+		if (provider.durationperpot * self:GetStackCount()) > self:GetRemainingTime() then
+			self.duration = provider.durationperpot * self:GetStackCount()
+			self:SetDuration( self.duration, true )
+		end
 	end
 end
 
 function modifier_vgmar_i_poison_dagger_debuff:DeclareFunctions()
 	local funcs = {
-		MODIFIER_PROPERTY_TOOLTIP
+		MODIFIER_PROPERTY_PROVIDES_FOW_POSITION,
+		MODIFIER_EVENT_ON_SPENT_MANA
     }
     return funcs
 end
 
-function modifier_vgmar_i_poison_dagger_debuff:OnTooltip()
-	if IsClient() then
-		return (self.clientvalues.damage * ((math.floor(self:GetRemainingTime())) / self.clientvalues.interval))
-	else
-		return (self.damage * ((math.floor(self:GetRemainingTime())) / self.interval))
+function modifier_vgmar_i_poison_dagger_debuff:OnSpentMana( event )
+	if IsServer() then
+		if event.unit == self:GetParent() and event.cost > 0 then
+			--TODO: Test new mana value
+			self:GetParent():ReduceMana(event.cost * (self.manacostperc * self:GetStackCount()))
+			local dmg = math.ceil((event.cost + (event.cost * (self.manacostperc * self:GetStackCount()))) * (self.dmgpermana * self:GetStackCount()))
+			local damageTable = {
+				victim = self:GetParent(),
+				attacker = self:GetCaster(),
+				damage = dmg,
+				damage_type = DAMAGE_TYPE_MAGICAL,
+			}
+			StartSoundEvent("Hero_Antimage.ManaBreak", self:GetParent())
+			SendOverheadEventMessage(nil, OVERHEAD_ALERT_BONUS_SPELL_DAMAGE, self:GetParent(), dmg, nil)
+			ApplyDamage(damageTable)
+		end
+	end
+end
+
+function modifier_vgmar_i_poison_dagger_debuff:GetModifierProvidesFOWVision()
+	if IsServer() then
+		if self:GetParent():IsInvisible() == false then
+			return 1
+		end
+		return 0
 	end
 end
 
@@ -261,13 +259,14 @@ end
 
 function modifier_vgmar_i_poison_dagger_debuff:OnIntervalThink()
 	if IsServer() then
-		local damageTable = {
+		local damageTableDoT = {
 			victim = self:GetParent(),
 			attacker = self:GetCaster(),
-			damage = self.damage,
+			damage = 10,
 			damage_type = DAMAGE_TYPE_MAGICAL,
 		}
-		SendOverheadEventMessage(nil, OVERHEAD_ALERT_BONUS_POISON_DAMAGE, self:GetParent(), self.damage, nil)
-		ApplyDamage(damageTable)
+		ApplyDamage(damageTableDoT)
+		self:GetParent():ReduceMana(self.manaloss * self:GetStackCount())
+		SendOverheadEventMessage(nil, OVERHEAD_ALERT_MANA_LOSS, self:GetParent(), self.manaloss * self:GetStackCount(), nil)
 	end
 end

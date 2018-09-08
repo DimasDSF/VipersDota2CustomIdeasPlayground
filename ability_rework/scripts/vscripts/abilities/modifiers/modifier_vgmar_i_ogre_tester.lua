@@ -83,7 +83,7 @@ end
 
 --[[function modifier_vgmar_i_ogre_tester:OnSpentMana( event )
 	if IsServer() then
-		DeepPrintTable(event)
+		debug.PrintTable(event)
 	end
 end--]]
 
@@ -186,8 +186,8 @@ function modifier_vgmar_i_ogre_tester:GetEffectAttachType()
 	return PATTACH_ABSORIGIN_FOLLOW
 end--]]
 
-function modifier_vgmar_i_ogre_tester:OnAttackLanded(kv)
-	--[[if kv.attacker == self:GetParent() then
+--[[function modifier_vgmar_i_ogre_tester:OnAttackLanded(kv)
+	if kv.attacker == self:GetParent() then
 		local aAO = kv.attacker:GetOrigin()
 		local tAO = kv.target:GetOrigin()
 		DebugDrawLine(aAO, tAO, 128, 255, 255, true, 2)
@@ -200,18 +200,18 @@ function modifier_vgmar_i_ogre_tester:OnAttackLanded(kv)
 		ParticleManager:SetParticleControlForward( pfx, 1, -AtTV )
 		ParticleManager:SetParticleControlEnt( pfx, 10, kv.target, PATTACH_ABSORIGIN_FOLLOW, nil, kv.target:GetOrigin(), true )
 		ParticleManager:ReleaseParticleIndex( pfx )
-	end--]]
-end
+	end
+end--]]
 
 function modifier_vgmar_i_ogre_tester:OnTakeDamage( event )
-	if IsServer() then
+	--[[if IsServer() then
 		if event.unit == self:GetParent() then
 			--for i,v in ipairs(event) do
 			--	print(i.." : "..v)
 			--end
 			debug.PrintTable(event)
 		end
-	end
+	end--]]
 end
 
 function modifier_vgmar_i_ogre_tester:OnRemoved()
@@ -240,7 +240,8 @@ end
 function modifier_vgmar_i_ogre_tester:DeclareFunctions()
 	local funcs = {
 		MODIFIER_EVENT_ON_DEATH,
-		MODIFIER_EVENT_ON_ATTACK_LANDED,
+		--MODIFIER_EVENT_ON_ATTACK_LANDED,
+		MODIFIER_EVENT_ON_ORDER,
 		MODIFIER_EVENT_ON_TAKEDAMAGE,
 		--MODIFIER_EVENT_ON_SPENT_MANA,
 		--MODIFIER_EVENT_ON_ABILITY_EXECUTED,
@@ -253,6 +254,10 @@ end
 function modifier_vgmar_i_ogre_tester:GetActivityTranslationModifiers()
 	return "injured"
 end
+
+--[[function modifier_vgmar_i_ogre_tester:OnOrder(event)
+
+end--]]
 
 --[[ManaCost Modification
 function modifier_vgmar_i_ogre_tester:OnAbilityExecuted(kv)
