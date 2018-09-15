@@ -5,7 +5,7 @@ local RUNE_SPAWN_TIME_BOUNTY = 5
 local VGMAR_DEBUG = true
 local VGMAR_DEBUG_ENABLE_VARIABLE_SETTING = true
 local VGMAR_GIVE_DEBUG_ITEMS = false
-local VGMAR_BOT_FILL = true
+local VGMAR_BOT_FILL = false
 local VGMAR_LOG_BALANCE = false
 local VGMAR_LOG_BALANCE_GAMEEND = true
 local VGMAR_LOG_BALANCE_INTERVAL = 120
@@ -140,7 +140,7 @@ local modifierdatatable = {
 	["modifier_vgmar_i_pulse"] = {stackspercreep = 1, stacksperhero = 8, duration = 4, hpregenperstack = 1, manaregenperstack = 0.5, maxstacks = 20},
 	["modifier_vgmar_i_greatcleave"] = {cleaveperc = 100, cleavestartrad = 150, cleaveendrad = 300, cleaveradius = 700, bonusdamage = 75},
 	["modifier_vgmar_i_vampiric_aura"] = {radius = 700, lspercent = 30, lspercentranged = 20},
-	["modifier_vgmar_i_multishot"] = {stackscap = 5, shotspercap = 3, attackduration = 1, bonusrange = 140},
+	["modifier_vgmar_i_multishot"] = {basetargets = 1, mainattrpertarget = 25, bonusdamage = 50, bonusrange = 140},
 	["modifier_vgmar_i_midas_greed"] = {min_bonus_gold = 0, count_per_kill = 1, reduction_per_tick = 2, bonus_gold_cap = 40, stack_duration = 30, reduction_duration = 2.5, killsperstack = 3, midasusestacks = 2},
 	["modifier_vgmar_i_kingsaegis_cooldown"] = {cooldown = 240, reincarnate_time = 5},
 	["modifier_vgmar_i_critical_mastery"] = {critdmgpercentage = 250, critchance = 100},
@@ -334,8 +334,6 @@ function VGMAR:Init()
 	LinkLuaModifier("modifier_vgmar_i_thirst", "abilities/modifiers/modifier_vgmar_i_thirst", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_thirst_debuff", "abilities/modifiers/modifier_vgmar_i_thirst", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_multishot", "abilities/modifiers/modifier_vgmar_i_multishot", LUA_MODIFIER_MOTION_NONE)
-	LinkLuaModifier("modifier_vgmar_i_multishot_attack", "abilities/modifiers/modifier_vgmar_i_multishot_attack", LUA_MODIFIER_MOTION_NONE)
-	LinkLuaModifier("modifier_vgmar_util_multishot_active", "abilities/modifiers/modifier_vgmar_i_multishot", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_arcane_intellect", "abilities/modifiers/modifier_vgmar_i_arcane_intellect", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_poison_dagger", "abilities/modifiers/modifier_vgmar_i_poison_dagger", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_poison_dagger_debuff", "abilities/modifiers/modifier_vgmar_i_poison_dagger", LUA_MODIFIER_MOTION_NONE)
@@ -2073,7 +2071,7 @@ function VGMAR:OnThink()
 				preventedhero = "npc_target_dummy",
 				specificcond = heroent:IsRangedAttacker() == false },
 			{spell = "modifier_vgmar_i_multishot",
-				items = {itemnames = {"item_dragon_lance", "item_demon_edge", "item_yasha"}, itemnum = {1, 2, 1}},
+				items = {itemnames = {"item_dragon_lance", "item_demon_edge"}, itemnum = {1, 2}},
 				isconsumable = true,
 				ismodifier = true,
 				usemodifierdatatable = true,
