@@ -5,7 +5,7 @@ local RUNE_SPAWN_TIME_BOUNTY = 5
 local VGMAR_DEBUG = true
 local VGMAR_DEBUG_ENABLE_VARIABLE_SETTING = true
 local VGMAR_GIVE_DEBUG_ITEMS = false
-local VGMAR_BOT_FILL = false
+local VGMAR_BOT_FILL = true
 local VGMAR_LOG_BALANCE = false
 local VGMAR_LOG_BALANCE_GAMEEND = true
 local VGMAR_LOG_BALANCE_INTERVAL = 120
@@ -617,6 +617,21 @@ function VGMAR:TestFunction()
 	end
 end
 
+function IsDevMode()
+	if Convars:GetInt("vgmar_devmode") == 1 then
+		return true
+	end
+	return false
+end
+
+function IsIssuerHost()
+	if GameRules:PlayerHasCustomGameHostPrivileges(Convars:GetDOTACommandClient()) then
+		return true
+	else
+		return false
+	end
+end
+
 function VGMAR:TestReadVar(varname)
 	--local varname = "GameRules.VGMAR."..var
 	dprint("Reading "..varname)
@@ -643,20 +658,21 @@ function VGMAR:TestReadVar(varname)
 end
 
 function VGMAR:TestWriteVar(var, val)
-	if VGMAR_DEBUG_ENABLE_VARIABLE_SETTING then
-		local function setfield (f, v)
-			local t = _G
-			for w, d in string.gfind(f, "([%w_]+)(.?)") do
-				if d == "." then
-					t[w] = t[w] or {}
-					t = t[w]
-				else
-					t[w] = v
+	if VGMAR_DEBUG_ENABLE_VARIABLE_SETTING and IsDevMode() then
+		if IsIssuerHost() then
+			local function setfield (f, v)
+				local t = _G
+				for w, d in string.gfind(f, "([%w_]+)(.?)") do
+					if d == "." then
+						t[w] = t[w] or {}
+						t = t[w]
+					else
+						t[w] = v
+					end
 				end
 			end
 		end
 		if var ~= nil and val ~= nil then
-			if debug.ReadVar(var) ~= nil then
 				dprint("Variable "..var.." changing from "..debug.ReadVar(var).." to "..val)
 			else
 				dprint("Creating a variable "..var.." = "..val)
@@ -3018,10 +3034,8 @@ function VGMAR:OnGameStateChanged( keys )
 		end
 		
 		Convars:SetBool("sv_cheats", true)
-		for f=0,100 do
-			if VGMAR_BOT_FILL == true then
-				SendToServerConsole("dota_bot_populate")
-			end
+		if VGMAR_BOT_FILL == true then
+			SendToServerConsole("dota_bot_populate")
 			SendToServerConsole("dota_bot_set_difficulty 3")
 		end
 		Convars:SetBool("dota_bot_disable", false)
