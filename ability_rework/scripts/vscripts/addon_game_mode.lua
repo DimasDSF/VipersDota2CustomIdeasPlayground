@@ -671,14 +671,17 @@ function VGMAR:TestWriteVar(var, val)
 					end
 				end
 			end
-		end
-		if var ~= nil and val ~= nil then
-				dprint("Variable "..var.." changing from "..debug.ReadVar(var).." to "..val)
-			else
-				dprint("Creating a variable "..var.." = "..val)
+			if var ~= nil and val ~= nil then
+				if debug.ReadVar(var) ~= nil then
+					dprint("Variable "..var.." changing from "..debug.ReadVar(var).." to "..val)
+				else
+					dprint("Creating a variable "..var.." = "..val)
+				end
+				setfield(var, val)
+				GameRules.VGMAR:TestReadVar(var)
 			end
-			setfield(var, val)
-			GameRules.VGMAR:TestReadVar(var)
+		else
+			print("Only Host can use this function")
 		end
 	else
 		print("Variable Setting is disabled.\nTo enable turn VGMAR_DEBUG_ENABLE_VARIABLE_SETTING to true")
@@ -687,13 +690,6 @@ end
 
 function VGMAR:GetItemByID(id)
 	return self.ItemKVs[id]
-end
-
-function IsDevMode()
-	if Convars:GetInt("vgmar_devmode") == 1 then
-		return true
-	end
-	return false
 end
 
 function VGMAR:ReloadTestModifier()
@@ -3014,7 +3010,7 @@ function VGMAR:OnGameStateChanged( keys )
 		
 		for playerID=0, DOTA_MAX_TEAM_PLAYERS do
 			if PlayerResource:IsValidPlayer(playerID) then
-				dprint("PlayedID:", playerID)
+				dprint("PlayerID:", playerID)
 				
 				if PlayerResource:GetTeam(playerID) == DOTA_TEAM_GOODGUYS then
 					self.n_players_radiant = self.n_players_radiant + 1
