@@ -57,14 +57,24 @@ function debug.PrintTable(debugOver, prefix)
 		print("Printing Table: "..tostring(debugOver))
 		print("vvvvvvvvvvvvvv")
 		for idx, data_value in pairs(debugOver) do
-			if type(data_value) == "string" then 
-				print( string.format( "%s%-32s\t= \"%s\" (%s)", prefix, idx, data_value, type(data_value) ) )
-			else 
-				print( string.format( "%s%-32s\t= %s (%s)", prefix, idx, tostring(data_value), type(data_value) ) )
+			if type(idx) ~= "number" then 
+				if type(data_value) == "string" then 
+					print( string.format( "%s%-32s\t= \"%s\" (%s)", prefix, idx, data_value, type(data_value) ) )
+				else 
+					print( string.format( "%s%-32s\t= %s (%s)", prefix, idx, tostring(data_value), type(data_value) ) )
+				end
 			end
 		end
 		print("--------------")
 	else
 		print(tostring(debugOver).." is not a Table")
 	end
+end
+
+function debug.ReadVar(f)
+	local v = _G    -- start with the table of globals
+	for w in string.gfind(f, "[%w_]+") do
+		v = v[w]
+	end
+	return v
 end

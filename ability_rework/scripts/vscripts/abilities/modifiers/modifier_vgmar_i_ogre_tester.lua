@@ -136,6 +136,17 @@ function modifier_vgmar_i_ogre_tester:OnIntervalThink()
 			end
 			self.oldgold = PlayerResource:GetGold(self:GetParent():GetPlayerOwnerID())
 		end
+		if self.oldxp == nil then
+			self.oldxp = self:GetParent():GetCurrentXP()
+		end
+		if self.oldxp ~= self:GetParent():GetCurrentXP() then
+			if self.oldxp < self:GetParent():GetCurrentXP() then
+				self:statprint(HeroNamesLib:ConvertInternalToHeroName(self:GetParent():GetName()).." Gained "..math.floor(self:GetParent():GetCurrentXP() - self.oldxp).." XP")
+			elseif self.oldxp > self:GetParent():GetCurrentXP() then
+				self:statprint(HeroNamesLib:ConvertInternalToHeroName(self:GetParent():GetName()).." Lost "..math.floor(self.oldxp - self:GetParent():GetCurrentXP()).." XP")
+			end
+			self.oldxp = self:GetParent():GetCurrentXP()
+		end
 		--self:statprint("AttackDMG: "..self:GetParent():GetAttackDamage().."\nAverage AttackDMG: "..self:GetParent():GetAverageTrueAttackDamage(self:GetParent()))
 		--OrientationTest
 		--local orientation = -self:GetParent():GetForwardVector()
@@ -205,11 +216,11 @@ end--]]
 
 function modifier_vgmar_i_ogre_tester:OnTakeDamage( event )
 	--[[if IsServer() then
-		if event.unit == self:GetParent() then
+		if event.unit:IsBuilding() then
 			--for i,v in ipairs(event) do
 			--	print(i.." : "..v)
 			--end
-			debug.PrintTable(event)
+			--debug.PrintTable(event)
 		end
 	end--]]
 end

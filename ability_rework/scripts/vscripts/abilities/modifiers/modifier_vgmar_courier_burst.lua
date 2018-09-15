@@ -45,6 +45,7 @@ function modifier_vgmar_courier_burst:OnCreated(kv)
 		--func
 		self:SetStackCount(self.level)
 		self:StartIntervalThink(self.ticktime)
+		self:SetDuration(self.rechargedelay, true)
 		--Charge Indicator
 		self.chargeind = self:GetParent():AddNewModifier(self:GetParent(), nil, "modifier_vgmar_courier_burst_charge", {})
 	end

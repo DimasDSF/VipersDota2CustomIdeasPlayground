@@ -3,8 +3,9 @@ local DIRE_TEAM_MAX_PLAYERS = 8
 local RUNE_SPAWN_TIME_POWERUP = 2
 local RUNE_SPAWN_TIME_BOUNTY = 5
 local VGMAR_DEBUG = true
+local VGMAR_DEBUG_ENABLE_VARIABLE_SETTING = true
 local VGMAR_GIVE_DEBUG_ITEMS = false
-local VGMAR_BOT_FILL = true
+local VGMAR_BOT_FILL = false
 local VGMAR_LOG_BALANCE = false
 local VGMAR_LOG_BALANCE_GAMEEND = true
 local VGMAR_LOG_BALANCE_INTERVAL = 120
@@ -47,6 +48,13 @@ local debugitems = {
 local creeptobuildingdmgmult = {
 	["npc_dota_creep_lane"] = 0.5,
 	["npc_dota_creep_siege"] = 0.25
+}
+
+local botpushrewards = {
+	basegold = {solo = 200, team = 500},
+	basexp = {solo = 300, team = 2000},
+	splitgoldxp = {false, true},
+	denyfactor = 0.5
 }
 
 --TODO:Replace static prices in this table with KV read
@@ -239,7 +247,7 @@ function VGMAR:Init()
 	self.direanc = Entities:FindByName(nil, "dota_badguys_fort")
 	self.radiantanc = Entities:FindByName(nil, "dota_goodguys_fort")
 	self.lastrunefixtimestamp = -1
-	self.realbountyrunes = {}
+	--self.realbountyrunes = {}
 	self.botupgradestatus = {}
 	self.botitemaghsremoved = {}
 	
@@ -575,6 +583,10 @@ function VGMAR:Init()
 	Convars:RegisterConvar('vgmar_blockbotcontrol', "1", "Set to 0 to enable controlling bots", 0)
 	Convars:RegisterCommand('vgmar_reload_test_modifier', Dynamic_Wrap( VGMAR, "ReloadTestModifier" ), "Reload script modifier", 0)
 	Convars:RegisterCommand('vgmar_test', Dynamic_Wrap( VGMAR, "TestFunction" ), "Runs a test function", 0)
+	Convars:RegisterCommand('vgmar_test_readvar', Dynamic_Wrap( VGMAR, "TestReadVar" ), "Tries to read a variable from lua", 0)
+	if VGMAR_DEBUG_ENABLE_VARIABLE_SETTING then
+		Convars:RegisterCommand('vgmar_test_writevar', Dynamic_Wrap( VGMAR, "TestWriteVar" ), "Tries to write a variable to lua", 0)
+	end
 	Convars:RegisterCommand('vgmar_forcebalancelog', Dynamic_Wrap( VGMAR, "LogBalance" ), "Forces a balance log print", 0)
 	if VGMAR_DEBUG == true then
 		Convars:SetInt("vgmar_devmode", 1)
@@ -602,6 +614,58 @@ function VGMAR:TestFunction()
 				dprint("----------")
 			end
 		end
+	end
+end
+
+function VGMAR:TestReadVar(varname)
+	--local varname = "GameRules.VGMAR."..var
+	dprint("Reading "..varname)
+	local value = debug.ReadVar(varname)
+	if value ~= nil then
+		dprint(varname)
+		local sep = ""
+		for i=1,#varname do
+			sep = sep.."-"
+		end
+		dprint(sep)
+		dprint("type: "..type(value))
+		dprint("-----")
+		if type(value) == "table" then
+			debug.PrintTable(value)
+		else
+			dprint(value)
+		end
+	else
+		dprint(varname)
+		dprint("-----")
+		dprint("nil")
+	end
+end
+
+function VGMAR:TestWriteVar(var, val)
+	if VGMAR_DEBUG_ENABLE_VARIABLE_SETTING then
+		local function setfield (f, v)
+			local t = _G
+			for w, d in string.gfind(f, "([%w_]+)(.?)") do
+				if d == "." then
+					t[w] = t[w] or {}
+					t = t[w]
+				else
+					t[w] = v
+				end
+			end
+		end
+		if var ~= nil and val ~= nil then
+			if debug.ReadVar(var) ~= nil then
+				dprint("Variable "..var.." changing from "..debug.ReadVar(var).." to "..val)
+			else
+				dprint("Creating a variable "..var.." = "..val)
+			end
+			setfield(var, val)
+			GameRules.VGMAR:TestReadVar(var)
+		end
+	else
+		print("Variable Setting is disabled.\nTo enable turn VGMAR_DEBUG_ENABLE_VARIABLE_SETTING to true")
 	end
 end
 
@@ -1355,6 +1419,7 @@ function VGMAR:OnTowerKilled( keys )
 		self.botsInLateGameMode = true
 		GameRules:GetGameModeEntity():SetBotsInLateGame(self.botsInLateGameMode)
 	end
+	--TODO:Use GameRules:GetGameModeEntity():SetBotsMaxPushTier(int nMaxTier)
 end
 
 function VGMAR:IsHeroBotControlled(hero)
@@ -1365,6 +1430,37 @@ function VGMAR:IsHeroBotControlled(hero)
 		end
 	end
 	return false
+end
+
+function VGMAR:TeamReward(teamnumber, amount, split)
+	local heroes = HeroList:GetAllHeroes()
+	local targets = {}
+	for i=0,HeroList:GetHeroCount() do
+		local heroent = heroes[i]
+		if heroent then
+			if heroent:GetTeamNumber() == teamnumber then
+				table.insert(targets, heroent)
+			end
+		end
+	end
+	if #targets > 0 then
+		if split[1] then
+			amount[1] = amount[1]/#targets
+		end
+		if split[2] then
+			amount[2] = amount[2]/#targets
+		end
+		for i=1,#targets do
+			if amount[1] > 0 then
+				targets[i]:ModifyGold(amount[1], false, 0)
+			end
+			if amount[2] then
+				targets[i]:AddExperience(amount[2], 2, false, true)
+			end
+		end
+	else
+		dprint("TeamReward found 0 targets")
+	end
 end
 
 function VGMAR:GetTeamAdvantage( radiant, tower, kill, networth )
@@ -1984,6 +2080,7 @@ function VGMAR:OnThink()
 				backpack = true,
 				preventedhero = "npc_target_dummy",
 				specificcond = true	},
+				--TODO:Rework Poisob Dagger Recipe
 			{spell = "modifier_vgmar_i_poison_dagger",
 				items = {itemnames = {"item_butterfly", "item_orb_of_venom", "item_eagle"}, itemnum = {1, 2, 1}},
 				isconsumable = true,
@@ -2105,14 +2202,6 @@ function VGMAR:OnThink()
 						end
 					end
 				end
-				--////////////////
-				--PurgeFieldVisual
-				--////////////////
-				if heroent:FindAbilityByName("vgmar_i_purgefield") ~= nil and heroent:IsAlive() then
-					if not heroent:HasModifier("modifier_vgmar_i_purgefield_visual") then
-						heroent:AddNewModifier(heroent, nil, "modifier_vgmar_i_purgefield_visual", {})
-					end
-				end
 				
 				--///////////////////
 				--CourierBurstUpgrade
@@ -2206,19 +2295,6 @@ function VGMAR:OnThink()
 				self:LogBalance()
 			end
 		end
-		--////////////////////////////////////////
-		--Updating Radiant And Dire Buildings Down
-		--////////////////////////////////////////
-		if self.radiantanc ~= nil and self.radiantanc ~= nil then
-			local towerskilleddire = self.radiantanc:FindModifierByName("modifier_vgmar_buildings_destroyed_counter"):GetStackCount()
-			local towerskilledrad = self.direanc:FindModifierByName("modifier_vgmar_buildings_destroyed_counter"):GetStackCount()
-			self.towerskilleddire = towerskilleddire
-			self.towerskilledrad = towerskilledrad
-		else
-			self.direanc = Entities:FindByName(nil, "dota_badguys_fort")
-			self.radiantanc = Entities:FindByName(nil, "dota_goodguys_fort")
-			
-		end
 	end
 	if GameRules:State_Get() >= DOTA_GAMERULES_STATE_PRE_GAME then
 		--///////////////////
@@ -2251,6 +2327,50 @@ function VGMAR:OnThink()
 		return nil
 	end
 	return VGMAR_GTHINK_TIME
+end
+
+--Function Called from a modifier attached on game start
+function VGMAR:OnBuildingDestroyed(attacker, denied, buildingteamnumber, buildingname, buildingvalue)
+	--Dire Building Down
+	if buildingteamnumber == 3 then
+		self.towerskilledrad = self.towerskilledrad + buildingvalue
+	--Radiant Building Down
+	elseif buildingteamnumber == 2 then
+		self.towerskilleddire = self.towerskilleddire + buildingvalue
+		self:BuildingKillReward(attacker, denied, buildingteamnumber, buildingname, buildingvalue)
+	end
+end
+
+function VGMAR:BuildingKillReward(attacker, denied, buildingteamnumber, buildingname, buildingvalue)
+	--TODO:Balance
+	local function GetRealAttacker(attkr)
+		if attkr:IsRealHero() then
+			return {id = attkr:GetPlayerID(), ent = PlayerResource:GetPlayer(attkr:GetPlayerID()), hero = attkr}
+		else
+			if attkr:GetPlayerOwner() then
+				return {id = attkr:GetPlayerOwnerID(), ent = PlayerResource:GetPlayer(attkr:GetPlayerOwnerID()), hero = PlayerResource:GetPlayer(attkr:GetPlayerOwnerID()):GetAssignedHero()}
+			end
+		end
+		return {id = nil, ent = nil, hero = nil}
+	end
+	local function InvertTeamNumber(teamnum)
+		if teamnum == 3 then
+			return 2
+		else
+			return 3
+		end
+	end
+	if denied then
+		self:TeamReward(InvertTeamNumber(buildingteamnumber), {(buildingvalue * botpushrewards.basegold.team) * botpushrewards.denyfactor, (buildingvalue * botpushrewards.basexp.team) * botpushrewards.denyfactor}, botpushrewards.splitgoldxp)
+	else
+		if(GetRealAttacker(attacker).hero ~= nil) then
+			--SoloGold
+			PlayerResource:ModifyGold(GetRealAttacker(attacker).id, buildingvalue*botpushrewards.basegold.solo, false, 0)
+			--SoloXp
+			GetRealAttacker(attacker).hero:AddExperience(buildingvalue*botpushrewards.basexp.solo, 2, false, true)
+		end
+		self:TeamReward(InvertTeamNumber(buildingteamnumber), {buildingvalue * botpushrewards.basegold.team, buildingvalue * botpushrewards.basexp.team}, botpushrewards.splitgoldxp)
+	end
 end
 
 function VGMAR:OnNPCSpawned( event )
@@ -3164,7 +3284,7 @@ function VGMAR:OnGameStateChanged( keys )
 			self.istimescalereset = 1
 		end
 	elseif state == DOTA_GAMERULES_STATE_POST_GAME then
-		if IsServer() and VGMAR_LOG_BALANCE_GAMEEND then
+		if IsServer() and VGMAR_LOG_BALANCE_GAMEEND and VGMAR_BOT_FILL then
 			LogLib:WriteLog("balance", 0, false, "------------------------")
 			LogLib:WriteLog("balance", 0, false, "------------------------")
 			LogLib:WriteLog("balance", 0, false, "      Game End Log      ")

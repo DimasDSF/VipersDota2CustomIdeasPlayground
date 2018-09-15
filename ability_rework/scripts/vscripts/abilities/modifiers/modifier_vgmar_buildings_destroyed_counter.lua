@@ -41,12 +41,14 @@ end
 
 function modifier_vgmar_buildings_destroyed_counter:OnBuildingKilled(kv)
 	if IsServer() then
-		if kv.target:GetTeamNumber() == 3 and self:GetParent():GetTeamNumber() == 3 then
-			if self.buildingvaluelist[kv.target:GetName()] ~= nil then
-				self:SetStackCount(self:GetStackCount() + self.buildingvaluelist[kv.target:GetName()])
+		if self.buildingvaluelist[kv.target:GetName()] ~= nil then
+			if self:GetParent():GetTeamNumber() == 2 then
+				local denied = kv.unit:GetTeamNumber() == kv.target:GetTeamNumber()
+				local buildingname = kv.target:GetName()
+				local buildingvalue = self.buildingvaluelist[buildingname]
+				GameRules.VGMAR:OnBuildingDestroyed(kv.unit, denied, kv.target:GetTeamNumber(), buildingname, buildingvalue)
 			end
-		elseif kv.target:GetTeamNumber() == 2 and self:GetParent():GetTeamNumber() == 2 then
-			if self.buildingvaluelist[kv.target:GetName()] ~= nil then
+			if kv.target:GetTeamNumber() == self:GetParent():GetTeamNumber() then
 				self:SetStackCount(self:GetStackCount() + self.buildingvaluelist[kv.target:GetName()])
 			end
 		end

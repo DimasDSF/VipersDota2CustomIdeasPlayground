@@ -4,6 +4,6 @@
 *.bak
 
 ability_rework/scripts/npc/pre707
+ability_rework/scripts/npc/BaseGameUpdateFiles/update
 
 ability_rework/scripts/npc/botinfo/List/HeroList.txt
-ability_rework/scripts/npc/BaseGameUpdateFiles/npc_heroes.txt
