@@ -3,6 +3,7 @@ local DIRE_TEAM_MAX_PLAYERS = 8
 local RUNE_SPAWN_TIME_POWERUP = 2
 local RUNE_SPAWN_TIME_BOUNTY = 5
 local VGMAR_DEBUG = true
+local VGMAR_DEBUG_DRAW = true
 local VGMAR_DEBUG_ENABLE_VARIABLE_SETTING = true
 local VGMAR_GIVE_DEBUG_ITEMS = false
 local VGMAR_BOT_FILL = false
@@ -140,7 +141,7 @@ local modifierdatatable = {
 	["modifier_vgmar_i_pulse"] = {stackspercreep = 1, stacksperhero = 8, duration = 4, hpregenperstack = 1, manaregenperstack = 0.5, maxstacks = 20},
 	["modifier_vgmar_i_greatcleave"] = {cleaveperc = 100, cleavestartrad = 150, cleaveendrad = 300, cleaveradius = 700, bonusdamage = 75},
 	["modifier_vgmar_i_vampiric_aura"] = {radius = 700, lspercent = 30, lspercentranged = 20},
-	["modifier_vgmar_i_multishot"] = {basetargets = 1, mainattrpertarget = 25, bonusdamage = 50, bonusrange = 140},
+	["modifier_vgmar_i_multishot"] = {basetargets = 1, mainattrpertarget = 25, bonusdamage = 60, bonusrange = 140},
 	["modifier_vgmar_i_midas_greed"] = {min_bonus_gold = 0, count_per_kill = 1, reduction_per_tick = 2, bonus_gold_cap = 40, stack_duration = 30, reduction_duration = 2.5, killsperstack = 3, midasusestacks = 2},
 	["modifier_vgmar_i_kingsaegis_cooldown"] = {cooldown = 240, reincarnate_time = 5},
 	["modifier_vgmar_i_critical_mastery"] = {critdmgpercentage = 250, critchance = 100},
@@ -221,6 +222,7 @@ end
 function VGMAR:Init()
 	AbilitySlotsLib:Init()
 	LogLib:Init()
+	Extensions:Init()
 	self.n_players_radiant = 0
 	self.n_players_dire = 0
 	self.istimescalereset = 0
@@ -2902,7 +2904,7 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 									if math.random(1,100) <= missclickchance then
 										dprint("Making PlayerID: "..issuer.." missclick a unit target ability: "..ability:GetName().." probability: "..missclickchance)
 										local newtar = filteredmissclicktargets[math.random(1,#filteredmissclicktargets)]
-										if IsDevMode() then
+										if IsDevMode() and VGMAR_DEBUG_DRAW then
 											DebugDrawLine(unit:GetOrigin(), target:GetOrigin(), 128, 255, 255, true, 2)
 											DebugDrawCircle(target:GetOrigin(), Vector(128, 255, 255), 100, missclickrange, true, 2)
 											DebugDrawCircle(target:GetOrigin(), Vector(128, 255, 128), 255, 15, true, 2)
@@ -2919,7 +2921,7 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 									local newx = filterTable["position_x"] + math.random(-1*missclickrange, missclickrange)
 									local newy = filterTable["position_y"] + math.random(-1*missclickrange, missclickrange)
 									local newz = GetGroundHeight(Vector(newx,newy,0), nil)
-									if IsDevMode() then
+									if IsDevMode() and VGMAR_DEBUG_DRAW then
 										DebugDrawLine(unit:GetOrigin(), TargetVector, 128, 255, 255, true, 2)
 										DebugDrawCircle(TargetVector, Vector(128, 255, 255), 100, missclickrange, true, 2)
 										DebugDrawCircle(TargetVector, Vector(128, 255, 128), 255, 15, true, 2)

@@ -70,11 +70,11 @@ function modifier_vgmar_i_greatcleave:OnAttackLanded( event )
 	if IsServer() then
 		if event.attacker == self:GetParent() and not self:GetParent():IsIllusion() then
 			if self:GetParent():IsRangedAttacker() == false and not self:GetParent():PassivesDisabled() then
-				if event.target:GetTeamNumber() ~= self:GetCaster():GetTeamNumber() then
-					local cleaveDamage = ( self.cleaveperc * event.damage ) / 100
-					local particle = nil
-					local dist = (self:GetParent():GetAbsOrigin() - event.target:GetAbsOrigin()):Length2D()
-					if dist <= 400 then
+				if event.target:IsBuilding() == false and event.target:IsOther() == false then
+					if event.target:GetTeamNumber() ~= self:GetCaster():GetTeamNumber() then
+						local cleaveDamage = ( self.cleaveperc * event.damage ) / 100
+						local particle = nil
+						local dist = (self:GetParent():GetAbsOrigin() - event.target:GetAbsOrigin()):Length2D()
 						if cleaveDamage < 400 then
 							particle = "particles/econ/items/sven/sven_ti7_sword/sven_ti7_sword_spell_great_cleave.vpcf"
 						elseif cleaveDamage >= 400 and cleaveDamage < 1500 then
@@ -84,7 +84,12 @@ function modifier_vgmar_i_greatcleave:OnAttackLanded( event )
 						elseif cleaveDamage >= 3000 then
 							particle = "particles/econ/items/sven/sven_ti7_sword/sven_ti7_sword_spell_great_cleave_gods_strength_crit.vpcf"
 						end
-						DoCleaveAttack( self:GetParent(), event.target, self:GetParent():GetAbilityByIndex(0), cleaveDamage, self.cleavestartrad, self.cleaveendrad, self.cleaveradius, particle )
+						local direction = (event.attacker:GetAbsOrigin() - event.target:GetAbsOrigin()):Normalized()
+						local damageInfo = {
+							damage = cleaveDamage,
+							type = DAMAGE_TYPE_PURE
+						}
+						Extensions:DoCleaveAttackPositional(self:GetParent(), event.target, event.target:GetAbsOrigin(), direction, true, damageInfo, self.cleavestartrad, self.cleaveendrad, self.cleaveradius, DOTA_UNIT_TARGET_TEAM_ENEMY, DOTA_UNIT_TARGET_BASIC + DOTA_UNIT_TARGET_HERO, 0, particle)
 						self:GetParent():EmitSound("DOTA_Item.BattleFury")
 					end
 				end

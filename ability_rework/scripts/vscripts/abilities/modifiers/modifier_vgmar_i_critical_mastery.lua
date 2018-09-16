@@ -50,7 +50,7 @@ end
 
 function modifier_vgmar_i_critical_mastery:OnAttackStart(kv)
 	if IsServer() then
-		if kv.attacker == self:GetParent() and kv.target:GetTeamNumber() ~= self:GetParent():GetTeamNumber() and kv.target:IsBuilding() == false then
+		if kv.attacker == self:GetParent() and kv.target:GetTeamNumber() ~= self:GetParent():GetTeamNumber() and kv.target:IsBuilding() == false and kv.target:IsOther() == false then
 			if math.random(0,100) <= self.critchance then
 				kv.attacker:AddNewModifier(kv.attacker, self, "modifier_vgmar_i_critical_mastery_active", {critdmgpercentage = self.critdmgpercentage})
 			end
@@ -97,13 +97,13 @@ function modifier_vgmar_i_critical_mastery_active:DeclareFunctions()
 end
 
 function modifier_vgmar_i_critical_mastery_active:GetModifierPreAttack_CriticalStrike(kv)
-	if kv.attacker == self:GetParent() and kv.target:GetTeamNumber() ~= self:GetParent():GetTeamNumber() and kv.target:IsBuilding() == false then
+	if kv.attacker == self:GetParent() and kv.target:GetTeamNumber() ~= self:GetParent():GetTeamNumber() and kv.target:IsBuilding() == false and kv.target:IsOther() == false then
 		return self.critdmgpercentage
 	end
 end
 
 function modifier_vgmar_i_critical_mastery_active:OnAttackLanded(kv)
-	if kv.attacker == self:GetParent() and kv.target:GetTeamNumber() ~= self:GetParent():GetTeamNumber() and kv.target:IsBuilding() == false then
+	if kv.attacker == self:GetParent() and kv.target:GetTeamNumber() ~= self:GetParent():GetTeamNumber() and kv.target:IsBuilding() == false and kv.target:IsOther() == false then
 		local particle = "particles/units/heroes/hero_phantom_assassin/phantom_assassin_crit_impact.vpcf"
 		local soundevnt = "Hero_PhantomAssassin.CoupDeGrace"
 		if kv.target:GetClassname() == "npc_dota_creep_siege" then
