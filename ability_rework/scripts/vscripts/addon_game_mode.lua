@@ -6,7 +6,7 @@ local VGMAR_DEBUG = true
 local VGMAR_DEBUG_DRAW = true
 local VGMAR_DEBUG_ENABLE_VARIABLE_SETTING = true
 local VGMAR_GIVE_DEBUG_ITEMS = false
-local VGMAR_BOT_FILL = false
+local VGMAR_BOT_FILL = true
 local VGMAR_LOG_BALANCE = false
 local VGMAR_LOG_BALANCE_GAMEEND = true
 local VGMAR_LOG_BALANCE_INTERVAL = 120
@@ -82,7 +82,9 @@ local botitemskv = {
 		"item_power_treads",
 		"item_arcane_boots",
 		"item_tranquil_boots"
-	}
+	},
+	tomerestock = {690.0, 600.0},
+	tomeprice = 150
 }
 
 local botupgradepriorities = {
@@ -205,7 +207,8 @@ function Precache( ctx )
 		"wisp",
 		"zuus",
 		"medusa",
-		"ancient_apparition"
+		"ancient_apparition",
+		"alchemist"
 	}
 	
 	for i=1,#herosoundprecachelist do
@@ -225,6 +228,8 @@ function VGMAR:Init()
 	Extensions:Init()
 	self.n_players_radiant = 0
 	self.n_players_dire = 0
+	self.radiantheroes = {}
+	self.direheroes = {}
 	self.istimescalereset = 0
 	self.direcourieruplevel = 1
 	self.radiantcourieruplevel = 1
@@ -238,6 +243,7 @@ function VGMAR:Init()
 	--self.lastrunetype = -1
 	--self.currunenum = 1
 	--self.removedrunenum = math.random(1,2)
+	self.buildingdecaydurrange = {300, 720}
 	self.botsInLateGameMode = false
 	self.backdoorstatustable = {}
 	self.backdoortimertable = {}
@@ -252,6 +258,9 @@ function VGMAR:Init()
 	--self.realbountyrunes = {}
 	self.botupgradestatus = {}
 	self.botitemaghsremoved = {}
+	self.shrinedecaystarted = false
+	self.bottomepurchausetimestamp = 0
+	self.tomepurchaseallmaxlvl = false
 	
 	local itemskvnum = 0
 	local itemscustomkvnum = 0
@@ -361,6 +370,7 @@ function VGMAR:Init()
 	LinkLuaModifier("modifier_vgmar_crai_courier_shield", "abilities/modifiers/ai/modifier_vgmar_crai_courier_shield.lua", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_buildings_destroyed_counter", "abilities/modifiers/modifier_vgmar_buildings_destroyed_counter.lua", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_anticreep_protection", "abilities/modifiers/modifier_vgmar_anticreep_protection.lua", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_buildings_decay", "abilities/modifiers/modifier_vgmar_buildings_decay.lua", LUA_MODIFIER_MOTION_NONE)
 	
 	self.buildingadvantagevaluelist = {
 		["dota_badguys_tower1_mid"] = 1,
@@ -542,6 +552,25 @@ function VGMAR:Init()
 		["modifier_vgmar_b_fountain_anticamp_debuff_silence"] = {silence = true, stun = false, root = false}
 	}
 	
+	self.buildingstatus = {
+		["good"] = {
+			["good_rax_melee_mid"] = true,
+			["good_rax_range_mid"] = true,
+			["good_rax_melee_top"] = true,
+			["good_rax_range_top"] = true,
+			["good_rax_melee_bot"] = true,
+			["good_rax_range_bot"] = true
+		},
+		["bad"] = {
+			["bad_rax_melee_mid"] = true,
+			["bad_rax_range_mid"] = true,
+			["bad_rax_melee_top"] = true,
+			["bad_rax_range_top"] = true,
+			["bad_rax_melee_bot"] = true,
+			["bad_rax_range_bot"] = true
+		}
+	}
+	
 	self.mode = GameRules:GetGameModeEntity()
 	GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_GOODGUYS, RADIANT_TEAM_MAX_PLAYERS)
     GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_BADGUYS, DIRE_TEAM_MAX_PLAYERS)
@@ -599,7 +628,7 @@ function VGMAR:TestFunction()
 	--dmsg("Msg")
 	--dwarning("Warning")
 	--dhudmsg("Testing\nStuff")
-	local herolst = HeroList:GetAllHeroes()
+	--[[local herolst = HeroList:GetAllHeroes()
 	for i=1,#herolst do
 		local hero = herolst[i]
 		if hero then
@@ -614,7 +643,7 @@ function VGMAR:TestFunction()
 				dprint("----------")
 			end
 		end
-	end
+	end--]]
 end
 
 function IsDevMode()
@@ -671,11 +700,18 @@ function VGMAR:TestWriteVar(var, val)
 					end
 				end
 			end
+			if val == "false" then
+				val = false
+			elseif val == "true" then
+				val = true
+			elseif tonumber(val) ~= nil then
+				val = tonumber(val)
+			end
 			if var ~= nil and val ~= nil then
 				if debug.ReadVar(var) ~= nil then
-					dprint("Variable "..var.." changing from "..debug.ReadVar(var).." to "..val)
+					dprint("Variable "..var.." changing from "..tostring(debug.ReadVar(var)).." to "..tostring(val))
 				else
-					dprint("Creating a variable "..var.." = "..val)
+					dprint("Creating a variable "..var.." = "..tostring(val))
 				end
 				setfield(var, val)
 				GameRules.VGMAR:TestReadVar(var)
@@ -2249,6 +2285,47 @@ function VGMAR:OnThink()
 						end
 					end
 				end
+				--/////////////
+				--Tome Purchase
+				--/////////////
+				if self:TimeIsLaterThan( math.floor(botitemskv.tomerestock[1]/60), botitemskv.tomerestock[1] % 60 ) and self.tomepurchaseallmaxlvl == false and #self.direheroes > 0 then
+					local function GetLowestXpBot()
+						local lowestxpbot = {99999, nil}
+						for k,v in ipairs(self.direheroes) do
+							if v:GetCurrentXP() < lowestxpbot[1] and v:GetGold() >= botitemskv.tomeprice then
+								lowestxpbot = {v:GetCurrentXP(), v}
+							end
+						end
+						return lowestxpbot[2]
+					end
+					local function BuyTome()
+						local lxpb = GetLowestXpBot()
+						if lxpb:GetLevel() < 25 and self:GetHeroFreeInventorySlots(lxpb, true, false) > 0 then
+							lxpb:SpendGold(botitemskv.tomeprice, 2)
+							local tome = lxpb:AddItemByName("item_tome_of_knowledge")
+							Timers:CreateTimer(5, function()
+								local tome = self:GetItemFromInventoryByName( lxpb, "item_tome_of_knowledge", false, true, false )
+								if tome ~= nil then
+									local slot = self:GetItemSlotFromInventoryByItemName( lxpb, "item_tome_of_knowledge", false, true, false )
+									if slot > 5 and slot < 9 then
+										lxpb:SwapItems(slot, 0)
+									end
+									lxpb:CastAbilityNoTarget(tome, lxpb:GetPlayerID())
+									return 5.0
+								end
+							end)
+							dprint("Buying item_tome_of_knowledge for "..HeroNamesLib:ConvertInternalToHeroName(lxpb:GetName()))
+							self.bottomepurchausetimestamp = GameRules:GetDOTATime(false, false)
+						elseif lxpb:GetLevel() == 25 then
+							self.tomepurchaseallmaxlvl = true
+						end
+					end
+					if self.bottomepurchausetimestamp + botitemskv.tomerestock[1] < GameRules:GetDOTATime(false, false) then
+						BuyTome()
+					elseif self.bottomepurchausetimestamp + botitemskv.tomerestock[2] < GameRules:GetDOTATime(false, false) then
+						BuyTome()
+					end
+				end
 			end
 			--///////////
 			--CourierInit
@@ -2351,6 +2428,22 @@ function VGMAR:OnBuildingDestroyed(attacker, denied, buildingteamnumber, buildin
 		self.towerskilleddire = self.towerskilleddire + buildingvalue
 		self:BuildingKillReward(attacker, denied, buildingteamnumber, buildingname, buildingvalue)
 	end
+	if self.buildingstatus["good"].buildingname ~= nil then
+		self.buildingstatus["good"].buildingname = false
+	elseif self.buildingstatus["bad"].buildingname ~= nil then
+		self.buildingstatus["bad"].buildingname = false
+	end
+	--Shrine Decay
+	if self:GetMegaCreepsStatus(2) and self.shrinedecaystarted == false then
+		local decaybuildings = {"good_healer_7", "good_healer_6"}
+		for i=1,#decaybuildings do
+			local building = Entities:FindByName(nil, decaybuildings[i])
+			if building and building:HasModifier("modifier_vgmar_buildings_decay") == false then
+				building:AddNewModifier(building, nil, "modifier_vgmar_buildings_decay", {})
+			end
+		end
+		self.shrinedecaystarted = true
+	end
 end
 
 function VGMAR:BuildingKillReward(attacker, denied, buildingteamnumber, buildingname, buildingvalue)
@@ -2365,15 +2458,8 @@ function VGMAR:BuildingKillReward(attacker, denied, buildingteamnumber, building
 		end
 		return {id = nil, ent = nil, hero = nil}
 	end
-	local function InvertTeamNumber(teamnum)
-		if teamnum == 3 then
-			return 2
-		else
-			return 3
-		end
-	end
 	if denied then
-		self:TeamReward(InvertTeamNumber(buildingteamnumber), {(buildingvalue * botpushrewards.basegold.team) * botpushrewards.denyfactor, (buildingvalue * botpushrewards.basexp.team) * botpushrewards.denyfactor}, botpushrewards.splitgoldxp)
+		self:TeamReward(Extensions:GetOpposingTeamNumber(buildingteamnumber), {(buildingvalue * botpushrewards.basegold.team) * botpushrewards.denyfactor, (buildingvalue * botpushrewards.basexp.team) * botpushrewards.denyfactor}, botpushrewards.splitgoldxp)
 	else
 		if(GetRealAttacker(attacker).hero ~= nil) then
 			--SoloGold
@@ -2381,8 +2467,35 @@ function VGMAR:BuildingKillReward(attacker, denied, buildingteamnumber, building
 			--SoloXp
 			GetRealAttacker(attacker).hero:AddExperience(buildingvalue*botpushrewards.basexp.solo, 2, false, true)
 		end
-		self:TeamReward(InvertTeamNumber(buildingteamnumber), {buildingvalue * botpushrewards.basegold.team, buildingvalue * botpushrewards.basexp.team}, botpushrewards.splitgoldxp)
+		self:TeamReward(Extensions:GetOpposingTeamNumber(buildingteamnumber), {buildingvalue * botpushrewards.basegold.team, buildingvalue * botpushrewards.basexp.team}, botpushrewards.splitgoldxp)
 	end
+end
+
+function VGMAR:GetBarracksStatus(teamnum, lane)
+	local teamname = "good"
+	if teamnum == 2 then
+		teamname = "good"
+	elseif teamnum == 3 then
+		teamname = "bad"
+	else
+		print("GetBarracksStatus: Error. Incorrect teamnumber specified")
+		LogLib:WriteLog("error", 0, true, "GetBarracksStatus: Error. Incorrect teamnumber specified")
+		return nil
+	end
+	if lane == "bot" or lane == "mid" or lane == "top" then
+		local rangerax = self.buildingstatus[teamname][teamname.."_rax_range_"..lane]
+		local meleerax = self.buildingstatus[teamname][teamname.."_rax_melee_"..lane]
+		local allrax = rangerax and meleerax
+		return {meleerax, rangerax, allrax}
+	else
+		print("GetBarracksStatus: Error. Incorrect lane specified")
+		LogLib:WriteLog("error", 0, true, "GetBarracksStatus: Error. Incorrect lane specified")
+		return nil
+	end
+end
+
+function VGMAR:GetMegaCreepsStatus(teamnum)
+	return (self:GetBarracksStatus(teamnum, "bot")[3] and self:GetBarracksStatus(teamnum, "mid")[3] and self:GetBarracksStatus(teamnum, "top")[3]) == false
 end
 
 function VGMAR:OnNPCSpawned( event )
@@ -3289,6 +3402,16 @@ function VGMAR:OnGameStateChanged( keys )
 		end
 		--////////////////////////////////////////
 	elseif state == DOTA_GAMERULES_STATE_GAME_IN_PROGRESS then
+		local heroes = HeroList:GetAllHeroes()
+		if #heroes > 0 then
+			for n=1,#heroes do
+				if heroes[n]:GetTeamNumber() == 2 then
+					table.insert(self.radiantheroes, heroes[n])
+				elseif heroes[n]:GetTeamNumber() == 3 then
+					table.insert(self.direheroes, heroes[n])
+				end
+			end
+		end
 		if IsServer() and self.istimescalereset == 0 then
 			Convars:SetFloat("host_timescale", 1.0)
 			self.istimescalereset = 1

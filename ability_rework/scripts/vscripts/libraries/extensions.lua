@@ -106,6 +106,17 @@ function Extensions:DoCleaveAttackPositional(attacker, target, position, directi
 	end
 end
 
+function Extensions:GetOpposingTeamNumber(teamNumber)
+	if teamNumber and type(teamNumber) == "number" then
+		if teamNumber == 3 then
+			return 2
+		else
+			return 3
+		end
+	end
+	return nil
+end
+
 --math
 function math.scale( min, value, max )
 	return value * (max - min) + min
