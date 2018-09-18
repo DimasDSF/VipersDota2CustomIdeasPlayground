@@ -2302,7 +2302,7 @@ function VGMAR:OnThink()
 						local lxpb = GetLowestXpBot()
 						if lxpb:GetLevel() < 25 and self:GetHeroFreeInventorySlots(lxpb, true, false) > 0 then
 							lxpb:SpendGold(botitemskv.tomeprice, 2)
-							local tome = lxpb:AddItemByName("item_tome_of_knowledge")
+							lxpb:AddItemByName("item_tome_of_knowledge")
 							Timers:CreateTimer(5, function()
 								local tome = self:GetItemFromInventoryByName( lxpb, "item_tome_of_knowledge", false, true, false )
 								if tome ~= nil then
