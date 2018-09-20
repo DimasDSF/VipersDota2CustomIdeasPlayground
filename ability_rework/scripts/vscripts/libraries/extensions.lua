@@ -58,14 +58,14 @@ function Extensions:DoCleaveAttackPositional(attacker, target, position, directi
 	end
 	local victims = {}
 	if isDistantCleave then
-		victims = Extensions:FindUnitsInCone(attacker:GetTeamNumber(), -direction, position, startRadius, endRadius, length, nil, teamFilter, typeFilter, flagFilter, FIND_CLOSEST, false)
+		victims = Extensions:FindUnitsInCone(attacker:GetTeamNumber(), direction, position, startRadius, endRadius, length, nil, teamFilter, typeFilter, flagFilter, FIND_CLOSEST, false)
 		if self:DebugDraw() then
-			DebugDrawLine(position, position+(-direction*length), 0, 255, 0, true, 2)
+			DebugDrawLine(position, position+(direction*length), 0, 255, 0, true, 2)
 		end
 	else
-		victims = Extensions:FindUnitsInCone(attacker:GetTeamNumber(), -direction, attacker:GetAbsOrigin(), startRadius, endRadius, length, nil, teamFilter, typeFilter, flagFilter, FIND_CLOSEST, false)
+		victims = Extensions:FindUnitsInCone(attacker:GetTeamNumber(), direction, attacker:GetAbsOrigin(), startRadius, endRadius, length, nil, teamFilter, typeFilter, flagFilter, FIND_CLOSEST, false)
 		if self:DebugDraw() then
-			DebugDrawLine(attacker:GetAbsOrigin(), attacker:GetAbsOrigin()+(-direction*length), 255, 0, 0, true, 2)
+			DebugDrawLine(attacker:GetAbsOrigin(), attacker:GetAbsOrigin()+(direction*length), 255, 0, 0, true, 2)
 		end
 	end
 	local targetarr = {target}
@@ -101,7 +101,7 @@ function Extensions:DoCleaveAttackPositional(attacker, target, position, directi
 			ParticleManager:SetParticleControl( pfx, 0, attacker:GetOrigin() )
 			ParticleManager:SetParticleControl( pfx, 1, attacker:GetOrigin() )
 		end
-		ParticleManager:SetParticleControlForward( pfx, 0, -direction )
+		ParticleManager:SetParticleControlForward( pfx, 0, direction )
 		ParticleManager:ReleaseParticleIndex( pfx )
 	end
 end
@@ -192,6 +192,19 @@ function table.sub(t2, t1)
         end
     end
     return ret
+end
+
+--CBaseEntity
+--Returns true for Creeps, Heroes, Couriers
+--Useful for Crits, Cleave attacks etc.
+--due to OnAttackStart working with items, runes and probably other non CDOTA_BaseNPC entities disallowing use of IsCreep, IsBuilding and throwing errors.
+function CBaseEntity:IsRealUnit(buildings)
+	if UnitFilter( self, DOTA_UNIT_TARGET_TEAM_BOTH, DOTA_UNIT_TARGET_HERO+DOTA_UNIT_TARGET_CREEP+DOTA_UNIT_TARGET_BUILDING+DOTA_UNIT_TARGET_COURIER, DOTA_UNIT_TARGET_FLAG_MAGIC_IMMUNE_ENEMIES, 0 ) == 0 then
+		if buildings and self:IsBuilding() or not self:IsBuilding() then
+			return true
+		end
+	end
+	return false
 end
 
 --debug

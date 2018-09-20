@@ -248,10 +248,29 @@ function modifier_vgmar_i_ogre_tester:OnDestroy()
 	end
 end
 
+--[[function modifier_vgmar_i_ogre_tester:OnAttackStart(kv)
+	if IsServer() then
+		if kv.attacker == self:GetParent() then
+			print("Printing AttackStart kv")
+			debug.PrintTable(kv)
+		end
+	end
+end--]]
+
+--[[function modifier_vgmar_i_ogre_tester:OnAttackLanded(kv)
+	if IsServer() then
+		if kv.attacker == self:GetParent() then
+			print("Printing AttackLanded kv")
+			debug.PrintTable(kv)
+		end
+	end
+end--]]
+
 function modifier_vgmar_i_ogre_tester:DeclareFunctions()
 	local funcs = {
 		MODIFIER_EVENT_ON_DEATH,
 		--MODIFIER_EVENT_ON_ATTACK_LANDED,
+		--MODIFIER_EVENT_ON_ATTACK_START,
 		MODIFIER_EVENT_ON_ORDER,
 		MODIFIER_EVENT_ON_TAKEDAMAGE,
 		--MODIFIER_EVENT_ON_SPENT_MANA,

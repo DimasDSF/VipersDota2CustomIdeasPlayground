@@ -6,7 +6,7 @@ local VGMAR_DEBUG = true
 local VGMAR_DEBUG_DRAW = true
 local VGMAR_DEBUG_ENABLE_VARIABLE_SETTING = true
 local VGMAR_GIVE_DEBUG_ITEMS = false
-local VGMAR_BOT_FILL = true
+local VGMAR_BOT_FILL = false
 local VGMAR_LOG_BALANCE = false
 local VGMAR_LOG_BALANCE_GAMEEND = true
 local VGMAR_LOG_BALANCE_INTERVAL = 120
@@ -153,7 +153,7 @@ local modifierdatatable = {
 	["modifier_item_ultimate_scepter_consumed"] = {bonus_all_stats = 10, bonus_health = 175, bonus_mana = 175},
 	["modifier_vgmar_i_arcane_intellect"] = {percentage = 10, multpercast = 0.2, bonusint = 25, csmaxmana = 6000, csminmana = 0, minimalcooldown = 1},
 	["modifier_vgmar_i_thirst"] = {threshold = 75, visionthreshold = 50, damagethreshold = 75, visionrange = 10, visionduration = 0.2, giverealvision = 0, givemodelvision = 1, damageperstack = 3, radius = 5000},
-	["modifier_vgmar_i_poison_dagger"] = {cooldown = 60, potencycooldown = 10, agiperpotency = 20, maxdistance = 1400, hitdamageperc = 140, manaloss = 5, durationperpot = 7, manacostperc = 10, dmgpermana = 0.2, bonusagi = 45, bonusmisschance = 30, daggerspeed = 1000},
+	["modifier_vgmar_i_poison_dagger"] = {cooldown = 60, potencycooldown = 10, agiperpotency = 20, maxdistance = 1400, hitdamageperc = 140, manaloss = 10, durationperpot = 10, manacostperc = 10, dmgpermana = 0.2, ticktime = 2, nomanadmgmult = 1, bonusagi = 45, bonusmisschance = 30, daggerspeed = 1000},
 	["modifier_vgmar_i_scorching_light"] = {radius = 700, interval = 1.0, visioninterval = 5.0, initialdamage = 60, damageincpertick = 2, maxdamage = 300, missrate = 17, visiondelay = 3, maxillusionstacks = 3, lingerduration = 3.0},
 	["modifier_vgmar_i_permafrost"] = {radius = 600, interval = 1.0, attackspeedperstack = -5, movespeedperstack = -5, bonusarmor = 25, bonusint = 60, maxstacks = 20, freezedmg = 150, lingerduration = 3},
 	["modifier_vgmar_i_manashield"] = {minmana = 0.5, lowmana = 0.55, maxtotalmana = 6000, mindmgfraction = 30, maxdmgfraction = 90, stunradius = 600, stunduration = 3, stundamage = 200, rechargetime = 60, bonusarmor = 15, bonusint = 20},
@@ -230,6 +230,7 @@ function VGMAR:Init()
 	self.n_players_dire = 0
 	self.radiantheroes = {}
 	self.direheroes = {}
+	self.botheroes = {}
 	self.istimescalereset = 0
 	self.direcourieruplevel = 1
 	self.radiantcourieruplevel = 1
@@ -3400,8 +3401,10 @@ function VGMAR:OnGameStateChanged( keys )
 				end
 			end
 		end
-		--////////////////////////////////////////
 	elseif state == DOTA_GAMERULES_STATE_GAME_IN_PROGRESS then
+		--///////////////
+		--Fill Hero Lists
+		--///////////////
 		local heroes = HeroList:GetAllHeroes()
 		if #heroes > 0 then
 			for n=1,#heroes do
@@ -3410,8 +3413,16 @@ function VGMAR:OnGameStateChanged( keys )
 				elseif heroes[n]:GetTeamNumber() == 3 then
 					table.insert(self.direheroes, heroes[n])
 				end
+				if self:IsHeroBotControlled(heroes[n]) then
+					table.insert(self.botheroes, heroes[n])
+				end
 			end
 		end
+			end
+		end
+		--///////////////
+		--Reset Timescale
+		--///////////////
 		if IsServer() and self.istimescalereset == 0 then
 			Convars:SetFloat("host_timescale", 1.0)
 			self.istimescalereset = 1

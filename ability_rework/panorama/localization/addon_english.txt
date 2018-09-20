@@ -163,7 +163,7 @@
 	"vgmarItemsTextDescription22"	"Arcane Intelligence Provides Owner with 25 Int, a 10% of intellect SpellAmp%. Every 5 spells cast provide a 1*(Mana/100)% increase"
 	"vgmarItemsHeader23"			"Poison Dagger"
 	"vgmarItemsTextRecipe23" 		"Eaglesong + Butterfly + Orb of Venom*2 [Consumed]"
-	"vgmarItemsTextDescription23"	"Gains charges every 15s up to 4\nMakes Owner throw poison daggers at the Attack Target while it has charges\nIf Owner has more than 4 enemies in 500 of him throws daggers at all enemies in 500 range for 2 charges"
+	"vgmarItemsTextDescription23"	"Gains charges every 15s up to 4\nMakes Owner throw poison daggers at the Attack Target while it has charges"
 	"vgmarItemsHeader24"			"PermaFrost"
 	"vgmarItemsTextRecipe24" 		"Shiva's Guard * 2 [Consumed]"
 	"vgmarItemsTextDescription24"	"Grants Owner with 25 Armor, 60 Intellect\nand an aura freezing enemies in 600 range reducing their attack and move speed\nIf the debuff gains 20 stacks it also applies 150 magic damage"

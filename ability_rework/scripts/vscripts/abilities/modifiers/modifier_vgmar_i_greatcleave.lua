@@ -70,7 +70,7 @@ function modifier_vgmar_i_greatcleave:OnAttackLanded( event )
 	if IsServer() then
 		if event.attacker == self:GetParent() and not self:GetParent():IsIllusion() then
 			if self:GetParent():IsRangedAttacker() == false and not self:GetParent():PassivesDisabled() then
-				if event.target:IsBuilding() == false and event.target:IsOther() == false then
+				if event.target:IsRealUnit(false) then
 					if event.target:GetTeamNumber() ~= self:GetCaster():GetTeamNumber() then
 						local cleaveDamage = ( self.cleaveperc * event.damage ) / 100
 						local particle = nil
@@ -84,7 +84,7 @@ function modifier_vgmar_i_greatcleave:OnAttackLanded( event )
 						elseif cleaveDamage >= 3000 then
 							particle = "particles/econ/items/sven/sven_ti7_sword/sven_ti7_sword_spell_great_cleave_gods_strength_crit.vpcf"
 						end
-						local direction = (event.attacker:GetAbsOrigin() - event.target:GetAbsOrigin()):Normalized()
+						local direction = (event.target:GetAbsOrigin() - event.attacker:GetAbsOrigin()):Normalized()
 						local damageInfo = {
 							damage = cleaveDamage,
 							type = DAMAGE_TYPE_PURE

@@ -46,6 +46,8 @@ function modifier_vgmar_i_poison_dagger:OnCreated( kv )
 		self.durationperpot = kv.durationperpot
 		self.manacostperc = kv.manacostperc / 100
 		self.dmgpermana = kv.dmgpermana
+		self.nomanadmgmult = kv.nomanadmgmult
+		self.ticktime = kv.ticktime
 		self.bonusagi = kv.bonusagi
 		self.bonusmisschance = kv.bonusmisschance
 		self.daggerspeed = kv.daggerspeed
@@ -185,8 +187,10 @@ function modifier_vgmar_i_poison_dagger_debuff:OnCreated( kv )
 		self.manaloss = provider.manaloss
 		self.manacostperc = provider.manacostperc
 		self.dmgpermana = provider.dmgpermana
+		self.nomanadmgmult = provider.nomanadmgmult
+		self.ticktime = provider.ticktime
 		self:SetDuration( self.duration, true )
-		self:StartIntervalThink( 1 )
+		self:StartIntervalThink( self.ticktime )
 		self.particle = ParticleManager:CreateParticle("particles/units/heroes/hero_queenofpain/queen_shadow_strike_debuff.vpcf", PATTACH_ABSORIGIN_FOLLOW, self:GetParent())
 		self.particle2 = ParticleManager:CreateParticle("particles/items2_fx/orb_of_venom.vpcf", PATTACH_ABSORIGIN_FOLLOW, self:GetParent())
 		--ParticleManager:SetParticleControl(self.particle, 0, self:GetParent():GetAbsOrigin())
@@ -259,6 +263,7 @@ end
 
 function modifier_vgmar_i_poison_dagger_debuff:OnIntervalThink()
 	if IsServer() then
+		local parent = self:GetParent()
 		local damageTableDoT = {
 			victim = self:GetParent(),
 			attacker = self:GetCaster(),
@@ -266,7 +271,22 @@ function modifier_vgmar_i_poison_dagger_debuff:OnIntervalThink()
 			damage_type = DAMAGE_TYPE_MAGICAL,
 		}
 		ApplyDamage(damageTableDoT)
-		self:GetParent():ReduceMana(self.manaloss * self:GetStackCount())
-		SendOverheadEventMessage(nil, OVERHEAD_ALERT_MANA_LOSS, self:GetParent(), self.manaloss * self:GetStackCount(), nil)
+		if parent:GetMana() >= self.manaloss * self:GetStackCount() then
+			parent:ReduceMana(self.manaloss * self:GetStackCount())
+			SendOverheadEventMessage(nil, OVERHEAD_ALERT_MANA_LOSS, self:GetParent(), self.manaloss * self:GetStackCount(), nil)
+		else
+			local mana = parent:GetMana()
+			local dmg = ((self.manaloss * self:GetStackCount()) - mana) * self.nomanadmgmult
+			local manadamageTableDoT = {
+				victim = self:GetParent(),
+				attacker = self:GetCaster(),
+				damage = dmg,
+				damage_type = DAMAGE_TYPE_MAGICAL,
+			}
+			ApplyDamage(manadamageTableDoT)
+			SendOverheadEventMessage(nil, OVERHEAD_ALERT_BONUS_SPELL_DAMAGE, self:GetParent(), dmg, nil)
+			SendOverheadEventMessage(nil, OVERHEAD_ALERT_MANA_LOSS, self:GetParent(), mana, nil)
+			parent:ReduceMana(mana)
+		end
 	end
 end
