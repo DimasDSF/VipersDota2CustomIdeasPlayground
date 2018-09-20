@@ -3418,8 +3418,6 @@ function VGMAR:OnGameStateChanged( keys )
 				end
 			end
 		end
-			end
-		end
 		--///////////////
 		--Reset Timescale
 		--///////////////
