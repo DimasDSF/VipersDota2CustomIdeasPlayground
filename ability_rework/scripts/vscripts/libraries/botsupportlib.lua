@@ -419,7 +419,7 @@ function BotSupportLib:CastAbility(hero, order_type, target, ability, position, 
 		local aindex = nil
 		if target then
 			if type(target) == "number" then
-				tinidex = target
+				tindex = target
 			else
 				tindex = target:entindex()
 			end
@@ -506,6 +506,7 @@ function BotSupportLib:OnAttackLanded(attacker, target, event)
 						end
 					elseif name == "npc_dota_hero_skeleton_king" then
 						local crit = self:GetAbilityFromDB(attacker, "skeleton_king_mortal_strike")
+						local reincarnation = self:GetAbilityFromDB(attacker, "skeleton_king_reincarnation")
 						local skeletonsmodifier = self:GetModifierFromDB(attacker, "modifier_skeleton_king_mortal_strike")
 						if target and target:IsRealUnit(true) and (target:IsNeutralUnitType() or target:IsBuilding()) then
 							if self:GetAbilityCastConditions(attacker, crit) and self:GetAbilityCastManaConditions(attacker, crit, {reincarnation}, 0.5) then
@@ -609,7 +610,6 @@ function BotSupportLib:OnAbilityCast(unit, ability, target, event)
 					local reincarnation = self:GetAbilityFromDB( unit, "skeleton_king_reincarnation")
 					local skeletonsmodifier = self:GetModifierFromDB( unit, "modifier_skeleton_king_mortal_strike")
 					if ability == stun then
-						debug.PrintTable(filterTable)
 						if target and target:IsHero() then
 							if self:GetAbilityCastConditions(unit, crit) and self:GetAbilityCastManaConditions(unit, crit, {reincarnation}, 0.1) then
 								print("[BSL]::WK: Passed conditions for stun skeleton summoning")
