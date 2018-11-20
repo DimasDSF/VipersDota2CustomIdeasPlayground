@@ -12,7 +12,7 @@
 			{
 				"item_tango"			"ITEM_CONSUMABLE | ITEM_SELLABLE"
 				"item_flask"			"ITEM_CONSUMABLE | ITEM_SELLABLE"
-				"item_stout_shield"		"ITEM_CORE | ITEM_SELLABLE"
+				"item_stout_shield"		"ITEM_CORE"
 
 				"item_branches"			"ITEM_CORE"
 				"item_branches"			"ITEM_CORE"
@@ -51,7 +51,6 @@
 				"item_recipe_basher"		"ITEM_LUXURY"
 				"item_basher"				"ITEM_DERIVED"
 
-				"item_stout_shield"			"ITEM_LUXURY"
 				"item_ring_of_health"		"ITEM_LUXURY"
 				"item_vitality_booster"		"ITEM_LUXURY"
 				"item_vanguard"				"ITEM_DERIVED"
