@@ -48,11 +48,13 @@ function modifier_vgmar_i_arcane_intellect:OnIntervalThink()
 			self:SetStackCount( math.floor(((self.percentage/100) * self:GetParent():GetIntellect()) + (math.floor(self.caststacks) * math.truncate(math.max(math.map(self:GetParent():GetMana(), self.csminmana, self.csmaxmana, 0, 1), 0), 1))) )
 			if self.ison == false then
 				self:SetDuration(0, true)
+				self.ison = true
 			end
 		else
 			self:SetStackCount( 0 )
 			if self.ison == true then
 				self:SetDuration(0.1, true)
+				self.ison = false
 			end
 		end
 	end

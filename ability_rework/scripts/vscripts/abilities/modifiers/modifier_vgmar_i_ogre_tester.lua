@@ -147,6 +147,9 @@ function modifier_vgmar_i_ogre_tester:OnIntervalThink()
 			end
 			self.oldxp = self:GetParent():GetCurrentXP()
 		end
+		for _,j in ipairs(GridNav:GetAllTreesAroundPoint(self:GetParent():GetAbsOrigin(), 600, true)) do
+			DebugDrawText(j:GetAbsOrigin(), tostring(j:entindex()).."\n"..tostring(GetEntityIndexForTreeId(j:entindex())).."\n"..tostring(GetTreeIdForEntityIndex(j:entindex())), false, 1)
+		end
 		--self:statprint("AttackDMG: "..self:GetParent():GetAttackDamage().."\nAverage AttackDMG: "..self:GetParent():GetAverageTrueAttackDamage(self:GetParent()))
 		--OrientationTest
 		--local orientation = -self:GetParent():GetForwardVector()
@@ -214,16 +217,10 @@ end--]]
 	end
 end--]]
 
-function modifier_vgmar_i_ogre_tester:OnTakeDamage( event )
-	--[[if IsServer() then
-		if event.unit:IsBuilding() then
-			--for i,v in ipairs(event) do
-			--	print(i.." : "..v)
-			--end
-			--debug.PrintTable(event)
-		end
-	end--]]
-end
+--[[function modifier_vgmar_i_ogre_tester:OnTakeDamage( event )
+	if IsServer() then
+	end
+end--]]
 
 function modifier_vgmar_i_ogre_tester:OnRemoved()
 	if IsServer() then
@@ -271,11 +268,12 @@ function modifier_vgmar_i_ogre_tester:DeclareFunctions()
 		MODIFIER_EVENT_ON_DEATH,
 		--MODIFIER_EVENT_ON_ATTACK_LANDED,
 		--MODIFIER_EVENT_ON_ATTACK_START,
-		MODIFIER_EVENT_ON_ORDER,
-		MODIFIER_EVENT_ON_TAKEDAMAGE,
+		--MODIFIER_EVENT_ON_ORDER,
+		--MODIFIER_EVENT_ON_TAKEDAMAGE,
 		--MODIFIER_EVENT_ON_SPENT_MANA,
-		--MODIFIER_EVENT_ON_ABILITY_EXECUTED,
-		--MODIFIER_EVENT_ON_ABILITY_START,
+		MODIFIER_EVENT_ON_ABILITY_EXECUTED,
+		MODIFIER_EVENT_ON_ABILITY_START,
+		MODIFIER_EVENT_ON_ABILITY_FULLY_CAST,
 		MODIFIER_PROPERTY_TRANSLATE_ACTIVITY_MODIFIERS
     }
     return funcs
@@ -286,7 +284,8 @@ function modifier_vgmar_i_ogre_tester:GetActivityTranslationModifiers()
 end
 
 --[[function modifier_vgmar_i_ogre_tester:OnOrder(event)
-
+	if event.order_type == 7 then
+	end
 end--]]
 
 --[[ManaCost Modification
@@ -294,9 +293,9 @@ function modifier_vgmar_i_ogre_tester:OnAbilityExecuted(kv)
 	if kv.ability:IsItem() == false then
 		kv.unit:ReduceMana((kv.ability:GetManaCost(-1) * self.mci) - kv.ability:GetManaCost(-1))
 	end
-end
+end--]]
 
-function modifier_vgmar_i_ogre_tester:OnAbilityStart(kv)
+--[[function modifier_vgmar_i_ogre_tester:OnAbilityStart(kv)
 	if kv.ability:IsItem() == false then
 		print("Ability: "..kv.ability:GetName().."\nRequired Mana: "..kv.ability:GetManaCost(-1) * self.mci.."\nAvailable Mana: "..kv.unit:GetMana())
 		if kv.ability:GetManaCost(-1) * self.mci > kv.unit:GetMana() then
@@ -306,6 +305,124 @@ function modifier_vgmar_i_ogre_tester:OnAbilityStart(kv)
 		end
 	end
 end--]]
+
+--[[
+OnAbilityStart
+vvvvvvvvvvvvvv
+new_pos                         	= Vector 0000000000366CD8 [0.000000 -nan 0.000000] (userdata)
+process_procs                   	= false (boolean)
+order_type                      	= 0 (number)
+issuer_player_index             	= 0 (number)
+fail_type                       	= 0 (number)
+damage_category                 	= 0 (number)
+reincarnate                     	= false (boolean)
+damage                          	= 0 (number)
+ignore_invis                    	= false (boolean)
+ability                         	= table: 0x00301e80 (table)
+ranged_attack                   	= false (boolean)
+record                          	= -8208 (number)
+unit                            	= table: 0x0041cd50 (table)
+do_not_consume                  	= false (boolean)
+damage_type                     	= -976879620 (number)
+activity                        	= -1 (number)
+heart_regen_applied             	= false (boolean)
+diffusal_applied                	= false (boolean)
+mkb_tested                      	= false (boolean)
+no_attack_cooldown              	= false (boolean)
+damage_flags                    	= 0 (number)
+original_damage                 	= 0 (number)
+gain                            	= 0 (number)
+cost                            	= 0 (number)
+basher_tested                   	= false (boolean)
+distance                        	= 0 (number)
+--------------
+OnAbilityExecuted
+vvvvvvvvvvvvvv
+new_pos                         	= Vector 0000000000313B78 [0.000000 1.007813 0.000000] (userdata)
+process_procs                   	= false (boolean)
+order_type                      	= 0 (number)
+issuer_player_index             	= -158072448 (number)
+fail_type                       	= 187 (number)
+damage_category                 	= 0 (number)
+reincarnate                     	= false (boolean)
+damage                          	= 0 (number)
+ignore_invis                    	= false (boolean)
+ability                         	= table: 0x00301e80 (table)
+ranged_attack                   	= false (boolean)
+record                          	= -30583 (number)
+unit                            	= table: 0x0041cd50 (table)
+do_not_consume                  	= false (boolean)
+damage_type                     	= 91 (number)
+activity                        	= -1 (number)
+heart_regen_applied             	= false (boolean)
+diffusal_applied                	= false (boolean)
+mkb_tested                      	= false (boolean)
+no_attack_cooldown              	= false (boolean)
+damage_flags                    	= 0 (number)
+original_damage                 	= 0 (number)
+gain                            	= 0 (number)
+cost                            	= 0 (number)
+basher_tested                   	= false (boolean)
+distance                        	= 0 (number)
+--------------
+OnAbilityFullyCast
+vvvvvvvvvvvvvv
+new_pos                         	= Vector 00000000003B17C0 [0.000000 0.000000 0.000000] (userdata)
+process_procs                   	= false (boolean)
+order_type                      	= 0 (number)
+issuer_player_index             	= 0 (number)
+fail_type                       	= 32762 (number)
+damage_category                 	= 0 (number)
+reincarnate                     	= false (boolean)
+damage                          	= 0 (number)
+ignore_invis                    	= false (boolean)
+ability                         	= table: 0x00301e80 (table)
+ranged_attack                   	= false (boolean)
+record                          	= 396 (number)
+unit                            	= table: 0x0041cd50 (table)
+do_not_consume                  	= false (boolean)
+damage_type                     	= -107328192 (number)
+activity                        	= -1 (number)
+heart_regen_applied             	= false (boolean)
+diffusal_applied                	= false (boolean)
+mkb_tested                      	= false (boolean)
+no_attack_cooldown              	= false (boolean)
+damage_flags                    	= 0 (number)
+original_damage                 	= 0 (number)
+gain                            	= 0 (number)
+cost                            	= 110 (number)
+basher_tested                   	= false (boolean)
+distance                        	= 0 (number)
+]]--
+
+function modifier_vgmar_i_ogre_tester:OnAbilityExecuted(event)
+	if IsServer() then
+		if event.unit == self:GetParent() then
+			print("OnAbilityExecuted")
+			debug.PrintTable(event)
+		end
+	end
+end
+
+function modifier_vgmar_i_ogre_tester:OnAbilityStart(event)
+	if IsServer() then
+		if event.unit == self:GetParent() then
+			print("OnAbilityStart")
+			debug.PrintTable(event)
+		end
+	end
+end
+
+
+
+function modifier_vgmar_i_ogre_tester:OnAbilityFullyCast( event )
+	if IsServer() then
+		if event.unit == self:GetParent() then
+			print("OnAbilityFullyCast")
+			debug.PrintTable(event)
+		end
+	end
+end
 
 function modifier_vgmar_i_ogre_tester:OnDeath(kv)
 	local function nonnilprint(var)

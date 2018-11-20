@@ -117,6 +117,14 @@ function Extensions:GetOpposingTeamNumber(teamNumber)
 	return nil
 end
 
+function Extensions:CallWithDelay(delay, gametime, func)
+	Timers:CreateTimer({
+		useGameTime = gametime,
+		endTime = delay, -- when this timer should first execute, you can omit this if you want it to run first on the next frame
+		callback = func
+	})
+end
+
 --math
 function math.scale( min, value, max )
 	return value * (max - min) + min

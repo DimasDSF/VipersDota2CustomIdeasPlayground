@@ -6,7 +6,7 @@ local VGMAR_DEBUG = true
 local VGMAR_DEBUG_DRAW = true
 local VGMAR_DEBUG_ENABLE_VARIABLE_SETTING = true
 local VGMAR_GIVE_DEBUG_ITEMS = false
-local VGMAR_BOT_FILL = false
+local VGMAR_BOT_FILL = true
 local VGMAR_LOG_BALANCE = false
 local VGMAR_LOG_BALANCE_GAMEEND = true
 local VGMAR_LOG_BALANCE_INTERVAL = 120
@@ -72,7 +72,6 @@ local botitemskv = {
 	--Such interactions disable bots from using the ability
 	noaghsheroes = {
 		["npc_dota_hero_chaos_knight"] = true,
-		["npc_dota_hero_luna"] = true,
 		["npc_dota_hero_riki"] = true,
 		["npc_dota_hero_sniper"] = true,
 		["npc_dota_hero_bristleback"] = true
@@ -84,7 +83,11 @@ local botitemskv = {
 		"item_tranquil_boots"
 	},
 	tomerestock = {690.0, 600.0},
-	tomeprice = 150
+	tomeprice = 150,
+	gemtime = {50, 0}
+}
+
+local botmodifiers = {
 }
 
 local botupgradepriorities = {
@@ -191,6 +194,7 @@ require('libraries/extensions')
 require('libraries/heronames')
 require('libraries/heroabilityslots')
 require('libraries/loglib')
+require('libraries/botsupportlib')
 
 function Precache( ctx )
 	--Precaching Custom Ability sounds (and all used heros' sounds :fp:)
@@ -226,12 +230,17 @@ function VGMAR:Init()
 	AbilitySlotsLib:Init()
 	LogLib:Init()
 	Extensions:Init()
+	BotSupportLib:Init()
 	self.n_players_radiant = 0
 	self.n_players_dire = 0
 	self.radiantheroes = {}
 	self.direheroes = {}
 	self.botheroes = {}
-	self.istimescalereset = 0
+	self.allspawned = false
+	self.spawnedheroes = {}
+	self.forcedpause = true
+	self.pausedn = 0
+	self.istimescalereset = false
 	self.direcourieruplevel = 1
 	self.radiantcourieruplevel = 1
 	self.couriersinit = 0
@@ -262,6 +271,7 @@ function VGMAR:Init()
 	self.shrinedecaystarted = false
 	self.bottomepurchausetimestamp = 0
 	self.tomepurchaseallmaxlvl = false
+	self.botinnategemapplied = false
 	
 	local itemskvnum = 0
 	local itemscustomkvnum = 0
@@ -308,8 +318,12 @@ function VGMAR:Init()
 	--For ClientSide
 	self:InitNetTables()
 	
+	--Util
 	LinkLuaModifier("modifier_vgmar_util_dominator_ability_purger", "abilities/util/modifiers/modifier_vgmar_util_dominator_ability_purger.lua", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_util_creep_ability_updater", "abilities/util/modifiers/modifier_vgmar_util_creep_ability_updater", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_util_give_debugitems", "abilities/util/modifiers/modifier_vgmar_util_give_debugitems", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_util_all_vision", "abilities/util/modifiers/modifier_vgmar_util_all_vision", LUA_MODIFIER_MOTION_NONE)
+	--Items
 	LinkLuaModifier("modifier_vgmar_i_spellshield", "abilities/modifiers/modifier_vgmar_i_spellshield", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_kingsaegis_cooldown", "abilities/modifiers/modifier_vgmar_i_kingsaegis_cooldown", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_kingsaegis_active", "abilities/modifiers/modifier_vgmar_i_kingsaegis_active", LUA_MODIFIER_MOTION_NONE)
@@ -358,20 +372,21 @@ function VGMAR:Init()
 	LinkLuaModifier("modifier_vgmar_i_permafrost_debuff_lingering", "abilities/modifiers/modifier_vgmar_i_permafrost", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_manashield", "abilities/modifiers/modifier_vgmar_i_manashield", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_manashield_stun", "abilities/modifiers/modifier_vgmar_i_manashield", LUA_MODIFIER_MOTION_NONE)
+	--Building Specific
+	LinkLuaModifier("modifier_vgmar_buildings_destroyed_counter", "abilities/modifiers/modifier_vgmar_buildings_destroyed_counter.lua", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_anticreep_protection", "abilities/modifiers/modifier_vgmar_anticreep_protection.lua", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_buildings_decay", "abilities/modifiers/modifier_vgmar_buildings_decay.lua", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_b_fountain_anticamp", "abilities/modifiers/modifier_vgmar_b_fountain_anticamp", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_b_fountain_anticamp_debuff_break", "abilities/modifiers/modifier_vgmar_b_fountain_anticamp", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_b_fountain_anticamp_debuff_silence", "abilities/modifiers/modifier_vgmar_b_fountain_anticamp", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_b_fountain_anticamp_debuff_blindness", "abilities/modifiers/modifier_vgmar_b_fountain_anticamp", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_b_fountain_anticamp_debuff", "abilities/modifiers/modifier_vgmar_b_fountain_anticamp", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_b_fountain_anticamp_debuff_lingering", "abilities/modifiers/modifier_vgmar_b_fountain_anticamp", LUA_MODIFIER_MOTION_NONE)
-	LinkLuaModifier("modifier_vgmar_util_give_debugitems", "abilities/util/modifiers/modifier_vgmar_util_give_debugitems", LUA_MODIFIER_MOTION_NONE)
+	--Unit Specific
 	LinkLuaModifier("modifier_vgmar_courier_burst", "abilities/modifiers/modifier_vgmar_courier_burst.lua", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_courier_burst_effect", "abilities/modifiers/modifier_vgmar_courier_burst.lua", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_courier_burst_charge", "abilities/modifiers/modifier_vgmar_courier_burst.lua", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_crai_courier_shield", "abilities/modifiers/ai/modifier_vgmar_crai_courier_shield.lua", LUA_MODIFIER_MOTION_NONE)
-	LinkLuaModifier("modifier_vgmar_buildings_destroyed_counter", "abilities/modifiers/modifier_vgmar_buildings_destroyed_counter.lua", LUA_MODIFIER_MOTION_NONE)
-	LinkLuaModifier("modifier_vgmar_anticreep_protection", "abilities/modifiers/modifier_vgmar_anticreep_protection.lua", LUA_MODIFIER_MOTION_NONE)
-	LinkLuaModifier("modifier_vgmar_buildings_decay", "abilities/modifiers/modifier_vgmar_buildings_decay.lua", LUA_MODIFIER_MOTION_NONE)
 	
 	self.buildingadvantagevaluelist = {
 		["dota_badguys_tower1_mid"] = 1,
@@ -576,7 +591,7 @@ function VGMAR:Init()
 	GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_GOODGUYS, RADIANT_TEAM_MAX_PLAYERS)
     GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_BADGUYS, DIRE_TEAM_MAX_PLAYERS)
 	GameRules:SetStrategyTime( 0.0 )
-	GameRules:SetShowcaseTime( 5.0 )
+	GameRules:SetShowcaseTime( 0.0 )
 	GameRules:SetCustomGameSetupAutoLaunchDelay( 5 )
 	--RuneSpawnTime set to 60 to workaround BaseCustomGameAPI Bug forcing all runes to spawn at RuneSpawnTime
 	GameRules:SetRuneSpawnTime( 60 )
@@ -611,6 +626,7 @@ function VGMAR:Init()
 	--ListenToGameEvent( "dota_player_used_ability", Dynamic_Wrap( VGMAR, 'OnPlayerUsedAbility' ), self )
 	Convars:RegisterConvar('vgmar_devmode', "0", "Set to 1 to show debug info.  Set to 0 to disable.", 0)
 	Convars:RegisterConvar('vgmar_blockbotcontrol', "1", "Set to 0 to enable controlling bots", 0)
+	Convars:RegisterConvar('vgmar_enable_full_vision', "0", "Set to 1 to enable all vision", 0)
 	Convars:RegisterCommand('vgmar_reload_test_modifier', Dynamic_Wrap( VGMAR, "ReloadTestModifier" ), "Reload script modifier", 0)
 	Convars:RegisterCommand('vgmar_test', Dynamic_Wrap( VGMAR, "TestFunction" ), "Runs a test function", 0)
 	Convars:RegisterCommand('vgmar_test_readvar', Dynamic_Wrap( VGMAR, "TestReadVar" ), "Tries to read a variable from lua", 0)
@@ -662,7 +678,7 @@ function IsIssuerHost()
 	end
 end
 
-function VGMAR:TestReadVar(varname)
+function VGMAR:TestReadVar(varname, deep)
 	--local varname = "GameRules.VGMAR."..var
 	dprint("Reading "..varname)
 	local value = debug.ReadVar(varname)
@@ -676,7 +692,11 @@ function VGMAR:TestReadVar(varname)
 		dprint("type: "..type(value))
 		dprint("-----")
 		if type(value) == "table" then
-			debug.PrintTable(value)
+			if deep then
+				DeepPrintTable(value)
+			else
+				debug.PrintTable(value)
+			end
 		else
 			dprint(value)
 		end
@@ -771,6 +791,13 @@ function VGMAR:LogBalance()
 	local radiantXP = 0
 	local direXP = 0
 	local allheroes = HeroList:GetAllHeroes()
+	local trackedmodifiers = {
+		"modifier_item_moon_shard_consumed",
+		"modifier_silencer_int_steal",
+		"modifier_legion_commander_duel_damage_boost",
+		"modifier_pudge_flesh_heap",
+		"modifier_nevermore_necromastery"
+	}
 	LogLib:WriteLog("balance", 1, false, "")
 	LogLib:WriteLog("balance", 1, false, "Hero Data:")
 	for i=1,#allheroes do
@@ -798,8 +825,10 @@ function VGMAR:LogBalance()
 			radiantteamnetworth = radiantteamnetworth + heronw
 
 			LogLib:WriteLog("balance", 3, false, "Modifiers: ")
-			if allheroes[i]:HasModifier("modifier_item_moon_shard_consumed") then
-				LogLib:WriteLog("balance", 4, false, "- modifier_item_moon_shard_consumed | StackCount: 0")
+			for _,v in ipairs(trackedmodifiers) do
+				if allheroes[i]:HasModifier(v) then
+					LogLib:WriteLog("balance", 4, false, "- "..v.." | StackCount: "..allheroes[i]:FindModifierByName(v):GetStackCount())
+				end
 			end
 			for k,v in pairs(modifierdatatable) do
 				if allheroes[i]:HasModifier(k) then
@@ -829,8 +858,10 @@ function VGMAR:LogBalance()
 			LogLib:WriteLog("balance", 3, false, "Item Networth: "..heronw)
 			
 			LogLib:WriteLog("balance", 3, false, "Modifiers: ")
-			if allheroes[i]:HasModifier("modifier_item_moon_shard_consumed") then
-				LogLib:WriteLog("balance", 4, false, "- modifier_item_moon_shard_consumed | StackCount: 0")
+			for _,v in ipairs(trackedmodifiers) do
+				if allheroes[i]:HasModifier(v) then
+					LogLib:WriteLog("balance", 4, false, "- "..v.." | StackCount: "..allheroes[i]:FindModifierByName(v):GetStackCount())
+				end
 			end
 			for k,v in pairs(modifierdatatable) do
 				if allheroes[i]:HasModifier(k) then
@@ -892,7 +923,10 @@ local missclickproofabilities = {
 	["item_tpscroll"] = true,
 	["item_travel_boots"] = true,
 	["item_travel_boots_2"] = true,
-	["item_moon_shard"] = true
+	["item_moon_shard"] = true,
+	["item_ward_observer"] = true,
+	["item_ward_sentry"] = true,
+	["item_ward_dispenser"] = true
 }
 	
 function VGMAR:InitNetTables()
@@ -1471,16 +1505,6 @@ function VGMAR:OnTowerKilled( keys )
 	--TODO:Use GameRules:GetGameModeEntity():SetBotsMaxPushTier(int nMaxTier)
 end
 
-function VGMAR:IsHeroBotControlled(hero)
-	if hero ~= nil then
-		local heroplayerID = hero:GetPlayerID()
-		if PlayerResource:IsValidPlayer(heroplayerID) and PlayerResource:GetConnectionState(heroplayerID) == 1 then
-			return true
-		end
-	end
-	return false
-end
-
 function VGMAR:TeamReward(teamnumber, amount, split)
 	local heroes = HeroList:GetAllHeroes()
 	local targets = {}
@@ -1708,6 +1732,16 @@ function VGMAR:OnThink()
 	end
 	if GameRules:State_Get() == DOTA_GAMERULES_STATE_GAME_IN_PROGRESS then
 		local heroes = HeroList:GetAllHeroes()
+		if Convars:GetInt("vgmar_enable_full_vision") == 1 then
+			local wards = {}
+			for _,ward in ipairs (Entities:FindAllByClassname("npc_dota_ward_base")) do table.insert(wards, ward) end
+			for _,ward in ipairs (Entities:FindAllByClassname("npc_dota_ward_base_truesight")) do table.insert(wards, ward) end
+			for _,ent in ipairs(wards) do
+				if not ent:HasModifier("modifier_vgmar_util_all_vision") then
+					ent:AddNewModifier(ent, nil, "modifier_vgmar_util_all_vision", {})
+				end
+			end
+		end
 		for i=0,HeroList:GetHeroCount() do
 			local heroent = heroes[i]
 			if heroent then
@@ -1721,6 +1755,12 @@ function VGMAR:OnThink()
 					heroent:SetBotDifficulty(3)
 					if closestrune then
 						heroent:PickupRune(closestrune)
+					end
+					
+					if Convars:GetInt("vgmar_enable_full_vision") == 1 then
+						if not heroent:HasModifier("modifier_vgmar_util_all_vision") then
+							heroent:AddNewModifier(heroent, nil, "modifier_vgmar_util_all_vision", {})
+						end
 					end
 					
 					--TODO: Add teamAdvantage into the buyback cooldown reset price calculation for bots
@@ -2129,7 +2169,7 @@ function VGMAR:OnThink()
 				backpack = true,
 				preventedhero = "npc_target_dummy",
 				specificcond = true	},
-				--TODO:Rework Poisob Dagger Recipe
+				--TODO:Rework Poison Dagger Recipe
 			{spell = "modifier_vgmar_i_poison_dagger",
 				items = {itemnames = {"item_butterfly", "item_orb_of_venom", "item_eagle"}, itemnum = {1, 2, 1}},
 				isconsumable = true,
@@ -2327,6 +2367,22 @@ function VGMAR:OnThink()
 						BuyTome()
 					end
 				end
+				--/////////////////////
+				--Innate Gem Assignment
+				--/////////////////////
+				if self:TimeIsLaterThan( botitemskv.gemtime[1], botitemskv.gemtime[2] ) and self.botinnategemapplied == false and #self.direheroes > 0 then
+					local fathero = {-1, nil}
+					for _, fatso in ipairs(self.direheroes) do
+						if fatso:GetMaxHealth() > fathero[1] then
+							fathero = {fatso:GetMaxHealth(), fatso}
+						end
+					end
+					if fathero[2] ~= nil then
+						fathero[2]:AddNewModifier(fathero[2], nil, "modifier_vgmar_i_truesight", modifierdatatable["modifier_vgmar_i_truesight"])
+						dprint("Adding modifier_vgmar_i_truesight to "..HeroNamesLib:ConvertInternalToHeroName(fathero[2]:GetName()))
+						self.botinnategemapplied = true
+					end
+				end
 			end
 			--///////////
 			--CourierInit
@@ -2392,10 +2448,10 @@ function VGMAR:OnThink()
 		--///////////////////
 		
 		local customitemreminderlist = {
-			[-90] = "<font color='honeydew'>Remember, this gamemode has multiple scripted item abilities</font>",
-			[-80] = "<font color='honeydew'>Use information Icon above your minimap</font>",
-			[-70] = "<font color='honeydew'>You can reset your buyback cooldown by buying an item at the base shop.</font>",
-			[-65] = "<font color='honeydew'>Bots can also do that.",
+			[-60] = "<font color='honeydew'>Remember, this gamemode has multiple scripted item abilities</font>",
+			[-50] = "<font color='honeydew'>Use information Icon above your minimap</font>",
+			[-40] = "<font color='honeydew'>You can reset your buyback cooldown by buying an item at the base shop.</font>",
+			[-30] = "<font color='honeydew'>Bots can also do that.",
 			[-5] = "<font color='lime'>GLHF</font>"
 		}
 		
@@ -2499,10 +2555,158 @@ function VGMAR:GetMegaCreepsStatus(teamnum)
 	return (self:GetBarracksStatus(teamnum, "bot")[3] and self:GetBarracksStatus(teamnum, "mid")[3] and self:GetBarracksStatus(teamnum, "top")[3]) == false
 end
 
+function VGMAR:OnAllHeroesSpawned()
+	--Handle unpause
+	GameRules:SendCustomMessageToTeam("<font color='palegreen'>Finished Loading.</font>", DOTA_TEAM_GOODGUYS, DOTA_TEAM_GOODGUYS, DOTA_TEAM_GOODGUYS)
+	self.forcedpause = false
+	self.pausedn = nil
+	PauseGame(false)
+	-----------------
+	--///////////////
+	--Fill Hero Lists
+	--///////////////
+	local heroes = HeroList:GetAllHeroes()
+	if #heroes > 0 then
+		for n=1,#heroes do
+			if heroes[n]:GetTeamNumber() == 2 then
+				table.insert(self.radiantheroes, heroes[n])
+			elseif heroes[n]:GetTeamNumber() == 3 then
+				table.insert(self.direheroes, heroes[n])
+			end
+			if BotSupportLib:IsHeroBotControlled(heroes[n]) then
+				table.insert(self.botheroes, heroes[n])
+			end
+		end
+	end
+	--/////////////////////////
+	--BotSupportLib Heroes Init
+	--/////////////////////////
+	Extensions:CallWithDelay(2, true, function()
+		BotSupportLib:StartBotInit()
+	end)
+	--//////////////////////
+	--Applying Bot Modifiers
+	--//////////////////////
+	for _, bot in ipairs(self.botheroes) do
+		if botmodifiers[bot:GetName()] ~= nil then
+			local botmods = botmodifiers[bot:GetName()]
+			for _, mod in ipairs(botmods) do
+				bot:AddNewModifier(bot, nil, mod.modifier, mod.data)
+				dprint("Attached modifier: "..mod.modifier.." to bot: "..HeroNamesLib:ConvertInternalToHeroName(bot:GetName()))
+			end
+		end
+	end
+	
+	--/////////
+	--Timescale
+	--/////////
+	
+	Extensions:CallWithDelay(10, true, function() Convars:SetFloat("host_timescale", PreGameSpeed()) end)
+	Extensions:CallWithDelay(85, true, function()
+		if self.istimescalereset == false then
+			Convars:SetFloat("host_timescale", 1.0)
+			self.istimescalereset = true
+		end
+	end)
+	
+	--////////////
+	--Free Courier
+	--////////////
+	if self.couriergiven == false then
+		local luckyhero = self.radiantheroes[math.random(1, #self.radiantheroes)]
+		if luckyhero ~= nil then
+			luckyhero:AddItemByName("item_courier")
+			local heroname = HeroNamesLib:ConvertInternalToHeroName(luckyhero:GetName())
+			GameRules:SendCustomMessageToTeam("<font color='turquoise'>Giving Free Courier to</font> <font color='gold'>"..heroname.."</font>", DOTA_TEAM_GOODGUYS, DOTA_TEAM_GOODGUYS, DOTA_TEAM_GOODGUYS)
+			self.couriergiven = true
+		end
+	end
+	--Giving Debug Items
+	if IsDevMode() and VGMAR_GIVE_DEBUG_ITEMS == true then
+		local itemslist = {}
+		for k,v in pairs(debugitems) do
+			if v >= 1 then
+				for j=1, v do
+					table.insert(itemslist, k)
+				end
+			end
+		end
+		if #itemslist > 0 then
+			for i=1,#self.radiantheroes do
+				self.radiantheroes[i]:AddNewModifier(self.radiantheroes[i], nil, "modifier_vgmar_util_give_debugitems", 
+					{item1 = itemslist[1],
+					item2 = itemslist[2],
+					item3 = itemslist[3],
+					item4 = itemslist[4],
+					item5 = itemslist[5],
+					item6 = itemslist[6],
+					item7 = itemslist[7],
+					item8 = itemslist[8],
+					item9 = itemslist[9],
+					item10 = itemslist[10],
+					item11 = itemslist[11],
+					item12 = itemslist[12],
+					item13 = itemslist[13],
+					item14 = itemslist[14],
+					item15 = itemslist[15],
+					item16 = itemslist[16],
+					item17 = itemslist[17],
+					item18 = itemslist[18],
+					item19 = itemslist[19],
+					item20 = itemslist[20],
+					item21 = itemslist[21],
+					item22 = itemslist[22],
+					item23 = itemslist[23],
+					item24 = itemslist[24],
+					item25 = itemslist[25],
+					item26 = itemslist[26],
+					item27 = itemslist[27],
+					item28 = itemslist[28],
+					item29 = itemslist[29],
+					item30 = itemslist[30],
+					item31 = itemslist[31],
+					item32 = itemslist[32],
+					item33 = itemslist[33],
+					item34 = itemslist[34],
+					item35 = itemslist[35],
+					item36 = itemslist[36],
+					item37 = itemslist[37],
+					item38 = itemslist[38],
+					item39 = itemslist[39],
+					item40 = itemslist[40],
+					item41 = itemslist[41],
+					item42 = itemslist[42],
+					item43 = itemslist[43],
+					item44 = itemslist[44],
+					item45 = itemslist[45],
+					item46 = itemslist[46],
+					item47 = itemslist[47],
+					item48 = itemslist[48],
+					item49 = itemslist[49],
+					item50 = itemslist[50]})
+			end
+		end
+	end
+end
+
 function VGMAR:OnNPCSpawned( event )
 	local spawnedUnit = EntIndexToHScript( event.entindex )
 	if not spawnedUnit or spawnedUnit:GetClassname() == "npc_dota_thinker" or spawnedUnit:IsPhantom() then
 		return
+	end
+	
+	if spawnedUnit:IsRealHero() and self.allspawned == false then
+		if self.spawnedheroes[event.entindex] == nil then
+			dprint(HeroNamesLib:ConvertInternalToHeroName(spawnedUnit:GetName()).." | Index: "..event.entindex.." Spawned for the first time")
+			table.insert(self.spawnedheroes, event.entindex)
+			self.spawnedheroes[event.entindex] = true
+			if PlayerResource:GetPlayerCountForTeam(2) + PlayerResource:GetPlayerCountForTeam(3) <= #self.spawnedheroes then
+				dprint("All heroes successfully spawned")
+				self.allspawned = true
+				self.spawnedheroes = nil
+				self:OnAllHeroesSpawned()
+			end
+		end
 	end
 	
 	if spawnedUnit:GetClassname() == "npc_dota_venomancer_plagueward" then
@@ -2682,8 +2886,6 @@ function VGMAR:FilterDamage( filterTable )
 	local attacker = EntIndexToHScript(filterTable.entindex_attacker_const)
 	local damage = filterTable["damage"]
 	
-	local DAMAGEDEBUG = true
-	
 	--Damn 7.07 Makes Creeps SuperDemolishingSquads
 	--Reduce Creep Damage to Buildings
 	if (victim:IsBuilding() or victim:IsTower()) and (attacker:GetClassname() == "npc_dota_creep_lane" or attacker:GetClassname() == "npc_dota_creep_lane") and not attacker:IsDominated() then
@@ -2695,10 +2897,10 @@ function VGMAR:FilterDamage( filterTable )
 		if (victim:GetClassname() == "npc_dota_creep_lane" or victim:GetClassname() == "npc_dota_creep_siege") and (attacker:GetClassname() == "npc_dota_creep_lane" or attacker:GetClassname() == "npc_dota_creep_siege") then
 			--Creep to Creep Damage
 			if attacker:GetTeamNumber() == 2 then --Radiant damage
-				if DAMAGEDEBUG == true then DebugDrawText(attacker:GetAbsOrigin(), "Rad DMGMult: "..self:CreepDamage(true, 0.8, 1.2), false, 2.0) end
+				if VGMAR_DEBUG_DRAW == true then DebugDrawText(attacker:GetAbsOrigin(), "Rad DMGMult: "..self:CreepDamage(true, 0.8, 1.2), false, 2.0) end
 				filterTable["damage"] = filterTable["damage"] * self:CreepDamage(true, 0.8, 1.2) --math.min(1.2,math.max(0.8,self:GetTeamAdvantage(false, true, false, false)))
 			elseif attacker:GetTeamNumber() == 3 then --Dire damage
-				if DAMAGEDEBUG == true then DebugDrawText(attacker:GetAbsOrigin(), "Dire DMGMult: "..self:CreepDamage(false, 0.8, 1.2), false, 2.0) end
+				if VGMAR_DEBUG_DRAW == true then DebugDrawText(attacker:GetAbsOrigin(), "Dire DMGMult: "..self:CreepDamage(false, 0.8, 1.2), false, 2.0) end
 				filterTable["damage"] = filterTable["damage"] * self:CreepDamage(false, 0.8, 1.2) --math.min(1.2,math.max(0.8,self:GetTeamAdvantage(true, true, false, false)))
 			end
 		--[[elseif (attacker:GetClassname() == "npc_dota_creep_lane" or attacker:GetClassname() == "npc_dota_creep_siege") and (victim:IsBuilding() or victim:IsTower()) then
@@ -2795,6 +2997,11 @@ function VGMAR:ExecuteOrderFilter( filterTable )
     local ability = EntIndexToHScript(filterTable.entindex_ability)
     local target = EntIndexToHScript(filterTable.entindex_target)		
 	
+	if GameRules:State_Get() == DOTA_GAMERULES_STATE_STRATEGY_TIME then
+		dprint("LoadingTime: Blocking order:"..order_type.." PlayerID: "..issuer)
+		return false
+	end
+	
 	--//////////
 	--Buy Orders
 	--//////////
@@ -2884,6 +3091,45 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 				end
 			end
 			return false
+		end
+	end
+	
+	--Bot Control Prevention
+	if unit and Convars:GetInt("vgmar_blockbotcontrol") == 1 and order_type ~= 27 then
+		local player = PlayerResource:GetPlayer(issuer)
+		if unit:IsRealHero() then
+			local unitPlayerID = unit:GetPlayerID()
+			if PlayerResource:GetConnectionState(unitPlayerID) == 1 and unitPlayerID ~= issuer and issuer ~= -1 then
+				dprint("Blocking a command to a unit not owned by player UnitPlayerID: ", unitPlayerID, "PlayerID: ", issuer)
+				if IsDevMode() then
+					DeepPrintTable(filterTable)
+				end
+				if player then
+					dprint("Trying to call panorama to reset players unit selection")
+					CustomGameEventManager:Send_ServerToPlayer(player, "selection_reset", {})
+				end
+				return false
+			end
+		end
+		if unit:GetClassname() == "npc_dota_courier" or unit:GetClassname() == "npc_dota_flying_courier" then
+			if PlayerResource:GetTeam(issuer) == 2 or PlayerResource:GetTeam(issuer) == 3 then
+				if unit:GetTeamNumber() ~= PlayerResource:GetTeam(issuer) then
+					dprint("Blocking enemy team Courier usage CourierTeamID: ", unit:GetTeamNumber(), "PlayerTeamID: ", PlayerResource:GetTeam(issuer))
+					CustomGameEventManager:Send_ServerToPlayer(player, "selection_reset", {})
+					return false
+				end
+			end
+		end
+	end
+	
+	--Preventing Console Spam By invalid attack orders
+	if units then
+		for _,j in ipairs(units) do
+			if j:GetAttackCapability() == 0 and (order_type == 3 or order_type == 4) then return false end
+			if j:IsCommandRestricted() then
+				if j:GetName() == "npc_dota_zeus_cloud" then return false end
+				if j:HasModifer("modifier_skeleton_king_mortal_strike_summon") then return false end
+			end
 		end
 	end
 	
@@ -3048,35 +3294,11 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 						end
 					end
 				end
+				local bslofoutput = BotSupportLib:OrderFilter(filterTable)
+				if bslofoutput ~= nil then
+					return bslofoutput
+				end
             end
-		end
-	end
-	
-	--Bot Control Prevention
-	if unit and Convars:GetInt("vgmar_blockbotcontrol") == 1 and order_type ~= 27 then
-		local player = PlayerResource:GetPlayer(issuer)
-		if unit:IsRealHero() then
-			local unitPlayerID = unit:GetPlayerID()
-			if PlayerResource:GetConnectionState(unitPlayerID) == 1 and unitPlayerID ~= issuer and issuer ~= -1 then
-				dprint("Blocking a command to a unit not owned by player UnitPlayerID: ", unitPlayerID, "PlayerID: ", issuer)
-				if IsDevMode() then
-					DeepPrintTable(filterTable)
-				end
-				if player then
-					dprint("Trying to call panorama to reset players unit selection")
-					CustomGameEventManager:Send_ServerToPlayer(player, "selection_reset", {})
-				end
-				return false
-			end
-		end
-		if unit:GetClassname() == "npc_dota_courier" or unit:GetClassname() == "npc_dota_flying_courier" then
-			if PlayerResource:GetTeam(issuer) == 2 or PlayerResource:GetTeam(issuer) == 3 then
-				if unit:GetTeamNumber() ~= PlayerResource:GetTeam(issuer) then
-					dprint("Blocking enemy team Courier usage CourierTeamID: ", unit:GetTeamNumber(), "PlayerTeamID: ", PlayerResource:GetTeam(issuer))
-					CustomGameEventManager:Send_ServerToPlayer(player, "selection_reset", {})
-					return false
-				end
-			end
 		end
 	end
 	
@@ -3121,16 +3343,10 @@ function VGMAR:OnGameStateChanged( keys )
 	elseif state == DOTA_GAMERULES_STATE_STRATEGY_TIME then
 		local used_hero_name = "npc_dota_hero_dragon_knight"
 		dprint("Checking players...")
-		
+
 		for playerID=0, DOTA_MAX_TEAM_PLAYERS do
 			if PlayerResource:IsValidPlayer(playerID) then
 				dprint("PlayerID:", playerID)
-				
-				if PlayerResource:GetTeam(playerID) == DOTA_TEAM_GOODGUYS then
-					self.n_players_radiant = self.n_players_radiant + 1
-				elseif PlayerResource:GetTeam(playerID) == DOTA_TEAM_BADGUYS then
-					self.n_players_dire = self.n_players_dire + 1
-				end
 
 				-- Random heroes for people who have not picked
 				if PlayerResource:HasSelectedHero(playerID) == false then
@@ -3150,126 +3366,43 @@ function VGMAR:OnGameStateChanged( keys )
 		end
 		Convars:SetBool("dota_bot_disable", false)
 		
-		dprint("Number of players:", self.n_players_radiant + self.n_players_dire)
-		dprint("Radiant:", self.n_players_radiant)
-		dprint("Radiant:", self.n_players_dire)
-		
+	elseif state == DOTA_GAMERULES_STATE_TEAM_SHOWCASE then
+		if IsServer() then
+			Timers:CreateTimer({ 
+				useGameTime = false,
+				endTime = 2,
+				callback = function()
+					self.n_players_radiant = PlayerResource:GetPlayerCountForTeam(2)
+					self.n_players_dire = PlayerResource:GetPlayerCountForTeam(3)
+					
+					dprint("Number of players:", self.n_players_radiant + self.n_players_dire)
+					dprint("Radiant:", self.n_players_radiant)
+					dprint("Dire:", self.n_players_dire)
+				end
+			})
+		end
 	elseif state == DOTA_GAMERULES_STATE_PRE_GAME then
 		if IsServer() then
+			GameRules:SendCustomMessageToTeam("<font color='lightyellow'>Loading. Please wait.</font>", DOTA_TEAM_GOODGUYS, DOTA_TEAM_GOODGUYS, DOTA_TEAM_GOODGUYS)
+			Timers:CreateTimer(0.1, function()
+				if self.forcedpause and GameRules:IsGamePaused() == false then
+					PauseGame(true)
+					self.pausedn = self.pausedn + 1
+					if self.pausedn == 2 then
+						GameRules:SendCustomMessageToTeam("<font color='lightsalmon'>Please do not interfere with the loading.</font>", DOTA_TEAM_GOODGUYS, DOTA_TEAM_GOODGUYS, DOTA_TEAM_GOODGUYS)
+						GameRules:SendCustomMessageToTeam("<font color='lightyellow'>Game will unpause automatically when loading is finished.</font>", DOTA_TEAM_GOODGUYS, DOTA_TEAM_GOODGUYS, DOTA_TEAM_GOODGUYS)
+					end
+				end
+				if self.forcedpause then
+					return 0.1
+				end
+			end)
 			Timers:CreateTimer(10, function()
 				Convars:SetBool("sv_cheats", true)
 				Convars:SetBool("dota_bot_disable", false)
 				if VGMAR_BOT_FILL == true then
 					GameRules:GetGameModeEntity():SetBotThinkingEnabled(true)
 					GameRules:GetGameModeEntity():SetBotsInLateGame(self.botsInLateGameMode)
-				end
-				Convars:SetFloat("host_timescale", PreGameSpeed())
-			end)
-		end
-	
-		--////////////
-		--Free Courier
-		--////////////
-		if IsServer() then
-			Timers:CreateTimer(5,
-			function()
-				if self.couriergiven == false then
-					local heroes = HeroList:GetAllHeroes()
-					local radiantheroes = {}
-					if #heroes > 0 then
-						for i=1,#heroes do
-							if heroes[i]:GetTeamNumber() == 2 then
-								table.insert(radiantheroes, heroes[i])
-							end
-						end
-					else
-						return 5.0
-					end
-					local luckyhero = radiantheroes[math.random(1, #radiantheroes)]
-					if luckyhero ~= nil then
-						luckyhero:AddItemByName("item_courier")
-						local heroname = HeroNamesLib:ConvertInternalToHeroName(luckyhero:GetName())
-						GameRules:SendCustomMessageToTeam("<font color='turquoise'>Giving Free Courier to</font> <font color='gold'>"..heroname.."</font>", DOTA_TEAM_GOODGUYS, DOTA_TEAM_GOODGUYS, DOTA_TEAM_GOODGUYS)
-						self.couriergiven = true
-					end
-					if self.couriergiven == false then
-						return 5.0
-					end
-				end
-				--Giving Debug Items
-				if IsDevMode() and VGMAR_GIVE_DEBUG_ITEMS == true then
-					local heroes = HeroList:GetAllHeroes()
-					local radiantheroes = {}
-					if #heroes > 0 then
-						for i=1,#heroes do
-							if heroes[i]:GetTeamNumber() == 2 then
-								table.insert(radiantheroes, heroes[i])
-							end
-						end
-					end
-					local itemslist = {}
-					for k,v in pairs(debugitems) do
-						if v >= 1 then
-							for j=1, v do
-								table.insert(itemslist, k)
-							end
-						end
-					end
-					if #itemslist > 0 then
-						for i=1,#radiantheroes do
-							radiantheroes[i]:AddNewModifier(radiantheroes[i], nil, "modifier_vgmar_util_give_debugitems", 
-								{item1 = itemslist[1],
-								item2 = itemslist[2],
-								item3 = itemslist[3],
-								item4 = itemslist[4],
-								item5 = itemslist[5],
-								item6 = itemslist[6],
-								item7 = itemslist[7],
-								item8 = itemslist[8],
-								item9 = itemslist[9],
-								item10 = itemslist[10],
-								item11 = itemslist[11],
-								item12 = itemslist[12],
-								item13 = itemslist[13],
-								item14 = itemslist[14],
-								item15 = itemslist[15],
-								item16 = itemslist[16],
-								item17 = itemslist[17],
-								item18 = itemslist[18],
-								item19 = itemslist[19],
-								item20 = itemslist[20],
-								item21 = itemslist[21],
-								item22 = itemslist[22],
-								item23 = itemslist[23],
-								item24 = itemslist[24],
-								item25 = itemslist[25],
-								item26 = itemslist[26],
-								item27 = itemslist[27],
-								item28 = itemslist[28],
-								item29 = itemslist[29],
-								item30 = itemslist[30],
-								item31 = itemslist[31],
-								item32 = itemslist[32],
-								item33 = itemslist[33],
-								item34 = itemslist[34],
-								item35 = itemslist[35],
-								item36 = itemslist[36],
-								item37 = itemslist[37],
-								item38 = itemslist[38],
-								item39 = itemslist[39],
-								item40 = itemslist[40],
-								item41 = itemslist[41],
-								item42 = itemslist[42],
-								item43 = itemslist[43],
-								item44 = itemslist[44],
-								item45 = itemslist[45],
-								item46 = itemslist[46],
-								item47 = itemslist[47],
-								item48 = itemslist[48],
-								item49 = itemslist[49],
-								item50 = itemslist[50]})
-						end
-					end
 				end
 			end)
 		end
@@ -3403,27 +3536,11 @@ function VGMAR:OnGameStateChanged( keys )
 		end
 	elseif state == DOTA_GAMERULES_STATE_GAME_IN_PROGRESS then
 		--///////////////
-		--Fill Hero Lists
-		--///////////////
-		local heroes = HeroList:GetAllHeroes()
-		if #heroes > 0 then
-			for n=1,#heroes do
-				if heroes[n]:GetTeamNumber() == 2 then
-					table.insert(self.radiantheroes, heroes[n])
-				elseif heroes[n]:GetTeamNumber() == 3 then
-					table.insert(self.direheroes, heroes[n])
-				end
-				if self:IsHeroBotControlled(heroes[n]) then
-					table.insert(self.botheroes, heroes[n])
-				end
-			end
-		end
-		--///////////////
 		--Reset Timescale
 		--///////////////
-		if IsServer() and self.istimescalereset == 0 then
+		if IsServer() and self.istimescalereset == false then
 			Convars:SetFloat("host_timescale", 1.0)
-			self.istimescalereset = 1
+			self.istimescalereset = true
 		end
 	elseif state == DOTA_GAMERULES_STATE_POST_GAME then
 		if IsServer() and VGMAR_LOG_BALANCE_GAMEEND and VGMAR_BOT_FILL then
