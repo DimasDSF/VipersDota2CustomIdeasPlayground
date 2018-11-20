@@ -300,7 +300,7 @@ function BotSupportLib:InitBotHero(unit)
 			table.insert(self.botdata, index)
 			self.botdata[index] = {hero = unit, name = unit:GetName(), abilities = abilities, modifiers = {}, thinkers = {}, abilitythinkers = {}}
 			for i,j in ipairs(affectedheroeslist[unit:GetName()].logicthinkers) do
-				thinkerdata = affectedheroeslist[unit:GetName()].logicthinkers[i]
+				local thinkerdata = affectedheroeslist[unit:GetName()].logicthinkers[i]
 				self:AttachThinker(unit, thinkerdata[1], thinkerdata[2], thinkerdata[3], thinkerdata[6], thinkerdata[4], thinkerdata[5])
 				print("[BSL]:--------------------------------------------------")
 				print("[BSL]: Attached Thinker Modifier to "..HeroNamesLib:ConvertInternalToHeroName(unit:GetName()))
