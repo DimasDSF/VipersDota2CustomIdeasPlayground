@@ -19,7 +19,6 @@
 				"item_boots"					"ITEM_CORE"
 				"item_wind_lace" 		"ITEM_CORE"
 				"item_ring_of_regen" 			"ITEM_CORE"
-				"item_recipe_tranquil_boots" 	"ITEM_DERIVED"
 				"item_tranquil_boots"			"ITEM_DERIVED"
 				
 				"item_blink"	"ITEM_CORE"
@@ -66,7 +65,7 @@
 				"12"		"crystal_maiden_freezing_field"
 				"13"		"crystal_maiden_frostbite"
 				"14"		"crystal_maiden_frostbite"
-				"15"		"special_bonus_gold_income_15"
+				"15"		"special_bonus_gold_income_25"
 				"16"		"crystal_maiden_frostbite"
 				"17"		""
 				"18"		"crystal_maiden_freezing_field"

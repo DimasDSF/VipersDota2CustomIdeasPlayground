@@ -19,10 +19,10 @@
 
 				"item_quelling_blade"		"ITEM_CORE"
 
-				"item_boots"				"ITEM_CORE"
-				"item_blades_of_attack"		"ITEM_EXTENSION"
-				"item_blades_of_attack"		"ITEM_EXTENSION"
-				"item_phase_boots"			"ITEM_DERIVED"
+				"item_boots"			"ITEM_CORE"
+				"item_chainmail"		"ITEM_EXTENSION"
+				"item_gloves"			"ITEM_EXTENSION"
+				"item_phase_boots"		"ITEM_DERIVED"
 
 				"item_ring_of_health"	"ITEM_CORE"
 				"item_void_stone"		"ITEM_CORE"

@@ -51,7 +51,7 @@ function Extensions:DoCleaveAttackPositional(attacker, target, position, directi
 	local isDistantCleave = false
 	if checkDistantCleave then
 		if attacker ~= nil and target ~= nil then
-			if (attacker:GetAbsOrigin() - target:GetAbsOrigin()):Length2D() > attacker:GetAttackRange() + attacker:GetAttackRangeBuffer() then
+			if (attacker:GetAbsOrigin() - target:GetAbsOrigin()):Length2D() > attacker:Script_GetAttackRange() + attacker:GetAttackRangeBuffer() then
 				isDistantCleave = true
 			end
 		end

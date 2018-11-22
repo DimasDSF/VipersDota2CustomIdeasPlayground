@@ -42,8 +42,9 @@
 				"item_manta"		"ITEM_DERIVED"
 
 				"item_reaver"		"ITEM_LUXURY"
+				"item_ring_of_tarrasque"		"ITEM_LUXURY"
 				"item_vitality_booster"		"ITEM_LUXURY"
-				"item_vitality_booster"		"ITEM_LUXURY"
+				"item_recipe_heart"		"ITEM_LUXURY"
 				"item_heart"		"ITEM_DERIVED"
 
 				"item_ogre_axe"					"ITEM_EXTENSION"

@@ -285,6 +285,13 @@ function BotSupportLib:StartBotInit()
 			self:InitBotHero(v)
 		end
 	end
+	Timers:CreateTimer({
+		endTime = 5,
+		callback = function()
+			BotSupportLib:GlobalBotThink()
+			return 0.5
+		end
+	})
 end
 
 function BotSupportLib:InitBotHero(unit)
@@ -480,6 +487,28 @@ function BotSupportLib:OnAbilityLearned( keys )
 								n:StartIntervalThinkWithPresetInterval()
 								print("[BSL]:OnAbilityLearned:Starting Thinker for ability "..abilityname)
 							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+function BotSupportLib:GlobalBotThink()
+	if GameRules:State_Get() >= DOTA_GAMERULES_STATE_PRE_GAME then
+		local heroes = HeroList:GetAllHeroes()
+		for i=0,HeroList:GetHeroCount() do
+			local heroent = heroes[i]
+			if heroent then
+				if BotSupportLib:IsHeroBotControlled(heroent) then
+					--////////////////////
+					--Bot Bloodstone Usage
+					--////////////////////
+					if heroent:IsRealHero() and GameRules.VGMAR:HeroHasUsableItemInInventory( heroent, "item_bloodstone", false, false, false ) and heroent:IsAlive() then
+						local bloodstone = GameRules.VGMAR:GetItemFromInventoryByName( heroent, "item_bloodstone", false, false, false )
+						if bloodstone ~= nil and bloodstone:GetCooldownTimeRemaining() <= 0 and heroent:GetHealth()/heroent:GetMaxHealth() < 0.3 and heroent:GetMana()/heroent:GetMaxMana() > 0.6 then
+							BotSupportLib:CastAbility(heroent, DOTA_UNIT_ORDER_CAST_NO_TARGET, nil, bloodstone, nil, false, true)
 						end
 					end
 				end

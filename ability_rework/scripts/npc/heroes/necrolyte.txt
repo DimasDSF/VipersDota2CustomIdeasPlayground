@@ -12,10 +12,7 @@
 			"Loadout"
 			{
 				"item_tango"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
-				"item_circlet"		"ITEM_CORE"
-				"item_mantle"		"ITEM_CORE"
-				"item_recipe_null_talisman"	"ITEM_CORE"
-				"item_null_talisman"	"ITEM_DERIVED"
+				"item_crown"		"ITEM_EXTENSION"
 				
 				"item_branches"		"ITEM_CORE"
 				"item_branches"		"ITEM_CORE"
@@ -24,12 +21,6 @@
 				"item_magic_wand"		"ITEM_DERIVED | ITEM_SELLABLE"
 
 				"item_boots"				"ITEM_CORE"
-
-				"item_circlet"		"ITEM_CORE"
-				"item_mantle"		"ITEM_CORE"
-				"item_recipe_null_talisman"	"ITEM_CORE"
-				"item_null_talisman"	"ITEM_DERIVED"
-
 				"item_energy_booster"		"ITEM_CORE"
 				"item_arcane_boots"			"ITEM_DERIVED"
 
@@ -72,8 +63,8 @@
 			}
 			"Build"
 			{
-				"1"		"necrolyte_death_pulse"
-				"2"		"necrolyte_heartstopper_aura"
+				"1"		"necrolyte_heartstopper_aura"
+				"2"		"necrolyte_death_pulse"
 				"3"		"necrolyte_death_pulse"
 				"4"		"necrolyte_sadist"
 				"5"		"necrolyte_death_pulse"
@@ -81,7 +72,7 @@
 				"7"		"necrolyte_death_pulse"
 				"8"		"necrolyte_sadist"
 				"9"		"necrolyte_sadist"
-				"10"		"special_bonus_attack_damage_40"
+				"10"		"special_bonus_attack_damage_30"
 				"11"		"necrolyte_sadist"
 				"12"		"necrolyte_reapers_scythe"
 				"13"		"necrolyte_heartstopper_aura"

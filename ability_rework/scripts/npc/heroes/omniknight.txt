@@ -56,8 +56,9 @@
 				"item_sheepstick"		"ITEM_DERIVED"
 
 				"item_reaver"		"ITEM_LUXURY"
+				"item_ring_of_tarrasque"		"ITEM_LUXURY"
 				"item_vitality_booster"		"ITEM_LUXURY"
-				"item_vitality_booster"		"ITEM_LUXURY"
+				"item_recipe_heart"		"ITEM_LUXURY"
 				"item_heart"		"ITEM_DERIVED"
 			}
 			"Build"
@@ -81,12 +82,12 @@
 				"17"		""
 				"18"		"omniknight_guardian_angel"
 				"19"		""
-				"20"		"special_bonus_unique_omniknight_2"
+				"20"		"special_bonus_mp_regen_5"
 				"21"		""
 				"22"		""
 				"23"		""
 				"24"		""
-				"25"		"special_bonus_unique_omniknight_1"
+				"25"		"special_bonus_unique_omniknight_3"
 			}
 			"HeroType"		"DOTA_BOT_TANK | DOTA_BOT_PURE_SUPPORT"
 			"LaningInfo"

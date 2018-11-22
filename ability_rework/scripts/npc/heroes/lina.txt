@@ -68,7 +68,7 @@
 				"12"		"lina_laguna_blade"
 				"13"		"lina_fiery_soul"
 				"14"		"lina_fiery_soul"
-				"15"		"special_bonus_unique_lina_3"
+				"15"		"special_bonus_hp_350"
 				"16"		"lina_fiery_soul"
 				"17"		""
 				"18"		"lina_laguna_blade"

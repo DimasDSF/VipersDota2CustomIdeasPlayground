@@ -21,18 +21,15 @@
 
 				"item_boots"				"ITEM_EXTENSION"
 
-				"item_gauntlets"				"ITEM_CORE"
-				"item_circlet"					"ITEM_CORE"
-				"item_recipe_bracer"			"ITEM_EXTENSION"
-				"item_bracer"					"ITEM_DERIVED"
+				"item_crown"					"ITEM_EXTENSION"
 				"item_wind_lace"				"ITEM_EXTENSION"
 				"item_sobi_mask"				"ITEM_EXTENSION"
 				"item_recipe_ancient_janggo"	"ITEM_EXTENSION"
 				"item_ancient_janggo"			"ITEM_DERIVED | ITEM_SELLABLE"
 
-				"item_blades_of_attack"		"ITEM_EXTENSION"
-				"item_blades_of_attack"		"ITEM_EXTENSION"
-				"item_phase_boots"			"ITEM_DERIVED"
+				"item_chainmail"		"ITEM_EXTENSION"
+				"item_gloves"			"ITEM_EXTENSION"
+				"item_phase_boots"		"ITEM_DERIVED"
 
 				"item_broadsword"			"ITEM_EXTENSION"
 				"item_blades_of_attack"		"ITEM_EXTENSION"
@@ -66,8 +63,9 @@
 				"item_silver_edge"			"ITEM_DERIVED"
 				
 				"item_reaver"		"ITEM_LUXURY"
+				"item_ring_of_tarrasque"		"ITEM_LUXURY"
 				"item_vitality_booster"		"ITEM_LUXURY"
-				"item_vitality_booster"		"ITEM_LUXURY"
+				"item_recipe_heart"		"ITEM_LUXURY"
 				"item_heart"		"ITEM_DERIVED"
 			}
 			"Build"
@@ -86,7 +84,7 @@
 				"12"		"kunkka_ghostship"
 				"13"		"kunkka_torrent"
 				"14"		"kunkka_torrent"
-				"15"		"special_bonus_hp_regen_10"
+				"15"		"special_bonus_hp_regen_12"
 				"16"		"kunkka_torrent"
 				"17"		""
 				"18"		"kunkka_ghostship"

@@ -87,7 +87,7 @@ function modifier_vgmar_i_greatcleave:OnAttackLanded( event )
 						local direction = (event.target:GetAbsOrigin() - event.attacker:GetAbsOrigin()):Normalized()
 						local damageInfo = {
 							damage = cleaveDamage,
-							type = DAMAGE_TYPE_PURE
+							type = DAMAGE_TYPE_PHYSICAL
 						}
 						Extensions:DoCleaveAttackPositional(self:GetParent(), event.target, event.target:GetAbsOrigin(), direction, true, damageInfo, self.cleavestartrad, self.cleaveendrad, self.cleaveradius, DOTA_UNIT_TARGET_TEAM_ENEMY, DOTA_UNIT_TARGET_BASIC + DOTA_UNIT_TARGET_HERO, 0, particle)
 						self:GetParent():EmitSound("DOTA_Item.BattleFury")

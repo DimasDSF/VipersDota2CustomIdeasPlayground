@@ -5,10 +5,10 @@
 	//=================================================================================================================
 	"npc_dota_hero_axe"
 	{
-		"SupportsEasyMode"	"1"
 		"BotImplemented"		"1"
 		"Bot"
 		{
+			"SupportsEasyMode"	"1"
 			"Loadout"
 			{
 				"item_stout_shield"	"ITEM_CORE"
@@ -37,15 +37,19 @@
 				"item_recipe_black_king_bar"		"ITEM_LUXURY"
 				"item_black_king_bar"		"ITEM_LUXURY | ITEM_DERIVED"
 
+				"item_ring_of_tarrasque"		"ITEM_LUXURY"
 				"item_reaver"		"ITEM_LUXURY"
 				"item_vitality_booster"		"ITEM_LUXURY"
-				"item_vitality_booster"		"ITEM_LUXURY"
-				"item_heart"		"ITEM_DERIVED"
+				"item_recipe_heart"		"ITEM_LUXURY"
+				"item_heart"		"ITEM_LUXURY | ITEM_DERIVED"
 				
 				"item_chainmail"		"ITEM_CORE"
 				"item_branches"		"ITEM_CORE"
 				"item_recipe_buckler"		"ITEM_CORE"
 				"item_buckler"		"ITEM_DERIVED"
+				
+				"item_recipe_crimson_guard"	"ITEM_LUXURY"
+				"item_crimson_guard"	"ITEM_LUXURY | ITEM_DERIVED"
 			}
 			"Build"
 			{
@@ -63,12 +67,12 @@
 				"12"		"axe_culling_blade"
 				"13"		"axe_berserkers_call"
 				"14"		"axe_berserkers_call"
-				"15"		"special_bonus_mp_regen_3"
+				"15"		"special_bonus_mp_regen_4"
 				"16"		"axe_berserkers_call"
 				"17"		""
 				"18"		"axe_culling_blade"
 				"19"		""
-				"20"		"special_bonus_hp_regen_20"
+				"20"		"special_bonus_hp_regen_25"
 				"21"		""
 				"22"		""
 				"23"		""

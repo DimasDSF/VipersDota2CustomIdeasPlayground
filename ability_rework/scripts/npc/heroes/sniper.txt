@@ -26,14 +26,9 @@
 				"item_magic_wand"		"ITEM_DERIVED | ITEM_SELLABLE"
 
 				"item_boots"			"ITEM_CORE"
-				"item_blades_of_attack"		"ITEM_CORE"
-				"item_blades_of_attack"		"ITEM_CORE"
-				"item_phase_boots"			"ITEM_DERIVED"
-
-				"item_ring_of_protection"	"ITEM_CORE"
-				"item_sobi_mask"			"ITEM_CORE"
-				"item_ring_of_basilius"		"ITEM_DERIVED"
-				"item_ring_of_aquila"		"ITEM_DERIVED | ITEM_SELLABLE"
+				"item_boots_of_elves"	"ITEM_CORE"
+				"item_blades_of_attack"			"ITEM_CORE"
+				"item_power_treads"		"ITEM_DERIVED"
 
 				"item_ogre_axe"			"ITEM_CORE"
 				"item_boots_of_elves"	"ITEM_CORE"
@@ -81,7 +76,7 @@
 				"12"		"sniper_assassinate"
 				"13"		"sniper_headshot"
 				"14"		"sniper_headshot"
-				"15"		"special_bonus_unique_sniper_1"
+				"15"		"special_bonus_attack_speed_40"
 				"16"		"sniper_headshot"
 				"17"		""
 				"18"		"sniper_assassinate"

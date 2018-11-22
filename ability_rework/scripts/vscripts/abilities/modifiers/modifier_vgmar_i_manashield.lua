@@ -246,9 +246,14 @@ end
 
 function modifier_vgmar_i_manashield_stun:DeclareFunctions()
 	local funcs = {
-		MODIFIER_PROPERTY_TRANSLATE_ACTIVITY_MODIFIERS
+		MODIFIER_PROPERTY_TRANSLATE_ACTIVITY_MODIFIERS,
+		MODIFIER_PROPERTY_OVERRIDE_ANIMATION
     }
     return funcs
+end
+
+function modifier_vgmar_i_manashield_stun:GetOverrideAnimation( params )
+	return ACT_DOTA_DISABLED
 end
 
 function modifier_vgmar_i_manashield_stun:GetActivityTranslationModifiers()

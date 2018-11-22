@@ -20,7 +20,7 @@
 				"item_recipe_magic_wand"		"ITEM_CORE"
 				"item_magic_wand"		"ITEM_DERIVED | ITEM_SELLABLE"
 
-				"item_gloves"		"ITEM_EXTENSION"
+				"item_blades_of_attack"		"ITEM_EXTENSION"
 				"item_boots_of_elves"		"ITEM_EXTENSION"
 				"item_power_treads"		"ITEM_DERIVED"
 
@@ -75,7 +75,7 @@
 				"12"		"bloodseeker_rupture"
 				"13"		"bloodseeker_bloodrage"
 				"14"		"bloodseeker_bloodrage"
-				"15"		"special_bonus_hp_300"
+				"15"		"special_bonus_hp_275"
 				"16"		"bloodseeker_bloodrage"
 				"17"		""
 				"18"		"bloodseeker_rupture"
@@ -85,7 +85,7 @@
 				"22"		""
 				"23"		""
 				"24"		""
-				"25"		"special_bonus_unique_bloodseeker_2"
+				"25"		"special_bonus_unique_bloodseeker"
 			}
 			"HeroType"		"DOTA_BOT_SEMI_CARRY | DOTA_BOT_GANKER"
 			"LaningInfo"

@@ -20,14 +20,8 @@
 				"item_magic_wand"	"ITEM_DERIVED | ITEM_SELLABLE"
 
 				"item_boots"			"ITEM_CORE"				
-
-				"item_slippers"					"ITEM_CORE"
-				"item_circlet"					"ITEM_CORE"
-				"item_recipe_wraith_band"		"ITEM_CORE"
-				"item_wraith_band"				"ITEM_DERIVED"
-
 				"item_belt_of_strength"	"ITEM_CORE"
-				"item_gloves"			"ITEM_CORE"
+				"item_blades_of_attack"			"ITEM_CORE"
 				"item_power_treads"		"ITEM_DERIVED"
 
 				"item_chainmail"	"ITEM_CORE"
@@ -49,6 +43,7 @@
 				"item_recipe_aether_lens"	"ITEM_LUXURY"
 				"item_aether_lens"			"ITEM_DERIVED"
 				
+				"item_crown"		"ITEM_CORE"
 				"item_boots_of_elves"	"ITEM_CORE"
 				"item_boots_of_elves"	"ITEM_CORE"
 				"item_ogre_axe"			"ITEM_CORE"
@@ -56,7 +51,9 @@
 				
 				"item_hurricane_pike"	"ITEM_DERIVED"
 				
-				"item_talisman_of_evasion"	"ITEM_EXTENSION"
+				"item_ultimate_orb"		"ITEM_EXTENSION"
+				"item_wind_lace"			"ITEM_EXTENSION"
+				"item_recipe_solar_crest"	"ITEM_EXTENSION"
 				"item_solar_crest"			"ITEM_DERIVED"
 				
 				"item_ultimate_orb"			"ITEM_EXTENSION"

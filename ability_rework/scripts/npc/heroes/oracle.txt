@@ -44,7 +44,9 @@
 				"item_recipe_aeon_disk"		"ITEM_EXTENSION"
 				"item_aeon_disk"		"ITEM_DERIVED"
 
-				"item_talisman_of_evasion"	"ITEM_EXTENSION"
+				"item_ultimate_orb"		"ITEM_EXTENSION"
+				"item_wind_lace"			"ITEM_EXTENSION"
+				"item_recipe_solar_crest"	"ITEM_EXTENSION"
 				"item_solar_crest"			"ITEM_DERIVED"
 
 				"item_point_booster"		"ITEM_EXTENSION"
@@ -69,7 +71,7 @@
 				"12"		"oracle_false_promise"
 				"13"		"oracle_fates_edict"
 				"14"		"oracle_fates_edict"
-				"15"		"special_bonus_gold_income_15"
+				"15"		"special_bonus_gold_income_20"
 				"16"		"oracle_fates_edict"
 				"17"		""
 				"18"		"oracle_false_promise"

@@ -21,7 +21,7 @@
 				"item_magic_wand"		"ITEM_DERIVED | ITEM_SELLABLE"
 
 				"item_belt_of_strength"		"ITEM_CORE"
-				"item_gloves"		"ITEM_CORE"
+				"item_blades_of_attack"		"ITEM_CORE"
 				"item_power_treads"		"ITEM_DERIVED"
 
 				"item_ring_of_health"		"ITEM_CORE"
@@ -39,8 +39,9 @@
 				"item_blade_mail"		"ITEM_DERIVED | ITEM_SELLABLE"
 
 				"item_reaver"		"ITEM_EXTENSION"
+				"item_ring_of_tarrasque"		"ITEM_EXTENSION"
 				"item_vitality_booster"		"ITEM_EXTENSION"
-				"item_vitality_booster"		"ITEM_EXTENSION"
+				"item_recipe_heart"		"ITEM_EXTENSION"
 				"item_heart"		"ITEM_DERIVED"
 
 				"item_vitality_booster"	"ITEM_LUXURY"
@@ -70,7 +71,7 @@
 				"7"		"bristleback_quill_spray"
 				"8"		"bristleback_bristleback"
 				"9"		"bristleback_bristleback"
-				"10"		"special_bonus_mp_regen_2"
+				"10"		"special_bonus_mp_regen_3"
 				"11"		"bristleback_viscous_nasal_goo"
 				"12"		"bristleback_warpath"
 				"13"		"bristleback_viscous_nasal_goo"
@@ -80,7 +81,7 @@
 				"17"		""
 				"18"		"bristleback_warpath"
 				"19"		""
-				"20"		"special_bonus_hp_regen_20"
+				"20"		"special_bonus_hp_regen_25"
 				"21"		""
 				"22"		""
 				"23"		""

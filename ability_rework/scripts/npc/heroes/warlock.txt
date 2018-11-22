@@ -12,10 +12,8 @@
 			"Loadout"
 			{
 				"item_tango"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
-				"item_circlet"		"ITEM_CORE"
-				"item_mantle"		"ITEM_CORE"
-				"item_recipe_null_talisman"	"ITEM_CORE"
-				"item_null_talisman"	"ITEM_DERIVED"
+				"item_clarity"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
+				"item_clarity"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
 
 				"item_boots"				"ITEM_CORE"
 				"item_energy_booster"		"ITEM_CORE"

@@ -134,17 +134,17 @@ local botupgradepriorities = {
 }
 
 local modifierdatatable = {
-	["modifier_vgmar_i_manaregen_aura"] = {radius = 4000, bonusmanaself = 400, bonusmanaallies = 300, regenself = 1.5, regenallies = 1},
+	["modifier_vgmar_i_manaregen_aura"] = {radius = 4000, bonusmanaself = 400, bonusmanaallies = 300, regenself = 4.5, regenallies = 2.5},
 	["modifier_vgmar_i_attackrange"] = {range = 140, bonusstr = 12, bonusagi = 12},
-	["modifier_vgmar_i_castrange"] = {range = 250, manaregen = 1.25, bonusmana = 400},
+	["modifier_vgmar_i_castrange"] = {range = 250, manaregen = 3.0, bonusmana = 400},
 	["modifier_vgmar_i_spellamp"] = {percentage = 10, costpercentage = 10, bonusint = 16},
 	["modifier_vgmar_i_cdreduction"] = {percentage = 25, bonusmana = 905, bonushealth = 905, intbonus = 25, spelllifestealhero = 25, spelllifestealcreep = 5},
 	["modifier_vgmar_i_essence_aura"] = {radius = 1000, bonusmana = 900, restorechancemax = 20, restorechancemin = 5, restoremax = 1, restoremin = 0.15, restoreamount = 20},
 	["modifier_vgmar_i_spellshield"] = {resistance = 35, cooldown = 12, maxstacks = 2},
 	["modifier_vgmar_i_fervor"] = {maxstacks = 15, asperstack = 15},
 	["modifier_vgmar_i_essence_shift"] = {reductionprimary = 1, reductionsecondary = 0, increaseprimary = 1, increasesecondary = 0, hitsperstackinc = 1, hitsperstackred = 2, duration = 40, durationtarget = 40},
-	["modifier_vgmar_i_pulse"] = {stackspercreep = 1, stacksperhero = 8, duration = 4, hpregenperstack = 1, manaregenperstack = 0.5, maxstacks = 20},
-	["modifier_vgmar_i_greatcleave"] = {cleaveperc = 100, cleavestartrad = 150, cleaveendrad = 300, cleaveradius = 700, bonusdamage = 75},
+	["modifier_vgmar_i_pulse"] = {stackspercreep = 1, stacksperhero = 8, duration = 4, hpregenperstack = 1, manaregenperstack = 1.5, maxstacks = 20},
+	["modifier_vgmar_i_greatcleave"] = {cleaveperc = 100, cleavestartrad = 150, cleaveendrad = 360, cleaveradius = 700, bonusdamage = 75},
 	["modifier_vgmar_i_vampiric_aura"] = {radius = 700, lspercent = 30, lspercentranged = 20},
 	["modifier_vgmar_i_multishot"] = {basetargets = 1, mainattrpertarget = 25, bonusdamage = 60, bonusrange = 140},
 	["modifier_vgmar_i_midas_greed"] = {min_bonus_gold = 0, count_per_kill = 1, reduction_per_tick = 2, bonus_gold_cap = 40, stack_duration = 30, reduction_duration = 2.5, killsperstack = 3, midasusestacks = 2},
@@ -162,6 +162,7 @@ local modifierdatatable = {
 	["modifier_vgmar_i_manashield"] = {minmana = 0.5, lowmana = 0.55, maxtotalmana = 6000, mindmgfraction = 30, maxdmgfraction = 90, stunradius = 600, stunduration = 3, stundamage = 200, rechargetime = 60, bonusarmor = 15, bonusint = 20},
 	["modifier_vgmar_b_fountain_anticamp"] = {radius = 2000, interval = 1.0, strpertick = 4, intpertick = 2, agipertick = 2, disablepassivestick = 20, silencetick = 40, blindnessendtick = 60, blindnessrange = 200, lingerduration = 30.0},
 	["modifier_vgmar_anticreep_protection"] = {radius = 1800, strikeinterval = 2.0, activeduration = 5.0, dmgpercentpercreep = 5.0},
+	["modifier_vgmar_c_cannon_ball"] = {damageperlevel = 20, stunduration = 1.0},
 	["modifier_vgmar_i_ogre_tester"] = {}
 }
 
@@ -278,12 +279,18 @@ function VGMAR:Init()
 	local itemskverrornum = 0
 	local itemscustomkverrornum = 0
 	local erroreditems = {}
+	local conflictingitems = {}
 	for k,v in pairs(LoadKeyValues("scripts/npc/items.txt")) do
 		if k and v and k~="Version" then
 			if v["ID"] then
 				--print("Adding Item: "..k.." With ID: "..v["ID"].." from items.txt")
 				itemskvnum = itemskvnum + 1
-				self.ItemKVs[v["ID"]] = k
+				if self.ItemKVs[v["ID"]] == nil then
+					self.ItemKVs[v["ID"]] = k
+				else
+					--print("Item: "..k.." Has a conflicting item ID "..v["ID"].." with "..self.ItemKVs[v["ID"]])
+					table.insert(conflictingitems, {v["ID"], k, self.ItemKVs[v["ID"]]})
+				end
 			else
 				itemskverrornum = itemskverrornum + 1
 				print("Item: "..k.." Has no ID!!!")
@@ -296,8 +303,14 @@ function VGMAR:Init()
 			if v["ID"] then
 				--print("Adding Item: "..k.." With ID: "..v["ID"].." from items_custom.txt")
 				itemscustomkvnum = itemscustomkvnum + 1
-				self.ItemKVs[v["ID"]] = k
+				if self.ItemKVs[v["ID"]] == nil then
+					self.ItemKVs[v["ID"]] = k
+				else
+					--print("Item: "..k.." Has a conflicting item ID "..v["ID"].." with "..self.ItemKVs[v["ID"]])
+					table.insert(conflictingitems, {v["ID"], k, self.ItemKVs[v["ID"]]})
+				end
 			else
+				itemscustomkverrornum = itemscustomkverrornum + 1
 				print("Item: "..k.." Has no ID!!!")
 				table.insert(erroreditems, k)
 			end
@@ -311,6 +324,16 @@ function VGMAR:Init()
 		LogLib:WriteLog("error", 1, false, "Items Missing IDs")
 		for i=1,#erroreditems do
 			LogLib:WriteLog("error", 2, false, i..". "..erroreditems[i])
+		end
+	end
+	if #conflictingitems > 0 then
+		print("Encountered "..#conflictingitems.." Conflicting Item IDs")
+		LogLib:WriteLog("error", 0, false, "----------------")
+		LogLib:WriteLog("error", 0, true, "Item KV ID system encountered "..#conflictingitems.." conflicting Item IDs")
+		for i=1,#conflictingitems do
+			local cidata = conflictingitems[i]
+			print(i..": ID: "..cidata[1].." Items: "..cidata[2].." - "..cidata[3])
+			LogLib:WriteLog("error", 1, false, i..": ID: "..cidata[1].." Items: "..cidata[2].." - "..cidata[3])
 		end
 	end
 	
@@ -387,6 +410,8 @@ function VGMAR:Init()
 	LinkLuaModifier("modifier_vgmar_courier_burst_effect", "abilities/modifiers/modifier_vgmar_courier_burst.lua", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_courier_burst_charge", "abilities/modifiers/modifier_vgmar_courier_burst.lua", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_crai_courier_shield", "abilities/modifiers/ai/modifier_vgmar_crai_courier_shield.lua", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_c_cannon_ball", "abilities/modifiers/modifier_vgmar_c_cannon_ball.lua", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_c_cannon_ball_stun", "abilities/modifiers/modifier_vgmar_c_cannon_ball.lua", LUA_MODIFIER_MOTION_NONE)
 	
 	self.buildingadvantagevaluelist = {
 		["dota_badguys_tower1_mid"] = 1,
@@ -566,25 +591,6 @@ function VGMAR:Init()
 		["modifier_item_mask_of_madness_berserk"] = {silence = true, stun = false, root = false},
 		["modifier_grimstroke_spirit_walk_buff"] = {silence = true, stun = false, root = false},
 		["modifier_vgmar_b_fountain_anticamp_debuff_silence"] = {silence = true, stun = false, root = false}
-	}
-	
-	self.buildingstatus = {
-		["good"] = {
-			["good_rax_melee_mid"] = true,
-			["good_rax_range_mid"] = true,
-			["good_rax_melee_top"] = true,
-			["good_rax_range_top"] = true,
-			["good_rax_melee_bot"] = true,
-			["good_rax_range_bot"] = true
-		},
-		["bad"] = {
-			["bad_rax_melee_mid"] = true,
-			["bad_rax_range_mid"] = true,
-			["bad_rax_melee_top"] = true,
-			["bad_rax_range_top"] = true,
-			["bad_rax_melee_bot"] = true,
-			["bad_rax_range_bot"] = true
-		}
 	}
 	
 	self.mode = GameRules:GetGameModeEntity()
@@ -796,7 +802,11 @@ function VGMAR:LogBalance()
 		"modifier_silencer_int_steal",
 		"modifier_legion_commander_duel_damage_boost",
 		"modifier_pudge_flesh_heap",
-		"modifier_nevermore_necromastery"
+		"modifier_nevermore_necromastery",
+		"modifier_lion_finger_of_death_kill_counter",
+		"modifier_abyssal_underlord_atrophy_aura_hero_permanent_buff",
+		"modifier_slark_essence_shift_permanent_buff",
+		"modifier_slark_essence_shift_permanent_debuff"
 	}
 	LogLib:WriteLog("balance", 1, false, "")
 	LogLib:WriteLog("balance", 1, false, "Hero Data:")
@@ -1082,7 +1092,7 @@ Example:
 local creepabilitieslist = {
 	{classname = "npc_dota_creep_siege",
 		abilities = {
-			{name = "vgmar_c_siegetimelock", ismodifier = 0}
+			{name = "modifier_vgmar_c_cannon_ball", ismodifier = 1}
 		},
 		levelmechanicmode = {
 			"unitlevel"
@@ -1730,8 +1740,7 @@ function VGMAR:OnThink()
 		end
 		GameRules:LockCustomGameSetupTeamAssignment(true)
 	end
-	if GameRules:State_Get() == DOTA_GAMERULES_STATE_GAME_IN_PROGRESS then
-		local heroes = HeroList:GetAllHeroes()
+	if GameRules:State_Get() >= DOTA_GAMERULES_STATE_PRE_GAME then
 		if Convars:GetInt("vgmar_enable_full_vision") == 1 then
 			local wards = {}
 			for _,ward in ipairs (Entities:FindAllByClassname("npc_dota_ward_base")) do table.insert(wards, ward) end
@@ -1741,7 +1750,24 @@ function VGMAR:OnThink()
 					ent:AddNewModifier(ent, nil, "modifier_vgmar_util_all_vision", {})
 				end
 			end
+			local heroes = HeroList:GetAllHeroes()
+			for i=0,HeroList:GetHeroCount() do
+				local heroent = heroes[i]
+				if heroent then
+					local heroplayerid = heroent:GetPlayerID()
+					if PlayerResource:GetConnectionState(heroplayerid) == 1 then
+						if Convars:GetInt("vgmar_enable_full_vision") == 1 then
+							if not heroent:HasModifier("modifier_vgmar_util_all_vision") then
+								heroent:AddNewModifier(heroent, nil, "modifier_vgmar_util_all_vision", {})
+							end
+						end
+					end
+				end
+			end
 		end
+	end
+	if GameRules:State_Get() == DOTA_GAMERULES_STATE_GAME_IN_PROGRESS then
+		local heroes = HeroList:GetAllHeroes()
 		for i=0,HeroList:GetHeroCount() do
 			local heroent = heroes[i]
 			if heroent then
@@ -1755,12 +1781,6 @@ function VGMAR:OnThink()
 					heroent:SetBotDifficulty(3)
 					if closestrune then
 						heroent:PickupRune(closestrune)
-					end
-					
-					if Convars:GetInt("vgmar_enable_full_vision") == 1 then
-						if not heroent:HasModifier("modifier_vgmar_util_all_vision") then
-							heroent:AddNewModifier(heroent, nil, "modifier_vgmar_util_all_vision", {})
-						end
 					end
 					
 					--TODO: Add teamAdvantage into the buyback cooldown reset price calculation for bots
@@ -2137,7 +2157,7 @@ function VGMAR:OnThink()
 				modifierdata = { radius = 1000, bonusmana = 900, restorechance = 25, restoreamount = 20 },
 				usesmultiple = true,
 				backpack = true,
-				preventedhero = "npc_dota_hero_obsidian_destroyer",
+				preventedhero = "npc_target_dummy",
 				specificcond = true },
 			{spell = "modifier_vgmar_i_greatcleave",
 				items = {itemnames = {"item_bfury"}, itemnum = {2}},
@@ -2485,11 +2505,6 @@ function VGMAR:OnBuildingDestroyed(attacker, denied, buildingteamnumber, buildin
 		self.towerskilleddire = self.towerskilleddire + buildingvalue
 		self:BuildingKillReward(attacker, denied, buildingteamnumber, buildingname, buildingvalue)
 	end
-	if self.buildingstatus["good"].buildingname ~= nil then
-		self.buildingstatus["good"].buildingname = false
-	elseif self.buildingstatus["bad"].buildingname ~= nil then
-		self.buildingstatus["bad"].buildingname = false
-	end
 	--Shrine Decay
 	if self:GetMegaCreepsStatus(2) and self.shrinedecaystarted == false then
 		local decaybuildings = {"good_healer_7", "good_healer_6"}
@@ -2540,10 +2555,18 @@ function VGMAR:GetBarracksStatus(teamnum, lane)
 		return nil
 	end
 	if lane == "bot" or lane == "mid" or lane == "top" then
-		local rangerax = self.buildingstatus[teamname][teamname.."_rax_range_"..lane]
-		local meleerax = self.buildingstatus[teamname][teamname.."_rax_melee_"..lane]
-		local allrax = rangerax and meleerax
-		return {meleerax, rangerax, allrax}
+		local rangerax = Entities:FindByName(nil, teamname.."_rax_range_"..lane)
+		local meleerax = Entities:FindByName(nil, teamname.."_rax_melee_"..lane)
+		local rangeraxstate = false
+		local meleeraxstate = false
+		if rangerax ~= nil then
+			rangeraxstate = rangerax:IsAlive()
+		end
+		if meleerax then
+			meleeraxstate = meleerax:IsAlive()
+		end
+		local allraxstate = rangeraxstate and meleeraxstate
+		return {meleeraxstate, rangeraxstate, allraxstate}
 	else
 		print("GetBarracksStatus: Error. Incorrect lane specified")
 		LogLib:WriteLog("error", 0, true, "GetBarracksStatus: Error. Incorrect lane specified")
@@ -3426,18 +3449,18 @@ function VGMAR:OnGameStateChanged( keys )
 		--New Implementation of defskills
 		--///////////////////////////////
 		local buildingstobufflist = {
-			{bn = "dota_goodguys_fort", priority = 4, istower = 0, regnegation = 5.5},
-			{bn = "good_rax_melee_bot", priority = 3, istower = 0, regnegation = 5.5},
-			{bn = "good_rax_melee_mid", priority = 3, istower = 0, regnegation = 5.5},
-			{bn = "good_rax_melee_top", priority = 3, istower = 0, regnegation = 5.5},
-			{bn = "good_rax_range_top", priority = 2, istower = 0, regnegation = 5.5},
-			{bn = "good_rax_range_mid", priority = 2, istower = 0, regnegation = 5.5},
-			{bn = "good_rax_range_bot", priority = 2, istower = 0, regnegation = 5.5},
-			{bn = "dota_goodguys_tower4_bot", priority = 1, istower = 1, regnegation = 5.5},
-			{bn = "dota_goodguys_tower4_top", priority = 1, istower = 1, regnegation = 5.5},
-			{bn = "dota_goodguys_tower3_top", priority = 0, istower = 1, regnegation = 5.5},
-			{bn = "dota_goodguys_tower3_mid", priority = 0, istower = 1, regnegation = 5.5},
-			{bn = "dota_goodguys_tower3_bot", priority = 0, istower = 1, regnegation = 5.5}
+			{bn = "dota_goodguys_fort", priority = 4, istower = 0, regnegation = 7.0},
+			{bn = "good_rax_melee_bot", priority = 3, istower = 0, regnegation = 7.0},
+			{bn = "good_rax_melee_mid", priority = 3, istower = 0, regnegation = 7.0},
+			{bn = "good_rax_melee_top", priority = 3, istower = 0, regnegation = 7.0},
+			{bn = "good_rax_range_top", priority = 2, istower = 0, regnegation = 7.0},
+			{bn = "good_rax_range_mid", priority = 2, istower = 0, regnegation = 7.0},
+			{bn = "good_rax_range_bot", priority = 2, istower = 0, regnegation = 7.0},
+			{bn = "dota_goodguys_tower4_bot", priority = 1, istower = 1, regnegation = 7.0},
+			{bn = "dota_goodguys_tower4_top", priority = 1, istower = 1, regnegation = 7.0},
+			{bn = "dota_goodguys_tower3_top", priority = 0, istower = 1, regnegation = 7.0},
+			{bn = "dota_goodguys_tower3_mid", priority = 0, istower = 1, regnegation = 7.0},
+			{bn = "dota_goodguys_tower3_bot", priority = 0, istower = 1, regnegation = 7.0}
 		}
 		
 		local defskills = {

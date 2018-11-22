@@ -19,7 +19,7 @@
 
 				"item_boots"			"ITEM_CORE"
 				"item_belt_of_strength"	"ITEM_CORE"
-				"item_gloves"			"ITEM_CORE"
+				"item_blades_of_attack"	"ITEM_CORE"
 				"item_power_treads"		"ITEM_DERIVED"
 
 				"item_shadow_amulet"		"ITEM_CORE"
@@ -65,7 +65,7 @@
 				"7"		"dragon_knight_dragon_tail"
 				"8"		"dragon_knight_breathe_fire"
 				"9"		"dragon_knight_dragon_blood"
-				"10"		"special_bonus_mp_regen_2"
+				"10"		"special_bonus_mp_regen_3"
 				"11"		"dragon_knight_dragon_blood"
 				"12"		"dragon_knight_elder_dragon_form"
 				"13"		"dragon_knight_dragon_tail"

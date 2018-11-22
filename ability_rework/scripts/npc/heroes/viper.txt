@@ -20,18 +20,8 @@
 
 				"item_boots"			"ITEM_CORE"
 				"item_boots_of_elves"	"ITEM_CORE"
-				"item_gloves"			"ITEM_CORE"
+				"item_blades_of_attack"			"ITEM_CORE"
 				"item_power_treads"		"ITEM_DERIVED"
-
-				"item_ring_of_protection"		"ITEM_CORE"
-				"item_sobi_mask"		"ITEM_CORE"
-				"item_ring_of_basilius"		"ITEM_DERIVED"
-				"item_ring_of_aquila"		"ITEM_DERIVED | ITEM_SELLABLE"
-
-				"item_slippers"					"ITEM_CORE"
-				"item_circlet"					"ITEM_CORE"
-				"item_recipe_wraith_band"		"ITEM_CORE"
-				"item_wraith_band"				"ITEM_DERIVED"
 
 				"item_ogre_axe"			"ITEM_CORE"
 				"item_boots_of_elves"	"ITEM_CORE"
@@ -47,6 +37,7 @@
 				"item_recipe_black_king_bar"		"ITEM_EXTENSION"
 				"item_black_king_bar"		"ITEM_DERIVED"
 
+				"item_crown"		"ITEM_CORE"
 				"item_staff_of_wizardry"		"ITEM_EXTENSION"
 				"item_ring_of_regen"		"ITEM_EXTENSION"
 				"item_recipe_force_staff"		"ITEM_EXTENSION"
@@ -98,7 +89,7 @@
 				"17"		""
 				"18"		"viper_viper_strike"
 				"19"		""
-				"20"		"special_bonus_unique_viper_4"
+				"20"		"special_bonus_unique_viper_2"
 				"21"		""
 				"22"		""
 				"23"		""

@@ -25,7 +25,7 @@
 				"item_quelling_blade"	"ITEM_CORE | ITEM_SELLABLE"
 
 				"item_belt_of_strength"	"ITEM_CORE"
-				"item_gloves"			"ITEM_CORE"
+				"item_blades_of_attack"			"ITEM_CORE"
 				"item_power_treads"		"ITEM_DERIVED"
 
 				"item_lifesteal"		"ITEM_CORE"

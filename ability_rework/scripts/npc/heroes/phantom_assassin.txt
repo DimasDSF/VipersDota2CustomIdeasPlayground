@@ -24,18 +24,10 @@
 
 				"item_recipe_magic_wand"		"ITEM_CORE"
 				"item_magic_wand"	"ITEM_DERIVED | ITEM_SELLABLE"
-
-				"item_ring_of_protection"		"ITEM_CORE"
-				"item_sobi_mask"		"ITEM_CORE"
-				"item_ring_of_basilius"		"ITEM_DERIVED"
-				"item_slippers"		"ITEM_CORE"
-				"item_circlet"		"ITEM_CORE"
-				"item_recipe_wraith_band"		"ITEM_CORE"
-				"item_ring_of_aquila"		"ITEM_DERIVED | ITEM_SELLABLE"
-
-				"item_blades_of_attack"		"ITEM_EXTENSION"
-				"item_blades_of_attack"		"ITEM_EXTENSION"
-				"item_phase_boots"			"ITEM_DERIVED"
+				
+				"item_blades_of_attack"			"ITEM_CORE"
+				"item_boots_of_elves"	"ITEM_CORE"
+				"item_power_treads"		"ITEM_DERIVED"
 				
 				"item_mithril_hammer"			"ITEM_CORE"
 				"item_mithril_hammer"			"ITEM_CORE"

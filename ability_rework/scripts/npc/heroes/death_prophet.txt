@@ -12,20 +12,12 @@
 			"Loadout"
 			{
 				"item_tango"		"ITEM_CONSUMABLE | ITEM_SELLABLE"
-				"item_mantle"		"ITEM_CORE"
-				"item_circlet"		"ITEM_CORE"
-				"item_recipe_null_talisman"		"ITEM_CORE"
-				"item_null_talisman"		"ITEM_DERIVED"
+				"item_crown"		"ITEM_EXTENSION"
 
-				"item_boots"		"ITEM_CORE"
-				"item_blades_of_attack"		"ITEM_CORE"
-				"item_blades_of_attack"		"ITEM_CORE"
+				"item_boots"			"ITEM_CORE"
+				"item_chainmail"		"ITEM_EXTENSION"
+				"item_gloves"			"ITEM_EXTENSION"
 				"item_phase_boots"		"ITEM_DERIVED"
-
-				"item_mantle"		"ITEM_EXTENSION"
-				"item_circlet"		"ITEM_EXTENSION"
-				"item_recipe_null_talisman"		"ITEM_EXTENSION"
-				"item_null_talisman"		"ITEM_DERIVED"
 
 				"item_helm_of_iron_will"	"ITEM_EXTENSION"
 				"item_recipe_veil_of_discord"	"ITEM_EXTENSION"
@@ -76,7 +68,7 @@
 				"7"		"death_prophet_spirit_siphon"
 				"8"		"death_prophet_carrion_swarm"
 				"9"		"death_prophet_carrion_swarm"
-				"10"		"special_bonus_attack_damage_50"
+				"10"		"special_bonus_attack_damage_40"
 				"11"		"death_prophet_silence"
 				"12"		"death_prophet_exorcism"
 				"13"		"death_prophet_silence"

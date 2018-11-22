@@ -150,6 +150,7 @@ function modifier_vgmar_i_ogre_tester:OnIntervalThink()
 		for _,j in ipairs(GridNav:GetAllTreesAroundPoint(self:GetParent():GetAbsOrigin(), 600, true)) do
 			DebugDrawText(j:GetAbsOrigin(), tostring(j:entindex()).."\n"..tostring(GetEntityIndexForTreeId(j:entindex())).."\n"..tostring(GetTreeIdForEntityIndex(j:entindex())), false, 1)
 		end
+		--print("AttackRange: "..self:GetParent():Script_GetAttackRange())
 		--self:statprint("AttackDMG: "..self:GetParent():GetAttackDamage().."\nAverage AttackDMG: "..self:GetParent():GetAverageTrueAttackDamage(self:GetParent()))
 		--OrientationTest
 		--local orientation = -self:GetParent():GetForwardVector()

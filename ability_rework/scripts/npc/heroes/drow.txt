@@ -18,19 +18,16 @@
 				"item_slippers"					"ITEM_CORE"
 				"item_circlet"					"ITEM_CORE"
 				"item_recipe_wraith_band"		"ITEM_CORE"
-				"item_wraith_band"				"ITEM_DERIVED"
+				"item_wraith_band"				"ITEM_DERIVED | ITEM_SELLABLE"
 				
 				"item_boots" 		"ITEM_CORE"
 
 				"item_slippers"					"ITEM_CORE"
 				"item_circlet"					"ITEM_CORE"
 				"item_recipe_wraith_band"		"ITEM_CORE"
-				"item_wraith_band"				"ITEM_DERIVED"
-				"item_sobi_mask"				"ITEM_CORE"
-				"item_ring_of_basilius"			"ITEM_DERIVED"
-				"item_ring_of_aquila"			"ITEM_DERIVED | ITEM_SELLABLE"
+				"item_wraith_band"				"ITEM_DERIVED | ITEM_SELLABLE"
 
-				"item_gloves"				"ITEM_CORE"
+				"item_blades_of_attack"		"ITEM_CORE"
 				"item_boots_of_elves"		"ITEM_CORE"
 				"item_power_treads"			"ITEM_CORE | ITEM_DERIVED"
 
@@ -48,6 +45,7 @@
 				"item_recipe_force_staff"	"ITEM_EXTENSION"
 				"item_force_staff"			"ITEM_DERIVED"
 				
+				"item_recipe_hurricane_pike"	"ITEM_EXTENSION"
 				"item_hurricane_pike"	"ITEM_DERIVED"
 
 				"item_ultimate_orb"			"ITEM_EXTENSION"
@@ -90,7 +88,7 @@
 				"17"		""
 				"18"		"drow_ranger_marksmanship"
 				"19"		""
-				"20"		"special_bonus_unique_drow_ranger_3"
+				"20"		"special_bonus_unique_drow_ranger_4"
 				"21"		""
 				"22"		""
 				"23"		""

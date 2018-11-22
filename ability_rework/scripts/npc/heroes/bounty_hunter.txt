@@ -39,7 +39,9 @@
 				"item_talisman_of_evasion"	"ITEM_EXTENSION"
 				"item_heavens_halberd"		"ITEM_DERIVED"
 
-				"item_talisman_of_evasion"	"ITEM_EXTENSION"
+				"item_ultimate_orb"		"ITEM_EXTENSION"
+				"item_wind_lace"			"ITEM_EXTENSION"
+				"item_recipe_solar_crest"	"ITEM_EXTENSION"
 				"item_solar_crest"			"ITEM_DERIVED"
 
 				"item_ultimate_orb"		"ITEM_LUXURY"

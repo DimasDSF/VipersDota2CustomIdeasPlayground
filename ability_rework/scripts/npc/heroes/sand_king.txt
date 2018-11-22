@@ -19,9 +19,8 @@
 				"item_branches"		"ITEM_CORE | ITEM_SELLABLE"
 
 				"item_boots"		"ITEM_CORE"
-				"item_ring_of_regen"		"ITEM_EXTENSION"
-				"item_wind_lace"		"ITEM_EXTENSION"
-				"item_tranquil_boots"		"ITEM_DERIVED"
+				"item_energy_booster"		"ITEM_CORE"
+				"item_arcane_boots"		"ITEM_DERIVED"
 
 				"item_blink"		"ITEM_CORE"
 
@@ -72,7 +71,7 @@
 				"22"		""
 				"23"		""
 				"24"		""
-				"25"		"special_bonus_hp_regen_35"
+				"25"		"special_bonus_hp_regen_50"
 			}
 			"HeroType"		"DOTA_BOT_GANKER | DOTA_BOT_STUN_SUPPORT"
 			"LaningInfo"

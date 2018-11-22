@@ -24,7 +24,7 @@
 				"item_magic_wand"		"ITEM_DERIVED | ITEM_SELLABLE"
 
 				"item_belt_of_strength"	"ITEM_CORE"
-				"item_gloves"			"ITEM_CORE"
+				"item_blades_of_attack"			"ITEM_CORE"
 				"item_power_treads"		"ITEM_DERIVED"
 
 				"item_blink"		"ITEM_CORE"
@@ -49,8 +49,8 @@
 				"item_ultimate_orb"		"ITEM_LUXURY"
 				"item_sheepstick"		"ITEM_DERIVED"
 
-				"item_vitality_booster"		"ITEM_LUXURY"
 				"item_reaver"		"ITEM_LUXURY"
+				"item_ring_of_tarrasque"		"ITEM_LUXURY"
 				"item_vitality_booster"		"ITEM_LUXURY"
 				"item_heart"		"ITEM_DERIVED"
 			}
