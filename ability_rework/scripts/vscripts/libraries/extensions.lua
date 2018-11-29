@@ -110,7 +110,7 @@ function Extensions:GetOpposingTeamNumber(teamNumber)
 	if teamNumber and type(teamNumber) == "number" then
 		if teamNumber == 3 then
 			return 2
-		else
+		elseif teamNumber == 2 then
 			return 3
 		end
 	end
@@ -146,20 +146,25 @@ end
 
 --math
 function math.scale( min, value, max )
+	if ((min == nil or max == nil or value == nil) or (type(min) ~= 'number' or type(max) ~= 'number' or type(value) ~= 'number')) then return nil end
 	return value * (max - min) + min
 end
 
 function math.map(value, explow, exphigh, outlow, outhigh)
+	if ((outlow == nil or outhigh == nil or explow == nil or exphigh == nil or value == nil) or (type(outlow) ~= 'number' or type(outhigh) ~= 'number' or type(explow) ~= 'number' or type(exphigh) ~= 'number' or type(value) ~= 'number')) then return nil end
 	return outlow + (value - explow) * (outhigh - outlow) / (exphigh - explow)
 end
 
 function math.clamp(min, value, max)
+	if ((min == nil or max == nil or value == nil) or (type(min) ~= 'number' or type(max) ~= 'number' or type(value) ~= 'number')) then return nil end
+	if (min > max) then return nil end
 	if (value < min) then return min end
 	if (value > max) then return max end
 	return value
 end
 
 function math.mapl(value, explow, exphigh, outlow, outhigh)
+	if ((outlow == nil or outhigh == nil or explow == nil or exphigh == nil or value == nil) or (type(outlow) ~= 'number' or type(outhigh) ~= 'number' or type(explow) ~= 'number' or type(exphigh) ~= 'number' or type(value) ~= 'number')) then return nil end
 	if outlow > outhigh then
 		return math.clamp(outhigh, math.map(value, explow, exphigh, outlow, outhigh), outlow)
 	else
@@ -172,6 +177,7 @@ function math.isNaN(input)
 end
 
 function math.round(input)
+	if ((input == nil) or (type(input) ~= 'number')) then return nil end
     if input >= 0 then
 		return math.floor(input + 0.5)
 	else
@@ -180,12 +186,14 @@ function math.round(input)
 end
 
 function math.truncate(input, num)
+	if ((input == nil or num == nil) or ((type(input) ~= 'number') or type(num) ~= 'number')) then return nil end
 	return math.round(input * (10 ^ num)) / (10 ^ num);
 end
 
 --string
 function string.split(input, delimiter)
 	local output = {}
+	if ((input == nil or delimiter == nil) or (type(input) ~= 'string' or type(delimiter) ~= 'string')) then return output end
     for match in input:gmatch("([^"..delimiter.."]+)") do
         table.insert(output, match)
     end
