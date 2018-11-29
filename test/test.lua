@@ -1,14 +1,8 @@
--------------------------------------------------
---Make it Work for generic checks without DotaAPI
--------------------------------------------------
-function class()
-	return {}
-end
-GameRules = {}
-CBaseEntity = {}
--------------------------------------------------
 local test = require 'simple_test'
-
+------------------------------
+--APICallDummies
+require('test/DotaAPIDummies')
+------------------------------
 require('ability_rework/scripts/vscripts/libraries/extensions')
 
 

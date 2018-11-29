@@ -10,4 +10,4 @@ install:
   - luarocks install simple_test
 script:
   - luacheck -q ./ability_rework/scripts/vscripts
-  - lua ./test.lua
+  - lua ./test/test.lua
