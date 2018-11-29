@@ -420,7 +420,7 @@ end
 [34] = "DOTA_UNIT_ORDER_VECTOR_TARGET_CANCELED",
 [35] = "DOTA_UNIT_ORDER_CAST_RIVER_PAINT"--]]
 
-function BotSupportLib:CastAbility(hero, order_type, target, ability, position, queue, force, interval, timeout)
+function BotSupportLib:CastAbility(hero, order_type, target, ability, position, queue, force, cancelondeath, interval, timeout)
 	if hero then
 		local tindex = nil
 		local aindex = nil
@@ -446,6 +446,7 @@ function BotSupportLib:CastAbility(hero, order_type, target, ability, position, 
 					pos = position,
 					queue = queue,
 					force = force,
+					cancelondeath = cancelondeath,
 					timeout = timeout,
 					interval = interval
 				})
@@ -508,7 +509,7 @@ function BotSupportLib:GlobalBotThink()
 					if heroent:IsRealHero() and GameRules.VGMAR:HeroHasUsableItemInInventory( heroent, "item_bloodstone", false, false, false ) and heroent:IsAlive() then
 						local bloodstone = GameRules.VGMAR:GetItemFromInventoryByName( heroent, "item_bloodstone", false, false, false )
 						if bloodstone ~= nil and bloodstone:GetCooldownTimeRemaining() <= 0 and heroent:GetHealth()/heroent:GetMaxHealth() < 0.3 and heroent:GetMana()/heroent:GetMaxMana() > 0.6 then
-							BotSupportLib:CastAbility(heroent, DOTA_UNIT_ORDER_CAST_NO_TARGET, nil, bloodstone, nil, false, true)
+							BotSupportLib:CastAbility(heroent, DOTA_UNIT_ORDER_CAST_NO_TARGET, nil, bloodstone, nil, false, true, true)
 						end
 					end
 				end
@@ -530,7 +531,7 @@ function BotSupportLib:OnAttackLanded(attacker, target, event)
 						local precisionaura = self:GetAbilityFromDB(attacker, "drow_ranger_trueshot")
 						if target:IsBuilding() then
 							if ultimate:GetLevel() > 0 and self:GetAbilityCastConditions(attacker, precisionaura) then
-								self:CastAbility(attacker, DOTA_UNIT_ORDER_CAST_NO_TARGET, nil, precisionaura, nil, false, true)
+								self:CastAbility(attacker, DOTA_UNIT_ORDER_CAST_NO_TARGET, nil, precisionaura, nil, false, true, true)
 							end
 						end
 					elseif name == "npc_dota_hero_skeleton_king" then
@@ -540,7 +541,7 @@ function BotSupportLib:OnAttackLanded(attacker, target, event)
 						if target and target:IsRealUnit(true) and (target:IsNeutralUnitType() or target:IsBuilding()) then
 							if self:GetAbilityCastConditions(attacker, crit) and self:GetAbilityCastManaConditions(attacker, crit, {reincarnation}, 0.5) then
 								if skeletonsmodifier and skeletonsmodifier:GetStackCount() >= crit:GetSpecialValueFor("max_skeleton_charges") then
-									self:CastAbility(attacker, DOTA_UNIT_ORDER_CAST_NO_TARGET, nil, crit, nil, false, true)
+									self:CastAbility(attacker, DOTA_UNIT_ORDER_CAST_NO_TARGET, nil, crit, nil, false, true, true)
 								end
 							end
 						end
@@ -617,7 +618,7 @@ function BotSupportLib:OnAbilityCast(unit, ability, target, event)
 						if self:GetAbilityCastConditions(unit, nimbus) and self:GetAbilityCastManaConditions(unit, nimbus, {}, 0.2) then
 							if target and target:IsRealHero() then
 								print("[BSL]:Zuus: Casting Nimbus after Bolt")
-								self:CastAbility(unit, DOTA_UNIT_ORDER_CAST_POSITION, nil, nimbus, target:GetAbsOrigin(), false, true)
+								self:CastAbility(unit, DOTA_UNIT_ORDER_CAST_POSITION, nil, nimbus, target:GetAbsOrigin(), false, true, true)
 							end
 						end
 					elseif ability == ultimate then
@@ -626,7 +627,7 @@ function BotSupportLib:OnAbilityCast(unit, ability, target, event)
 								local enemy = self:GetLowestHealthEnemy(unit, -1)
 								if enemy then
 									print("[BSL]:Zuus: Casting Nimbus after ultimate on "..enemy:GetName())
-									self:CastAbility(unit, DOTA_UNIT_ORDER_CAST_POSITION, nil, nimbus, enemy:GetAbsOrigin(), false, true)
+									self:CastAbility(unit, DOTA_UNIT_ORDER_CAST_POSITION, nil, nimbus, enemy:GetAbsOrigin(), false, true, true)
 								end
 							end)
 						end
@@ -643,7 +644,7 @@ function BotSupportLib:OnAbilityCast(unit, ability, target, event)
 							if self:GetAbilityCastConditions(unit, crit) and self:GetAbilityCastManaConditions(unit, crit, {reincarnation}, 0.1) then
 								print("[BSL]::WK: Passed conditions for stun skeleton summoning")
 								if skeletonsmodifier and skeletonsmodifier:GetStackCount() >= crit:GetSpecialValueFor("max_skeleton_charges")/2 then
-									self:CastAbility(unit, DOTA_UNIT_ORDER_CAST_NO_TARGET, nil, crit, nil, false, true)
+									self:CastAbility(unit, DOTA_UNIT_ORDER_CAST_NO_TARGET, nil, crit, nil, false, true, true)
 								end
 							end
 						end
@@ -663,7 +664,7 @@ function BotSupportLib:OnAbilityCast(unit, ability, target, event)
 					if ability == ultimate then
 						if target and target:IsHero() then
 							if self:GetAbilityCastConditions(unit, nethertoxin) and self:GetAbilityCastManaConditions(unit, nethertoxin, {}, 0.1) then
-								self:CastAbility(unit, DOTA_UNIT_ORDER_CAST_POSITION, nil, nethertoxin, target:GetAbsOrigin(), false, true)
+								self:CastAbility(unit, DOTA_UNIT_ORDER_CAST_POSITION, nil, nethertoxin, target:GetAbsOrigin(), false, true, true)
 							end
 						end
 					end
@@ -714,7 +715,7 @@ function BotSupportLib:IntervalFunctionCall(unit, fID)
 					local skeletonsmodifier = self:GetModifierFromDB( unit, "modifier_skeleton_king_mortal_strike")
 					if self:GetAbilityCastConditions(unit, crit) and self:GetAbilityCastManaConditions(unit, crit, {reincarnation}, 0.5) then
 						if skeletonsmodifier and skeletonsmodifier:GetStackCount() >= crit:GetSpecialValueFor("max_skeleton_charges") then
-							self:CastAbility(unit, DOTA_UNIT_ORDER_CAST_NO_TARGET, nil, crit, nil, false, true)
+							self:CastAbility(unit, DOTA_UNIT_ORDER_CAST_NO_TARGET, nil, crit, nil, false, true, true)
 						end
 					end
 				end
@@ -786,7 +787,7 @@ function BotSupportLib:IntervalFunctionCall(unit, fID)
 							timeout = 4
 						})--]]
 						print("Forcing Tiny Tree Grab")
-						self:CastAbility(unit, DOTA_UNIT_ORDER_CAST_TARGET_TREE, GetTreeIdForEntityIndex(tree), tree_grab, nil, false, true, 0.1, 4)
+						self:CastAbility(unit, DOTA_UNIT_ORDER_CAST_TARGET_TREE, GetTreeIdForEntityIndex(tree), tree_grab, nil, false, true, true, 0.1, 4)
 					end
 				end
 			else

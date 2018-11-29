@@ -117,6 +117,25 @@ function Extensions:GetOpposingTeamNumber(teamNumber)
 	return nil
 end
 
+function Extensions:CalculateArmorDamageReductionMultiplier(armor)
+	if type(armor) == "number" then
+		return 1-((0.052*armor)/(0.9+0.048*armor))
+	end
+	return nil
+end
+
+--An inaccurate Auto-attack damage prediction
+function Extensions:PredictAttackDamage(attacker, target)
+	if attacker and target then
+		if attacker:IsNull() == false and target:IsNull() == false then
+			if target:IsAlive() then
+				return attacker:GetAverageTrueAttackDamage(attacker)*Extensions:CalculateArmorDamageReductionMultiplier(target:GetPhysicalArmorValue())
+			end
+		end
+	end
+	return 0
+end
+
 function Extensions:CallWithDelay(delay, gametime, func)
 	Timers:CreateTimer({
 		useGameTime = gametime,

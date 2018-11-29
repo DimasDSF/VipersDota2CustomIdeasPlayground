@@ -36,6 +36,7 @@ function modifier_bsl_execute_order_processor:OnCreated(kv)
 		--Keep Trying until success or timeout
 		self.force = kv.force
 		self.timeout = kv.timeout
+		self.cancelondeath = kv.cancelondeath
 		--
 		self.interval = kv.interval or 0.5
 
@@ -83,6 +84,9 @@ function modifier_bsl_execute_order_processor:OnIntervalThink()
 			DOTA_UNIT_ORDER_MOVE_TO_TARGET,
 			DOTA_UNIT_ORDER_ATTACK_TARGET
 		}
+		if self.cancelondeath and parent:IsAlive() == false then
+			self:Destroy() end
+		end
 		if self.force and self.aindex == nil and (self.pos ~= nil or self.tindex ~= nil) then
 			if moveorders[self.ordertype] ~= nil then
 				local distance = (parent:GetAbsOrigin() - self.pos):Length2D()

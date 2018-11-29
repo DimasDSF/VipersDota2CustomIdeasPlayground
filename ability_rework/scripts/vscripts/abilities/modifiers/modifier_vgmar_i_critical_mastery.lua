@@ -34,6 +34,7 @@ end
 function modifier_vgmar_i_critical_mastery:OnCreated( kv )
 	if IsServer() then
 		self.critdmgpercentage = kv.critdmgpercentage
+		self.finishercritpercentage = kv.finishercritpercentage
 		self.critchance = kv.critchance
 	else
 		self.clientvalues = CustomNetTables:GetTableValue("client_side_ability_values", "modifier_vgmar_i_critical_mastery")
@@ -43,16 +44,55 @@ end
 function modifier_vgmar_i_critical_mastery:DeclareFunctions()
 	local funcs = {
 		MODIFIER_EVENT_ON_ATTACK_START,
+		MODIFIER_EVENT_ON_ATTACK_LANDED,
+		MODIFIER_PROPERTY_PREATTACK_CRITICALSTRIKE,
 		MODIFIER_PROPERTY_TOOLTIP
     }
     return funcs
 end
 
+function modifier_vgmar_i_critical_mastery:GetModifierPreAttack_CriticalStrike(kv)
+	if IsServer() then
+		if kv.attacker == self:GetParent() and kv.target:GetTeamNumber() ~= self:GetParent():GetTeamNumber() and kv.target:IsRealUnit(false) and self:GetParent():PassivesDisabled() == false then
+			if kv.target:GetHealth() <= (Extensions:PredictAttackDamage(kv.attacker, kv.target) * (self.finishercritpercentage/100)) then
+				return self.finishercritpercentage
+			end
+		end
+	end
+end
+
 function modifier_vgmar_i_critical_mastery:OnAttackStart(kv)
 	if IsServer() then
 		if kv.attacker == self:GetParent() and kv.target:GetTeamNumber() ~= self:GetParent():GetTeamNumber() and kv.target:IsRealUnit(false) then
-			if math.random(0,100) <= self.critchance then
+			if ((math.random(0,100) <= self.critchance) and (self:GetParent():PassivesDisabled() or (kv.target:GetHealth() > (Extensions:PredictAttackDamage(kv.attacker, kv.target) * (self.finishercritpercentage/100))))) then
 				kv.attacker:AddNewModifier(kv.attacker, self, "modifier_vgmar_i_critical_mastery_active", {critdmgpercentage = self.critdmgpercentage})
+			end
+		end
+	end
+end
+
+function modifier_vgmar_i_critical_mastery:OnAttackLanded(kv)
+	if IsServer() then
+		if kv.attacker == self:GetParent() and kv.target:GetTeamNumber() ~= self:GetParent():GetTeamNumber() and kv.target:IsRealUnit(false) and self:GetParent():PassivesDisabled() == false then
+			if kv.target:GetHealth() <= (Extensions:PredictAttackDamage(kv.attacker, kv.target) * (self.finishercritpercentage/100)) then
+				local particle = "particles/units/heroes/hero_phantom_assassin/phantom_assassin_crit_impact.vpcf"
+				local soundevnt = "Hero_PhantomAssassin.CoupDeGrace"
+				if kv.target:GetClassname() == "npc_dota_creep_siege" then
+					particle = "particles/units/heroes/hero_phantom_assassin/phantom_assassin_crit_impact_mechanical.vpcf"
+					soundevnt = "Hero_PhantomAssassin.CoupDeGrace.Mech"
+				else
+					StartSoundEvent("Hero_PhantomAssassin.Spatter", kv.target)
+				end
+				local pfx = ParticleManager:CreateParticle(particle, PATTACH_CUSTOMORIGIN, kv.attacker)
+				local aAO = kv.attacker:GetOrigin()
+				local tAO = kv.target:GetOrigin()
+				local AtTV = (tAO-aAO):Normalized()
+				ParticleManager:SetParticleControlEnt( pfx, 0, kv.target, PATTACH_POINT_FOLLOW, "attach_hitloc", kv.target:GetOrigin(), true )
+				ParticleManager:SetParticleControl( pfx, 1, kv.target:GetOrigin() )
+				ParticleManager:SetParticleControlForward( pfx, 1, -AtTV )
+				ParticleManager:SetParticleControlEnt( pfx, 10, kv.target, PATTACH_ABSORIGIN_FOLLOW, nil, kv.target:GetOrigin(), true )
+				ParticleManager:ReleaseParticleIndex( pfx )
+				StartSoundEvent(soundevnt, kv.target)
 			end
 		end
 	end
@@ -122,6 +162,7 @@ function modifier_vgmar_i_critical_mastery_active:OnAttackLanded(kv)
 		ParticleManager:SetParticleControlEnt( pfx, 10, kv.target, PATTACH_ABSORIGIN_FOLLOW, nil, kv.target:GetOrigin(), true )
 		ParticleManager:ReleaseParticleIndex( pfx )
 		StartSoundEvent(soundevnt, kv.target)
+		self:Destroy()
 	end
 end
 --------------------------------------------------------------------------------

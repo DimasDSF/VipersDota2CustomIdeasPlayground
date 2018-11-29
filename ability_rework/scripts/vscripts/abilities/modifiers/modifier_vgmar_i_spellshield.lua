@@ -97,7 +97,7 @@ function modifier_vgmar_i_spellshield:OnIntervalThink()
 					ignoresilence = ignoresilence or v.silence
 				end
 			end
-			if (parent:IsSilenced() and ignoresilence == false) or (parent:IsStunned() and ignorestun == false) or (parent:IsRooted() and ignoreroot == false) then
+			if (((parent:IsSilenced() and ignoresilence == false) or (parent:IsStunned() and ignorestun == false) or (parent:IsRooted() and ignoreroot == false)) and parent:PassivesDisabled() == false) then
 				self:SetStackCount( self:GetStackCount() - 1 )
 				if self:GetRemainingTime() <= 0 then
 					self:SetDuration( self.cooldown, true )
@@ -176,7 +176,7 @@ function modifier_vgmar_i_spellshield_active:GetAbsorbSpell(kv)
 				local pfx2 = ParticleManager:CreateParticle("particles/units/heroes/hero_antimage/antimage_spellshield_reflect.vpcf" , PATTACH_ROOTBONE_FOLLOW, self:GetParent())
 				ParticleManager:ReleaseParticleIndex(pfx)
 				ParticleManager:ReleaseParticleIndex(pfx2)
-				EmitSoundOn("Hero_Antimage.Counterspell.Absorb", self:GetParent())
+				EmitSoundOn("Item.LotusOrb.Target", self:GetParent())
 				EmitSoundOn("Hero_Antimage.Counterspell.Target", self:GetParent())
 				self:GetParent():FindModifierByName("modifier_vgmar_i_spellshield"):SetStackCount( self:GetParent():FindModifierByName("modifier_vgmar_i_spellshield"):GetStackCount() - 1 )
 				if self:GetParent():FindModifierByName("modifier_vgmar_i_spellshield"):GetRemainingTime() <= 0 then

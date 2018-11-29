@@ -133,7 +133,7 @@
 	"vgmarItemsTextDescription12"	"Grants Owner a mana regeneration aura and additional mana"
 	"vgmarItemsHeader13"			"Critical Mastery"
 	"vgmarItemsTextRecipe13" 		"Daedalus*2 + Crystalis [Consumed]"
-	"vgmarItemsTextDescription13"	"Does not stack with Deaths Kiss\nMakes Owner have a 100% chance to deal 300% damage"
+	"vgmarItemsTextDescription13"	"Does not stack with Deaths Kiss\nMakes Owner have a 20% chance to deal 200% damage\n Enemies with Health less than 250% owners damage will be finished by a 250% crit."
 	"vgmarItemsHeader14"			"Scorching Light"
 	"vgmarItemsTextRecipe14" 		"Radiance * 2 [Consumed]"
 	"vgmarItemsTextDescription14"	"Grants Glowing Aura that scorches nearby enemies, gives increased vision range, and makes enemy heroes visible in FoW after being affected for specified time"

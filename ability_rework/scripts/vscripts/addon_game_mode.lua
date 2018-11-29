@@ -144,19 +144,19 @@ local modifierdatatable = {
 	["modifier_vgmar_i_fervor"] = {maxstacks = 15, asperstack = 15},
 	["modifier_vgmar_i_essence_shift"] = {reductionprimary = 1, reductionsecondary = 0, increaseprimary = 1, increasesecondary = 0, hitsperstackinc = 1, hitsperstackred = 2, duration = 40, durationtarget = 40},
 	["modifier_vgmar_i_pulse"] = {stackspercreep = 1, stacksperhero = 8, duration = 4, hpregenperstack = 1, manaregenperstack = 1.5, maxstacks = 20},
-	["modifier_vgmar_i_greatcleave"] = {cleaveperc = 100, cleavestartrad = 150, cleaveendrad = 360, cleaveradius = 700, bonusdamage = 75},
+	["modifier_vgmar_i_greatcleave"] = {cleaveperc = 100, cleavestartrad = 150, cleaveendrad = 360, cleaveradius = 700, bonusdamage = 75, manaregen = 3.0},
 	["modifier_vgmar_i_vampiric_aura"] = {radius = 700, lspercent = 30, lspercentranged = 20},
 	["modifier_vgmar_i_multishot"] = {basetargets = 1, mainattrpertarget = 25, bonusdamage = 60, bonusrange = 140},
 	["modifier_vgmar_i_midas_greed"] = {min_bonus_gold = 0, count_per_kill = 1, reduction_per_tick = 2, bonus_gold_cap = 40, stack_duration = 30, reduction_duration = 2.5, killsperstack = 3, midasusestacks = 2},
 	["modifier_vgmar_i_kingsaegis_cooldown"] = {cooldown = 240, reincarnate_time = 5},
-	["modifier_vgmar_i_critical_mastery"] = {critdmgpercentage = 250, critchance = 100},
+	["modifier_vgmar_i_critical_mastery"] = {critdmgpercentage = 200, finishercritpercentage = 250, critchance = 20},
 	["modifier_vgmar_i_atrophy"] = {radius = 1000, dmgpercreep = 1, dmgperhero = 5, stack_duration = 240, stack_duration_scepter = -1, max_stacks = 1000, initial_stacks = 0},
 	["modifier_vgmar_i_deathskiss"] = {critdmgpercentage = 20000, critchance = 1.0},
 	["modifier_vgmar_i_truesight"] = {maxrange = 1300, minrange = 200, maxtime = 180},
 	["modifier_item_ultimate_scepter_consumed"] = {bonus_all_stats = 10, bonus_health = 175, bonus_mana = 175},
 	["modifier_vgmar_i_arcane_intellect"] = {percentage = 10, multpercast = 0.2, bonusint = 25, csmaxmana = 6000, csminmana = 0, minimalcooldown = 1},
 	["modifier_vgmar_i_thirst"] = {threshold = 75, visionthreshold = 50, damagethreshold = 75, visionrange = 10, visionduration = 0.2, giverealvision = 0, givemodelvision = 1, damageperstack = 3, radius = 5000},
-	["modifier_vgmar_i_poison_dagger"] = {cooldown = 60, potencycooldown = 10, agiperpotency = 20, maxdistance = 1400, hitdamageperc = 140, manaloss = 10, durationperpot = 10, manacostperc = 10, dmgpermana = 0.2, ticktime = 2, nomanadmgmult = 1, bonusagi = 45, bonusmisschance = 30, daggerspeed = 1000},
+	["modifier_vgmar_i_poison_dagger"] = {cooldown = 60, potencycooldown = 10, agiperpotency = 20, maxdistance = 1400, hitdamageperc = 70, manaloss = 25, durationperpot = 10, manacostperc = 10, dmgpermana = 0.2, ticktime = 2, nomanadmgmult = 1, bonusagi = 45, bonusmisschance = 30, daggerspeed = 1000},
 	["modifier_vgmar_i_scorching_light"] = {radius = 700, interval = 1.0, visioninterval = 5.0, initialdamage = 60, damageincpertick = 2, maxdamage = 300, missrate = 17, visiondelay = 3, maxillusionstacks = 3, lingerduration = 3.0},
 	["modifier_vgmar_i_permafrost"] = {radius = 600, interval = 1.0, attackspeedperstack = -5, movespeedperstack = -5, bonusarmor = 25, bonusint = 60, maxstacks = 20, freezedmg = 150, lingerduration = 3},
 	["modifier_vgmar_i_manashield"] = {minmana = 0.5, lowmana = 0.55, maxtotalmana = 6000, mindmgfraction = 30, maxdmgfraction = 90, stunradius = 600, stunduration = 3, stundamage = 200, rechargetime = 60, bonusarmor = 15, bonusint = 20},
@@ -2585,22 +2585,6 @@ function VGMAR:OnAllHeroesSpawned()
 	self.pausedn = nil
 	PauseGame(false)
 	-----------------
-	--///////////////
-	--Fill Hero Lists
-	--///////////////
-	local heroes = HeroList:GetAllHeroes()
-	if #heroes > 0 then
-		for n=1,#heroes do
-			if heroes[n]:GetTeamNumber() == 2 then
-				table.insert(self.radiantheroes, heroes[n])
-			elseif heroes[n]:GetTeamNumber() == 3 then
-				table.insert(self.direheroes, heroes[n])
-			end
-			if BotSupportLib:IsHeroBotControlled(heroes[n]) then
-				table.insert(self.botheroes, heroes[n])
-			end
-		end
-	end
 	--/////////////////////////
 	--BotSupportLib Heroes Init
 	--/////////////////////////
@@ -2723,6 +2707,17 @@ function VGMAR:OnNPCSpawned( event )
 			dprint(HeroNamesLib:ConvertInternalToHeroName(spawnedUnit:GetName()).." | Index: "..event.entindex.." Spawned for the first time")
 			table.insert(self.spawnedheroes, event.entindex)
 			self.spawnedheroes[event.entindex] = true
+			--///////////////
+			--Fill Hero Lists
+			--///////////////
+			if spawnedUnit:GetTeamNumber() == 2 then
+				table.insert(self.radiantheroes, spawnedUnit)
+			elseif spawnedUnit:GetTeamNumber() == 3 then
+				table.insert(self.direheroes, spawnedUnit)
+			end
+			if BotSupportLib:IsHeroBotControlled(spawnedUnit) then
+				table.insert(self.botheroes, spawnedUnit)
+			end
 			if PlayerResource:GetPlayerCountForTeam(2) + PlayerResource:GetPlayerCountForTeam(3) <= #self.spawnedheroes then
 				dprint("All heroes successfully spawned")
 				self.allspawned = true
@@ -2920,10 +2915,10 @@ function VGMAR:FilterDamage( filterTable )
 		if (victim:GetClassname() == "npc_dota_creep_lane" or victim:GetClassname() == "npc_dota_creep_siege") and (attacker:GetClassname() == "npc_dota_creep_lane" or attacker:GetClassname() == "npc_dota_creep_siege") then
 			--Creep to Creep Damage
 			if attacker:GetTeamNumber() == 2 then --Radiant damage
-				if VGMAR_DEBUG_DRAW == true then DebugDrawText(attacker:GetAbsOrigin(), "Rad DMGMult: "..self:CreepDamage(true, 0.8, 1.2), false, 2.0) end
+				if VGMAR_DEBUG_DRAW == true then DebugDrawText(attacker:GetAbsOrigin(), "Rad DMGMult: "..math.truncate(self:CreepDamage(true, 0.8, 1.2),2), false, 2.0) end
 				filterTable["damage"] = filterTable["damage"] * self:CreepDamage(true, 0.8, 1.2) --math.min(1.2,math.max(0.8,self:GetTeamAdvantage(false, true, false, false)))
 			elseif attacker:GetTeamNumber() == 3 then --Dire damage
-				if VGMAR_DEBUG_DRAW == true then DebugDrawText(attacker:GetAbsOrigin(), "Dire DMGMult: "..self:CreepDamage(false, 0.8, 1.2), false, 2.0) end
+				if VGMAR_DEBUG_DRAW == true then DebugDrawText(attacker:GetAbsOrigin(), "Dire DMGMult: "..math.truncate(self:CreepDamage(false, 0.8, 1.2),2), false, 2.0) end
 				filterTable["damage"] = filterTable["damage"] * self:CreepDamage(false, 0.8, 1.2) --math.min(1.2,math.max(0.8,self:GetTeamAdvantage(true, true, false, false)))
 			end
 		--[[elseif (attacker:GetClassname() == "npc_dota_creep_lane" or attacker:GetClassname() == "npc_dota_creep_siege") and (victim:IsBuilding() or victim:IsTower()) then
@@ -3118,28 +3113,55 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 	end
 	
 	--Bot Control Prevention
-	if unit and Convars:GetInt("vgmar_blockbotcontrol") == 1 and order_type ~= 27 then
+	--Implement Multiple units selection Fix
+	if units and Convars:GetInt("vgmar_blockbotcontrol") == 1 and order_type ~= 27 then
 		local player = PlayerResource:GetPlayer(issuer)
-		if unit:IsRealHero() then
-			local unitPlayerID = unit:GetPlayerID()
-			if PlayerResource:GetConnectionState(unitPlayerID) == 1 and unitPlayerID ~= issuer and issuer ~= -1 then
-				dprint("Blocking a command to a unit not owned by player UnitPlayerID: ", unitPlayerID, "PlayerID: ", issuer)
-				if IsDevMode() then
-					DeepPrintTable(filterTable)
-				end
-				if player then
-					dprint("Trying to call panorama to reset players unit selection")
-					CustomGameEventManager:Send_ServerToPlayer(player, "selection_reset", {})
-				end
-				return false
-			end
-		end
-		if unit:GetClassname() == "npc_dota_courier" or unit:GetClassname() == "npc_dota_flying_courier" then
-			if PlayerResource:GetTeam(issuer) == 2 or PlayerResource:GetTeam(issuer) == 3 then
-				if unit:GetTeamNumber() ~= PlayerResource:GetTeam(issuer) then
-					dprint("Blocking enemy team Courier usage CourierTeamID: ", unit:GetTeamNumber(), "PlayerTeamID: ", PlayerResource:GetTeam(issuer))
-					CustomGameEventManager:Send_ServerToPlayer(player, "selection_reset", {})
+		for k,j in pairs(units) do
+			local junit = EntIndexToHScript(j)
+			if junit:IsRealHero() then
+				local unitPlayerID = junit:GetPlayerID()
+				if PlayerResource:GetConnectionState(unitPlayerID) == 1 and unitPlayerID ~= issuer and issuer ~= -1 then
+					dprint("Blocking a command to a unit not owned by player UnitPlayerID: ", unitPlayerID, "PlayerID: ", issuer)
+					if IsDevMode() then
+						DeepPrintTable(filterTable)
+					end
+					if player then
+						dprint("Trying to call panorama to reset players unit selection")
+						CustomGameEventManager:Send_ServerToPlayer(player, "selection_reset", {})
+						local relayedOrders = {
+							[1] = true,
+							[2] = true,
+							[3] = true,
+							[4] = true,
+							[10] = true,
+							[14] = true,
+							[15] = true,
+							[21] = true,
+							[28] = true,
+							[29] = true
+						}
+						if relayedOrders[order_type] ~= nil and relayedOrders[order_type] == true then
+							local relayedOrder = {
+								UnitIndex = PlayerResource:GetPlayer(filterTable["issuer_player_id_const"]):GetAssignedHero():entindex(), 
+								OrderType = filterTable.order_type,
+								TargetIndex = filterTable["entindex_target"], --Optional.  Only used when targeting units
+								AbilityIndex = filterTable["entindex_ability"], --Optional.  Only used when casting abilities
+								Position = Vector(filterTable["position_x"],filterTable["position_y"],filterTable["position_z"]), --Optional.  Only used when targeting the ground
+								Queue = filterTable["queue"] --Optional.  Used for queueing up abilities
+							}
+							ExecuteOrderFromTable(relayedOrder)
+						end
+					end
 					return false
+				end
+			end
+			if junit:GetClassname() == "npc_dota_courier" or junit:GetClassname() == "npc_dota_flying_courier" then
+				if PlayerResource:GetTeam(issuer) == 2 or PlayerResource:GetTeam(issuer) == 3 then
+					if junit:GetTeamNumber() ~= PlayerResource:GetTeam(issuer) then
+						dprint("Blocking enemy team Courier usage CourierTeamID: ", junit:GetTeamNumber(), "PlayerTeamID: ", PlayerResource:GetTeam(issuer))
+						CustomGameEventManager:Send_ServerToPlayer(player, "selection_reset", {})
+						return false
+					end
 				end
 			end
 		end
@@ -3147,11 +3169,16 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 	
 	--Preventing Console Spam By invalid attack orders
 	if units then
-		for _,j in ipairs(units) do
-			if j:GetAttackCapability() == 0 and (order_type == 3 or order_type == 4) then return false end
-			if j:IsCommandRestricted() then
-				if j:GetName() == "npc_dota_zeus_cloud" then return false end
-				if j:HasModifer("modifier_skeleton_king_mortal_strike_summon") then return false end
+		for _,j in pairs(units) do
+			local junit = EntIndexToHScript(j)
+			if junit:GetAttackCapability() == 0 and (order_type == 3 or order_type == 4) then return false end
+			if junit:HasMovementCapability() == false and (order_type == 1 or order_type == 2 or order_type == 3 or order_type == 28 or order_type == 29) then return false end
+			if junit:GetName() == "npc_dota_zeus_cloud" then return false end
+			if junit:IsCommandRestricted() then
+				if junit:HasModifier("modifier_skeleton_king_mortal_strike_summon") then return false end
+			end
+			if ability then
+				if ability:GetName() == "item_butterfly" then return false end
 			end
 		end
 	end

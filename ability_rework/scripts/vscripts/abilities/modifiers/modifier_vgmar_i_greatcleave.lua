@@ -38,6 +38,7 @@ function modifier_vgmar_i_greatcleave:OnCreated( kv )
 		self.cleaveendrad = kv.cleaveendrad
 		self.cleaveradius = kv.cleaveradius
 		self.bonusdamage = kv.bonusdamage
+		self.manaregen = kv.manaregen
 	else
 		self.clientvalues = CustomNetTables:GetTableValue("client_side_ability_values", "modifier_vgmar_i_greatcleave")
 	end
@@ -47,6 +48,7 @@ function modifier_vgmar_i_greatcleave:DeclareFunctions()
 	local funcs = {
         MODIFIER_EVENT_ON_ATTACK_LANDED,
 		MODIFIER_PROPERTY_BASEATTACK_BONUSDAMAGE,
+		MODIFIER_PROPERTY_MANA_REGEN_CONSTANT,
 		MODIFIER_PROPERTY_TOOLTIP
     }
     return funcs
@@ -54,6 +56,14 @@ end
 
 function modifier_vgmar_i_greatcleave:OnTooltip()
 	return self.clientvalues.cleaveperc
+end
+
+function modifier_vgmar_i_greatcleave:GetModifierConstantManaRegen()
+	if not IsServer() then
+		return self.clientvalues.manaregen
+	else
+		return self.manaregen
+	end
 end
 
 function modifier_vgmar_i_greatcleave:GetModifierBaseAttack_BonusDamage()
