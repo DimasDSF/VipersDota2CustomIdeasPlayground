@@ -1,4 +1,5 @@
-require('ability_rework/scripts/vscripts/addon_game_mode')
+class() = {}
+require('ability_rework/scripts/vscripts/libraries/extensions')
 local test = require 'simple_test'
 
 test('Extensions:GetOpposingTeamNumber should return nil if teamNumber is nil', function(a)
