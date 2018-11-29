@@ -85,7 +85,7 @@ function modifier_bsl_execute_order_processor:OnIntervalThink()
 			DOTA_UNIT_ORDER_ATTACK_TARGET
 		}
 		if self.cancelondeath and parent:IsAlive() == false then
-			self:Destroy() end
+			self:Destroy()
 		end
 		if self.force and self.aindex == nil and (self.pos ~= nil or self.tindex ~= nil) then
 			if moveorders[self.ordertype] ~= nil then
