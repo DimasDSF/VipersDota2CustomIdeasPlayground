@@ -76,7 +76,7 @@
 				"12"		"phantom_assassin_coup_de_grace"
 				"13"		"phantom_assassin_blur"
 				"14"		"phantom_assassin_blur"
-				"15"		"special_bonus_corruption_4"
+				"15"		"special_bonus_corruption_3"
 				"16"		"phantom_assassin_blur"
 				"17"		""
 				"18"		"phantom_assassin_coup_de_grace"
