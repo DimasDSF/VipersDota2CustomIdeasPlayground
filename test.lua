@@ -1,13 +1,16 @@
+-------------------------------------------------
 --Make it Work for generic checks without DotaAPI
+-------------------------------------------------
 function class()
 	return {}
 end
 GameRules = {}
 CBaseEntity = {}
 -------------------------------------------------
+local test = require 'simple_test'
 
 require('ability_rework/scripts/vscripts/libraries/extensions')
-local test = require 'simple_test'
+
 
 test('Extensions:GetOpposingTeamNumber should return nil if teamNumber is nil', function(a)
 	a.equal(Extensions:GetOpposingTeamNumber(nil), nil)
