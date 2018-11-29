@@ -1,4 +1,6 @@
-class() = {}
+function class()
+	return {}
+end
 require('ability_rework/scripts/vscripts/libraries/extensions')
 local test = require 'simple_test'
 
