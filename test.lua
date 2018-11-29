@@ -1,6 +1,11 @@
+--Make it Work for generic checks without DotaAPI
 function class()
 	return {}
 end
+GameRules = {}
+CBaseEntity = {}
+-------------------------------------------------
+
 require('ability_rework/scripts/vscripts/libraries/extensions')
 local test = require 'simple_test'
 
