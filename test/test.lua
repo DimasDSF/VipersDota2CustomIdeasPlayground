@@ -25,11 +25,11 @@ test('Extensions:GetOpposingTeamNumber should return Opposing Team Number', func
 end)
 
 test('Extensions:CalculateArmorDamageReductionMultiplier should return nil if armor is nil', function(a)
-	a.equal(Extensions:GetOpposingTeamNumber(nil), nil)
+	a.equal(Extensions:CalculateArmorDamageReductionMultiplier(nil), nil)
 end)
 
 test('Extensions:CalculateArmorDamageReductionMultiplier should return nil if armor is not a number', function(a)
-	a.equal(Extensions:GetOpposingTeamNumber("test"), nil)
+	a.equal(Extensions:CalculateArmorDamageReductionMultiplier("test"), nil)
 end)
 
 test('math.scale calc test', function(a)
