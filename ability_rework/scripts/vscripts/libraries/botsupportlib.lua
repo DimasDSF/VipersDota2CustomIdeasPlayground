@@ -204,6 +204,26 @@ local affectedheroeslist = {
 		},
 		trackedintrinsicmodifiers = {},
 		logicthinkers = {}
+	},
+	["npc_dota_hero_phantom_assassin"] = {
+		abilities = {
+			"phantom_assassin_stifling_dagger",
+			"phantom_assassin_phantom_strike",
+			"phantom_assassin_blur",
+			"phantom_assassin_coup_de_grace"
+		},
+		trackedintrinsicmodifiers = {},
+		logicthinkers = {}
+	},
+	["npc_dota_hero_lich"] = {
+		abilities = {
+			"lich_frost_nova",
+			"lich_frost_shield",
+			"lich_sinister_gaze",
+			"lich_chain_frost"
+		},
+		trackedintrinsicmodifiers = {},
+		logicthinkers = {}
 	}
 }
 
@@ -333,30 +353,30 @@ function BotSupportLib:GetAbilityCastManaConditions(hero, ability, addabilities,
 	if addabilities then
 		for _,i in ipairs(addabilities) do
 			if i:IsFullyCastable() then
-				print("[BSL]::ACMC: Manacost:"..i:GetName().."IsFullyCastable :+"..i:GetManaCost(-1))
+				--print("[BSL]::ACMC: Manacost:"..i:GetName().."IsFullyCastable :+"..i:GetManaCost(-1))
 				manacost = manacost + i:GetManaCost(-1)
 			elseif i:GetCooldownTimeRemaining() < 10 and i:GetLevel() > 0 then
 				if mana + (manaregen * i:GetCooldownTimeRemaining()) >= i:GetManaCost(-1) then
-					print("[BSL]::ACMC: Manacost:"..i:GetName().."Will be FullyCastable in "..i:GetCooldownTimeRemaining().." :+"..i:GetManaCost(-1))
+					--print("[BSL]::ACMC: Manacost:"..i:GetName().."Will be FullyCastable in "..i:GetCooldownTimeRemaining().." :+"..i:GetManaCost(-1))
 					manacost = manacost + i:GetManaCost(-1)
 				end
 			end
 		end
-		print("[BSL]::ACMC: Manacost after addabilities:"..manacost)
+		--print("[BSL]::ACMC: Manacost after addabilities:"..manacost)
 	end
 	if remainder ~= nil then
-		print("[BSL]::ACMC: Remainder>Manacost:"..tostring((mana - manacost)/hero:GetMaxMana() >= remainder))
+		--print("[BSL]::ACMC: Remainder>Manacost:"..tostring((mana - manacost)/hero:GetMaxMana() >= remainder))
 		return (mana - manacost)/hero:GetMaxMana() >= remainder
 	end
-	print("[BSL]::ACMC: Manacost<Mana:"..tostring(manacost < mana))
+	--print("[BSL]::ACMC: Manacost<Mana:"..tostring(manacost < mana))
 	return manacost < mana
 end
 
 function BotSupportLib:GetAbilityCastConditions(hero, ability)
-	if not ability then print("[BSL]::ACC: Fail: No ability") return false end
-	if not ability:IsFullyCastable() then print("[BSL]::ACC: Fail:"..ability:GetName().." Not FullyCastable") return false end
-	if ability:IsHidden() then print("[BSL]::ACC: Fail:"..ability:GetName().." Ability is Hidden") return false end
-	if hero:IsChanneling() and ability ~= hero:GetCurrentActiveAbility() then print("[BSL]::ACC: Fail:"..ability:GetName().." Channeling other ability "..hero:GetCurrentActiveAbility():GetName()) return false end
+	if not ability then return false end
+	if not ability:IsFullyCastable() then return false end
+	if ability:IsHidden() then return false end
+	if hero:IsChanneling() and ability ~= hero:GetCurrentActiveAbility() then return false end
 	return true
 end
 
@@ -380,7 +400,7 @@ function BotSupportLib:GetClosestEnemyHero(hero, range)
 	if enemy[1] then
 		return {enemy[1], (enemy[1]:GetAbsOrigin() - hero:GetAbsOrigin()):Length2D()}
 	end
-	return nil
+	return {nil, 9999999}
 end
 
 --[[[0] = "DOTA_UNIT_ORDER_NONE",
@@ -486,7 +506,6 @@ function BotSupportLib:OnAbilityLearned( keys )
 						for _,n in ipairs(j) do
 							if n and n:IsNull() == false then
 								n:StartIntervalThinkWithPresetInterval()
-								print("[BSL]:OnAbilityLearned:Starting Thinker for ability "..abilityname)
 							end
 						end
 					end
@@ -510,6 +529,16 @@ function BotSupportLib:GlobalBotThink()
 						local bloodstone = GameRules.VGMAR:GetItemFromInventoryByName( heroent, "item_bloodstone", false, false, false )
 						if bloodstone ~= nil and bloodstone:GetCooldownTimeRemaining() <= 0 and heroent:GetHealth()/heroent:GetMaxHealth() < 0.3 and heroent:GetMana()/heroent:GetMaxMana() > 0.6 then
 							BotSupportLib:CastAbility(heroent, DOTA_UNIT_ORDER_CAST_NO_TARGET, nil, bloodstone, nil, false, true, true)
+						end
+					end
+					--///////////////////////////////////
+					--Butterfly Replacement(thx Valve /s)
+					--///////////////////////////////////
+					if heroent:IsRealHero() and GameRules.VGMAR:HeroHasUsableItemInInventory( heroent, "item_butterfly", false, false, false ) then
+						local bfly = GameRules.VGMAR:GetItemFromInventoryByName( heroent, "item_butterfly", false, true, true )
+						if bfly then
+							GameRules.VGMAR:RemoveNItemsInInventory(heroent, "item_butterfly", 1)
+							heroent:AddItemByName("item_butterfly_fixed")
 						end
 					end
 				end
@@ -538,11 +567,19 @@ function BotSupportLib:OnAttackLanded(attacker, target, event)
 						local crit = self:GetAbilityFromDB(attacker, "skeleton_king_mortal_strike")
 						local reincarnation = self:GetAbilityFromDB(attacker, "skeleton_king_reincarnation")
 						local skeletonsmodifier = self:GetModifierFromDB(attacker, "modifier_skeleton_king_mortal_strike")
-						if target and target:IsRealUnit(true) and (target:IsNeutralUnitType() or target:IsBuilding()) then
+						if target and (target:IsNeutralUnitType() or target:IsBuilding()) then
 							if self:GetAbilityCastConditions(attacker, crit) and self:GetAbilityCastManaConditions(attacker, crit, {reincarnation}, 0.5) then
 								if skeletonsmodifier and skeletonsmodifier:GetStackCount() >= crit:GetSpecialValueFor("max_skeleton_charges") then
 									self:CastAbility(attacker, DOTA_UNIT_ORDER_CAST_NO_TARGET, nil, crit, nil, false, true, true)
 								end
+							end
+						end
+					elseif name == "npc_dota_hero_lich" then
+						local gaze = self:GetAbilityFromDB(attacker, "lich_sinister_gaze")
+						local ultimate = self:GetAbilityFromDB(attacker, "lich_chain_frost")
+						if target and target:IsHero() then
+							if self:GetAbilityCastConditions(attacker, gaze) and self:GetAbilityCastManaConditions(attacker, gaze, {ultimate}, 0.3) then
+								self:CastAbility(attacker, DOTA_UNIT_ORDER_CAST_TARGET, target, gaze, nil, false, true, true, 0.5, 2)
 							end
 						end
 					end
@@ -558,7 +595,14 @@ function BotSupportLib:OnAttackStart(attacker, target, event)
 		if self:IsHeroBSLSupported(attacker) then
 			if self.botdata[index] ~= nil then
 				local name = self.botdata[index].name
-				
+				if name == "npc_dota_hero_sniper" then
+					if target:IsHero() then
+						local takeaim = self:GetAbilityFromDB(attacker, "sniper_take_aim")
+						if self:GetAbilityCastConditions(attacker, takeaim) then
+							self:CastAbility(attacker, DOTA_UNIT_ORDER_CAST_NO_TARGET, nil, takeaim, nil, false, true, true)
+						end
+					end
+				end
 			end
 		end
 	end
@@ -578,11 +622,33 @@ end
 
 function BotSupportLib:OnDamaged(unit, attacker, event)
 	if unit and attacker and event then
-		local index = unit:entindex()
+		local aindex = attacker:entindex()
+		local uindex = unit:entindex()
 		if self:IsHeroBSLSupported(attacker) then
-			if self.botdata[index] ~= nil then
-				local name = self.botdata[index].name
+			if self.botdata[aindex] ~= nil then
+				local name = self.botdata[aindex].name
 				
+			end
+		end
+		if self:IsHeroBSLSupported(unit) then
+			if self.botdata[uindex] ~= nil then
+				local name = self.botdata[uindex].name
+				if name == "npc_dota_hero_phantom_assassin" then
+					local blur = self:GetAbilityFromDB(unit, "phantom_assassin_blur")
+					if attacker:IsHero() and (unit:GetHealth()/unit:GetMaxHealth() < 0.7) then
+						if BotSupportLib:GetClosestEnemyHero(attacker, -1)[2] > (blur:GetSpecialValueFor("radius")*1.15) then
+							self:CastAbility(unit, DOTA_UNIT_ORDER_CAST_NO_TARGET, nil, blur, nil, false, true, true)
+						end
+					end
+				elseif name == "npc_dota_hero_lich" then
+					local shield = self:GetAbilityFromDB(unit, "lich_frost_shield")
+					local ultimate = self:GetAbilityFromDB(unit, "lich_chain_frost")
+					if self:GetAbilityCastConditions(unit, shield) and self:GetAbilityCastManaConditions(unit, shield, {ultimate}, 0.6) then
+						if (unit:GetHealth()/unit:GetMaxHealth() < 0.7) then
+							self:CastAbility(unit, DOTA_UNIT_ORDER_CAST_TARGET, unit, shield, nil, false, true, true, 0.2, 2)
+						end
+					end
+				end
 			end
 		end
 	end
@@ -617,7 +683,6 @@ function BotSupportLib:OnAbilityCast(unit, ability, target, event)
 					if ability == bolt then
 						if self:GetAbilityCastConditions(unit, nimbus) and self:GetAbilityCastManaConditions(unit, nimbus, {}, 0.2) then
 							if target and target:IsRealHero() then
-								print("[BSL]:Zuus: Casting Nimbus after Bolt")
 								self:CastAbility(unit, DOTA_UNIT_ORDER_CAST_POSITION, nil, nimbus, target:GetAbsOrigin(), false, true, true)
 							end
 						end
@@ -626,7 +691,6 @@ function BotSupportLib:OnAbilityCast(unit, ability, target, event)
 							Extensions:CallWithDelay(0.5, true, function()
 								local enemy = self:GetLowestHealthEnemy(unit, -1)
 								if enemy then
-									print("[BSL]:Zuus: Casting Nimbus after ultimate on "..enemy:GetName())
 									self:CastAbility(unit, DOTA_UNIT_ORDER_CAST_POSITION, nil, nimbus, enemy:GetAbsOrigin(), false, true, true)
 								end
 							end)
@@ -642,7 +706,6 @@ function BotSupportLib:OnAbilityCast(unit, ability, target, event)
 					if ability == stun then
 						if target and target:IsHero() then
 							if self:GetAbilityCastConditions(unit, crit) and self:GetAbilityCastManaConditions(unit, crit, {reincarnation}, 0.1) then
-								print("[BSL]::WK: Passed conditions for stun skeleton summoning")
 								if skeletonsmodifier and skeletonsmodifier:GetStackCount() >= crit:GetSpecialValueFor("max_skeleton_charges")/2 then
 									self:CastAbility(unit, DOTA_UNIT_ORDER_CAST_NO_TARGET, nil, crit, nil, false, true, true)
 								end
@@ -665,6 +728,32 @@ function BotSupportLib:OnAbilityCast(unit, ability, target, event)
 						if target and target:IsHero() then
 							if self:GetAbilityCastConditions(unit, nethertoxin) and self:GetAbilityCastManaConditions(unit, nethertoxin, {}, 0.1) then
 								self:CastAbility(unit, DOTA_UNIT_ORDER_CAST_POSITION, nil, nethertoxin, target:GetAbsOrigin(), false, true, true)
+							end
+						end
+					end
+				--Lich
+				elseif name == "npc_dota_hero_lich" then
+					local blast = self:GetAbilityFromDB(unit, "lich_frost_nova")
+					local gaze = self:GetAbilityFromDB(unit, "lich_sinister_gaze")
+					local ultimate = self:GetAbilityFromDB(unit, "lich_chain_frost")
+					if ability == blast or ability == ultimate then
+						if target and target:IsHero() then
+							if self:GetAbilityCastConditions(unit, gaze) and self:GetAbilityCastManaConditions(unit, gaze, {ultimate}, 0.1) then
+								self:CastAbility(unit, DOTA_UNIT_ORDER_CAST_TARGET, target, gaze, nil, false, true, true, 0.5, 1)
+							end
+						end
+					end
+				elseif name == "npc_dota_hero_phantom_assassin" then
+					local blink = self:GetAbilityFromDB(unit, "phantom_assassin_phantom_strike")
+					local blur = self:GetAbilityFromDB(unit, "phantom_assassin_blur")
+					if ability == blink then
+						if target and target:GetTeamNumber() == unit:GetTeamNumber() then
+							if self:GetAbilityCastConditions(unit, blur) then
+								Extensions:CallWithDelay(0.5, true, function()
+									if BotSupportLib:GetClosestEnemyHero(unit, -1)[2] > (blur:GetSpecialValueFor("radius")*1.15) then
+										self:CastAbility(unit, DOTA_UNIT_ORDER_CAST_NO_TARGET, nil, blur, nil, false, true, true, 0.3, 1)
+									end
+								end)
 							end
 						end
 					end
@@ -786,7 +875,6 @@ function BotSupportLib:IntervalFunctionCall(unit, fID)
 							interval = 0.1,
 							timeout = 4
 						})--]]
-						print("Forcing Tiny Tree Grab")
 						self:CastAbility(unit, DOTA_UNIT_ORDER_CAST_TARGET_TREE, GetTreeIdForEntityIndex(tree), tree_grab, nil, false, true, true, 0.1, 4)
 					end
 				end

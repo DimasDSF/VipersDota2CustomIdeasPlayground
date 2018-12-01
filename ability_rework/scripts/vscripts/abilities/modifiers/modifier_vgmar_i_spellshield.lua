@@ -97,7 +97,7 @@ function modifier_vgmar_i_spellshield:OnIntervalThink()
 					ignoresilence = ignoresilence or v.silence
 				end
 			end
-			if (((parent:IsSilenced() and ignoresilence == false) or (parent:IsStunned() and ignorestun == false) or (parent:IsRooted() and ignoreroot == false)) and parent:PassivesDisabled() == false) then
+			if (((parent:IsHexed()) or (parent:IsSilenced() and ignoresilence == false) or (parent:IsStunned() and ignorestun == false) or (parent:IsRooted() and ignoreroot == false)) and parent:PassivesDisabled() == false) then
 				self:SetStackCount( self:GetStackCount() - 1 )
 				if self:GetRemainingTime() <= 0 then
 					self:SetDuration( self.cooldown, true )

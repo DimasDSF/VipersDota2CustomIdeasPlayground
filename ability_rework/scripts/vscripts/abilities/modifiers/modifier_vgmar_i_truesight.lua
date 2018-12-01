@@ -45,6 +45,7 @@ function modifier_vgmar_i_truesight:OnCreated(kv)
 	if IsServer() then
 		self:SetDuration(kv.maxtime, true)
 		self:StartIntervalThink( 1 )
+		self:GetParent():AddNewModifier(self:GetParent(), nil, "modifier_vgmar_i_truesight_vision", {})
 	end
 end
 
@@ -63,6 +64,7 @@ function modifier_vgmar_i_truesight:DeclareFunctions()
     }
     return funcs
 end
+
 
 function modifier_vgmar_i_truesight:OnRespawn(kv)
 	if kv.unit == self:GetParent() then
@@ -92,3 +94,55 @@ function modifier_vgmar_i_truesight:OnIntervalThink()
 end
 
 --------------------------------------------------------------------------------
+
+modifier_vgmar_i_truesight_vision = class({})
+
+function modifier_vgmar_i_truesight_vision:IsHidden()
+    return true
+end
+
+function modifier_vgmar_i_truesight_vision:IsPurgable()
+	return false
+end
+
+function modifier_vgmar_i_truesight_vision:RemoveOnDeath()
+	return false
+end
+
+function modifier_vgmar_i_truesight_vision:DestroyOnExpire()
+	return false
+end
+
+function modifier_vgmar_i_truesight_vision:OnCreated(kv)
+	if IsServer() then
+		self.provider = self:GetCaster():FindModifierByName("modifier_vgmar_i_truesight")
+		self.maxtime = self.provider.maxtime
+		self:StartIntervalThink( 1 )
+	end
+end
+
+function modifier_vgmar_i_truesight_vision:DeclareFunctions()
+	local funcs = {
+		MODIFIER_PROPERTY_BONUS_NIGHT_VISION
+    }
+    return funcs
+end
+
+function modifier_vgmar_i_truesight_vision:OnIntervalThink()
+	if IsServer() then
+		local parent = self:GetParent()
+		if parent:IsAlive() then
+			local nightdaydiff = (parent:GetBaseDayTimeVisionRange()-parent:GetBaseNightTimeVisionRange())
+			if self.provider:GetRemainingTime() <= 0 then
+				self:SetStackCount(nightdaydiff)
+			else
+				local scale = math.map(math.floor(self.provider:GetRemainingTime()), self.maxtime, 0, 0, 1)
+				self:SetStackCount(scale*nightdaydiff)
+			end
+		end
+	end
+end
+
+function modifier_vgmar_i_truesight_vision:GetBonusNightVision()
+	return self:GetStackCount()
+end

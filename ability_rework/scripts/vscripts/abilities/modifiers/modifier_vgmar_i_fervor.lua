@@ -52,14 +52,16 @@ end
 
 function modifier_vgmar_i_fervor:OnAttack( event )
 	if IsServer() then
-		if event.attacker == self:GetCaster() then
-			if event.target == self.lasttar then
-				if self:GetStackCount() + 1 <= self.maxstacks then
-					self:SetStackCount(self:GetStackCount() + 1)
+		if event.attacker == self:GetParent() then
+			if event.attacker:GetAttackTarget() == self.lasttar then
+				if event.target == self.lasttar then
+					if self:GetStackCount() + 1 <= self.maxstacks then
+						self:SetStackCount(self:GetStackCount() + 1)
+					end
 				end
 			else
-				self.lasttar = event.target
-				self:SetStackCount(1)
+				self.lasttar = event.attacker:GetAttackTarget()
+				self:SetStackCount(0)
 			end
 		end
 	end

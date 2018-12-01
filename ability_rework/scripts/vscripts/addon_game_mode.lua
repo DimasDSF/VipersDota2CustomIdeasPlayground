@@ -7,7 +7,8 @@ local VGMAR_DEBUG_DRAW = true
 local VGMAR_DEBUG_ENABLE_VARIABLE_SETTING = true
 local VGMAR_GIVE_DEBUG_ITEMS = false
 local VGMAR_BOT_FILL = true
-local VGMAR_LOG_BALANCE = false
+local VGMAR_LOG_BALANCE_PERIODIC = false
+local VGMAR_LOG_BALANCE_EVENTS = true
 local VGMAR_LOG_BALANCE_GAMEEND = true
 local VGMAR_LOG_BALANCE_INTERVAL = 120
 local MAX_COURIER_LVL = 5
@@ -146,7 +147,7 @@ local modifierdatatable = {
 	["modifier_vgmar_i_pulse"] = {stackspercreep = 1, stacksperhero = 8, duration = 4, hpregenperstack = 1, manaregenperstack = 1.5, maxstacks = 20},
 	["modifier_vgmar_i_greatcleave"] = {cleaveperc = 100, cleavestartrad = 150, cleaveendrad = 360, cleaveradius = 700, bonusdamage = 75, manaregen = 3.0},
 	["modifier_vgmar_i_vampiric_aura"] = {radius = 700, lspercent = 30, lspercentranged = 20},
-	["modifier_vgmar_i_multishot"] = {basetargets = 1, mainattrpertarget = 25, bonusdamage = 60, bonusrange = 140},
+	["modifier_vgmar_i_multishot"] = {basetargets = 1, mainattrpertarget = 50, bonusdamage = 60, bonusrange = 140},
 	["modifier_vgmar_i_midas_greed"] = {min_bonus_gold = 0, count_per_kill = 1, reduction_per_tick = 2, bonus_gold_cap = 40, stack_duration = 30, reduction_duration = 2.5, killsperstack = 3, midasusestacks = 2},
 	["modifier_vgmar_i_kingsaegis_cooldown"] = {cooldown = 240, reincarnate_time = 5},
 	["modifier_vgmar_i_critical_mastery"] = {critdmgpercentage = 200, finishercritpercentage = 250, critchance = 20},
@@ -273,6 +274,7 @@ function VGMAR:Init()
 	self.bottomepurchausetimestamp = 0
 	self.tomepurchaseallmaxlvl = false
 	self.botinnategemapplied = false
+	self.gemapplyretrytime = 0
 	
 	local itemskvnum = 0
 	local itemscustomkvnum = 0
@@ -352,6 +354,7 @@ function VGMAR:Init()
 	LinkLuaModifier("modifier_vgmar_i_kingsaegis_active", "abilities/modifiers/modifier_vgmar_i_kingsaegis_active", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_purgefield_visual", "abilities/modifiers/modifier_vgmar_i_purgefield_visual", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_truesight", "abilities/modifiers/modifier_vgmar_i_truesight", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_truesight_vision", "abilities/modifiers/modifier_vgmar_i_truesight", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_fervor", "abilities/modifiers/modifier_vgmar_i_fervor", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_cdreduction", "abilities/modifiers/modifier_vgmar_i_cdreduction", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_midas_greed", "abilities/modifiers/modifier_vgmar_i_midas_greed", LUA_MODIFIER_MOTION_NONE)
@@ -812,16 +815,36 @@ function VGMAR:LogBalance()
 	LogLib:WriteLog("balance", 1, false, "Hero Data:")
 	for i=1,#allheroes do
 		LogLib:WriteLog("balance", 2, false, "Hero: "..HeroNamesLib:ConvertInternalToHeroName( allheroes[i]:GetName() ))
+		local playerID = allheroes[i]:GetPlayerID()
 		if allheroes[i]:GetTeamNumber() == 2 then
 			radiantheroes = radiantheroes + 1
 			LogLib:WriteLog("balance", 3, false, "Team: Radiant")
 			LogLib:WriteLog("balance", 3, false, "Kills: "..allheroes[i]:GetKills())
+			for _,v in ipairs(GameRules.VGMAR.direheroes) do
+				LogLib:WriteLog("balance", 4, false, HeroNamesLib:ConvertInternalToHeroName( v:GetName() ).." : "..PlayerResource:GetKillsDoneToHero(playerID, v:GetPlayerID()))
+			end
 			LogLib:WriteLog("balance", 3, false, "Deaths: "..allheroes[i]:GetDeaths())
 			LogLib:WriteLog("balance", 3, false, "Assists: "..allheroes[i]:GetAssists())
 			LogLib:WriteLog("balance", 3, false, "Last Hits: "..allheroes[i]:GetLastHits())
+			LogLib:WriteLog("balance", 3, false, "Denies: "..PlayerResource:GetDenies(playerID))
 			LogLib:WriteLog("balance", 3, false, "Gold: "..allheroes[i]:GetGold())
+			LogLib:WriteLog("balance", 3, false, "Gold Per Minute: "..math.truncate(PlayerResource:GetGoldPerMin(playerID), 2))
+			LogLib:WriteLog("balance", 3, false, "Gold Lost to Deaths: "..PlayerResource:GetGoldLostToDeath(playerID))
+			LogLib:WriteLog("balance", 3, false, "Total Gold Earned: "..PlayerResource:GetTotalEarnedGold(playerID))
 			LogLib:WriteLog("balance", 3, false, "XP: "..allheroes[i]:GetCurrentXP())
+			LogLib:WriteLog("balance", 3, false, "XP Per Minute: "..math.truncate(PlayerResource:GetXPPerMin(playerID), 2))
+			LogLib:WriteLog("balance", 3, false, "Runes picked up: "..PlayerResource:GetRunePickups(playerID))
+			LogLib:WriteLog("balance", 3, false, "Stuns: "..math.truncate(PlayerResource:GetStuns(playerID), 2))
+			LogLib:WriteLog("balance", 3, false, "Misses: "..PlayerResource:GetMisses(playerID))
 			LogLib:WriteLog("balance", 3, false, "Level: "..allheroes[i]:GetLevel())
+			LogLib:WriteLog("balance", 3, false, "Healing: "..PlayerResource:GetHealing(playerID))
+			LogLib:WriteLog("balance", 3, false, "Damage: ")
+			LogLib:WriteLog("balance", 4, false, "Total: "..PlayerResource:GetRawPlayerDamage(playerID))
+			LogLib:WriteLog("balance", 4, false, "------")
+			for _,v in ipairs(GameRules.VGMAR.direheroes) do
+				LogLib:WriteLog("balance", 4, false, HeroNamesLib:ConvertInternalToHeroName( v:GetName() ).." : "..PlayerResource:GetDamageDoneToHero(playerID, v:GetPlayerID()))
+			end
+			LogLib:WriteLog("balance", 4, false, "------")
 			LogLib:WriteLog("balance", 3, false, "Items: ")
 			local heronw = 0
 			for j = 0, 14 do
@@ -850,12 +873,31 @@ function VGMAR:LogBalance()
 			direheroes = direheroes + 1
 			LogLib:WriteLog("balance", 3, false, "Team: Dire")
 			LogLib:WriteLog("balance", 3, false, "Kills: "..allheroes[i]:GetKills())
+			for _,v in ipairs(GameRules.VGMAR.radiantheroes) do
+				LogLib:WriteLog("balance", 4, false, HeroNamesLib:ConvertInternalToHeroName( v:GetName() ).." : "..PlayerResource:GetKillsDoneToHero(playerID, v:GetPlayerID()))
+			end
 			LogLib:WriteLog("balance", 3, false, "Deaths: "..allheroes[i]:GetDeaths())
 			LogLib:WriteLog("balance", 3, false, "Assists: "..allheroes[i]:GetAssists())
 			LogLib:WriteLog("balance", 3, false, "Last Hits: "..allheroes[i]:GetLastHits())
+			LogLib:WriteLog("balance", 3, false, "Denies: "..PlayerResource:GetDenies(playerID))
 			LogLib:WriteLog("balance", 3, false, "Gold: "..allheroes[i]:GetGold())
+			LogLib:WriteLog("balance", 3, false, "Gold Per Minute: "..math.truncate(PlayerResource:GetGoldPerMin(playerID), 2))
+			LogLib:WriteLog("balance", 3, false, "Gold Lost to Deaths: "..PlayerResource:GetGoldLostToDeath(playerID))
+			LogLib:WriteLog("balance", 3, false, "Total Gold Earned: "..PlayerResource:GetTotalEarnedGold(playerID))
 			LogLib:WriteLog("balance", 3, false, "XP: "..allheroes[i]:GetCurrentXP())
+			LogLib:WriteLog("balance", 3, false, "XP Per Minute: "..math.truncate(PlayerResource:GetXPPerMin(playerID), 2))
+			LogLib:WriteLog("balance", 3, false, "Runes picked up: "..PlayerResource:GetRunePickups(playerID))
+			LogLib:WriteLog("balance", 3, false, "Stuns: "..math.truncate(PlayerResource:GetStuns(playerID), 2))
+			LogLib:WriteLog("balance", 3, false, "Misses: "..PlayerResource:GetMisses(playerID))
 			LogLib:WriteLog("balance", 3, false, "Level: "..allheroes[i]:GetLevel())
+			LogLib:WriteLog("balance", 3, false, "Healing: "..PlayerResource:GetHealing(playerID))
+			LogLib:WriteLog("balance", 3, false, "Damage: ")
+			LogLib:WriteLog("balance", 4, false, "Total: "..PlayerResource:GetRawPlayerDamage(playerID))
+			LogLib:WriteLog("balance", 4, false, "------")
+			for _,v in ipairs(GameRules.VGMAR.radiantheroes) do
+				LogLib:WriteLog("balance", 4, false, HeroNamesLib:ConvertInternalToHeroName( v:GetName() ).." : "..PlayerResource:GetDamageDoneToHero(playerID, v:GetPlayerID()))
+			end
+			LogLib:WriteLog("balance", 4, false, "------")
 			LogLib:WriteLog("balance", 3, false, "Items: ")
 			local heronw = 0
 			for j = 0, 14 do
@@ -927,7 +969,12 @@ function VGMAR:LogBalance()
 	LogLib:WriteLog("balance", 3, false, "Dire: "..GameRules.VGMAR:GetTeamAdvantage(false, true, true, true))
 end
 
-
+function VGMAR:LogEvent(text)
+	if text ~= nil and VGMAR_LOG_BALANCE_EVENTS then
+		LogLib:WriteLog("balance", 0, true, "BE:"..text)
+		LogLib:WriteLog("balance", 0, false, "-------------")
+	end
+end
 
 local missclickproofabilities = {
 	["item_tpscroll"] = true,
@@ -1541,6 +1588,7 @@ function VGMAR:TeamReward(teamnumber, amount, split)
 				targets[i]:AddExperience(amount[2], 2, false, true)
 			end
 		end
+		self:LogEvent("TeamReward: Team: "..teamnumber.." Gold: "..amount[1].." Split: "..tostring(split[1]).." |XP: "..amount[2].." Split: "..tostring(split[2]))
 	else
 		dprint("TeamReward found 0 targets")
 	end
@@ -1793,6 +1841,7 @@ function VGMAR:OnThink()
 							heroent:SetBuybackCooldownTime( 0 )
 							dprint("Resetting Buyback Cooldown for "..HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()))
 							dprint("Buyback Cost: "..heroent:GetBuybackCost(false).." Gold Remaining: "..(heroent:GetGold() - heroent:GetBuybackCost(false)))
+							self:LogEvent("Resetting Buyback Cooldown for "..HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Buyback Cost: "..heroent:GetBuybackCost(false).." Gold Remaining: "..(heroent:GetGold() - heroent:GetBuybackCost(false)))
 						end
 					end
 					
@@ -1819,6 +1868,7 @@ function VGMAR:OnThink()
 												heroent:SpendGold(botitemskv.travelbootscost, 2)
 												heroent:AddItemByName("item_travel_boots")
 												dprint(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Upgraded "..bootsname.." to Travel Boots | Gold Remaining: "..heroent:GetGold())
+												self:LogEvent(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Upgraded "..bootsname.." to Travel Boots | Gold Remaining: "..heroent:GetGold())
 												self.botupgradestatus[heroent:entindex()] = self.botupgradestatus[heroent:entindex()] + 1
 											end
 										end
@@ -1828,6 +1878,7 @@ function VGMAR:OnThink()
 										heroent:SpendGold(botitemskv.travelbootsrecipecost, 2)
 										heroent:AddItemByName("item_recipe_travel_boots")
 										dprint(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Upgraded Travel Boots to level 2 | Gold Remaining: "..heroent:GetGold())
+										self:LogEvent(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Upgraded Travel Boots to level 2 | Gold Remaining: "..heroent:GetGold())
 										self.botupgradestatus[heroent:entindex()] = self.botupgradestatus[heroent:entindex()] + 1
 									end
 								elseif bup == "aghs" then
@@ -1842,11 +1893,13 @@ function VGMAR:OnThink()
 												heroent:SpendGold(botitemskv.aghanimscost, 2)
 												heroent:AddNewModifier(heroent, nil, "modifier_item_ultimate_scepter_consumed", botitemskv.aghanimsstats)
 												dprint(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Consumed Aghanims replacing inventory Aghanims | Gold Remaining: "..heroent:GetGold())
+												self:LogEvent(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Consumed Aghanims replacing inventory Aghanims | Gold Remaining: "..heroent:GetGold())
 												self.botupgradestatus[heroent:entindex()] = self.botupgradestatus[heroent:entindex()] + 1
 											elseif aghs == nil and heroent:GetGold() >= heroent:GetBuybackCost(false) + botitemskv.aghanimscost * 2 then
 												heroent:SpendGold(botitemskv.aghanimscost * 2, 2)
 												heroent:AddNewModifier(heroent, nil, "modifier_item_ultimate_scepter_consumed", botitemskv.aghanimsstats)
 												dprint(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Consumed Aghanims | Gold Remaining: "..heroent:GetGold())
+												self:LogEvent(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Consumed Aghanims | Gold Remaining: "..heroent:GetGold())
 												self.botupgradestatus[heroent:entindex()] = self.botupgradestatus[heroent:entindex()] + 1
 											end
 										end
@@ -1857,6 +1910,7 @@ function VGMAR:OnThink()
 										heroent:SpendGold(botitemskv.moonshardcost, 2)
 										heroent:AddNewModifier(heroent, nil, "modifier_item_moon_shard_consumed", botitemskv.moonshardvalues)
 										dprint(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Consumed Moonshard | Gold Remaining: "..heroent:GetGold())
+										self:LogEvent(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Consumed Moonshard | Gold Remaining: "..heroent:GetGold())
 										self.botupgradestatus[heroent:entindex()] = self.botupgradestatus[heroent:entindex()] + 1
 									end
 								end
@@ -1906,7 +1960,7 @@ function VGMAR:OnThink()
 				local heroname = heroent:GetName()
 				--AbilityAutoUpgradeTable
 				local heroautoabilityuplist = {
-					["npc_dota_hero_riki"] = {
+					--[[["npc_dota_hero_riki"] = {
 						spells = {"riki_smoke_screen",
 							"riki_blink_strike", 
 							"riki_permanent_invisibility", 
@@ -1917,7 +1971,7 @@ function VGMAR:OnThink()
 							{[5] = heroent:GetLevel() >= 15 or heroent:HasScepter(), [6] = heroent:HasScepter() and heroent:GetLevel() >= 15},
 							{[4] = heroent:HasScepter() or heroent:GetLevel() == 25, [5] = heroent:HasScepter() and heroent:GetLevel() == 25}
 						}
-					},
+					},--]]
 				}
 				if heroautoabilityuplist[heroname] ~= nil then
 					for j=1,#heroautoabilityuplist[heroname].spells do
@@ -2376,6 +2430,7 @@ function VGMAR:OnThink()
 								end
 							end)
 							dprint("Buying item_tome_of_knowledge for "..HeroNamesLib:ConvertInternalToHeroName(lxpb:GetName()))
+							self:LogEvent("Buying item_tome_of_knowledge for "..HeroNamesLib:ConvertInternalToHeroName(lxpb:GetName()))
 							self.bottomepurchausetimestamp = GameRules:GetDOTATime(false, false)
 						elseif lxpb:GetLevel() == 25 then
 							self.tomepurchaseallmaxlvl = true
@@ -2390,7 +2445,7 @@ function VGMAR:OnThink()
 				--/////////////////////
 				--Innate Gem Assignment
 				--/////////////////////
-				if self:TimeIsLaterThan( botitemskv.gemtime[1], botitemskv.gemtime[2] ) and self.botinnategemapplied == false and #self.direheroes > 0 then
+				if self:TimeIsLaterThan( botitemskv.gemtime[1], botitemskv.gemtime[2] ) and GameRules:GetGameTime(false, false) > self.gemapplyretrytime and self.botinnategemapplied == false and #self.direheroes > 0 then
 					local fathero = {-1, nil}
 					for _, fatso in ipairs(self.direheroes) do
 						if fatso:GetMaxHealth() > fathero[1] then
@@ -2398,9 +2453,19 @@ function VGMAR:OnThink()
 						end
 					end
 					if fathero[2] ~= nil then
-						fathero[2]:AddNewModifier(fathero[2], nil, "modifier_vgmar_i_truesight", modifierdatatable["modifier_vgmar_i_truesight"])
-						dprint("Adding modifier_vgmar_i_truesight to "..HeroNamesLib:ConvertInternalToHeroName(fathero[2]:GetName()))
-						self.botinnategemapplied = true
+						if fathero[2]:IsAlive() then
+							local gemmodifier = fathero[2]:AddNewModifier(fathero[2], nil, "modifier_vgmar_i_truesight", modifierdatatable["modifier_vgmar_i_truesight"])
+							dprint("Adding modifier_vgmar_i_truesight to "..HeroNamesLib:ConvertInternalToHeroName(fathero[2]:GetName()))
+							if gemmodifier ~= nil then
+								self.botinnategemapplied = true
+								self:LogEvent("Adding modifier_vgmar_i_truesight to "..HeroNamesLib:ConvertInternalToHeroName(fathero[2]:GetName()))
+							else
+								dprint("Failed to attach Gem Modifier to "..HeroNamesLib:ConvertInternalToHeroName(fathero[2]:GetName()))
+								LogLib:WriteLog("error", 0, true, "Failed to attach Gem Modifier to "..HeroNamesLib:ConvertInternalToHeroName(fathero[2]:GetName()))
+							end
+						else
+							self.gemapplyretrytime = GameRules:GetGameTime(false, false) + fathero[2]:GetTimeUntilRespawn() + 1
+						end
 					end
 				end
 			end
@@ -2455,7 +2520,7 @@ function VGMAR:OnThink()
 		--///////////////
 		--BalanceLogPrint
 		--///////////////
-		if VGMAR_LOG_BALANCE == true then
+		if VGMAR_LOG_BALANCE_PERIODIC == true then
 			if GameRules:GetDOTATime(false, false) >= self.balancelogprinttimestamp + VGMAR_LOG_BALANCE_INTERVAL then
 				self.balancelogprinttimestamp = math.floor(GameRules:GetDOTATime(false, false))
 				self:LogBalance()
@@ -3113,7 +3178,6 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 	end
 	
 	--Bot Control Prevention
-	--Implement Multiple units selection Fix
 	if units and Convars:GetInt("vgmar_blockbotcontrol") == 1 and order_type ~= 27 then
 		local player = PlayerResource:GetPlayer(issuer)
 		for k,j in pairs(units) do
@@ -3178,7 +3242,7 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 				if junit:HasModifier("modifier_skeleton_king_mortal_strike_summon") then return false end
 			end
 			if ability then
-				if ability:GetName() == "item_butterfly" then return false end
+				if ability:GetName() == "item_butterfly" and (order_type == 5 or order_type == 6 or order_type == 8) then return false end
 			end
 		end
 	end

@@ -54,4 +54,51 @@
 		"ItemSupport"					"1"
 		"IsTempestDoubleClonable"		"0"
 	}
+	//================================================================================================================
+	// 7.20 Bot Butterfly Fix
+	//================================================================================================================
+	"item_butterfly_fixed"
+	{
+		//General
+		//------------------------------------------------------------------------------------------------------------
+		"ID"							"28100"
+		"BaseClass"						"item_butterfly"
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_PASSIVE"
+		//"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_IMMEDIATE | DOTA_ABILITY_BEHAVIOR_NO_TARGET"
+		
+		// Item Info
+		//-------------------------------------------------------------------------------------------------------------
+		"ItemCost"						"5475"
+		"ItemShopTags"					"agi;damage;evasion;attack_speed"
+		"ItemQuality"					"epic"
+		"ItemAliases"					"bfly;butterfly"
+		"ItemDeclarations"				"DECLARE_PURCHASES_TO_TEAMMATES | DECLARE_PURCHASES_IN_SPEECH | DECLARE_PURCHASES_TO_SPECTATORS"
+		"ShouldBeSuggested"				"1"
+		
+		// Special	
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"bonus_agility"			"35"
+			}
+			"02"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"bonus_damage"			"25"
+			}
+			"03"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"bonus_evasion"			"35"
+			}
+			"04"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"bonus_attack_speed"	"30"
+			}
+		}
+	}
 }

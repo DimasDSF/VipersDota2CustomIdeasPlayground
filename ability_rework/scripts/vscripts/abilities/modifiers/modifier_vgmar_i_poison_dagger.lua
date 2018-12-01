@@ -91,7 +91,7 @@ function modifier_vgmar_i_poison_dagger:OnOrder(event)
 		if event.unit == self:GetParent() then
 			if event.order_type == 4 and self:GetStackCount() > 0 and event.target ~= nil then
 				if event.target:GetTeamNumber() ~= self:GetParent():GetTeamNumber() and event.target:IsHero() then
-					if (event.unit:GetAbsOrigin() - event.target:GetAbsOrigin()):Length2D() <= self.maxdistance then
+					if (event.unit:GetAbsOrigin() - event.target:GetAbsOrigin()):Length2D() <= self.maxdistance and (event.unit:IsStunned() == false and event.unit:IsHexed() == false and event.unit:IsDisarmed() == false) then
 						local target = event.target
 						local info = {
 							Target = target,

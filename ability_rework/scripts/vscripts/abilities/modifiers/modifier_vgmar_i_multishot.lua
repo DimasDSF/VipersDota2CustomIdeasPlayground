@@ -100,7 +100,7 @@ function modifier_vgmar_i_multishot:OnAttack( event )
 			if event.attacker:GetTeamNumber() ~= event.target:GetTeamNumber() and event.target == self:GetParent():GetAttackTarget() then
 				if self:GetStackCount() > 0 then
 					local parent = self:GetParent()
-					local targets = FindUnitsInRadius(parent:GetTeamNumber(), parent:GetAbsOrigin(), nil, parent:GetAttackRange() + 150, DOTA_UNIT_TARGET_TEAM_ENEMY, DOTA_UNIT_TARGET_HERO + DOTA_UNIT_TARGET_CREEP + DOTA_UNIT_TARGET_BUILDING, DOTA_UNIT_TARGET_FLAG_FOW_VISIBLE, FIND_CLOSEST, false)
+					local targets = FindUnitsInRadius(parent:GetTeamNumber(), parent:GetAbsOrigin(), nil, parent:Script_GetAttackRange() + 150, DOTA_UNIT_TARGET_TEAM_ENEMY, DOTA_UNIT_TARGET_HERO + DOTA_UNIT_TARGET_CREEP + DOTA_UNIT_TARGET_BUILDING, DOTA_UNIT_TARGET_FLAG_FOW_VISIBLE, FIND_CLOSEST, false)
 					local sortedtargets = {}
 					--Sorting
 					if #targets > 1 then
