@@ -14,8 +14,6 @@
 				"item_tango"			"ITEM_CONSUMABLE | ITEM_SELLABLE"
 				"item_flask"			"ITEM_CONSUMABLE | ITEM_SELLABLE"
 				"item_stout_shield"		"ITEM_CORE | ITEM_SELLABLE"
-				"item_recipe_magic_wand"	"ITEM_CONSUMABLE | ITEM_SELLABLE"
-				"item_branches"			"ITEM_CORE | ITEM_SELLABLE"
 
 				"item_quelling_blade"		"ITEM_CORE"
 
@@ -74,7 +72,7 @@
 				"12"		"juggernaut_omni_slash"
 				"13"		"juggernaut_blade_dance"
 				"14"		"juggernaut_blade_dance"
-				"15"		"special_bonus_attack_speed_25"
+				"15"		"special_bonus_attack_speed_20"
 				"16"		"juggernaut_blade_dance"
 				"17"		""
 				"18"		"juggernaut_omni_slash"

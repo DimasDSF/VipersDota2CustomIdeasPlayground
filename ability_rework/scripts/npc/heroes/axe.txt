@@ -67,7 +67,7 @@
 				"12"		"axe_culling_blade"
 				"13"		"axe_berserkers_call"
 				"14"		"axe_berserkers_call"
-				"15"		"special_bonus_mp_regen_4"
+				"15"		"special_bonus_mp_regen_3"
 				"16"		"axe_berserkers_call"
 				"17"		""
 				"18"		"axe_culling_blade"
