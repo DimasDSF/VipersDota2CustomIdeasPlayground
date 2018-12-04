@@ -59,6 +59,12 @@ local botpushrewards = {
 	denyfactor = 0.5
 }
 
+local botancientlastresort = {
+	healththreshold = 0.4,
+	gold = 10000,
+	xp = 3000
+}
+
 --TODO:Replace static prices in this table with KV read
 local botitemskv = {
 	maxbotupgradestatus = 4,
@@ -132,6 +138,14 @@ local botupgradepriorities = {
 	["npc_dota_hero_sand_king"] = {"travel1", "aghs", "travel2", "moonshard"},
 	["npc_dota_hero_dragon_knight"] = {"travel1", "moonshard", "travel2", "aghs"},
 	["npc_dota_hero_drow_ranger"] = {"travel1", "aghs", "moonshard", "travel2"}
+}
+
+--Preventing bots from spending all early game boost gold on endgame QoL upgrades
+local botupgradetimings = {
+	travel1 = {30, 0},
+	aghs = {0, 0},
+	moonshard = {30, 0},
+	travel2 = {30, 0}
 }
 
 local modifierdatatable = {
@@ -275,6 +289,7 @@ function VGMAR:Init()
 	self.tomepurchaseallmaxlvl = false
 	self.botinnategemapplied = false
 	self.gemapplyretrytime = 0
+	self.lastresortboostgiven = false
 	
 	local itemskvnum = 0
 	local itemscustomkvnum = 0
@@ -1261,17 +1276,34 @@ end
 function VGMAR:FilterGoldGained( filterTable )
 	--dprint("PreModification Table: HeroId: ", filterTable["player_id_const"], "Gold: ", filterTable["gold"])
 	--DeepPrintTable( filterTable )
-	--[[reason_const
+	--[[
+	reason_const
 	reliable
 	player_id_const
 	gold
 	--]]
-	local player = PlayerResource:GetPlayer(filterTable["player_id_const"])
-	if filterTable["reliable"] == 0 then
+	local player = PlayerResource:GetPlayer(filterTable.player_id_const)
+	if filterTable.reliable == 0 then
 		if player:GetTeamNumber() == 2 then
 			filterTable["gold"] = filterTable["gold"] * self:GetTeamAdvantageClamped(false, true, true, true, 0.5, 3.0) --math.min(2.0,math.max(0.5,self:GetTeamAdvantage(false, true, true, true, filterTable["player_id_const"])))
 		elseif player:GetTeamNumber() == 3 then
 			filterTable["gold"] = filterTable["gold"] * self:GetTeamAdvantageClamped(true, true, true, true, 0.5, 3.0) --math.min(2.0,math.max(0.5,self:GetTeamAdvantage(true, true, true, true, filterTable["player_id_const"])))
+		end
+	end
+	--HeroKill
+	if filterTable.reason_const == 12 then
+		local hero = PlayerResource:GetPlayer(filterTable.player_id_const):GetAssignedHero()
+		local gold = filterTable.gold
+		if player:GetTeamNumber() == 2 then
+			dprint("HeroKill gold modifier: "..math.round(self:GetTeamAdvantageClamped(false, false, true, true, 0.5, 2.0)))
+			dprint("HeroKill gold: base: "..filterTable.gold.." modified: "..math.round(filterTable.gold * self:GetTeamAdvantageClamped(false, false, true, true, 0.5, 2.0)))
+			filterTable["gold"] = math.round(filterTable["gold"] * self:GetTeamAdvantageClamped(false, false, true, true, 0.5, 2.0))
+			if VGMAR_DEBUG_DRAW == true then DebugDrawText(hero:GetAbsOrigin(), "G "..math.round(filterTable["gold"] * self:GetTeamAdvantageClamped(false, false, true, true, 0.5, 2.0))-gold, false, 2.0) end
+		elseif player:GetTeamNumber() == 3 then
+			dprint("HeroKill gold modifier: "..math.round(self:GetTeamAdvantageClamped(true, false, true, true, 0.5, 2.0)))
+			dprint("HeroKill gold: base: "..filterTable.gold.." modified: "..math.round(filterTable.gold * self:GetTeamAdvantageClamped(true, false, true, true, 0.5, 2.0)))
+			filterTable["gold"] = math.round(filterTable["gold"] * self:GetTeamAdvantageClamped(true, false, true, true, 0.5, 2.0))
+			if VGMAR_DEBUG_DRAW == true then DebugDrawText(hero:GetAbsOrigin(), "G "..math.round(filterTable["gold"] * self:GetTeamAdvantageClamped(true, false, true, true, 0.5, 2.0))-gold, false, 2.0) end
 		end
 	end
 	--dprint("PostModification Table: HeroId: ", filterTable["player_id_const"], "Gold: ", filterTable["gold"])
@@ -1857,7 +1889,7 @@ function VGMAR:OnThink()
 								local bus = self.botupgradestatus[heroent:entindex()]
 								local uppriolist = botupgradepriorities[heroent:GetName()]
 								local bup = uppriolist[bus]
-								if bup == "travel1" then
+								if bup == "travel1" and self:TimeIsLaterThan(botupgradetimings.travel1[1], botupgradetimings.travel1[2]) then
 									if heroent:GetGold() >= heroent:GetBuybackCost(false) + botitemskv.travelbootscost then
 										for j=1,#botitemskv.cheapboots do
 											local boots = self:GetItemFromInventoryByName( heroent, botitemskv.cheapboots[j], false, true, false )
@@ -1873,7 +1905,7 @@ function VGMAR:OnThink()
 											end
 										end
 									end
-								elseif bup == "travel2" then
+								elseif bup == "travel2" and self:TimeIsLaterThan(botupgradetimings.travel2[1], botupgradetimings.travel2[2]) then
 									if heroent:GetGold() >= heroent:GetBuybackCost(false) + botitemskv.travelbootsrecipecost then
 										heroent:SpendGold(botitemskv.travelbootsrecipecost, 2)
 										heroent:AddItemByName("item_recipe_travel_boots")
@@ -1881,7 +1913,7 @@ function VGMAR:OnThink()
 										self:LogEvent(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Upgraded Travel Boots to level 2 | Gold Remaining: "..heroent:GetGold())
 										self.botupgradestatus[heroent:entindex()] = self.botupgradestatus[heroent:entindex()] + 1
 									end
-								elseif bup == "aghs" then
+								elseif bup == "aghs" and self:TimeIsLaterThan(botupgradetimings.aghs[1], botupgradetimings.aghs[2]) then
 									if botitemskv.noaghsheroes[heroent:GetName()] == true then
 										self.botupgradestatus[heroent:entindex()] = self.botupgradestatus[heroent:entindex()] + 1
 									else
@@ -1904,7 +1936,7 @@ function VGMAR:OnThink()
 											end
 										end
 									end
-								elseif bup == "moonshard" then
+								elseif bup == "moonshard" and self:TimeIsLaterThan(botupgradetimings.moonshard[1], botupgradetimings.moonshard[2]) then
 									--TODO:??Make Supports Give Carries moonshards
 									if (heroent:GetGold() >= heroent:GetBuybackCost(false) + botitemskv.moonshardcost and heroent:GetAverageTrueAttackDamage(heroent) > botitemskv.moonshardmindmg) or (heroent:GetGold() >= heroent:GetBuybackCost(false) + botitemskv.moonshardcost * 2) then
 										heroent:SpendGold(botitemskv.moonshardcost, 2)
@@ -2445,7 +2477,7 @@ function VGMAR:OnThink()
 				--/////////////////////
 				--Innate Gem Assignment
 				--/////////////////////
-				if self:TimeIsLaterThan( botitemskv.gemtime[1], botitemskv.gemtime[2] ) and GameRules:GetGameTime(false, false) > self.gemapplyretrytime and self.botinnategemapplied == false and #self.direheroes > 0 then
+				if self:TimeIsLaterThan( botitemskv.gemtime[1], botitemskv.gemtime[2] ) and GameRules:GetDOTATime(false, false) > self.gemapplyretrytime and self.botinnategemapplied == false and #self.direheroes > 0 then
 					local fathero = {-1, nil}
 					for _, fatso in ipairs(self.direheroes) do
 						if fatso:GetMaxHealth() > fathero[1] then
@@ -2464,7 +2496,7 @@ function VGMAR:OnThink()
 								LogLib:WriteLog("error", 0, true, "Failed to attach Gem Modifier to "..HeroNamesLib:ConvertInternalToHeroName(fathero[2]:GetName()))
 							end
 						else
-							self.gemapplyretrytime = GameRules:GetGameTime(false, false) + fathero[2]:GetTimeUntilRespawn() + 1
+							self.gemapplyretrytime = GameRules:GetDOTATime(false, false) + fathero[2]:GetTimeUntilRespawn() + 1
 						end
 					end
 				end
@@ -2488,6 +2520,16 @@ function VGMAR:OnThink()
 						self.couriersinit = self.couriersinit + 1
 					end
 				end
+			end
+		end
+		--/////////////////
+		--Last Resort Boost
+		--/////////////////
+		if self.lastresortboostgiven == false then
+			if self.direanc:GetHealth()/self.direanc:GetMaxHealth() <= botancientlastresort.healththreshold then
+				self:TeamReward(3, {botancientlastresort.gold, botancientlastresort.xp}, {false, false})
+				EmitSoundOn("DOTA_Item.DoE.Activate",self.direanc)
+				self.lastresortboostgiven = true
 			end
 		end
 		--//////////////////
@@ -2570,8 +2612,13 @@ function VGMAR:OnBuildingDestroyed(attacker, denied, buildingteamnumber, buildin
 		self.towerskilleddire = self.towerskilleddire + buildingvalue
 		self:BuildingKillReward(attacker, denied, buildingteamnumber, buildingname, buildingvalue)
 	end
+	local shrinedecaystarters = {
+		["dota_goodguys_tower3_top"] = true,
+		["dota_goodguys_tower3_mid"] = true,
+		["dota_goodguys_tower3_bot"] = true
+	}
 	--Shrine Decay
-	if self:GetMegaCreepsStatus(2) and self.shrinedecaystarted == false then
+	if shrinedecaystarters[buildingname] ~= nil and shrinedecaystarters[buildingname] == true and self.shrinedecaystarted == false then
 		local decaybuildings = {"good_healer_7", "good_healer_6"}
 		for i=1,#decaybuildings do
 			local building = Entities:FindByName(nil, decaybuildings[i])
@@ -2582,6 +2629,35 @@ function VGMAR:OnBuildingDestroyed(attacker, denied, buildingteamnumber, buildin
 		self.shrinedecaystarted = true
 	end
 end
+
+--[[function VGMAR:GetAllT2Status(teamnum)
+	return (self:GetTier2TowersStatus(teamnum, "bot") and self:GetTier2TowersStatus(teamnum, "mid") and self:GetTier2TowersStatus(teamnum, "top")) == false
+end
+
+function VGMAR:GetTier2TowersStatus(teamnum, lane)
+	local teamname = "goodguys"
+	if teamnum == 2 then
+		teamname = "goodguys"
+	elseif teamnum == 3 then
+		teamname = "badguys"
+	else
+		dprint("GetTier2TowersStatus: Error. Incorrect teamnumber specified")
+		LogLib:WriteLog("error", 0, true, "GetTier2TowersStatus: Error. Incorrect teamnumber specified")
+		return nil
+	end
+	if lane == "bot" or lane == "mid" or lane == "top" then
+		local t2 = Entities:FindByName(nil, "dota_"..teamname.."_tower2_"..lane)
+		local t2state = false
+		if t2 then
+			t2state = t2:IsAlive()
+		end
+		return t2state
+	else
+		dprint("GetTier2TowersStatus: Error. Incorrect lane specified")
+		LogLib:WriteLog("error", 0, true, "GetTier2TowersStatus: Error. Incorrect lane specified")
+		return nil
+	end
+end--]]
 
 function VGMAR:BuildingKillReward(attacker, denied, buildingteamnumber, buildingname, buildingvalue)
 	--TODO:Balance
@@ -2615,7 +2691,7 @@ function VGMAR:GetBarracksStatus(teamnum, lane)
 	elseif teamnum == 3 then
 		teamname = "bad"
 	else
-		print("GetBarracksStatus: Error. Incorrect teamnumber specified")
+		dprint("GetBarracksStatus: Error. Incorrect teamnumber specified")
 		LogLib:WriteLog("error", 0, true, "GetBarracksStatus: Error. Incorrect teamnumber specified")
 		return nil
 	end
@@ -2633,7 +2709,7 @@ function VGMAR:GetBarracksStatus(teamnum, lane)
 		local allraxstate = rangeraxstate and meleeraxstate
 		return {meleeraxstate, rangeraxstate, allraxstate}
 	else
-		print("GetBarracksStatus: Error. Incorrect lane specified")
+		dprint("GetBarracksStatus: Error. Incorrect lane specified")
 		LogLib:WriteLog("error", 0, true, "GetBarracksStatus: Error. Incorrect lane specified")
 		return nil
 	end
@@ -3078,7 +3154,7 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 		unit = EntIndexToHScript(units["0"])
 	end
     local ability = EntIndexToHScript(filterTable.entindex_ability)
-    local target = EntIndexToHScript(filterTable.entindex_target)		
+    local target = EntIndexToHScript(filterTable.entindex_target)
 	
 	if GameRules:State_Get() == DOTA_GAMERULES_STATE_STRATEGY_TIME then
 		dprint("LoadingTime: Blocking order:"..order_type.." PlayerID: "..issuer)
@@ -3243,6 +3319,7 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 			end
 			if ability then
 				if ability:GetName() == "item_butterfly" and (order_type == 5 or order_type == 6 or order_type == 8) then return false end
+				if ability:GetName() == "item_ancient_janggo" and ability:GetCurrentCharges() == 0 and order_type == 8 then return false end
 			end
 		end
 	end
@@ -3329,13 +3406,6 @@ function VGMAR:ExecuteOrderFilter( filterTable )
                    unit.StuckCounter = 0
                 end
 				
-				--/////////////////////////////////////////////////////////////////////////
-				--Yeah Sure Dont Check Drums For Charges Before Trying To Use Them For Bots
-				--/////////////////////////////////////////////////////////////////////////
-				if order_type == 8 and ability:IsItem() and ability:GetName() == "item_ancient_janggo" and ability:GetCurrentCharges() == 0 then
-					return false
-				end
-				
 				--//////////////////////////
 				--Bot Action Miss Simulation
 				--//////////////////////////
@@ -3417,7 +3487,7 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 	end
 	
 	--Riki No Enemy Ult Before lvl4 scepters
-	if unit and unit:IsRealHero() then
+	--[[if unit and unit:IsRealHero() then
 		if ability and ability:GetName() == "riki_tricks_of_the_trade" then
 			if ability:GetLevel() < 4 then
 				if filterTable.entindex_target ~= 0 and target:GetTeamNumber() ~= unit:GetTeamNumber() then
@@ -3426,7 +3496,7 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 				end
 			end
 		end
-	end	
+	end--]]
 	return true
 end
 

@@ -29,6 +29,12 @@
 				"item_recipe_kaya"			"ITEM_EXTENSION"
 				"item_kaya"					"ITEM_DERIVED"
 				
+				"item_point_booster"		"ITEM_CORE"
+				"item_staff_of_wizardry"	"ITEM_CORE"
+				"item_blade_of_alacrity"	"ITEM_CORE"
+				"item_ogre_axe"				"ITEM_CORE"
+				"item_ultimate_scepter"		"ITEM_DERIVED"
+				
 				"item_blink"				"ITEM_CORE"
 
 				"item_void_stone"		"ITEM_LUXURY"

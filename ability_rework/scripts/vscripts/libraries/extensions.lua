@@ -70,7 +70,7 @@ function Extensions:DoCleaveAttackPositional(attacker, target, position, directi
 	end
 	local targetarr = {target}
 	victims = table.sub(victims, targetarr)
-	print("Found "..#victims.." Units for cleave")
+	if self:DebugDraw() then print("Found "..#victims.." Units for cleave") end
 	if #victims > 0 then
 		if self:DebugDraw() then
 			DebugDrawText(attacker:GetAbsOrigin()+Vector(0,0,100), "Cleave Targets: "..#victims, false, 2)
