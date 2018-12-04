@@ -10,7 +10,6 @@
 		{
 			"Loadout"
 			{
-				"item_ring_of_protection"	"ITEM_CORE"
 				"item_tango"				"ITEM_CONSUMABLE | ITEM_SELLABLE"
 				"item_flask"				"ITEM_CONSUMABLE | ITEM_SELLABLE"	
 				"item_branches"				"ITEM_CORE | ITEM_SELLABLE"

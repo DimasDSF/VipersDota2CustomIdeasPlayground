@@ -2,8 +2,8 @@ local RADIANT_TEAM_MAX_PLAYERS = 1
 local DIRE_TEAM_MAX_PLAYERS = 8
 local RUNE_SPAWN_TIME_POWERUP = 2
 local RUNE_SPAWN_TIME_BOUNTY = 5
-local VGMAR_DEBUG = true
-local VGMAR_DEBUG_DRAW = true
+local VGMAR_DEBUG = false
+local VGMAR_DEBUG_DRAW = false
 local VGMAR_DEBUG_ENABLE_VARIABLE_SETTING = true
 local VGMAR_GIVE_DEBUG_ITEMS = false
 local VGMAR_BOT_FILL = true
@@ -1295,15 +1295,15 @@ function VGMAR:FilterGoldGained( filterTable )
 		local hero = PlayerResource:GetPlayer(filterTable.player_id_const):GetAssignedHero()
 		local gold = filterTable.gold
 		if player:GetTeamNumber() == 2 then
-			dprint("HeroKill gold modifier: "..math.round(self:GetTeamAdvantageClamped(false, false, true, true, 0.5, 2.0)))
-			dprint("HeroKill gold: base: "..filterTable.gold.." modified: "..math.round(filterTable.gold * self:GetTeamAdvantageClamped(false, false, true, true, 0.5, 2.0)))
-			filterTable["gold"] = math.round(filterTable["gold"] * self:GetTeamAdvantageClamped(false, false, true, true, 0.5, 2.0))
-			if VGMAR_DEBUG_DRAW == true then DebugDrawText(hero:GetAbsOrigin(), "G "..math.round(filterTable["gold"] * self:GetTeamAdvantageClamped(false, false, true, true, 0.5, 2.0))-gold, false, 2.0) end
+			dprint("HeroKill gold modifier: "..math.truncate(self:GetTeamAdvantageClamped(false, false, true, true, 0.5, 2.0), 4))
+			dprint("HeroKill gold: base: "..filterTable.gold.." modified: "..math.truncate(filterTable.gold * self:GetTeamAdvantageClamped(false, false, true, true, 0.5, 2.0), 4))
+			filterTable["gold"] = math.truncate(filterTable["gold"] * self:GetTeamAdvantageClamped(false, false, true, true, 0.5, 2.0), 4)
+			if VGMAR_DEBUG_DRAW == true then DebugDrawText(hero:GetAbsOrigin(), "G "..math.truncate(filterTable["gold"] * self:GetTeamAdvantageClamped(false, false, true, true, 0.5, 2.0), 4)-gold, false, 2.0) end
 		elseif player:GetTeamNumber() == 3 then
-			dprint("HeroKill gold modifier: "..math.round(self:GetTeamAdvantageClamped(true, false, true, true, 0.5, 2.0)))
-			dprint("HeroKill gold: base: "..filterTable.gold.." modified: "..math.round(filterTable.gold * self:GetTeamAdvantageClamped(true, false, true, true, 0.5, 2.0)))
-			filterTable["gold"] = math.round(filterTable["gold"] * self:GetTeamAdvantageClamped(true, false, true, true, 0.5, 2.0))
-			if VGMAR_DEBUG_DRAW == true then DebugDrawText(hero:GetAbsOrigin(), "G "..math.round(filterTable["gold"] * self:GetTeamAdvantageClamped(true, false, true, true, 0.5, 2.0))-gold, false, 2.0) end
+			dprint("HeroKill gold modifier: "..math.truncate(self:GetTeamAdvantageClamped(true, false, true, true, 0.5, 2.0), 4))
+			dprint("HeroKill gold: base: "..filterTable.gold.." modified: "..math.truncate(filterTable.gold * self:GetTeamAdvantageClamped(true, false, true, true, 0.5, 2.0), 4))
+			filterTable["gold"] = math.truncate(filterTable["gold"] * self:GetTeamAdvantageClamped(true, false, true, true, 0.5, 2.0), 4)
+			if VGMAR_DEBUG_DRAW == true then DebugDrawText(hero:GetAbsOrigin(), "G "..math.truncate(filterTable["gold"] * self:GetTeamAdvantageClamped(true, false, true, true, 0.5, 2.0), 4)-gold, false, 2.0) end
 		end
 	end
 	--dprint("PostModification Table: HeroId: ", filterTable["player_id_const"], "Gold: ", filterTable["gold"])
