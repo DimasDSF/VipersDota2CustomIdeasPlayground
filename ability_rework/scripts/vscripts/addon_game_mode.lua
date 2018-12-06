@@ -160,7 +160,7 @@ local modifierdatatable = {
 	["modifier_vgmar_i_essence_shift"] = {reductionprimary = 1, reductionsecondary = 0, increaseprimary = 1, increasesecondary = 0, hitsperstackinc = 1, hitsperstackred = 2, duration = 40, durationtarget = 40},
 	["modifier_vgmar_i_pulse"] = {stackspercreep = 1, stacksperhero = 8, duration = 4, hpregenperstack = 1, manaregenperstack = 1.5, maxstacks = 20},
 	["modifier_vgmar_i_greatcleave"] = {cleaveperc = 100, cleavestartrad = 150, cleaveendrad = 360, cleaveradius = 700, bonusdamage = 75, manaregen = 3.0},
-	["modifier_vgmar_i_vampiric_aura"] = {radius = 700, lspercent = 30, lspercentranged = 20},
+	["modifier_vgmar_i_vampiric_aura"] = {radius = 700, lspercent = 20, lspercentranged = 15},
 	["modifier_vgmar_i_multishot"] = {basetargets = 1, mainattrpertarget = 50, bonusdamage = 60, bonusrange = 140},
 	["modifier_vgmar_i_midas_greed"] = {min_bonus_gold = 0, count_per_kill = 1, reduction_per_tick = 2, bonus_gold_cap = 40, stack_duration = 30, reduction_duration = 2.5, killsperstack = 3, midasusestacks = 2},
 	["modifier_vgmar_i_kingsaegis_cooldown"] = {cooldown = 240, reincarnate_time = 5},
@@ -290,6 +290,7 @@ function VGMAR:Init()
 	self.botinnategemapplied = false
 	self.gemapplyretrytime = 0
 	self.lastresortboostgiven = false
+	self.botmaxpushtier = 1
 	
 	local itemskvnum = 0
 	local itemscustomkvnum = 0
@@ -641,6 +642,7 @@ function VGMAR:Init()
 	self.mode:SetModifyGoldFilter(Dynamic_Wrap( VGMAR, "FilterGoldGained" ), self)
 	self.mode:SetModifyExperienceFilter( Dynamic_Wrap( VGMAR, "FilterExperienceGained" ), self)
 	self.mode:SetBountyRunePickupFilter( Dynamic_Wrap( VGMAR, "FilterBountyRunePickup" ), self)
+	self.mode:SetBotsMaxPushTier(self.botmaxpushtier)
 
 	ListenToGameEvent( "npc_spawned", Dynamic_Wrap( VGMAR, "OnNPCSpawned" ), self )
 	ListenToGameEvent( "dota_player_learned_ability", Dynamic_Wrap( VGMAR, "OnPlayerLearnedAbility" ), self)
@@ -980,8 +982,9 @@ function VGMAR:LogBalance()
 	LogLib:WriteLog("balance", 3, false, "Average Dire: "..avgxpdire)
 	--Advantage Formula Output
 	LogLib:WriteLog("balance", 2, false, "Advantage Formula Output")
-	LogLib:WriteLog("balance", 3, false, "Radiant: "..GameRules.VGMAR:GetTeamAdvantage(true, true, true, true))
-	LogLib:WriteLog("balance", 3, false, "Dire: "..GameRules.VGMAR:GetTeamAdvantage(false, true, true, true))
+	LogLib:WriteLog("balance", 2, false, "Tower/Kill/Networth/Full")
+	LogLib:WriteLog("balance", 3, false, "Radiant: "..GameRules.VGMAR:GetTeamAdvantage(true, true, false, false).."/"..GameRules.VGMAR:GetTeamAdvantage(true, false, true, false).."/"..GameRules.VGMAR:GetTeamAdvantage(true, false, false, true).."/"..GameRules.VGMAR:GetTeamAdvantage(true, true, true, true))
+	LogLib:WriteLog("balance", 3, false, "Dire: "..GameRules.VGMAR:GetTeamAdvantage(false, true, false, false).."/"..GameRules.VGMAR:GetTeamAdvantage(false, false, true, false).."/"..GameRules.VGMAR:GetTeamAdvantage(false, false, false, true).."/"..GameRules.VGMAR:GetTeamAdvantage(false, true, true, true))
 end
 
 function VGMAR:LogEvent(text)
@@ -2628,36 +2631,54 @@ function VGMAR:OnBuildingDestroyed(attacker, denied, buildingteamnumber, buildin
 		end
 		self.shrinedecaystarted = true
 	end
+	--Bot Balanced Push
+	if buildingteamnumber == 2 and self.botmaxpushtier ~= -1 then
+		if self:GetAllTierTowersDestroyed(2, self.botmaxpushtier) then
+			if self.botmaxpushtier < 4 then
+				self.botmaxpushtier = self.botmaxpushtier + 1
+				dprint("Bot Balanced Push: Now Pushing: Tier "..self.botmaxpushtier)
+			else
+				self.botmaxpushtier = -1
+				dprint("Bot Balanced Push: Push Restrictions Removed")
+			end
+			self.mode:SetBotsMaxPushTier(self.botmaxpushtier)
+		end
+	end
 end
 
---[[function VGMAR:GetAllT2Status(teamnum)
-	return (self:GetTier2TowersStatus(teamnum, "bot") and self:GetTier2TowersStatus(teamnum, "mid") and self:GetTier2TowersStatus(teamnum, "top")) == false
+function VGMAR:GetAllTierTowersDestroyed(teamnum, tier)
+	return (self:GetTierTowersStatus(teamnum, tier, "bot") == false and self:GetTierTowersStatus(teamnum, tier, "mid") == false and self:GetTierTowersStatus(teamnum, tier, "top") == false)
 end
 
-function VGMAR:GetTier2TowersStatus(teamnum, lane)
+function VGMAR:GetTierTowersStatus(teamnum, tier, lane)
 	local teamname = "goodguys"
 	if teamnum == 2 then
 		teamname = "goodguys"
 	elseif teamnum == 3 then
 		teamname = "badguys"
 	else
-		dprint("GetTier2TowersStatus: Error. Incorrect teamnumber specified")
-		LogLib:WriteLog("error", 0, true, "GetTier2TowersStatus: Error. Incorrect teamnumber specified")
+		dprint("GetTierTowersStatus: Error. Incorrect teamnumber specified")
+		LogLib:WriteLog("error", 0, true, "GetTierTowersStatus: Error. Incorrect teamnumber specified")
 		return nil
 	end
-	if lane == "bot" or lane == "mid" or lane == "top" then
-		local t2 = Entities:FindByName(nil, "dota_"..teamname.."_tower2_"..lane)
-		local t2state = false
-		if t2 then
-			t2state = t2:IsAlive()
+	if lane == "bot" or lane == "mid" or lane == "top" and (tier > 0 and tier < 5) then
+		local tower = Entities:FindByName(nil, "dota_"..teamname.."_tower"..tier.."_"..lane)
+		local towerstate = false
+		if tower then
+			towerstate = tower:IsAlive()
 		end
-		return t2state
+		return towerstate
 	else
-		dprint("GetTier2TowersStatus: Error. Incorrect lane specified")
-		LogLib:WriteLog("error", 0, true, "GetTier2TowersStatus: Error. Incorrect lane specified")
+		if not (lane == "bot" or lane == "mid" or lane == "top") then
+			dprint("GetTierTowersStatus: Error. Incorrect lane specified")
+			LogLib:WriteLog("error", 0, true, "GetTierTowersStatus: Error. Incorrect lane specified")
+		elseif not (tier > 0 and tier < 5) then
+			dprint("GetTierTowersStatus: Error. Incorrect tier specified")
+			LogLib:WriteLog("error", 0, true, "GetTierTowersStatus: Error. Incorrect tier specified")
+		end
 		return nil
 	end
-end--]]
+end
 
 function VGMAR:BuildingKillReward(attacker, denied, buildingteamnumber, buildingname, buildingvalue)
 	--TODO:Balance
@@ -3627,7 +3648,7 @@ function VGMAR:OnGameStateChanged( keys )
 		local defskills = {
 			{skill = "dragon_knight_dragon_blood", agressive = 0, p0 = 0, p1 = 0, p2 = 0, p3 = 0, p4 = 1, autocast = 0},
 			{skill = "tower_corrosive_skin", agressive = 0, p0 = 1, p1 = 3, p2 = 3, p3 = 3, p4 = 4, autocast = 0},
-			{skill = "tower_dispersion", agressive = 0, p0 = 1, p1 = 4, p2 = 3, p3 = 3, p4 = 4, autocast = 0},
+			{skill = "tower_dispersion", agressive = 0, p0 = 1, p1 = 4, p2 = 1, p3 = 2, p4 = 3, autocast = 0},
 			{skill = "tower_atrophy_aura", agressive = 1, p0 = 1, p1 = 4, p2 = 0, p3 = 0, p4 = 0, autocast = 0},
 			{skill = "tower_berserkers_blood", agressive = 1, p0 = 1, p1 = 4, p2 = 0, p3 = 0, p4 = 0, autocast = 0},
 			{skill = "tower_take_aim", agressive = 1, p0 = 0, p1 = 4, p2 = 0, p3 = 0, p4 = 0, autocast = 0},
