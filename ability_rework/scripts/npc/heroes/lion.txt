@@ -63,7 +63,7 @@
 				"12"		"lion_finger_of_death"
 				"13"		"lion_voodoo"
 				"14"		"lion_voodoo"
-				"15"		"special_bonus_gold_income_20"
+				"15"		"special_bonus_gold_income_25"
 				"16"		"lion_voodoo"
 				"17"		""
 				"18"		"lion_finger_of_death"

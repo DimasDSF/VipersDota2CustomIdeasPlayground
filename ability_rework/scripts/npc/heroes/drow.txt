@@ -26,9 +26,9 @@
 				"item_recipe_wraith_band"		"ITEM_CORE"
 				"item_wraith_band"				"ITEM_DERIVED | ITEM_SELLABLE"
 
-				"item_blades_of_attack"		"ITEM_CORE"
-				"item_boots_of_elves"		"ITEM_CORE"
-				"item_power_treads"			"ITEM_CORE | ITEM_DERIVED"
+				"item_gloves"		"ITEM_EXTENSION"
+				"item_boots_of_elves"		"ITEM_EXTENSION"
+				"item_power_treads"		"ITEM_DERIVED"
 
 				"item_boots_of_elves"	"ITEM_CORE"
 				"item_boots_of_elves"	"ITEM_CORE"
@@ -82,7 +82,7 @@
 				"12"		"drow_ranger_marksmanship"
 				"13"		"drow_ranger_wave_of_silence"
 				"14"		"drow_ranger_wave_of_silence"
-				"15"		"special_bonus_attack_speed_25"
+				"15"		"special_bonus_agility_10"
 				"16"		"drow_ranger_wave_of_silence"
 				"17"		""
 				"18"		"drow_ranger_marksmanship"

@@ -70,7 +70,7 @@
 				"7"		"witch_doctor_maledict"
 				"8"		"witch_doctor_paralyzing_cask"
 				"9"		"witch_doctor_paralyzing_cask"
-				"10"		"special_bonus_armor_5"
+				"10"		"special_bonus_armor_6"
 				"11"		"witch_doctor_voodoo_restoration"
 				"12"		"witch_doctor_death_ward"
 				"13"		"witch_doctor_voodoo_restoration"

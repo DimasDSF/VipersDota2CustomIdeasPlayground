@@ -656,6 +656,7 @@ function VGMAR:Init()
 	Convars:RegisterCommand('vgmar_reload_test_modifier', Dynamic_Wrap( VGMAR, "ReloadTestModifier" ), "Reload script modifier", 0)
 	Convars:RegisterCommand('vgmar_test', Dynamic_Wrap( VGMAR, "TestFunction" ), "Runs a test function", 0)
 	Convars:RegisterCommand('vgmar_test_readvar', Dynamic_Wrap( VGMAR, "TestReadVar" ), "Tries to read a variable from lua", 0)
+	Convars:RegisterCommand('vgmar_restart', Dynamic_Wrap( VGMAR, "CallRestartCommand" ), "A shortcut calling game reload if DevMode is enabled", 0)
 	if VGMAR_DEBUG_ENABLE_VARIABLE_SETTING then
 		Convars:RegisterCommand('vgmar_test_writevar', Dynamic_Wrap( VGMAR, "TestWriteVar" ), "Tries to write a variable to lua", 0)
 	end
@@ -665,6 +666,12 @@ function VGMAR:Init()
 	end
 	
 	GameRules:GetGameModeEntity():SetThink( "OnThink", self, 0.25 )
+end
+
+function VGMAR:CallRestartCommand()
+	if IsDevMode() then
+		SendToServerConsole("dota_launch_custom_game var dota")
+	end
 end
 
 function VGMAR:TestFunction()

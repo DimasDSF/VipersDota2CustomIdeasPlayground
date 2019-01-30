@@ -207,7 +207,7 @@
 		"AttributeBaseIntelligence"		"12"
 		"AttributeIntelligenceGain"		"1.800000"
 		"AttributeBaseAgility"		"22"
-		"AttributeAgilityGain"		"2.800000"
+		"AttributeAgilityGain"		"3.200000"
 		"StatusHealthRegen"		"0.25"
 
 		// Movement
@@ -224,14 +224,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_antimage/antimage_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_antimage/antimage_loadout.vpcf"		"loadout"
 			}
 		}
 
@@ -372,7 +365,7 @@
 		"AttackRange"		"150"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_STRENGTH"
 		"AttributeBaseStrength"		"25"
-		"AttributeStrengthGain"		"2.800000"
+		"AttributeStrengthGain"		"3.200000"
 		"AttributeBaseIntelligence"		"18"
 		"AttributeIntelligenceGain"		"1.600000"
 		"AttributeBaseAgility"		"20"
@@ -458,14 +451,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_axe/axe_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_attachment"
-						"location"		"attach_attack1"
-					}
-				}
+				"particles/units/heroes/hero_axe/axe_loadout.vpcf"		"loadout"
 			}
 		}
 	}
@@ -511,7 +497,7 @@
 		"Ability5"		"generic_hidden"
 		"Ability6"		"bane_fiends_grip"
 		"Ability7"		"bane_nightmare_end"
-		"Ability10"		"special_bonus_armor_6"
+		"Ability10"		"special_bonus_armor_7"
 		"Ability11"		"special_bonus_cast_range_100"
 		"Ability12"		"special_bonus_unique_bane_4"
 		"Ability13"		"special_bonus_exp_boost_40"
@@ -534,10 +520,10 @@
 		"AttributeBaseStrength"		"23"
 		"AttributeStrengthGain"		"2.400000"
 		"AttributeBaseIntelligence"		"23"
-		"AttributeIntelligenceGain"		"2.400000"
+		"AttributeIntelligenceGain"		"2.800000"
 		"AttributeBaseAgility"		"23"
 		"AttributeAgilityGain"		"2.400000"
-		"MovementSpeed"		"310"
+		"MovementSpeed"		"305"
 		"MovementTurnRate"		"0.600000"
 		"BoundsHullName"		"DOTA_HULL_SIZE_HERO"
 		"particle_folder"		"particles/units/heroes/hero_bane"
@@ -676,8 +662,8 @@
 		"AttributeBaseIntelligence"		"18"
 		"AttributeIntelligenceGain"		"1.700000"
 		"AttributeBaseAgility"		"24"
-		"AttributeAgilityGain"		"3.000000"
-		"MovementSpeed"		"290"
+		"AttributeAgilityGain"		"3.500000"
+		"MovementSpeed"		"295"
 		"MovementTurnRate"		"0.500000"
 		"BoundsHullName"		"DOTA_HULL_SIZE_HERO"
 		"particle_folder"		"particles/units/heroes/hero_bloodseeker"
@@ -687,14 +673,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_bloodseeker/bloodseeker_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_bloodseeker/bloodseeker_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -833,8 +812,8 @@
 		// Attack
 		//-------------------------------------------------------------------------------------------------------------
 		"AttackCapabilities"		"DOTA_UNIT_CAP_RANGED_ATTACK"
-		"AttackDamageMin"		"28"
-		"AttackDamageMax"		"34"
+		"AttackDamageMin"		"30"
+		"AttackDamageMax"		"36"
 		"AttackRate"		"1.700000"
 		"AttackAnimationPoint"		"0.550000"
 		"AttackAcquisitionRange"		"800"
@@ -845,7 +824,7 @@
 		"AttributeBaseStrength"		"18"
 		"AttributeStrengthGain"		"2.200000"
 		"AttributeBaseIntelligence"		"14"
-		"AttributeIntelligenceGain"		"2.900000"
+		"AttributeIntelligenceGain"		"3.300000"
 		"AttributeBaseAgility"		"16"
 		"AttributeAgilityGain"		"1.600000"
 		"MovementSpeed"		"275"
@@ -859,14 +838,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_crystalmaiden/maiden_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_crystalmaiden/maiden_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -971,7 +943,7 @@
 		"Ability6"		"drow_ranger_marksmanship"
 		"Ability10"		"special_bonus_movement_speed_20"
 		"Ability11"		"special_bonus_all_stats_5"
-		"Ability12"		"special_bonus_attack_speed_25"
+		"Ability12"		"special_bonus_agility_10"
 		"Ability13"		"special_bonus_unique_drow_ranger_2"
 		"Ability14"		"special_bonus_evasion_25"
 		"Ability15"		"special_bonus_unique_drow_ranger_4"
@@ -993,7 +965,7 @@
 		"AttributeBaseIntelligence"		"15"
 		"AttributeIntelligenceGain"		"1.400000"
 		"AttributeBaseAgility"		"23"
-		"AttributeAgilityGain"		"2.200000"
+		"AttributeAgilityGain"		"2.500000"
 		"StatusHealthRegen"		"0.25"
 		"VisionDaytimeRange"		"1800"
 		"MovementSpeed"		"285"
@@ -1007,14 +979,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_drow/drow_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_drow/drow_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -1147,7 +1112,7 @@
 		"ProjectileSpeed"		"0"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_STRENGTH"
 		"AttributeBaseStrength"		"22"
-		"AttributeStrengthGain"		"3.200000"
+		"AttributeStrengthGain"		"3.700000"
 		"AttributeBaseIntelligence"		"16"
 		"AttributeIntelligenceGain"		"1.800000"
 		"AttributeBaseAgility"		"12"
@@ -1163,19 +1128,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_earthshaker/earthshaker_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-					"1"
-					{
-						"type"		"follow_origin"
-						"position"		"250 250 250"
-					}
-				}
+				"particles/units/heroes/hero_earthshaker/earthshaker_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -1274,13 +1227,13 @@
 		"Ability6"		"juggernaut_omni_slash"
 		"Ability10"		"special_bonus_all_stats_5"
 		"Ability11"		"special_bonus_movement_speed_20"
-		"Ability12"		"special_bonus_unique_juggernaut"
+		"Ability12"		"special_bonus_unique_juggernaut_4"
 		"Ability13"		"special_bonus_attack_speed_20"
 		"Ability14"		"special_bonus_armor_10"
 		"Ability15"		"special_bonus_unique_juggernaut_3"
 		"Ability16"		"special_bonus_hp_600"
 		"Ability17"		"special_bonus_unique_juggernaut_2"
-		"ArmorPhysical"		"1"
+		"ArmorPhysical"		"0"
 		"AttackCapabilities"		"DOTA_UNIT_CAP_MELEE_ATTACK"
 		"AttackDamageMin"		"12"
 		"AttackDamageMax"		"16"
@@ -1301,7 +1254,7 @@
 		"AttributeBaseIntelligence"		"14"
 		"AttributeIntelligenceGain"		"1.400000"
 		"AttributeBaseAgility"		"36"
-		"AttributeAgilityGain"		"2.400000"
+		"AttributeAgilityGain"		"2.800000"
 		"StatusHealthRegen"		"0.5"
 		"MovementSpeed"		"300"
 		"MovementTurnRate"		"0.600000"
@@ -1475,8 +1428,8 @@
 		"AttributeBaseIntelligence"		"17"
 		"AttributeIntelligenceGain"		"1.7000"
 		"AttributeBaseAgility"		"18"
-		"AttributeAgilityGain"		"3.20000"
-		"MovementSpeed"		"295"
+		"AttributeAgilityGain"		"3.70000"
+		"MovementSpeed"		"290"
 		"MovementTurnRate"		"0.500000"
 		"HasAggressiveStance"		"1"
 		"BoundsHullName"		"DOTA_HULL_SIZE_HERO"
@@ -1496,14 +1449,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_mirana/mirana_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_mirana/mirana_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -1632,7 +1578,7 @@
 		"Ability16"		"special_bonus_unique_nevermore_5"
 		"Ability17"		"special_bonus_cooldown_reduction_40"
 
-		"ArmorPhysical"		"-1"
+		"ArmorPhysical"		"0"
 		"AttackCapabilities"		"DOTA_UNIT_CAP_RANGED_ATTACK"
 		"AttackDamageMin"		"15"
 		"AttackDamageMax"		"21"
@@ -1654,9 +1600,9 @@
 		"AttributeBaseIntelligence"		"18"
 		"AttributeIntelligenceGain"		"2.000000"
 		"AttributeBaseAgility"		"20"
-		"AttributeAgilityGain"		"2.900000"
+		"AttributeAgilityGain"		"3.300000"
 		"StatusHealthRegen"		"0.25"
-		"MovementSpeed"		"310"
+		"MovementSpeed"		"305"
 		"MovementTurnRate"		"1.000000"
 		"MovementSpeedActivityModifiers"
 		{
@@ -1670,14 +1616,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_nevermore/nevermore_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_nevermore/nevermore_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -1803,11 +1742,11 @@
 		"ProjectileSpeed"		"1300"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_AGILITY"
 		"AttributeBaseStrength"		"20"
-		"AttributeStrengthGain"		"2.300000"
+		"AttributeStrengthGain"		"2.600000"
 		"AttributeBaseIntelligence"		"13"
 		"AttributeIntelligenceGain"		"1.100000"
 		"AttributeBaseAgility"		"24"
-		"AttributeAgilityGain"		"3.700000"
+		"AttributeAgilityGain"		"4.300000"
 		"MovementSpeed"		"280"
 		"MovementTurnRate"		"0.600000"
 		"particle_folder"		"particles/units/heroes/hero_morphling"
@@ -1817,14 +1756,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_morphling/morphling_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_morphling/morphling_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -1923,7 +1855,7 @@
 		"Ability4"		"generic_hidden"
 		"Ability5"		"generic_hidden"
 		"Ability6"		"phantom_lancer_juxtapose"
-		"Ability10"		"special_bonus_evasion_10"
+		"Ability10"		"special_bonus_evasion_15"
 		"Ability11"		"special_bonus_attack_speed_20"
 		"Ability12"		"special_bonus_hp_250"
 		"Ability13"		"special_bonus_unique_phantom_lancer_2"
@@ -1945,7 +1877,7 @@
 		"AttributeBaseIntelligence"		"19"
 		"AttributeIntelligenceGain"		"2.000000"
 		"AttributeBaseAgility"		"29"
-		"AttributeAgilityGain"		"2.600000"
+		"AttributeAgilityGain"		"3.000000"
 		"StatusHealthRegen"		"1.5"
 		"MovementSpeed"		"290"
 		"MovementTurnRate"		"0.600000"
@@ -1958,20 +1890,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_phantom_lancer/phantom_lancer_spawn.vpcf"
-				{
-					"spawn"		"1"
-					"0"
-					{
-						"type"		"follow_attachment"
-						"location"		"attach_hitloc"
-					}
-					"1"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_attack1"
-					}
-				}
+				"particles/units/heroes/hero_phantom_lancer/phantom_lancer_spawn.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -2066,7 +1985,7 @@
 		"LastHitChallengeRival"		"npc_dota_hero_jakiro"
 		"HeroSelectSoundEffect"		"Hero_Puck.Pick"
 		"GibType"		"default"
-		"ArmorPhysical"		"-2"
+		"ArmorPhysical"		"-1"
 		"new_player_enable"		"1"
 		"Ability1"		"puck_illusory_orb"
 		"Ability2"		"puck_waning_rift"
@@ -2105,10 +2024,10 @@
 		"AttributeBaseStrength"		"17"
 		"AttributeStrengthGain"		"2.200000"
 		"AttributeBaseIntelligence"		"23"
-		"AttributeIntelligenceGain"		"2.700000"
+		"AttributeIntelligenceGain"		"3.100000"
 		"AttributeBaseAgility"		"22"
 		"AttributeAgilityGain"		"1.700000"
-		"MovementSpeed"		"295"
+		"MovementSpeed"		"290"
 		"MovementTurnRate"		"0.500000"
 		"BoundsHullName"		"DOTA_HULL_SIZE_HERO"
 		"particle_folder"		"particles/units/heroes/hero_puck"
@@ -2118,19 +2037,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_puck/puck_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_attachment"
-						"location"		"attach_hitloc"
-					}
-					"1"
-					{
-						"type"		"follow_origin"
-						"position"		"200 200 200"
-					}
-				}
+				"particles/units/heroes/hero_puck/puck_loadout.vpcf"		"loadout"
 			}
 		}
 		"AbilityPreview"
@@ -2231,8 +2138,8 @@
 		"Ability17"		"special_bonus_unique_pudge_1"
 		"ArmorPhysical"		"-2"
 		"AttackCapabilities"		"DOTA_UNIT_CAP_MELEE_ATTACK"
-		"AttackDamageMin"		"34"
-		"AttackDamageMax"		"40"
+		"AttackDamageMin"		"40"
+		"AttackDamageMax"		"46"
 		"AttackRate"		"1.700000"
 		"AttackAnimationPoint"		"0.500000"
 		"AttackAcquisitionRange"		"600"
@@ -2240,7 +2147,7 @@
 		"ProjectileSpeed"		"0"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_STRENGTH"
 		"AttributeBaseStrength"		"25"
-		"AttributeStrengthGain"		"3.500000"
+		"AttributeStrengthGain"		"4.000000"
 		"AttributeBaseIntelligence"		"14"
 		"AttributeIntelligenceGain"		"1.500000"
 		"AttributeBaseAgility"		"14"
@@ -2255,19 +2162,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_pudge/pudge_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-					"1"
-					{
-						"type"		"follow_origin"
-						"position"		"200 1 200"
-					}
-				}
+				"particles/units/heroes/hero_pudge/pudge_loadout.vpcf"		"loadout"
 			}
 		}
 		"AbilityPreview"
@@ -2401,7 +2296,7 @@
 		"Ability4"		"generic_hidden"
 		"Ability5"		"generic_hidden"
 		"Ability6"		"razor_eye_of_the_storm"
-		"Ability10"		"special_bonus_hp_200"
+		"Ability10"		"special_bonus_hp_225"
 		"Ability11"		"special_bonus_agility_15"
 		"Ability12"		"special_bonus_unique_razor"
 		"Ability13"		"special_bonus_unique_razor_3"
@@ -2424,7 +2319,7 @@
 		"AttributeBaseIntelligence"		"21"
 		"AttributeIntelligenceGain"		"1.800000"
 		"AttributeBaseAgility"		"22"
-		"AttributeAgilityGain"		"1.800000"
+		"AttributeAgilityGain"		"2.100000"
 		"MovementSpeed"		"285"
 		"MovementTurnRate"		"0.500000"
 		"BoundsHullName"		"DOTA_HULL_SIZE_HERO"
@@ -2435,14 +2330,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_razor/razor_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_razor/razor_loadout.vpcf"		"loadout"
 			}
 		}
 		"AbilityPreview"
@@ -2572,7 +2460,7 @@
 		"AttackRange"		"150"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_STRENGTH"
 		"AttributeBaseStrength"		"22"
-		"AttributeStrengthGain"		"2.800000"
+		"AttributeStrengthGain"		"3.200000"
 		"AttributeBaseIntelligence"		"16"
 		"AttributeIntelligenceGain"		"1.800000"
 		"AttributeBaseAgility"		"19"
@@ -2587,19 +2475,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_sandking/sandking_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-					"1"
-					{
-						"type"		"follow_origin"
-						"position"		"100 0 0"
-					}
-				}
+				"particles/units/heroes/hero_sandking/sandking_loadout.vpcf"		"loadout"
 			}
 		}
 		"AbilityPreview"
@@ -2701,7 +2577,7 @@
 		"Ability4"		"generic_hidden"
 		"Ability5"		"generic_hidden"
 		"Ability6"		"storm_spirit_ball_lightning"
-		"Ability10"		"special_bonus_attack_damage_20"
+		"Ability10"		"special_bonus_unique_storm_spirit_6"
 		"Ability11"		"special_bonus_mp_regen_3"
 		"Ability12"		"special_bonus_unique_storm_spirit_5"
 		"Ability13"		"special_bonus_hp_400"
@@ -2711,8 +2587,8 @@
 		"Ability17"		"special_bonus_unique_storm_spirit_4"
 		"ArmorPhysical"		"2"
 		"AttackCapabilities"		"DOTA_UNIT_CAP_RANGED_ATTACK"
-		"AttackDamageMin"		"24"
-		"AttackDamageMax"		"34"
+		"AttackDamageMin"		"26"
+		"AttackDamageMax"		"36"
 		"AttackRate"		"1.700000"
 		"AttackAnimationPoint"		"0.500000"
 		"AttackAcquisitionRange"		"800"
@@ -2723,7 +2599,7 @@
 		"AttributeBaseStrength"		"21"
 		"AttributeStrengthGain"		"2.000000"
 		"AttributeBaseIntelligence"		"22"
-		"AttributeIntelligenceGain"		"3.200000"
+		"AttributeIntelligenceGain"		"3.700000"
 		"AttributeBaseAgility"		"22"
 		"AttributeAgilityGain"		"1.500000"
 		"MovementSpeed"		"285"
@@ -2745,34 +2621,9 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_stormspirit/storm_spirit_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-					}
-				}
-				"particles/units/heroes/hero_stormspirit/storm_spirit_new_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_attachment"
-						"location"		"attach_hitloc"
-					}
-					"1"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
-				"particles/units/heroes/hero_stormspirit/storm_spirit_loadout_hand.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_attachment"
-						"location"		"attach_attack1"
-					}
-				}
+				"particles/units/heroes/hero_stormspirit/storm_spirit_loadout.vpcf"		"loadout"
+				"particles/units/heroes/hero_stormspirit/storm_spirit_new_loadout.vpcf"		"loadout"
+				"particles/units/heroes/hero_stormspirit/storm_spirit_loadout_hand.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -2874,26 +2725,19 @@
 		"ProjectileSpeed"		"0"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_STRENGTH"
 		"AttributeBaseStrength"		"23"
-		"AttributeStrengthGain"		"3.000000"
+		"AttributeStrengthGain"		"3.500000"
 		"AttributeBaseIntelligence"		"16"
 		"AttributeIntelligenceGain"		"1.300000"
 		"AttributeBaseAgility"		"21"
 		"AttributeAgilityGain"		"2.00000"
-		"MovementSpeed"		"290"
+		"MovementSpeed"		"310"
 		"MovementTurnRate"		"0.600000"
 		"BoundsHullName"		"DOTA_HULL_SIZE_HERO"
 		"RenderablePortrait"
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_sven/sven_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_sven/sven_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -3023,7 +2867,7 @@
 		"Ability7"		"tiny_toss_tree"
 		"Ability10"		"special_bonus_movement_speed_20"
 		"Ability11"		"special_bonus_attack_damage_30"
-		"Ability12"		"special_bonus_hp_350"
+		"Ability12"		"special_bonus_hp_400"
 		"Ability13"		"special_bonus_unique_tiny"
 		"Ability14"		"special_bonus_unique_tiny_4"
 		"Ability15"		"special_bonus_unique_tiny_5"
@@ -3046,7 +2890,7 @@
 		"AttackRange"		"150"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_STRENGTH"
 		"AttributeBaseStrength"		"30"
-		"AttributeStrengthGain"		"3.600000"
+		"AttributeStrengthGain"		"4.100000"
 		"AttributeBaseIntelligence"		"17"
 		"AttributeIntelligenceGain"		"1.600000"
 		"AttributeBaseAgility"		"0"
@@ -3068,14 +2912,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_tiny/tiny_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_tiny/tiny_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -3212,7 +3049,7 @@
 		"AttributeBaseIntelligence"		"13"
 		"AttributeIntelligenceGain"		"1.50000"
 		"AttributeBaseAgility"		"27"
-		"AttributeAgilityGain"		"3.300000"
+		"AttributeAgilityGain"		"3.800000"
 		"StatusHealthRegen"		"0.25"
 		"ArmorPhysical"		"0"
 		"MovementSpeed"		"290"
@@ -3281,14 +3118,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_vengeful/vengeful_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_vengeful/vengeful_loadout.vpcf"		"loadout"
 			}
 		}
 	}
@@ -3329,7 +3159,7 @@
 		"Ability10"		"special_bonus_mp_regen_3"
 		"Ability11"		"special_bonus_unique_windranger_2"
 		"Ability12"		"special_bonus_unique_windranger_3"
-		"Ability13"		"special_bonus_attack_range_100"
+		"Ability13"		"special_bonus_attack_range_125"
 		"Ability14"		"special_bonus_unique_windranger_6"
 		"Ability15"		"special_bonus_unique_windranger"
 		"Ability16"		"special_bonus_unique_windranger_4"
@@ -3348,11 +3178,11 @@
 		"AttributeBaseStrength"		"17"
 		"AttributeStrengthGain"		"3.000000"
 		"AttributeBaseIntelligence"		"18"
-		"AttributeIntelligenceGain"		"2.600000"
+		"AttributeIntelligenceGain"		"3.000000"
 		"AttributeBaseAgility"		"17"
 		"AttributeAgilityGain"		"1.400000"
 		"BoundsHullName"		"DOTA_HULL_SIZE_HERO"
-		"MovementSpeed"		"295"
+		"MovementSpeed"		"290"
 		"MovementTurnRate"		"0.800000"
 		"particle_folder"		"particles/units/heroes/hero_windrunner"
 		"GameSoundsFile"		"soundevents/game_sounds_heroes/game_sounds_windrunner.vsndevts"
@@ -3361,14 +3191,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_windrunner/windrunner_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_windrunner/windrunner_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -3482,7 +3305,7 @@
 			"Ability4"		"zuus_thundergods_wrath"
 		}
 
-		"ArmorPhysical"		"0"
+		"ArmorPhysical"		"1"
 		"AttackCapabilities"		"DOTA_UNIT_CAP_RANGED_ATTACK"
 		"AttackDamageMin"		"33"
 		"AttackDamageMax"		"41"
@@ -3496,10 +3319,10 @@
 		"AttributeBaseStrength"		"21"
 		"AttributeStrengthGain"		"2.100000"
 		"AttributeBaseIntelligence"		"20"
-		"AttributeIntelligenceGain"		"2.700000"
+		"AttributeIntelligenceGain"		"3.100000"
 		"AttributeBaseAgility"		"11"
 		"AttributeAgilityGain"		"1.200000"
-		"MovementSpeed"		"300"
+		"MovementSpeed"		"295"
 		"MovementTurnRate"		"0.600000"
 		"BoundsHullName"		"DOTA_HULL_SIZE_HERO"
 		"particle_folder"		"particles/units/heroes/hero_zuus,particles/units/heroes/hero_zeus"
@@ -3509,14 +3332,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_zuus/zeus_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_attachment"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_zuus/zeus_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -3623,7 +3439,7 @@
 		"Ability14"		"special_bonus_unique_kunkka"
 		"Ability15"		"special_bonus_strength_25"
 		"Ability16"		"special_bonus_unique_kunkka_3"
-		"Ability17"		"special_bonus_unique_kunkka_5"
+		"Ability17"		"special_bonus_unique_kunkka_4"
 		"AbilityDraftIgnoreCount"		"7"
 		"ArmorPhysical"		"1"
 		"AttackCapabilities"		"DOTA_UNIT_CAP_MELEE_ATTACK"
@@ -3635,7 +3451,7 @@
 		"AttackRange"		"150"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_STRENGTH"
 		"AttributeBaseStrength"		"24"
-		"AttributeStrengthGain"		"3.300000"
+		"AttributeStrengthGain"		"3.800000"
 		"AttributeBaseIntelligence"		"18"
 		"AttributeIntelligenceGain"		"1.500000"
 		"AttributeBaseAgility"		"14"
@@ -3647,14 +3463,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_kunkka/kunkka_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_kunkka/kunkka_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -3791,10 +3600,10 @@
 		"Ability15"		"special_bonus_unique_lina_2"
 		"Ability16"		"special_bonus_unique_lina_1"
 		"Ability17"		"special_bonus_attack_range_175"
-		"ArmorPhysical"		"0"
+		"ArmorPhysical"		"1"
 		"AttackCapabilities"		"DOTA_UNIT_CAP_RANGED_ATTACK"
-		"AttackDamageMin"		"18"
-		"AttackDamageMax"		"30"
+		"AttackDamageMin"		"21"
+		"AttackDamageMax"		"33"
 		"AttackRate"		"1.600000"
 		"AttackAnimationPoint"		"0.750000"
 		"AttackAcquisitionRange"		"800"
@@ -3805,10 +3614,10 @@
 		"AttributeBaseStrength"		"20"
 		"AttributeStrengthGain"		"2.000000"
 		"AttributeBaseIntelligence"		"28"
-		"AttributeIntelligenceGain"		"3.200000"
+		"AttributeIntelligenceGain"		"3.700000"
 		"AttributeBaseAgility"		"16"
 		"AttributeAgilityGain"		"1.500000"
-		"MovementSpeed"		"295"
+		"MovementSpeed"		"290"
 		"MovementTurnRate"		"0.500000"
 		"BoundsHullName"		"DOTA_HULL_SIZE_HERO"
 		"VoiceFile"		"soundevents/voscripts/game_sounds_vo_lina.vsndevts"
@@ -3818,19 +3627,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_lina/lina_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-					"1"
-					{
-						"type"		"follow_origin"
-						"position"		"150 1 1"
-					}
-				}
+				"particles/units/heroes/hero_lina/lina_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -3843,7 +3640,7 @@
 				"TextureWidth"		"256"
 				"TextureHeight"		"256"
 				"MaxPolygonsLOD0"		"1000"
-				"MaxPolygonsLOD1"		"700"
+				"MaxPolygonsLOD1"		"800"
 			}
 			"1"
 			{
@@ -3852,8 +3649,8 @@
 				"SlotText"		"#LoadoutSlot_Neck"
 				"TextureWidth"		"256"
 				"TextureHeight"		"256"
-				"MaxPolygonsLOD0"		"400"
-				"MaxPolygonsLOD1"		"300"
+				"MaxPolygonsLOD0"		"800"
+				"MaxPolygonsLOD1"		"600"
 			}
 			"2"
 			{
@@ -3862,7 +3659,7 @@
 				"SlotText"		"#LoadoutSlot_Arms"
 				"TextureWidth"		"256"
 				"TextureHeight"		"256"
-				"MaxPolygonsLOD0"		"500"
+				"MaxPolygonsLOD0"		"600"
 				"MaxPolygonsLOD1"		"400"
 			}
 			"3"
@@ -3872,8 +3669,8 @@
 				"SlotText"		"#LoadoutSlot_Belt"
 				"TextureWidth"		"256"
 				"TextureHeight"		"256"
-				"MaxPolygonsLOD0"		"700"
-				"MaxPolygonsLOD1"		"600"
+				"MaxPolygonsLOD0"		"1200"
+				"MaxPolygonsLOD1"		"900"
 			}
 			"4"
 			{
@@ -3944,10 +3741,10 @@
 		"AttributeBaseStrength"		"20"
 		"AttributeStrengthGain"		"2.10000"
 		"AttributeBaseIntelligence"		"20"
-		"AttributeIntelligenceGain"		"3.60000"
+		"AttributeIntelligenceGain"		"4.10000"
 		"AttributeBaseAgility"		"15"
 		"AttributeAgilityGain"		"2.0"
-		"MovementSpeed"		"310"
+		"MovementSpeed"		"305"
 		"MovementTurnRate"		"0.500000"
 		"BoundsHullName"		"DOTA_HULL_SIZE_HERO"
 		"ItemSlots"
@@ -4023,14 +3820,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_lich/lich_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_attachment"
-						"location"		"attach_attack1"
-					}
-				}
+				"particles/units/heroes/hero_lich/lich_loadout.vpcf"		"loadout"
 			}
 		}
 	}
@@ -4067,10 +3857,10 @@
 		"Ability4"		"generic_hidden"
 		"Ability5"		"generic_hidden"
 		"Ability6"		"lion_finger_of_death"
-		"Ability10"		"special_bonus_cast_range_75"
+		"Ability10"		"special_bonus_cast_range_100"
 		"Ability11"		"special_bonus_attack_damage_90"
 		"Ability12"		"special_bonus_unique_lion_3"
-		"Ability13"		"special_bonus_gold_income_20"
+		"Ability13"		"special_bonus_gold_income_25"
 		"Ability14"		"special_bonus_hp_500"
 		"Ability15"		"special_bonus_unique_lion"
 		"Ability16"		"special_bonus_unique_lion_2"
@@ -4089,7 +3879,7 @@
 		"AttributeBaseStrength"		"18"
 		"AttributeStrengthGain"		"2.200000"
 		"AttributeBaseIntelligence"		"18"
-		"AttributeIntelligenceGain"		"3.000000"
+		"AttributeIntelligenceGain"		"3.500000"
 		"AttributeBaseAgility"		"15"
 		"AttributeAgilityGain"		"1.500000"
 		"MovementSpeed"		"290"
@@ -4106,19 +3896,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_lion/lion_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_attachment"
-						"location"		"attach_attack1"
-					}
-					"1"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_lion/lion_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -4234,7 +4012,7 @@
 		"AttributeBaseStrength"		"23"
 		"AttributeStrengthGain"		"2.300000"
 		"AttributeBaseIntelligence"		"21"
-		"AttributeIntelligenceGain"		"3.000000"
+		"AttributeIntelligenceGain"		"3.500000"
 		"AttributeBaseAgility"		"16"
 		"AttributeAgilityGain"		"1.600000"
 		"MovementSpeed"		"285"
@@ -4252,14 +4030,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_shadowshaman/shadowshaman_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_shadowshaman/shadowshaman_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -4396,7 +4167,7 @@
 		"MovementTurnRate"		"0.500000"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_STRENGTH"
 		"AttributeBaseStrength"		"21"
-		"AttributeStrengthGain"		"3.100000"
+		"AttributeStrengthGain"		"3.600000"
 		"AttributeBaseIntelligence"		"15"
 		"AttributeIntelligenceGain"		"1.500000"
 		"AttributeBaseAgility"		"17"
@@ -4467,14 +4238,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_slardar/slardar_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_slardar/slardar_loadout.vpcf"		"loadout"
 			}
 		}
 	}
@@ -4530,7 +4294,7 @@
 		"AttackRange"		"150"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_STRENGTH"
 		"AttributeBaseStrength"		"22"
-		"AttributeStrengthGain"		"3.300000"
+		"AttributeStrengthGain"		"3.800000"
 		"AttributeBaseIntelligence"		"16"
 		"AttributeIntelligenceGain"		"1.700000"
 		"AttributeBaseAgility"		"15"
@@ -4545,14 +4309,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_tidehunter/tide_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_tidehunter/tide_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -4659,7 +4416,7 @@
 		"Ability5"		"generic_hidden"
 		"Ability6"		"witch_doctor_death_ward"
 		"Ability10"		"special_bonus_attack_damage_75"
-		"Ability11"		"special_bonus_armor_5"
+		"Ability11"		"special_bonus_armor_6"
 		"Ability12"		"special_bonus_unique_witch_doctor_3"
 		"Ability13"		"special_bonus_gold_income_20"
 		"Ability14"		"special_bonus_unique_witch_doctor_1"
@@ -4680,10 +4437,10 @@
 		"AttributeBaseStrength"		"18"
 		"AttributeStrengthGain"		"2.300000"
 		"AttributeBaseIntelligence"		"22"
-		"AttributeIntelligenceGain"		"2.900000"
+		"AttributeIntelligenceGain"		"3.300000"
 		"AttributeBaseAgility"		"13"
 		"AttributeAgilityGain"		"1.400000"
-		"MovementSpeed"		"305"
+		"MovementSpeed"		"300"
 		"MovementTurnRate"		"0.50000"
 		"BoundsHullName"		"DOTA_HULL_SIZE_HERO"
 		"precache"
@@ -4694,19 +4451,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_witchdoctor/witchdoctor_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-					"1"
-					{
-						"type"		"follow_attachment"
-						"location"		"attach_attack1"
-					}
-				}
+				"particles/units/heroes/hero_witchdoctor/witchdoctor_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -4828,8 +4573,8 @@
 		"Ability17"		"special_bonus_unique_riki_5"
 		"ArmorPhysical"		"1"
 		"AttackCapabilities"		"DOTA_UNIT_CAP_MELEE_ATTACK"
-		"AttackDamageMin"		"11"
-		"AttackDamageMax"		"15"
+		"AttackDamageMin"		"18"
+		"AttackDamageMax"		"22"
 		"AttackRate"		"1.700000"
 		"AttackAnimationPoint"		"0.300000"
 		"AttackAcquisitionRange"		"600"
@@ -4840,8 +4585,8 @@
 		"AttributeBaseIntelligence"		"14"
 		"AttributeIntelligenceGain"		"1.300000"
 		"AttributeBaseAgility"		"30"
-		"AttributeAgilityGain"		"2.20000"
-		"MovementSpeed"		"280"
+		"AttributeAgilityGain"		"2.50000"
+		"MovementSpeed"		"285"
 		"MovementTurnRate"		"0.600000"
 		"StatusHealthRegen"		"1.5"
 		"BoundsHullName"		"DOTA_HULL_SIZE_HERO"
@@ -4849,14 +4594,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_riki/riki_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_riki/riki_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -4999,7 +4737,7 @@
 		"AttributeBaseStrength"		"21"
 		"AttributeStrengthGain"		"2.500000"
 		"AttributeBaseIntelligence"		"18"
-		"AttributeIntelligenceGain"		"3.400000"
+		"AttributeIntelligenceGain"		"3.900000"
 		"AttributeBaseAgility"		"14"
 		"AttributeAgilityGain"		"1.0"
 		"MovementSpeed"		"290"
@@ -5139,7 +4877,7 @@
 		"AttributeBaseStrength"		"17"
 		"AttributeStrengthGain"		"2.500000"
 		"AttributeBaseIntelligence"		"28"
-		"AttributeIntelligenceGain"		"2.200000"
+		"AttributeIntelligenceGain"		"2.500000"
 		"AttributeBaseAgility"		"13"
 		"AttributeAgilityGain"		"1.200000"
 		"MovementSpeed"		"290"
@@ -5152,19 +4890,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_tinker/tinker_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_attachment"
-						"location"		"attach_attack2"
-					}
-					"1"
-					{
-						"type"		"follow_attachment"
-						"location"		"attach_attack3"
-					}
-				}
+				"particles/units/heroes/hero_tinker/tinker_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -5283,7 +5009,7 @@
 		"Ability10"		"special_bonus_cooldown_reduction_25"
 		"Ability11"		"special_bonus_attack_damage_20"
 		"Ability12"		"special_bonus_attack_speed_40"
-		"Ability13"		"special_bonus_unique_sniper_1"
+		"Ability13"		"special_bonus_unique_sniper_5"
 		"Ability14"		"special_bonus_unique_sniper_3"
 		"Ability15"		"special_bonus_unique_sniper_4"
 		"Ability16"		"special_bonus_attack_range_125"
@@ -5310,7 +5036,7 @@
 		"AttributeBaseIntelligence"		"15"
 		"AttributeIntelligenceGain"		"2.600000"
 		"AttributeBaseAgility"		"21"
-		"AttributeAgilityGain"		"2.700000"
+		"AttributeAgilityGain"		"3.100000"
 		"MovementSpeed"		"285"
 		"MovementTurnRate"		"0.700000"
 		"HasAggressiveStance"		"1"
@@ -5320,14 +5046,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_sniper/sniper_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_sniper/sniper_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -5447,7 +5166,7 @@
 		"AttributeBaseStrength"		"18"
 		"AttributeStrengthGain"		"2.800000"
 		"AttributeBaseIntelligence"		"20"
-		"AttributeIntelligenceGain"		"2.500000"
+		"AttributeIntelligenceGain"		"2.900000"
 		"AttributeBaseAgility"		"12"
 		"AttributeAgilityGain"		"1.300000"
 		"MovementSpeed"		"280"
@@ -5527,14 +5246,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_necrolyte/necrolyte_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_necrolyte/necrolyte_loadout.vpcf"		"loadout"
 			}
 		}
 	}
@@ -5589,13 +5301,13 @@
 		"ProjectileModel"		"particles/units/heroes/hero_warlock/warlock_base_attack.vpcf"
 		"ProjectileSpeed"		"1200"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_INTELLECT"
-		"AttributeBaseStrength"		"24"
+		"AttributeBaseStrength"		"26"
 		"AttributeStrengthGain"		"3.000000"
 		"AttributeBaseIntelligence"		"22"
-		"AttributeIntelligenceGain"		"2.700000"
+		"AttributeIntelligenceGain"		"3.100000"
 		"AttributeBaseAgility"		"10"
 		"AttributeAgilityGain"		"1.000000"
-		"MovementSpeed"		"295	"
+		"MovementSpeed"		"290"
 		"MovementTurnRate"		"0.50000"
 		"HasAggressiveStance"		"1"
 		"BoundsHullName"		"DOTA_HULL_SIZE_HERO"
@@ -5610,19 +5322,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_warlock/warlock_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_attachment"
-						"location"		"attach_attack1"
-					}
-					"1"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_warlock/warlock_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -5755,8 +5455,8 @@
 		"Ability10"		"special_bonus_exp_boost_25"
 		"Ability11"		"special_bonus_movement_speed_20"
 		"Ability12"		"special_bonus_armor_6"
-		"Ability13"		"special_bonus_unique_beastmaster_2"
-		"Ability14"		"special_bonus_unique_beastmaster"
+		"Ability13"		"special_bonus_unique_beastmaster"
+		"Ability14"		"special_bonus_unique_beastmaster_2"
 		"Ability15"		"special_bonus_hp_500"
 		"Ability16"		"special_bonus_unique_beastmaster_4"
 		"Ability17"		"special_bonus_unique_beastmaster_3"
@@ -5771,7 +5471,7 @@
 		"ProjectileSpeed"		"0"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_STRENGTH"
 		"AttributeBaseStrength"		"23"
-		"AttributeStrengthGain"		"2.500000"
+		"AttributeStrengthGain"		"2.900000"
 		"AttributeBaseIntelligence"		"16"
 		"AttributeIntelligenceGain"		"1.900000"
 		"AttributeBaseAgility"		"18"
@@ -5880,14 +5580,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_beastmaster/beastmaster_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_beastmaster/beastmaster_loadout.vpcf"		"loadout"
 			}
 		}
 	}
@@ -5945,10 +5638,10 @@
 		"AttributeBaseStrength"		"18"
 		"AttributeStrengthGain"		"2.300000"
 		"AttributeBaseIntelligence"		"22"
-		"AttributeIntelligenceGain"		"2.500000"
-		"AttributeBaseAgility"		"18"
-		"AttributeAgilityGain"		"2.0"
-		"MovementSpeed"		"295"
+		"AttributeIntelligenceGain"		"2.900000"
+		"AttributeBaseAgility"		"22"
+		"AttributeAgilityGain"		"2.2"
+		"MovementSpeed"		"290"
 		"MovementTurnRate"		"0.500000"
 		"particle_folder"		"particles/units/heroes/hero_queenofpain"
 		"GameSoundsFile"		"soundevents/game_sounds_heroes/game_sounds_queenofpain.vsndevts"
@@ -5957,14 +5650,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_queenofpain/queenofpain_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_queenofpain/queenofpain_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -6069,11 +5755,11 @@
 		"ProjectileSpeed"		"900"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_AGILITY"
 		"AttributeBaseStrength"		"19"
-		"AttributeStrengthGain"		"1.90000"
+		"AttributeStrengthGain"		"2.10000"
 		"AttributeBaseIntelligence"		"17"
 		"AttributeIntelligenceGain"		"1.80000"
 		"AttributeBaseAgility"		"26"
-		"AttributeAgilityGain"		"2.800000"
+		"AttributeAgilityGain"		"3.200000"
 		"MovementSpeed"		"275"
 		"MovementTurnRate"		"0.500000"
 		"precache"
@@ -6087,14 +5773,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_venomancer/venomancer_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_attachment"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_venomancer/venomancer_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -6209,9 +5888,9 @@
 		"Ability5"		"generic_hidden"
 		"Ability6"		"faceless_void_chronosphere"
 		"Ability10"		"special_bonus_attack_damage_15"
-		"Ability11"		"special_bonus_strength_8"
+		"Ability11"		"special_bonus_strength_10"
 		"Ability12"		"special_bonus_unique_faceless_void_3"
-		"Ability13"		"special_bonus_hp_300"
+		"Ability13"		"special_bonus_unique_faceless_void_5"
 		"Ability14"		"special_bonus_attack_speed_40"
 		"Ability15"		"special_bonus_unique_faceless_void"
 		"Ability16"		"special_bonus_unique_faceless_void_4"
@@ -6228,7 +5907,7 @@
 		"AttributeBaseStrength"		"24"
 		"AttributeStrengthGain"		"2.100000"
 		"AttributeBaseAgility"		"23"
-		"AttributeAgilityGain"		"2.8000"
+		"AttributeAgilityGain"		"3.2000"
 		"AttributeBaseIntelligence"		"15"
 		"AttributeIntelligenceGain"		"1.500000"
 		"StatusHealthRegen"		"0.5"
@@ -6301,14 +5980,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_faceless_void/faceless_void_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_faceless_void/faceless_void_loadout.vpcf"		"loadout"
 			}
 		}
 	}
@@ -6366,12 +6038,12 @@
 		"ProjectileSpeed"		"0"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_STRENGTH"
 		"AttributeBaseStrength"		"22"
-		"AttributeStrengthGain"		"2.800000"
+		"AttributeStrengthGain"		"3.200000"
 		"AttributeBaseIntelligence"		"18"
 		"AttributeIntelligenceGain"		"1.600000"
 		"AttributeBaseAgility"		"18"
 		"AttributeAgilityGain"		"1.700000"
-		"MovementSpeed"		"300"
+		"MovementSpeed"		"315"
 		"MovementTurnRate"		"0.500000"
 		"animation_transitions"
 		{
@@ -6392,19 +6064,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_skeletonking/wraith_king_new_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-					"1"
-					{
-						"type"		"follow_attachment"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_skeletonking/wraith_king_new_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -6531,8 +6191,8 @@
 		"Ability17"		"special_bonus_unique_death_prophet"
 		"ArmorPhysical"		"0"
 		"AttackCapabilities"		"DOTA_UNIT_CAP_RANGED_ATTACK"
-		"AttackDamageMin"		"26"
-		"AttackDamageMax"		"38"
+		"AttackDamageMin"		"29"
+		"AttackDamageMax"		"41"
 		"AttackRate"		"1.700000"
 		"AttackAnimationPoint"		"0.56000"
 		"AttackAcquisitionRange"		"800"
@@ -6545,8 +6205,8 @@
 		"AttributeBaseAgility"		"14"
 		"AttributeAgilityGain"		"1.400000"
 		"AttributeBaseIntelligence"		"21"
-		"AttributeIntelligenceGain"		"3.000000"
-		"MovementSpeed"		"315"
+		"AttributeIntelligenceGain"		"3.500000"
+		"MovementSpeed"		"310"
 		"MovementTurnRate"		"0.500000"
 		"BoundsHullName"		"DOTA_HULL_SIZE_HERO"
 		"precache"
@@ -6560,15 +6220,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_death_prophet/death_prophet_spawn.vpcf"
-				{
-					"spawn"		"1"
-					"0"
-					{
-						"type"		"follow_attachment"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_death_prophet/death_prophet_spawn.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -6696,12 +6348,12 @@
 		"Ability6"		"phantom_assassin_coup_de_grace"
 		"Ability10"		"special_bonus_hp_150"
 		"Ability11"		"special_bonus_attack_damage_15"
-		"Ability12"		"special_bonus_corruption_3"
-		"Ability13"		"special_bonus_cleave_30"
-		"Ability14"		"special_bonus_lifesteal_20"
-		"Ability15"		"special_bonus_unique_phantom_assassin"
+		"Ability12"		"special_bonus_lifesteal_15"
+		"Ability13"		"special_bonus_cleave_25"
+		"Ability14"		"special_bonus_corruption_4"
+		"Ability15"		"special_bonus_unique_phantom_assassin_3"
 		"Ability16"		"special_bonus_unique_phantom_assassin_2"
-		"Ability17"		"special_bonus_unique_phantom_assassin_3"
+		"Ability17"		"special_bonus_unique_phantom_assassin"
 		"ArmorPhysical"		"1"
 		"AttackCapabilities"		"DOTA_UNIT_CAP_MELEE_ATTACK"
 		"AttackDamageMin"		"23"
@@ -6720,7 +6372,7 @@
 		"AttributeBaseStrength"		"21"
 		"AttributeStrengthGain"		"2.20000"
 		"AttributeBaseAgility"		"23"
-		"AttributeAgilityGain"		"3.20000"
+		"AttributeAgilityGain"		"3.70000"
 		"AttributeBaseIntelligence"		"15"
 		"AttributeIntelligenceGain"		"1.400000"
 		"StatusHealthRegen"		"0.25"
@@ -6731,14 +6383,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_phantom_assassin/phantom_assassin_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_phantom_assassin/phantom_assassin_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -6859,8 +6504,8 @@
 		"AttributeBaseAgility"		"16"
 		"AttributeAgilityGain"		"1.000000"
 		"AttributeBaseIntelligence"		"24"
-		"AttributeIntelligenceGain"		"4.50000"
-		"MovementSpeed"		"335"
+		"AttributeIntelligenceGain"		"5.20000"
+		"MovementSpeed"		"330"
 		"MovementTurnRate"		"0.500000"
 		"BoundsHullName"		"DOTA_HULL_SIZE_HERO"
 		"ItemSlots"
@@ -6965,19 +6610,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_pugna/pugna_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-					"1"
-					{
-						"type"		"follow_origin"
-						"position"		"150 150 150"
-					}
-				}
+				"particles/units/heroes/hero_pugna/pugna_loadout.vpcf"		"loadout"
 			}
 		}
 	}
@@ -7013,8 +6646,8 @@
 		"Ability5"		"generic_hidden"
 		"Ability6"		"templar_assassin_psionic_trap"
 		"Ability10"		"special_bonus_attack_speed_25"
-		"Ability11"		"special_bonus_unique_templar_assassin_6"
-		"Ability12"		"special_bonus_armor_7"
+		"Ability11"		"special_bonus_evasion_15"
+		"Ability12"		"special_bonus_movement_speed_25"
 		"Ability13"		"special_bonus_unique_templar_assassin_3"
 		"Ability14"		"special_bonus_unique_templar_assassin_4"
 		"Ability15"		"special_bonus_unique_templar_assassin_2"
@@ -7042,11 +6675,11 @@
 		"AttributeBaseStrength"		"19"
 		"AttributeStrengthGain"		"2.400000"
 		"AttributeBaseAgility"		"23"
-		"AttributeAgilityGain"		"2.300000"
+		"AttributeAgilityGain"		"2.600000"
 		"AttributeBaseIntelligence"		"20"
 		"AttributeIntelligenceGain"		"2.000000"
 		"StatusHealthRegen"		"0.25"
-		"MovementSpeed"		"310"
+		"MovementSpeed"		"305"
 		"MovementTurnRate"		"0.700000"
 		"BoundsHullName"		"DOTA_HULL_SIZE_HERO"
 		"precache"
@@ -7060,14 +6693,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_templar_assassin/templar_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_templar_assassin/templar_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -7186,7 +6812,7 @@
 		"AttributeBaseStrength"		"21"
 		"AttributeStrengthGain"		"2.400000"
 		"AttributeBaseAgility"		"21"
-		"AttributeAgilityGain"		"2.900000"
+		"AttributeAgilityGain"		"3.300000"
 		"AttributeBaseIntelligence"		"15"
 		"AttributeIntelligenceGain"		"1.800000"
 		"MovementSpeed"		"275"
@@ -7204,19 +6830,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_viper/viper_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-					"1"
-					{
-						"type"		"follow_attachment"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_viper/viper_loadout.vpcf"		"loadout"
 			}
 		}
 		
@@ -7301,7 +6915,7 @@
 		"Ability5"		"generic_hidden"
 		"Ability6"		"luna_eclipse"
 		"Ability10"		"special_bonus_attack_speed_15"
-		"Ability11"		"special_bonus_cast_range_200"
+		"Ability11"		"special_bonus_cast_range_300"
 		"Ability12"		"special_bonus_unique_luna_2"
 		"Ability13"		"special_bonus_movement_speed_30"
 		"Ability14"		"special_bonus_all_stats_8"
@@ -7329,10 +6943,10 @@
 		"AttributeBaseStrength"		"16"
 		"AttributeStrengthGain"		"2.200000"
 		"AttributeBaseAgility"		"18"
-		"AttributeAgilityGain"		"3.100000"
+		"AttributeAgilityGain"		"3.600000"
 		"AttributeBaseIntelligence"		"16"
 		"AttributeIntelligenceGain"		"1.90000"
-		"MovementSpeed"		"330"
+		"MovementSpeed"		"325"
 		"MovementTurnRate"		"0.600000"
 		"BoundsHullName"		"DOTA_HULL_SIZE_HERO"
 		"particle_folder"		"particles/units/heroes/hero_luna"
@@ -7342,14 +6956,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_luna/luna_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_luna/luna_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -7449,8 +7056,8 @@
 		"Ability12"		"special_bonus_attack_damage_30"
 		"Ability13"		"special_bonus_hp_300"
 		"Ability14"		"special_bonus_gold_income_25"
-		"Ability15"		"special_bonus_unique_dragon_knight"
-		"Ability16"		"special_bonus_strength_40"
+		"Ability15"		"special_bonus_strength_25"
+		"Ability16"		"special_bonus_unique_dragon_knight"
 		"Ability17"		"special_bonus_unique_dragon_knight_2"
 		"AbilityDraftAbilities"
 		{
@@ -7470,12 +7077,12 @@
 		"ProjectileSpeed"		"900"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_STRENGTH"
 		"AttributeBaseStrength"		"19"
-		"AttributeStrengthGain"		"3.100000"
+		"AttributeStrengthGain"		"3.600000"
 		"AttributeBaseAgility"		"19"
 		"AttributeAgilityGain"		"2.000000"
 		"AttributeBaseIntelligence"		"15"
 		"AttributeIntelligenceGain"		"1.700000"
-		"MovementSpeed"		"285"
+		"MovementSpeed"		"295"
 		"MovementTurnRate"		"0.600000"
 		"BoundsHullName"		"DOTA_HULL_SIZE_HERO"
 		"precache"
@@ -7492,14 +7099,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_dragon_knight/dragon_knight_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_dragon_knight/dragon_knight_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -7637,10 +7237,10 @@
 		"AttributeBaseStrength"		"18"
 		"AttributeStrengthGain"		"2.50000"
 		"AttributeBaseIntelligence"		"25"
-		"AttributeIntelligenceGain"		"3.200000"
+		"AttributeIntelligenceGain"		"3.700000"
 		"AttributeBaseAgility"		"21"
 		"AttributeAgilityGain"		"1.700000"
-		"MovementSpeed"		"310"
+		"MovementSpeed"		"305"
 		"MovementTurnRate"		"0.600000"
 		"BoundsHullName"		"DOTA_HULL_SIZE_HERO"
 		"ItemSlots"
@@ -7709,14 +7309,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_dazzle/dazzle_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_attachment"
-						"location"		"attach_attack1"
-					}
-				}
+				"particles/units/heroes/hero_dazzle/dazzle_loadout.vpcf"		"loadout"
 			}
 		}
 	}
@@ -7754,9 +7347,9 @@
 		"Ability11"		"special_bonus_movement_speed_20"
 		"Ability12"		"special_bonus_strength_15"
 		"Ability13"		"special_bonus_unique_clockwerk_3"
-		"Ability14"		"special_bonus_magic_resistance_20"
+		"Ability14"		"special_bonus_unique_clockwerk_4"
 		"Ability15"		"special_bonus_unique_clockwerk_2"
-		"Ability16"		"special_bonus_unique_clockwerk_4"
+		"Ability16"		"special_bonus_magic_resistance_50"
 		"Ability17"		"special_bonus_unique_clockwerk"
 		"ArmorPhysical"		"-1"
 		"AttackCapabilities"		"DOTA_UNIT_CAP_MELEE_ATTACK"
@@ -7768,7 +7361,7 @@
 		"AttackRange"		"150"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_STRENGTH"
 		"AttributeBaseStrength"		"26"
-		"AttributeStrengthGain"		"3.200000"
+		"AttributeStrengthGain"		"3.700000"
 		"AttributeBaseAgility"		"13"
 		"AttributeAgilityGain"		"2.300000"
 		"AttributeBaseIntelligence"		"17"
@@ -7787,19 +7380,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_rattletrap/clock_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-					"1"
-					{
-						"type"		"follow_attachment"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_rattletrap/clock_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -7919,10 +7500,10 @@
 		"AttributeBaseStrength"		"18"
 		"AttributeStrengthGain"		"2.300000"
 		"AttributeBaseIntelligence"		"22"
-		"AttributeIntelligenceGain"		"3"
+		"AttributeIntelligenceGain"		"3.5"
 		"AttributeBaseAgility"		"23"
 		"AttributeAgilityGain"		"1.700000"
-		"MovementSpeed"		"330"
+		"MovementSpeed"		"325"
 		"MovementTurnRate"		"0.500000"
 		"BoundsHullName"		"DOTA_HULL_SIZE_HERO"
 		"VoiceFile"		"soundevents/voscripts/game_sounds_vo_leshrac.vsndevts"
@@ -7932,14 +7513,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_leshrac/leshrac_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_leshrac/leshrac_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -8046,7 +7620,7 @@
 		"Ability12"		"special_bonus_armor_10"
 		"Ability13"		"special_bonus_unique_furion_2"
 		"Ability14"		"special_bonus_attack_speed_40"
-		"Ability15"		"special_bonus_unique_furion_4"
+		"Ability15"		"special_bonus_cooldown_reduction_25"
 		"Ability16"		"special_bonus_unique_furion_3"
 		"Ability17"		"special_bonus_unique_furion"
 		"ArmorPhysical"		"2"
@@ -8063,7 +7637,7 @@
 		"AttributeBaseStrength"		"21"
 		"AttributeStrengthGain"		"2.600000"
 		"AttributeBaseIntelligence"		"23"
-		"AttributeIntelligenceGain"		"2.900000"
+		"AttributeIntelligenceGain"		"3.300000"
 		"AttributeBaseAgility"		"18"
 		"AttributeAgilityGain"		"3.300000"
 		"MovementSpeed"		"290"
@@ -8080,14 +7654,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_furion/furion_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_furion/furion_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -8211,7 +7778,7 @@
 		"Ability10"		"special_bonus_hp_200"
 		"Ability11"		"special_bonus_attack_speed_20"
 		"Ability12"		"special_bonus_attack_damage_30"
-		"Ability13"		"special_bonus_movement_speed_30"
+		"Ability13"		"special_bonus_movement_speed_25"
 		"Ability14"		"special_bonus_evasion_20"
 		"Ability15"		"special_bonus_unique_lifestealer_2"
 		"Ability16"		"special_bonus_unique_lifestealer_3"
@@ -8225,7 +7792,7 @@
 			//infest does not grant control, this causes infest to be sort of useless
 		}
 
-		"ArmorPhysical"		"-2"
+		"ArmorPhysical"		"0"
 		"AttackCapabilities"		"DOTA_UNIT_CAP_MELEE_ATTACK"
 		"AttackDamageMin"		"27"
 		"AttackDamageMax"		"37"
@@ -8235,12 +7802,12 @@
 		"AttackRange"		"150"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_STRENGTH"
 		"AttributeBaseStrength"		"25"
-		"AttributeStrengthGain"		"3.100000"
+		"AttributeStrengthGain"		"3.600000"
 		"AttributeBaseIntelligence"		"15"
 		"AttributeIntelligenceGain"		"1.8000"
 		"AttributeBaseAgility"		"18"
-		"AttributeAgilityGain"		"1.900000"
-		"MovementSpeed"		"310"
+		"AttributeAgilityGain"		"2.400000"
+		"MovementSpeed"		"325"
 		"MovementTurnRate"		"1.000000"
 		"HasAggressiveStance"		"1"
 		"BoundsHullName"		"DOTA_HULL_SIZE_HERO"
@@ -8251,14 +7818,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_life_stealer/life_stealer_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_life_stealer/life_stealer_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -8378,7 +7938,7 @@
 		"AttributeBaseAgility"		"12"
 		"AttributeAgilityGain"		"1.200000"
 		"AttributeBaseIntelligence"		"21"
-		"AttributeIntelligenceGain"		"2.700000"
+		"AttributeIntelligenceGain"		"3.100000"
 		"MovementSpeed"		"300"
 		"MovementTurnRate"		"0.600000"
 		"BoundsHullName"		"DOTA_HULL_SIZE_HERO"
@@ -8389,14 +7949,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_dark_seer/dark_seer_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_dark_seer/dark_seer_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -8506,7 +8059,7 @@
 		"Ability6"		"clinkz_burning_army"
 		"Ability10"		"special_bonus_magic_resistance_12"
 		"Ability11"		"special_bonus_armor_5"
-		"Ability12"		"special_bonus_evasion_20"
+		"Ability12"		"special_bonus_strength_15"
 		"Ability13"		"special_bonus_unique_clinkz_1"
 		"Ability14"		"special_bonus_attack_range_125"
 		"Ability15"		"special_bonus_hp_regen_16"
@@ -8526,11 +8079,11 @@
 		"AttributeBaseStrength"		"12"
 		"AttributeStrengthGain"		"1.900000"
 		"AttributeBaseAgility"		"22"
-		"AttributeAgilityGain"		"2.600"
+		"AttributeAgilityGain"		"3"
 		"AttributeBaseIntelligence"		"18"
 		"AttributeIntelligenceGain"		"1.7000"
 		"StatusHealthRegen"		"0.25"
-		"MovementSpeed"		"295"
+		"MovementSpeed"		"290"
 		"MovementTurnRate"		"0.50000"
 		"BoundsHullName"		"DOTA_HULL_SIZE_HERO"
 		"VoiceFile"		"soundevents/voscripts/game_sounds_vo_clinkz.vsndevts"
@@ -8540,19 +8093,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_clinkz/clinkz_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-					"1"
-					{
-						"type"		"follow_attachment"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_clinkz/clinkz_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -8680,7 +8221,7 @@
 		"AttackRange"		"150"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_STRENGTH"
 		"AttributeBaseStrength"		"22"
-		"AttributeStrengthGain"		"3.10000"
+		"AttributeStrengthGain"		"3.60000"
 		"AttributeBaseAgility"		"15"
 		"AttributeAgilityGain"		"1.80000"
 		"AttributeBaseIntelligence"		"15"
@@ -8695,14 +8236,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_omniknight/omniknight_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_attachment"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_omniknight/omniknight_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -8833,8 +8367,8 @@
 		"AttributeBaseAgility"		"19"
 		"AttributeAgilityGain"		"1.800000"
 		"AttributeBaseIntelligence"		"17"
-		"AttributeIntelligenceGain"		"3.100000"
-		"MovementSpeed"		"320"
+		"AttributeIntelligenceGain"		"3.600000"
+		"MovementSpeed"		"315"
 		"MovementTurnRate"		"0.50000"
 		"BoundsHullName"		"DOTA_HULL_SIZE_HERO"
 		"ItemSlots"
@@ -8903,22 +8437,8 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_enchantress/enchantress_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
-				"particles/units/heroes/hero_enchantress/enchantress_loadoutb.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_attachment"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_enchantress/enchantress_loadout.vpcf"		"loadout"
+				"particles/units/heroes/hero_enchantress/enchantress_loadoutb.vpcf"		"loadout"
 			}
 		}
 	}
@@ -8953,7 +8473,7 @@
 		"Ability5"		"generic_hidden"
 		"Ability6"		"huskar_life_break"
 		"Ability10"		"special_bonus_hp_225"
-		"Ability11"		"special_bonus_attack_damage_20"
+		"Ability11"		"special_bonus_attack_damage_15"
 		"Ability12"		"special_bonus_unique_huskar_2"
 		"Ability13"		"special_bonus_lifesteal_20"
 		"Ability14"		"special_bonus_strength_20"
@@ -8965,14 +8485,14 @@
 		"AttackDamageMin"		"19"
 		"AttackDamageMax"		"24"
 		"AttackRate"		"1.600000"
-		"AttackAnimationPoint"		"0.400000"
+		"AttackAnimationPoint"		"0.3"
 		"AttackAcquisitionRange"		"800"
 		"AttackRange"		"400"
 		"ProjectileModel"		"particles/units/heroes/hero_huskar/huskar_base_attack.vpcf"
 		"ProjectileSpeed"		"1400"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_STRENGTH"
 		"AttributeBaseStrength"		"21"
-		"AttributeStrengthGain"		"2.700000"
+		"AttributeStrengthGain"		"3.100000"
 		"AttributeBaseAgility"		"15"
 		"AttributeAgilityGain"		"1.40000"
 		"AttributeBaseIntelligence"		"18"
@@ -8988,14 +8508,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_huskar/huskar_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_huskar/huskar_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -9093,7 +8606,7 @@
 		"Ability10"		"special_bonus_hp_200"
 		"Ability11"		"special_bonus_mp_200"
 		"Ability12"		"special_bonus_strength_15"
-		"Ability13"		"special_bonus_cast_range_150"
+		"Ability13"		"special_bonus_lifesteal_15"
 		"Ability14"		"special_bonus_movement_speed_40"
 		"Ability15"		"special_bonus_attack_damage_50"
 		"Ability16"		"special_bonus_unique_night_stalker_2"
@@ -9108,7 +8621,7 @@
 		"AttackRange"		"150"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_STRENGTH"
 		"AttributeBaseStrength"		"23"
-		"AttributeStrengthGain"		"3.100000"
+		"AttributeStrengthGain"		"3.600000"
 		"AttributeBaseIntelligence"		"13"
 		"AttributeIntelligenceGain"		"1.600000"
 		"AttributeBaseAgility"		"18"
@@ -9130,14 +8643,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_night_stalker/nightstalker_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_night_stalker/nightstalker_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -9247,7 +8753,7 @@
 		"Ability10"		"special_bonus_unique_broodmother_3"
 		"Ability11"		"special_bonus_hp_200"
 		"Ability12"		"special_bonus_cooldown_reduction_20"
-		"Ability13"		"special_bonus_exp_boost_35"
+		"Ability13"		"special_bonus_agility_15"
 		"Ability14"		"special_bonus_unique_broodmother_4"
 		"Ability15"		"special_bonus_attack_speed_50"
 		"Ability16"		"special_bonus_unique_broodmother_1"
@@ -9264,7 +8770,7 @@
 		"AttributeBaseStrength"		"18"
 		"AttributeStrengthGain"		"2.800000"
 		"AttributeBaseAgility"		"15"
-		"AttributeAgilityGain"		"2.200000"
+		"AttributeAgilityGain"		"2.500000"
 		"AttributeBaseIntelligence"		"18"
 		"AttributeIntelligenceGain"		"2.000000"
 		"MovementSpeed"		"275"
@@ -9282,14 +8788,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_broodmother/broodmother_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_broodmother/broodmother_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -9417,7 +8916,7 @@
 		"AttributeBaseStrength"		"20"
 		"AttributeStrengthGain"		"2.500000"
 		"AttributeBaseAgility"		"21"
-		"AttributeAgilityGain"		"2.700000"
+		"AttributeAgilityGain"		"3.100000"
 		"AttributeBaseIntelligence"		"19"
 		"AttributeIntelligenceGain"		"2.000000"
 		"MovementSpeed"		"315"
@@ -9433,14 +8932,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_bounty_hunter/bounty_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_bounty_hunter/bounty_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -9551,10 +9043,10 @@
 		"Ability4"		"generic_hidden"
 		"Ability5"		"generic_hidden"
 		"Ability6"		"weaver_time_lapse"
-		"Ability10"		"special_bonus_strength_7"
+		"Ability10"		"special_bonus_unique_weaver_1"
 		"Ability11"		"special_bonus_exp_boost_35"
 		"Ability12"		"special_bonus_mana_break_20"
-		"Ability13"		"special_bonus_unique_weaver_1"
+		"Ability13"		"special_bonus_strength_14"
 		"Ability14"		"special_bonus_unique_weaver_3"
 		"Ability15"		"special_bonus_unique_weaver_4"
 		"Ability16"		"special_bonus_unique_weaver_2"
@@ -9575,7 +9067,7 @@
 		"AttributeBaseIntelligence"		"13"
 		"AttributeIntelligenceGain"		"1.800000"
 		"AttributeBaseAgility"		"14"
-		"AttributeAgilityGain"		"3.100000"
+		"AttributeAgilityGain"		"3.600000"
 		"StatusHealthRegen"		"1.0"
 		"MovementSpeed"		"275"
 		"MovementTurnRate"		"0.500000"
@@ -9590,14 +9082,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_weaver/weaver_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_attachment"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_weaver/weaver_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -9697,9 +9182,9 @@
 		"Ability4"		"generic_hidden"
 		"Ability5"		"generic_hidden"
 		"Ability6"		"jakiro_macropyre"
-		"Ability10"		"special_bonus_exp_boost_30"
+		"Ability10"		"special_bonus_attack_range_300"
 		"Ability11"		"special_bonus_spell_amplify_8"
-		"Ability12"		"special_bonus_attack_range_300"
+		"Ability12"		"special_bonus_exp_boost_40"
 		"Ability13"		"special_bonus_unique_jakiro_2"
 		"Ability14"		"special_bonus_unique_jakiro_4"
 		"Ability15"		"special_bonus_gold_income_25"
@@ -9719,7 +9204,7 @@
 		"AttributeBaseStrength"		"27"
 		"AttributeStrengthGain"		"2.800000"
 		"AttributeBaseIntelligence"		"26"
-		"AttributeIntelligenceGain"		"2.800000"
+		"AttributeIntelligenceGain"		"3.200000"
 		"AttributeBaseAgility"		"10"
 		"AttributeAgilityGain"		"1.200000"
 		"MovementSpeed"		"290"
@@ -9731,14 +9216,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_jakiro/jakiro_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_jakiro/jakiro_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -9854,7 +9332,7 @@
 		"AttributeBaseAgility"		"15"
 		"AttributeAgilityGain"		"1.500000"
 		"AttributeBaseIntelligence"		"22"
-		"AttributeIntelligenceGain"		"2.500000"
+		"AttributeIntelligenceGain"		"2.900000"
 		"StatusHealthRegen"		"1.75"
 		"MovementSpeed"		"290"
 		"MovementTurnRate"		"1.000000"
@@ -9922,14 +9400,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_batrider/batrider_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_batrider/batrider_loadout.vpcf"		"loadout"
 			}
 		}
 	}
@@ -9994,8 +9465,8 @@
 		"AttributeBaseAgility"		"15"
 		"AttributeAgilityGain"		"2.100000"
 		"AttributeBaseIntelligence"		"19"
-		"AttributeIntelligenceGain"		"2.800000"
-		"MovementSpeed"		"310"
+		"AttributeIntelligenceGain"		"3.200000"
+		"MovementSpeed"		"305"
 		"MovementTurnRate"		"0.600000"
 		"particle_folder"		"particles/units/heroes/hero_chen"
 		"GameSoundsFile"		"soundevents/game_sounds_heroes/game_sounds_chen.vsndevts"
@@ -10004,14 +9475,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_chen/chen_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_chen/chen_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -10153,9 +9617,9 @@
 		"AttackRange"		"150"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_AGILITY"
 		"AttributeBaseStrength"		"21"
-		"AttributeStrengthGain"		"2.300000"
+		"AttributeStrengthGain"		"2.500000"
 		"AttributeBaseAgility"		"23"
-		"AttributeAgilityGain"		"1.800000"
+		"AttributeAgilityGain"		"2.100000"
 		"AttributeBaseIntelligence"		"16"
 		"AttributeIntelligenceGain"		"1.900000"
 		"MovementSpeed"		"290"
@@ -10297,7 +9761,7 @@
 		"AttackRange"		"175"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_STRENGTH"
 		"AttributeBaseStrength"		"26"
-		"AttributeStrengthGain"		"3.500000"
+		"AttributeStrengthGain"		"4.000000"
 		"AttributeBaseAgility"		"11"
 		"AttributeAgilityGain"		"0.900000"
 		"AttributeBaseIntelligence"		"15"
@@ -10311,14 +9775,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_doom_bringer/doom_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_doom_bringer/doom_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -10461,8 +9918,8 @@
 		"AttributeBaseAgility"		"20"
 		"AttributeAgilityGain"		"2.200000"
 		"AttributeBaseIntelligence"		"23"
-		"AttributeIntelligenceGain"		"2.600000"
-		"MovementSpeed"		"295"
+		"AttributeIntelligenceGain"		"3.000000"
+		"MovementSpeed"		"290"
 		"MovementTurnRate"		"0.600000"
 		"particle_folder"		"particles/units/heroes/hero_ancient_apparition"
 		"GameSoundsFile"		"soundevents/game_sounds_heroes/game_sounds_ancient_apparition.vsndevts"
@@ -10471,14 +9928,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_ancient_apparition/ancient_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_ancient_apparition/ancient_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -10591,10 +10041,10 @@
 		"AttributeBaseStrength"		"24"
 		"AttributeStrengthGain"		"3.300000"
 		"AttributeBaseAgility"		"18"
-		"AttributeAgilityGain"		"2.100000"
+		"AttributeAgilityGain"		"2.400000"
 		"AttributeBaseIntelligence"		"16"
 		"AttributeIntelligenceGain"		"1.500000"
-		"MovementSpeed"		"305"
+		"MovementSpeed"		"330"
 		"MovementTurnRate"		"0.500000"
 		"StatusHealthRegen"		"0.5"
 		"particle_folder"		"particles/units/heroes/hero_ursa"
@@ -10604,14 +10054,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_ursa/ursa_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_ursa/ursa_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -10723,7 +10166,7 @@
 		"AttackRange"		"150"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_STRENGTH"
 		"AttributeBaseStrength"		"29"
-		"AttributeStrengthGain"		"2.700000"
+		"AttributeStrengthGain"		"3.100000"
 		"AttributeBaseAgility"		"17"
 		"AttributeAgilityGain"		"1.700000"
 		"AttributeBaseIntelligence"		"14"
@@ -10737,14 +10180,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_spirit_breaker/spirit_breaker_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_spirit_breaker/spirit_breaker_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -10881,13 +10317,13 @@
 		"ProjectileSpeed"		"3000"
 		"ProjectileModel"		"particles/units/heroes/hero_gyrocopter/gyro_base_attack.vpcf"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_AGILITY"
-		"AttributeBaseStrength"		"19"
+		"AttributeBaseStrength"		"22"
 		"AttributeStrengthGain"		"2.300000"
 		"AttributeBaseAgility"		"19"
-		"AttributeAgilityGain"		"2.800000"
+		"AttributeAgilityGain"		"3.600000"
 		"AttributeBaseIntelligence"		"19"
 		"AttributeIntelligenceGain"		"2.100000"
-		"MovementSpeed"		"320"
+		"MovementSpeed"		"315"
 		"MovementTurnRate"		"0.600000"
 		"HasAggressiveStance"		"1"
 		"precache"
@@ -10901,14 +10337,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_gyrocopter/gyrocopter_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_gyrocopter/gyrocopter_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -11046,12 +10475,12 @@
 		"AttackRange"		"150"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_STRENGTH"
 		"AttributeBaseStrength"		"25"
-		"AttributeStrengthGain"		"2.100000"
-		"AttributeBaseAgility"		"16"
+		"AttributeStrengthGain"		"2.400000"
+		"AttributeBaseAgility"		"22"
 		"AttributeAgilityGain"		"1.200000"
 		"AttributeBaseIntelligence"		"25"
 		"AttributeIntelligenceGain"		"1.800000"
-		"MovementSpeed"		"295"
+		"MovementSpeed"		"305"
 		"MovementTurnRate"		"0.600000"
 		"HasAggressiveStance"		"1"
 		"particle_folder"		"particles/units/heroes/hero_alchemist"
@@ -11061,14 +10490,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_alchemist/alchemist_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_attachment"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_alchemist/alchemist_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -11205,7 +10627,7 @@
 		"Ability14"		"invoker_forge_spirit"
 		"Ability15"		"invoker_ice_wall"
 		"Ability16"		"invoker_deafening_blast"		
-		"Ability17"		"special_bonus_unique_invoker_8"
+		"Ability17"		"special_bonus_unique_invoker_10"
 		"Ability18"		"special_bonus_unique_invoker_6"
 		"Ability19"		"special_bonus_unique_invoker_1"
 		"Ability20"		"special_bonus_unique_invoker_9"
@@ -11217,8 +10639,8 @@
 		"AbilityDraftDisabled"		"1"
 		"ArmorPhysical"		"-1"
 		"AttackCapabilities"		"DOTA_UNIT_CAP_RANGED_ATTACK"
-		"AttackDamageMin"		"21"
-		"AttackDamageMax"		"27"
+		"AttackDamageMin"		"24"
+		"AttackDamageMax"		"30"
 		"AttackRate"		"1.700000"
 		"AttackAnimationPoint"		"0.400000"
 		"AttackAcquisitionRange"		"800"
@@ -11231,7 +10653,7 @@
 		"AttributeBaseAgility"		"14"
 		"AttributeAgilityGain"		"1.900000"
 		"AttributeBaseIntelligence"		"14"
-		"AttributeIntelligenceGain"		"4.000000"
+		"AttributeIntelligenceGain"		"4.600000"
 		"MovementSpeed"		"280"
 		"MovementTurnRate"		"0.500000"
 		"VoiceFile"		"soundevents/voscripts/game_sounds_vo_invoker.vsndevts"
@@ -11245,14 +10667,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_invoker/invoker_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_invoker/invoker_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -11366,7 +10781,7 @@
 		"Ability4"		"generic_hidden"
 		"Ability5"		"generic_hidden"
 		"Ability6"		"silencer_global_silence"
-		"Ability10"		"special_bonus_armor_5"
+		"Ability10"		"special_bonus_armor_6"
 		"Ability11"		"special_bonus_attack_speed_25"
 		"Ability12"		"special_bonus_gold_income_20"
 		"Ability13"		"special_bonus_unique_silencer_2"
@@ -11374,7 +10789,7 @@
 		"Ability15"		"special_bonus_unique_silencer"
 		"Ability16"		"special_bonus_unique_silencer_3"
 		"Ability17"		"special_bonus_unique_silencer_4"
-		"ArmorPhysical"		"-1"
+		"ArmorPhysical"		"0"
 		"AttackCapabilities"		"DOTA_UNIT_CAP_RANGED_ATTACK"
 		"AttackDamageMin"		"18"
 		"AttackDamageMax"		"32"
@@ -11390,8 +10805,8 @@
 		"AttributeBaseAgility"		"22"
 		"AttributeAgilityGain"		"3.000000"
 		"AttributeBaseIntelligence"		"25"
-		"AttributeIntelligenceGain"		"2.500000"
-		"MovementSpeed"		"295"
+		"AttributeIntelligenceGain"		"2.900000"
+		"MovementSpeed"		"290"
 		"MovementTurnRate"		"0.600000"
 		"particle_folder"		"particles/units/heroes/hero_silencer"
 		"GameSoundsFile"		"soundevents/game_sounds_heroes/game_sounds_silencer.vsndevts"
@@ -11400,14 +10815,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_silencer/silencer_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_silencer/silencer_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -11514,7 +10922,7 @@
 		"Ability6"		"obsidian_destroyer_sanity_eclipse"
 		"Ability10"		"special_bonus_hp_250"
 		"Ability11"		"special_bonus_attack_speed_20"
-		"Ability12"		"special_bonus_movement_speed_30"
+		"Ability12"		"special_bonus_movement_speed_25"
 		"Ability13"		"special_bonus_armor_6"
 		"Ability14"		"special_bonus_strength_20"
 		"Ability15"		"special_bonus_unique_outworld_devourer_4"
@@ -11536,8 +10944,8 @@
 		"AttributeBaseAgility"		"24"
 		"AttributeAgilityGain"		"2.00000"
 		"AttributeBaseIntelligence"		"28"
-		"AttributeIntelligenceGain"		"3.000000"
-		"MovementSpeed"		"315"
+		"AttributeIntelligenceGain"		"3.500000"
+		"MovementSpeed"		"310"
 		"MovementTurnRate"		"0.500000"
 		"HealthBarOffset"		"300"
 		"particle_folder"		"particles/units/heroes/hero_obsidian_destroyer"
@@ -11547,14 +10955,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_obsidian_destroyer/obsidian_destroyer_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_attachment"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_obsidian_destroyer/obsidian_destroyer_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -11668,12 +11069,12 @@
 		"AttackRange"		"150"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_STRENGTH"
 		"AttributeBaseStrength"		"25"
-		"AttributeStrengthGain"		"3.3000"
+		"AttributeStrengthGain"		"3.8000"
 		"AttributeBaseAgility"		"16"
 		"AttributeAgilityGain"		"1.00000"
 		"AttributeBaseIntelligence"		"17"
 		"AttributeIntelligenceGain"		"1.40000"
-		"MovementSpeed"		"300"
+		"MovementSpeed"		"315"
 		"MovementTurnRate"		"0.500000"
 		"BoundsHullName"		"DOTA_HULL_SIZE_SMALL"
 		"particle_folder"		"particles/units/heroes/hero_lycan"
@@ -11683,19 +11084,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_lycan/lycan_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-					"1"
-					{
-						"type"		"follow_attachement"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_lycan/lycan_loadout.vpcf"		"loadout"
 			}
 		}
 		"precache"
@@ -11826,7 +11215,7 @@
 		"Ability4"		"generic_hidden"
 		"Ability5"		"generic_hidden"
 		"Ability6"		"brewmaster_primal_split"
-		"Ability10"		"special_bonus_attack_damage_20"
+		"Ability10"		"special_bonus_attack_damage_15"
 		"Ability11"		"special_bonus_hp_200"
 		"Ability12"		"special_bonus_unique_brewmaster_3"
 		"Ability13"		"special_bonus_magic_resistance_20"
@@ -11844,7 +11233,7 @@
 		"AttackRange"		"150"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_STRENGTH"
 		"AttributeBaseStrength"		"23"
-		"AttributeStrengthGain"		"3.200000"
+		"AttributeStrengthGain"		"3.700000"
 		"AttributeBaseAgility"		"22"
 		"AttributeAgilityGain"		"2.0000"
 		"AttributeBaseIntelligence"		"14"
@@ -11860,20 +11249,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_brewmaster/brewmaster_spawn.vpcf"
-				{
-					"spawn"		"1"
-					"0"
-					{
-						"type"		"follow_attachment"
-						"location"		"attach_keg"
-					}
-					"1"
-					{
-						"type"		"follow_attachment"
-						"location"		"attach_mouth"
-					}
-				}
+				"particles/units/heroes/hero_brewmaster/brewmaster_spawn.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -12011,8 +11387,8 @@
 		"AttributeBaseAgility"		"18"
 		"AttributeAgilityGain"		"2.200000"
 		"AttributeBaseIntelligence"		"21"
-		"AttributeIntelligenceGain"		"2.700000"
-		"MovementSpeed"		"295"
+		"AttributeIntelligenceGain"		"3.100000"
+		"MovementSpeed"		"290"
 		"MovementTurnRate"		"0.600000"
 		"BoundsHullName"		"DOTA_HULL_SIZE_HERO"
 		"particle_folder"		"particles/units/heroes/hero_shadow_demon"
@@ -12022,29 +11398,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_shadow_demon/shadow_demon_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_attachment"
-						"location"		"attach_attack1"
-					}
-					"1"
-					{
-						"type"		"follow_attachment"
-						"location"		"attach_attack2"
-					}
-					"2"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-					"3"
-					{
-						"type"		"follow_origin"
-						"position"		"3 3 3"
-					}
-				}
+				"particles/units/heroes/hero_shadow_demon/shadow_demon_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -12144,12 +11498,12 @@
 		"Ability6"		"lone_druid_true_form"
 		"Ability7"		"lone_druid_true_form_druid"
 		"Ability10"		"special_bonus_hp_250"
-		"Ability11"		"special_bonus_attack_range_150"
+		"Ability11"		"special_bonus_attack_range_125"
 		"Ability12"		"special_bonus_unique_lone_druid_4"
 		"Ability13"		"special_bonus_unique_lone_druid_2"
 		"Ability14"		"special_bonus_unique_lone_druid_8"
-		"Ability15"		"special_bonus_unique_lone_druid_10"
-		"Ability16"		"special_bonus_unique_lone_druid_9"
+		"Ability15"		"special_bonus_unique_lone_druid_9"
+		"Ability16"		"special_bonus_unique_lone_druid_10"
 		"Ability17"		"special_bonus_unique_lone_druid_7"
 		"AbilityDraftDisabled"		"1"
 		"ArmorPhysical"		"-2"
@@ -12166,11 +11520,11 @@
 		"AttributeBaseStrength"		"18"
 		"AttributeStrengthGain"		"2.400000"
 		"AttributeBaseAgility"		"20"
-		"AttributeAgilityGain"		"2.400000"
+		"AttributeAgilityGain"		"2.800000"
 		"AttributeBaseIntelligence"		"13"
 		"AttributeIntelligenceGain"		"1.400000"
 		"StatusHealthRegen"		"0.25"
-		"MovementSpeed"		"340"
+		"MovementSpeed"		"325"
 		"MovementTurnRate"		"0.500000"
 		"particle_folder"		"particles/units/heroes/hero_lone_druid"
 		"GameSoundsFile"		"soundevents/game_sounds_heroes/game_sounds_lone_druid.vsndevts"
@@ -12179,14 +11533,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_lone_druid/lone_druid_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_lone_druid/lone_druid_loadout.vpcf"		"loadout"
 			}
 		}
 		"precache"
@@ -12329,7 +11676,7 @@
 		"AttackRange"		"150"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_STRENGTH"
 		"AttributeBaseStrength"		"22"
-		"AttributeStrengthGain"		"3.200000"
+		"AttributeStrengthGain"		"3.700000"
 		"AttributeBaseAgility"		"14"
 		"AttributeAgilityGain"		"2.100000"
 		"AttributeBaseIntelligence"		"18"
@@ -12449,12 +11796,12 @@
 		"AttributeBaseStrength"		"24"
 		"AttributeStrengthGain"		"1.600000"
 		"AttributeBaseAgility"		"23"
-		"AttributeAgilityGain"		"1.400000"
+		"AttributeAgilityGain"		"1.600000"
 		"AttributeBaseIntelligence"		"20"
 		"AttributeIntelligenceGain"		"1.600000"
 		"StatusHealthRegen"		"0.25"
 		"VisionDaytimeRange"		"1800"
-		"MovementSpeed"		"320"
+		"MovementSpeed"		"330"
 		"MovementTurnRate"		"0.650000"
 		"particle_folder"		"particles/units/heroes/hero_meepo"
 		"GameSoundsFile"		"soundevents/game_sounds_heroes/game_sounds_meepo.vsndevts"
@@ -12463,14 +11810,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_meepo/meepo_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_meepo/meepo_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -12603,7 +11943,7 @@
 		"AttackRange"		"150"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_STRENGTH"
 		"AttributeBaseStrength"		"25"
-		"AttributeStrengthGain"		"3.600000"
+		"AttributeStrengthGain"		"4.100000"
 		"AttributeBaseAgility"		"15"
 		"AttributeAgilityGain"		"2.000000"
 		"AttributeBaseIntelligence"		"20"
@@ -12618,14 +11958,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_treant/treant_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_treant/treant_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -12745,7 +12078,7 @@
 		"AttributeBaseAgility"		"14"
 		"AttributeAgilityGain"		"1.60000"
 		"AttributeBaseIntelligence"		"15"
-		"AttributeIntelligenceGain"		"2.000000"
+		"AttributeIntelligenceGain"		"2.300000"
 		"StatusHealthRegen"		"3.25"
 		"MovementSpeed"		"290"
 		"MovementTurnRate"		"0.600000"
@@ -12756,14 +12089,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_ogre_magi/ogre_magi_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_ogre_magi/ogre_magi_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -12867,10 +12193,10 @@
 		"Ability5"		"generic_hidden"
 		"Ability6"		"undying_flesh_golem"
 		"Ability10"		"special_bonus_cast_range_150"
-		"Ability11"		"special_bonus_hp_regen_10"
-		"Ability12"		"special_bonus_unique_undying_3"
+		"Ability11"		"special_bonus_hp_regen_8"
+		"Ability12"		"special_bonus_unique_undying"
 		"Ability13"		"special_bonus_unique_undying_4"
-		"Ability14"		"special_bonus_unique_undying"
+		"Ability14"		"special_bonus_unique_undying_3"
 		"Ability15"		"special_bonus_unique_undying_5"
 		"Ability16"		"special_bonus_reincarnation_250"
 		"Ability17"		"special_bonus_unique_undying_2"
@@ -12884,7 +12210,7 @@
 		"AttackRange"		"150"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_STRENGTH"
 		"AttributeBaseStrength"		"22"
-		"AttributeStrengthGain"		"2.400000"
+		"AttributeStrengthGain"		"2.800000"
 		"AttributeBaseAgility"		"10"
 		"AttributeAgilityGain"		"0.800000"
 		"AttributeBaseIntelligence"		"27"
@@ -12898,14 +12224,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_undying/undying_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_undying/undying_loadout.vpcf"		"loadout"
 			}
 		}
 		"precache"
@@ -13037,6 +12356,11 @@
 		"AttackDamageMax"		"32"
 		"AttackRate"		"1.700000"
 		"AttackAnimationPoint"		"0.400000"
+		"AttackSpeedActivityModifiers"
+		{
+			"fast"		"200"
+			"faster"	"350"
+		}
 		"AttackAcquisitionRange"		"800"
 		"AttackRange"		"550"
 		"ProjectileModel"		"particles/units/heroes/hero_rubick/rubick_base_attack.vpcf"
@@ -13047,7 +12371,7 @@
 		"AttributeBaseAgility"		"19"
 		"AttributeAgilityGain"		"2.100000"
 		"AttributeBaseIntelligence"		"25"
-		"AttributeIntelligenceGain"		"2.700000"
+		"AttributeIntelligenceGain"		"3.100000"
 		"MovementSpeed"		"290"
 		"MovementTurnRate"		"0.700000"
 		"particle_folder"		"particles/units/heroes/hero_rubick"
@@ -13057,24 +12381,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_rubick/rubick_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"position"		"100 100 800"
-					}
-					"1"
-					{
-						"type"		"follow_attachment"
-						"location"		"attach_attack1"
-					}
-					"2"
-					{
-						"type"		"follow_origin"
-						"position"		"400 0 0"
-					}
-				}
+				"particles/units/heroes/hero_rubick/rubick_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -13108,6 +12415,7 @@
 				"TextureHeight"		"256"
 				"MaxPolygonsLOD0"		"1300"
 				"MaxPolygonsLOD1"		"950"
+				"CanBeUsedAsGeneratingSlot"	"1"
 			}
 			"3"
 			{
@@ -13187,8 +12495,8 @@
 		"AttributeBaseAgility"		"15"
 		"AttributeAgilityGain"		"1.400000"
 		"AttributeBaseIntelligence"		"20"
-		"AttributeIntelligenceGain"		"2.500000"
-		"MovementSpeed"		"300"
+		"AttributeIntelligenceGain"		"2.900000"
+		"MovementSpeed"		"295"
 		"MovementTurnRate"		"0.500000"
 		"particle_folder"		"particles/units/heroes/hero_disruptor"
 		"GameSoundsFile"		"soundevents/game_sounds_heroes/game_sounds_disruptor.vsndevts"
@@ -13197,14 +12505,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_disruptor/disruptor_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_disruptor/disruptor_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -13315,8 +12616,8 @@
 		"Ability5"		"generic_hidden"
 		"Ability6"		"nyx_assassin_vendetta"
 		"Ability7"		"nyx_assassin_unburrow"
-		"Ability10"		"special_bonus_spell_amplify_6"
-		"Ability11"		"special_bonus_gold_income_10"
+		"Ability10"		"special_bonus_spell_amplify_8"
+		"Ability11"		"special_bonus_gold_income_15"
 		"Ability12"		"special_bonus_hp_325"
 		"Ability13"		"special_bonus_movement_speed_30"
 		"Ability14"		"special_bonus_unique_nyx"
@@ -13347,13 +12648,13 @@
 		"AttackRange"		"150"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_AGILITY"
 		"AttributeBaseStrength"		"19"
-		"AttributeStrengthGain"		"2.300000"
+		"AttributeStrengthGain"		"2.500000"
 		"AttributeBaseAgility"		"19"
-		"AttributeAgilityGain"		"2.200000"
+		"AttributeAgilityGain"		"2.500000"
 		"AttributeBaseIntelligence"		"18"
 		"AttributeIntelligenceGain"		"2.100000"
 		"StatusHealthRegen"		"3.25"
-		"MovementSpeed"		"300"
+		"MovementSpeed"		"305"
 		"MovementTurnRate"		"0.500000"
 		"particle_folder"		"particles/units/heroes/hero_nyx_assassin"
 		"GameSoundsFile"		"soundevents/game_sounds_heroes/game_sounds_nyx_assassin.vsndevts"
@@ -13366,14 +12667,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_nyx_assassin/nyx_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_nyx_assassin/nyx_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -13479,10 +12773,10 @@
 		"AttributeBaseStrength"		"22"
 		"AttributeStrengthGain"		"2.800000"
 		"AttributeBaseAgility"		"21"
-		"AttributeAgilityGain"		"3.200"
+		"AttributeAgilityGain"		"3.700"
 		"AttributeBaseIntelligence"		"21"
 		"AttributeIntelligenceGain"		"2.0000"
-		"MovementSpeed"		"315"
+		"MovementSpeed"		"320"
 		"MovementTurnRate"		"0.500000"
 		"StatusHealthRegen"		"1.5"
 		"BoundsHullName"		"DOTA_HULL_SIZE_SMALL"
@@ -13493,24 +12787,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_siren/naga_siren_riptide.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-					"1"
-					{
-						"type"		"follow_origin"
-						"position"		"320 320 320"
-					}
-					"3"
-					{
-						"type"		"follow_origin"
-						"position"		"1 1 1"
-					}
-				}
+				"particles/units/heroes/hero_siren/naga_siren_riptide.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -13610,9 +12887,9 @@
 		"Ability5"		"generic_hidden"
 		"Ability6"		"keeper_of_the_light_will_o_wisp"
 		"Ability7"		"keeper_of_the_light_illuminate_end"
-		"Ability10"		"special_bonus_spell_lifesteal_8"
+		"Ability10"		"special_bonus_exp_boost_30"
 		"Ability11"		"special_bonus_movement_speed_25"
-		"Ability12"		"special_bonus_exp_boost_40"
+		"Ability12"		"special_bonus_unique_keeper_of_the_light_4"
 		"Ability13"		"special_bonus_cast_range_350"
 		"Ability14"		"special_bonus_magic_resistance_40"
 		"Ability15"		"special_bonus_unique_keeper_of_the_light_2"
@@ -13642,8 +12919,8 @@
 		"AttributeBaseAgility"		"15"
 		"AttributeAgilityGain"		"1.600000"
 		"AttributeBaseIntelligence"		"23"
-		"AttributeIntelligenceGain"		"2.800000"
-		"MovementSpeed"		"335"
+		"AttributeIntelligenceGain"		"3.200000"
+		"MovementSpeed"		"330"
 		"MovementTurnRate"		"0.500000"
 		"particle_folder"		"particles/units/heroes/hero_keeper_of_the_light"
 		"GameSoundsFile"		"soundevents/game_sounds_heroes/game_sounds_keeper_of_the_light.vsndevts"
@@ -13652,14 +12929,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_keeper_of_the_light/keeper_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_keeper_of_the_light/keeper_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -13735,7 +13005,7 @@
 		"workshop_guide_name"		"Io"
 		"PickSound"		"wisp_move03"
 		"BanSound"		"wisp_shitty_crummy_wizard"
-		"CMEnabled"		"1"
+		"CMEnabled"		"0"
 		"NameAliases"		"wisp"
 		"NoCombine"		"1"
 		"Legs"	"0"
@@ -13761,7 +13031,7 @@
 		"Ability16"		"special_bonus_unique_wisp_6"
 		"Ability17"		"special_bonus_unique_wisp_4"
 		"AbilityDraftIgnoreCount" "7"
-		"ArmorPhysical"		"-2.000000"
+		"ArmorPhysical"		"-2"
 		"AttackCapabilities"		"DOTA_UNIT_CAP_RANGED_ATTACK"
 		"AttackDamageMin"		"22"
 		"AttackDamageMax"		"31"
@@ -13773,7 +13043,7 @@
 		"ProjectileSpeed"		"1200"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_STRENGTH"
 		"AttributeBaseStrength"		"17"
-		"AttributeStrengthGain"		"2.200000"
+		"AttributeStrengthGain"		"2.500000"
 		"AttributeBaseAgility"		"14"
 		"AttributeAgilityGain"		"1.600000"
 		"AttributeBaseIntelligence"		"23"
@@ -13848,7 +13118,7 @@
 		"Ability4"		"visage_stone_form_self_cast"
 		"Ability5"		"generic_hidden"
 		"Ability6"		"visage_summon_familiars"
-		"Ability10"		"special_bonus_cast_range_125"
+		"Ability10"		"special_bonus_cast_range_100"
 		"Ability11"		"special_bonus_attack_damage_30"
 		"Ability12"		"special_bonus_exp_boost_40"
 		"Ability13"		"special_bonus_unique_visage_3"
@@ -13873,7 +13143,7 @@
 		"AttributeBaseAgility"		"11"
 		"AttributeAgilityGain"		"1.300000"
 		"AttributeBaseIntelligence"		"22"
-		"AttributeIntelligenceGain"		"2.500000"
+		"AttributeIntelligenceGain"		"2.900000"
 		"MovementSpeed"		"285"
 		"MovementTurnRate"		"0.500000"
 		"particle_folder"		"particles/units/heroes/hero_visage"
@@ -13887,14 +13157,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_visage/visage_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_attachment"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_visage/visage_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -14005,7 +13268,7 @@
 		"AttributeBaseIntelligence"		"16"
 		"AttributeIntelligenceGain"		"1.700000"
 		"AttributeBaseAgility"		"21"
-		"AttributeAgilityGain"		"1.500000"
+		"AttributeAgilityGain"		"1.700000"
 		"VisionDaytimeRange"		"1800"
 		"VisionNighttimeRange"		"1800"
 		"StatusHealthRegen"		"1.75"
@@ -14019,14 +13282,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_slark/slark_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_attachment"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_slark/slark_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -14138,13 +13394,13 @@
 		"Ability4"		"generic_hidden"
 		"Ability5"		"generic_hidden"
 		"Ability6"		"medusa_stone_gaze"
-		"Ability10"		"special_bonus_attack_damage_20"
+		"Ability10"		"special_bonus_attack_damage_15"
 		"Ability11"		"special_bonus_evasion_15"
 		"Ability12"		"special_bonus_attack_speed_30"
 		"Ability13"		"special_bonus_unique_medusa_3"
-		"Ability14"		"special_bonus_mp_700"
+		"Ability14"		"special_bonus_unique_medusa_5"
 		"Ability15"		"special_bonus_unique_medusa"
-		"Ability16"		"special_bonus_unique_medusa_2"
+		"Ability16"		"special_bonus_mp_1000"
 		"Ability17"		"special_bonus_unique_medusa_4"
 		"ArmorPhysical"		"-1"
 		"AttackCapabilities"		"DOTA_UNIT_CAP_RANGED_ATTACK"
@@ -14162,7 +13418,7 @@
 		"AttributeBaseIntelligence"		"19"
 		"AttributeIntelligenceGain"		"2.1000"
 		"AttributeBaseAgility"		"22"
-		"AttributeAgilityGain"		"3.400000"
+		"AttributeAgilityGain"		"3.900000"
 		"VisionDaytimeRange"		"1800"
 		"MovementSpeed"		"275"
 		"MovementTurnRate"		"0.500000"
@@ -14175,14 +13431,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_medusa/medusa_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_medusa/medusa_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -14287,7 +13536,7 @@
 		"Ability11"		"special_bonus_hp_250"
 		"Ability12"		"special_bonus_unique_troll_warlord_2"
 		"Ability13"		"special_bonus_unique_troll_warlord_3"
-		"Ability14"		"special_bonus_evasion_20"
+		"Ability14"		"special_bonus_evasion_25"
 		"Ability15"		"special_bonus_attack_damage_50"
 		"Ability16"		"special_bonus_unique_troll_warlord"
 		"Ability17"		"special_bonus_unique_troll_warlord_4"
@@ -14321,10 +13570,10 @@
 		"AttributeBaseIntelligence"		"13"
 		"AttributeIntelligenceGain"		"1.000000"
 		"AttributeBaseAgility"		"21"
-		"AttributeAgilityGain"		"2.50000"
+		"AttributeAgilityGain"		"2.90000"
 		"StatusHealthRegen"		"0.25"
 		"VisionDaytimeRange"		"1800"
-		"MovementSpeed"		"295"
+		"MovementSpeed"		"290"
 		"MovementTurnRate"		"0.500000"
 		"MovementSpeedActivityModifiers"
 		{
@@ -14341,14 +13590,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_troll_warlord/troll_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_troll_warlord/troll_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -14452,7 +13694,7 @@
 		"AttackRange"		"150"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_STRENGTH"
 		"AttributeBaseStrength"		"27"
-		"AttributeStrengthGain"		"4.00000"
+		"AttributeStrengthGain"		"4.60000"
 		"AttributeBaseIntelligence"		"15"
 		"AttributeIntelligenceGain"		"1.600000"
 		"AttributeBaseAgility"		"15"
@@ -14469,14 +13711,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_centaur/centaur_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_centaur/centaur_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -14618,7 +13853,7 @@
 		"AttackRange"		"150"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_STRENGTH"
 		"AttributeBaseStrength"		"23"
-		"AttributeStrengthGain"		"3.20000"
+		"AttributeStrengthGain"		"3.70000"
 		"AttributeBaseIntelligence"		"19"
 		"AttributeIntelligenceGain"		"1.70000"
 		"AttributeBaseAgility"		"15"
@@ -14636,19 +13871,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_magnataur/magnus_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-					"1"
-					{
-						"type"		"follow_attachment"
-						"location"		"attach_horn"
-					}
-				}
+				"particles/units/heroes/hero_magnataur/magnus_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -14747,7 +13970,7 @@
 		"Ability12"		"special_bonus_attack_damage_100"
 		"Ability13"		"special_bonus_unique_timbersaw_2"
 		"Ability14"		"special_bonus_strength_15"
-		"Ability15"		"special_bonus_cooldown_reduction_10"
+		"Ability15"		"special_bonus_cooldown_reduction_15"
 		"Ability16"		"special_bonus_unique_timbersaw"
 		"Ability17"		"special_bonus_unique_timbersaw_3"
 		"AbilityDraftIgnoreCount" "8"
@@ -14768,7 +13991,7 @@
 		"AttackRange"		"150"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_STRENGTH"
 		"AttributeBaseStrength"		"21"
-		"AttributeStrengthGain"		"2.40000"
+		"AttributeStrengthGain"		"2.80000"
 		"AttributeBaseAgility"		"16"
 		"AttributeAgilityGain"		"1.300000"
 		"AttributeBaseIntelligence"		"21"
@@ -14782,14 +14005,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_shredder/shredder_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_shredder/shredder_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -14925,7 +14141,7 @@
 		"AttackRange"		"150"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_STRENGTH"
 		"AttributeBaseStrength"		"22"
-		"AttributeStrengthGain"		"2.200000"
+		"AttributeStrengthGain"		"2.900000"
 		"AttributeBaseAgility"		"17"
 		"AttributeAgilityGain"		"1.800000"
 		"AttributeBaseIntelligence"		"14"
@@ -14939,19 +14155,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_bristleback/bristleback_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_attachment"
-						"location"		"attach_attack3"
-					}
-					"1"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_bristleback/bristleback_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -15088,7 +14292,7 @@
 		"AttackRange"		"150"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_STRENGTH"
 		"AttributeBaseStrength"		"23"
-		"AttributeStrengthGain"		"3.400"
+		"AttributeStrengthGain"		"3.900"
 		"AttributeBaseAgility"		"23"
 		"AttributeAgilityGain"		"2.100000"
 		"AttributeBaseIntelligence"		"18"
@@ -15102,14 +14306,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_tusk/tusk_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_tusk/tusk_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -15262,8 +14459,8 @@
 		"AttributeBaseAgility"		"13"
 		"AttributeAgilityGain"		"0.800000"
 		"AttributeBaseIntelligence"		"25"
-		"AttributeIntelligenceGain"		"3.600000"
-		"MovementSpeed"		"330"
+		"AttributeIntelligenceGain"		"4.100000"
+		"MovementSpeed"		"325"
 		"MovementTurnRate"		"0.500000"
 		"HasAggressiveStance"		"1"
 		"BoundsHullName"		"DOTA_HULL_SIZE_HERO"
@@ -15275,14 +14472,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_skywrath_mage/skywrath_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_skywrath_mage/skywrath_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -15404,7 +14594,7 @@
 		"AttackRange"		"150"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_STRENGTH"
 		"AttributeBaseStrength"		"23"
-		"AttributeStrengthGain"		"2.600000"
+		"AttributeStrengthGain"		"3.000000"
 		"AttributeBaseAgility"		"23"
 		"AttributeAgilityGain"		"1.500000"
 		"AttributeBaseIntelligence"		"21"
@@ -15522,7 +14712,7 @@
 		"Ability5"		"generic_hidden"
 		"Ability6"		"elder_titan_earth_splitter"
 		"Ability7"		"elder_titan_return_spirit"
-		"Ability10"		"special_bonus_movement_speed_25"
+		"Ability10"		"special_bonus_movement_speed_20"
 		"Ability11"		"special_bonus_hp_200"
 		"Ability12"		"special_bonus_magic_resistance_15"
 		"Ability13"		"special_bonus_unique_elder_titan"
@@ -15547,7 +14737,7 @@
 		"AttackRange"		"150"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_STRENGTH"
 		"AttributeBaseStrength"		"24"
-		"AttributeStrengthGain"		"2.600000"
+		"AttributeStrengthGain"		"3.000000"
 		"AttributeBaseAgility"		"14"
 		"AttributeAgilityGain"		"1.800000"
 		"AttributeBaseIntelligence"		"23"
@@ -15561,14 +14751,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_elder_titan/elder_titan_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_elder_titan/elder_titan_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -15670,10 +14853,10 @@
 		"Ability11"		"special_bonus_exp_boost_25"
 		"Ability12"		"special_bonus_attack_speed_30"
 		"Ability13"		"special_bonus_unique_legion_commander_4"
-		"Ability14"		"special_bonus_movement_speed_40"
+		"Ability14"		"special_bonus_movement_speed_35"
 		"Ability15"		"special_bonus_unique_legion_commander_3"
 		"Ability16"		"special_bonus_unique_legion_commander"
-		"Ability17"		"special_bonus_unique_legion_commander_2"
+		"Ability17"		"special_bonus_unique_legion_commander_5"
 		"ArmorPhysical"		"-1.000000"
 		"AttackCapabilities"		"DOTA_UNIT_CAP_MELEE_ATTACK"
 		"AttackDamageMin"		"35"
@@ -15684,12 +14867,12 @@
 		"AttackRange"		"150"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_STRENGTH"
 		"AttributeBaseStrength"		"26"
-		"AttributeStrengthGain"		"2.900000"
+		"AttributeStrengthGain"		"3.300000"
 		"AttributeBaseAgility"		"18"
 		"AttributeAgilityGain"		"1.700000"
 		"AttributeBaseIntelligence"		"20"
 		"AttributeIntelligenceGain"		"2.200000"
-		"MovementSpeed"		"315"
+		"MovementSpeed"		"330"
 		"MovementTurnRate"		"0.500000"
 		"particle_folder"		"particles/units/heroes/hero_legion_commander"
 		"GameSoundsFile"		"soundevents/game_sounds_heroes/game_sounds_legion_commander.vsndevts"
@@ -15698,14 +14881,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_legion_commander/legion_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_legion_commander/legion_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -15835,17 +15011,17 @@
 		"Ability17"		"special_bonus_unique_ember_spirit_5"
 		"ArmorPhysical"		"0.000000"
 		"AttackCapabilities"		"DOTA_UNIT_CAP_MELEE_ATTACK"
-		"AttackDamageMin"		"30"
-		"AttackDamageMax"		"34"
+		"AttackDamageMin"		"33"
+		"AttackDamageMax"		"37"
 		"AttackRate"		"1.700000"
 		"AttackAnimationPoint"		"0.400000"
 		"AttackAcquisitionRange"		"600"
 		"AttackRange"		"150"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_AGILITY"
-		"AttributeBaseStrength"		"20"
-		"AttributeStrengthGain"		"2.400000"
+		"AttributeBaseStrength"		"21"
+		"AttributeStrengthGain"		"2.600000"
 		"AttributeBaseAgility"		"22"
-		"AttributeAgilityGain"		"1.800000"
+		"AttributeAgilityGain"		"2.100000"
 		"AttributeBaseIntelligence"		"20"
 		"AttributeIntelligenceGain"		"1.800000"
 		"MovementSpeed"		"305"
@@ -15858,14 +15034,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_ember_spirit/ember_spirit_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_ember_spirit/ember_spirit_loadout.vpcf"		"loadout"
 			}
 		}
 		"animation_transitions"
@@ -16000,7 +15169,7 @@
 		"AttackRange"		"150"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_STRENGTH"
 		"AttributeBaseStrength"		"21"
-		"AttributeStrengthGain"		"3.800000"
+		"AttributeStrengthGain"		"4.400000"
 		"AttributeBaseAgility"		"17"
 		"AttributeAgilityGain"		"1.500000"
 		"AttributeBaseIntelligence"		"18"
@@ -16015,14 +15184,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_earth_spirit/earth_spirit_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_earth_spirit/earth_spirit_loadout.vpcf"		"loadout"
 			}
 		}
 		"VisionDaytimeRange"		"1800"
@@ -16173,12 +15335,12 @@
 		"AttackRange"		"150"
 		"ProjectileSpeed"		"900"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_AGILITY"
-		"AttributeBaseStrength"		"16"
-		"AttributeStrengthGain"		"1.700000"
+		"AttributeBaseStrength"		"15"
+		"AttributeStrengthGain"		"1.500000"
 		"AttributeBaseIntelligence"		"19"
 		"AttributeIntelligenceGain"		"1.60000"
 		"AttributeBaseAgility"		"22"
-		"AttributeAgilityGain"		"4.200000"
+		"AttributeAgilityGain"		"4.800000"
 		"MovementSpeed"		"310"
 		"MovementTurnRate"		"0.500000"
 		"BoundsHullName"		"DOTA_HULL_SIZE_HERO"
@@ -16194,14 +15356,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_terrorblade/terrorblade_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_terrorblade/terrorblade_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -16335,7 +15490,7 @@
 		"ProjectileSpeed"		"1100"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_STRENGTH"
 		"AttributeBaseStrength"		"19"
-		"AttributeStrengthGain"		"3.200000"
+		"AttributeStrengthGain"		"3.700000"
 		"AttributeBaseIntelligence"		"18"
 		"AttributeIntelligenceGain"		"1.800000"
 		"AttributeBaseAgility"		"12"
@@ -16466,10 +15621,10 @@
 		"AttributeBaseStrength"		"20"
 		"AttributeStrengthGain"		"2.400000"
 		"AttributeBaseIntelligence"		"21"
-		"AttributeIntelligenceGain"		"3.500000"
+		"AttributeIntelligenceGain"		"4.000000"
 		"AttributeBaseAgility"		"15"
 		"AttributeAgilityGain"		"1.700000"
-		"MovementSpeed"		"305"
+		"MovementSpeed"		"300"
 		"MovementTurnRate"		"0.700000"
 		"BoundsHullName"		"DOTA_HULL_SIZE_HERO"
 		"particle_folder"		"particles/units/heroes/hero_oracle"
@@ -16479,19 +15634,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_oracle/oracle_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_attachment"
-						"location"		"attach_attack1"
-					}
-					"1"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_oracle/oracle_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -16611,7 +15754,7 @@
 		"AttributeBaseStrength"		"19"
 		"AttributeStrengthGain"		"2.500000"
 		"AttributeBaseIntelligence"		"22"
-		"AttributeIntelligenceGain"		"2.900000"
+		"AttributeIntelligenceGain"		"3.300000"
 		"AttributeBaseAgility"		"14"
 		"AttributeAgilityGain"		"1.300000"
 		"BoundsHullName"		"DOTA_HULL_SIZE_HERO"
@@ -16621,19 +15764,11 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_techies/techies_loadout.vpcf"
-				{
-					"spawn"		"1"
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_remote"
-					}
-				}
+				"particles/units/heroes/hero_techies/techies_loadout.vpcf"		"loadout"
 			}
 		}
 		"MovementCapabilities"		"DOTA_UNIT_CAP_MOVE_GROUND"
-		"MovementSpeed"		"315"
+		"MovementSpeed"		"310"
 		"MovementTurnRate"		"0.500000"
 		"HasAggressiveStance"		"0"
 		"particle_folder"		"particles/units/heroes/hero_techies"
@@ -16864,7 +15999,7 @@
 		"AttributeBaseStrength"		"26"
 		"AttributeStrengthGain"		"2.600000"
 		"AttributeBaseIntelligence"		"26"
-		"AttributeIntelligenceGain"		"3.100000"
+		"AttributeIntelligenceGain"		"3.600000"
 		"AttributeBaseAgility"		"16"
 		"AttributeAgilityGain"		"1.900000"
 		"BoundsHullName"		"DOTA_HULL_SIZE_HERO"
@@ -16873,19 +16008,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_winter_wyvern/wyvern_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_attachment"
-						"location"		"attach_attack1"
-					}
-					"1"
-					{
-						"type"		"follow_origin"
-						"location"		"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_winter_wyvern/wyvern_loadout.vpcf"		"loadout"
 			}
 		}
 		"MovementCapabilities"		"DOTA_UNIT_CAP_MOVE_GROUND"
@@ -16983,7 +16106,7 @@
 		"Ability5"		"generic_hidden"
 		"Ability6"		"arc_warden_tempest_double"
 		"Ability10"		"special_bonus_cooldown_reduction_8"
-		"Ability11"		"special_bonus_attack_speed_25"
+		"Ability11"		"special_bonus_attack_speed_30"
 		"Ability12"		"special_bonus_hp_300"
 		"Ability13"		"special_bonus_unique_arc_warden_5"
 		"Ability14"		"special_bonus_unique_arc_warden_3"
@@ -17031,7 +16154,7 @@
 		"AttributeBaseIntelligence"		"24"
 		"AttributeIntelligenceGain"		"2.6"
 		"AttributeBaseAgility"		"15"
-		"AttributeAgilityGain"		"1.8"
+		"AttributeAgilityGain"		"2.1"
 		"StatusHealthRegen"		"0.25"
 
 		// Movement
@@ -17052,14 +16175,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_arc_warden/arc_warden_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_attachment"
-						"location"		"attach_attack2"
-					}
-				}
+				"particles/units/heroes/hero_arc_warden/arc_warden_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -17178,12 +16294,12 @@
 		"AttackRange"		"150"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_STRENGTH"
 		"AttributeBaseStrength"		"25"
-		"AttributeStrengthGain"		"2.900000"
+		"AttributeStrengthGain"		"3.300000"
 		"AttributeBaseAgility"		"12"
 		"AttributeAgilityGain"		"1.300000"
 		"AttributeBaseIntelligence"		"17"
 		"AttributeIntelligenceGain"		"2.300000"
-		"MovementSpeed"		"290"
+		"MovementSpeed"		"295"
 		"MovementTurnRate"		"0.600000"
 		"MovementSpeedActivityModifiers"
 		{
@@ -17317,9 +16433,9 @@
 		"AttributeBaseIntelligence"		"20"
 		"AttributeIntelligenceGain"		"1.8"
 		"AttributeBaseAgility"	"22"
-		"AttributeAgilityGain"	"3.200000"
+		"AttributeAgilityGain"	"3.700000"
 		"StatusHealthRegen"		"1.5"
-		"MovementSpeed"			"300"
+		"MovementSpeed"			"305"
 		"MovementTurnRate"		"0.600000"
 		"MovementSpeedActivityModifiers"
 		{
@@ -17418,7 +16534,7 @@
 		"Ability6"					"pangolier_gyroshell"
 		"Ability7"					"pangolier_gyroshell_stop"
 		"Ability10"					"special_bonus_mp_regen_3"
-		"Ability11"					"special_bonus_movement_speed_20"
+		"Ability11"					"special_bonus_unique_pangolier_7"
 		"Ability12"					"special_bonus_unique_pangolier_2"
 		"Ability13"					"special_bonus_unique_pangolier_6"
 		"Ability14"					"special_bonus_unique_pangolier_3"
@@ -17428,8 +16544,8 @@
 		"AbilityDraftIgnoreCount"	"7"
 		"ArmorPhysical"				"1"
 		"AttackCapabilities"		"DOTA_UNIT_CAP_MELEE_ATTACK"
-		"AttackDamageMin"			"29"
-		"AttackDamageMax"			"35"
+		"AttackDamageMin"			"33"
+		"AttackDamageMax"			"39"
 		"AttackRate"				"1.700000"
 		"AttackAnimationPoint"		"0.330000"
 		"AttackSpeedActivityModifiers"
@@ -17444,7 +16560,7 @@
 		"AttributeBaseStrength"		"17"
 		"AttributeStrengthGain"		"2.50000"
 		"AttributeBaseAgility"		"18"
-		"AttributeAgilityGain"		"2.80000"
+		"AttributeAgilityGain"		"3.20000"
 		"AttributeBaseIntelligence"	"16"
 		"AttributeIntelligenceGain"	"1.900000"
 		"StatusHealthRegen"		"0.25"
@@ -17471,19 +16587,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_pangolier/pangolier_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_origin"
-						"location"	"attach_hitloc"
-					}
-					"1"
-					{
-						"type"		"follow_attachment"
-						"location"	"attach_hitloc"
-					}
-				}
+				"particles/units/heroes/hero_pangolier/pangolier_loadout.vpcf"		"loadout"
 			}
 		}
 		"ItemSlots"
@@ -17608,10 +16712,10 @@
 		"AttributeBaseStrength"		"20"
 		"AttributeStrengthGain"		"2.00000"
 		"AttributeBaseIntelligence"		"18"
-		"AttributeIntelligenceGain"		"3.000000"
+		"AttributeIntelligenceGain"		"3.500000"
 		"AttributeBaseAgility"		"18"
 		"AttributeAgilityGain"		"1.600000"
-		"MovementSpeed"		"295"
+		"MovementSpeed"		"290"
 		"MovementTurnRate"		"0.700000"
 		"MovementSpeedActivityModifiers"
 		{
@@ -17634,19 +16738,7 @@
 		{
 			"Particles"
 			{
-				"particles/units/heroes/hero_dark_willow/dark_willow_loadout.vpcf"
-				{
-					"0"
-					{
-						"type"		"follow_attachment"
-						"location"		"attach_hitloc"
-					}
-					"1"
-					{
-						"type"		"follow_origin"
-						"position"		"200 200 200"
-					}
-				}
+				"particles/units/heroes/hero_dark_willow/dark_willow_loadout.vpcf"		"loadout"
 			}
 		}
 		"AbilityPreview"
@@ -17792,8 +16884,8 @@
 		"AttributeBaseAgility"		"18"
 		"AttributeAgilityGain"		"1.900000"
 		"AttributeBaseIntelligence"	"23"
-		"AttributeIntelligenceGain"	"3.300000"
-		"MovementSpeed"				"295"
+		"AttributeIntelligenceGain"	"3.800000"
+		"MovementSpeed"				"290"
 		"MovementTurnRate"			"0.600000"
 		"BoundsHullName"			"DOTA_HULL_SIZE_HERO"
 		"particle_folder"			"particles/units/heroes/hero_grimstroke"

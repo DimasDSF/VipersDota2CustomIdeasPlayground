@@ -18,6 +18,10 @@
 				"item_magic_stick"		"ITEM_EXTENSION"
 				"item_recipe_magic_wand"		"ITEM_EXTENSION"
 				"item_magic_wand"		"ITEM_DERIVED | ITEM_SELLABLE"
+				
+				"item_gloves"		"ITEM_EXTENSION"
+				"item_boots_of_elves"		"ITEM_EXTENSION"
+				"item_power_treads"		"ITEM_DERIVED"
 
 				"item_ogre_axe"			"ITEM_CORE"
 				"item_quarterstaff"		"ITEM_CORE"
