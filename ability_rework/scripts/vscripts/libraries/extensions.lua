@@ -159,7 +159,7 @@ function Extensions:IsEntityVisibleToTeam(entity, team)
 		end
 	end
 	if type(team) ~= "number" or (team ~= 2 and team ~= 3) then
-		LogLib:Log_Error("Error: Invalid team: "..team, 0, "Extensions:VisibleToTeam()::")
+		LogLib:Log_Error("Error: Invalid team: "..tostring(team), 0, "Extensions:VisibleToTeam()::")
 		return nil
 	else
 		local unitcheck = FindUnitsInRadius(team, entity:GetAbsOrigin(), nil, 200, DOTA_UNIT_TARGET_TEAM_BOTH, DOTA_UNIT_TARGET_HERO + DOTA_UNIT_TARGET_BASIC + DOTA_UNIT_TARGET_OTHER, DOTA_UNIT_TARGET_FLAG_MAGIC_IMMUNE_ENEMIES + DOTA_UNIT_TARGET_FLAG_FOW_VISIBLE + DOTA_UNIT_TARGET_FLAG_INVULNERABLE, FIND_CLOSEST, false)
