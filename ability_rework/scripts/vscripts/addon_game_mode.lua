@@ -24,26 +24,29 @@ local debugitems = {
 	["item_shivas_guard"] = 0,
 	["item_assault"] = 0,
 	["item_sheepstick"] = 0,
-	["item_ogre_axe"] = 2,
+	["item_ogre_axe"] = 0,
 	["item_travel_boots_2"] = 1,
 	["item_diffusal_blade"] = 1,
-	["item_octarine_core"] = 3,
+	["item_octarine_core"] = 0,
 	["item_kaya"] = 0,
 	["item_aether_lens"] = 0,
-	["item_ultimate_scepter"] = 2,
+	["item_ultimate_scepter"] = 1,
 	["item_mystic_staff"] = 0,
 	["item_energy_booster"] = 0,
-	["item_soul_booster"] = 2,
-	["item_butterfly"] = 1,
-	["item_eagle"] = 1,
-	["item_orb_of_venom"] = 2,
-	["item_silver_edge"] = 1,
+	["item_soul_booster"] = 0,
+	["item_butterfly"] = 0,
+	["item_bfury"] = 0,
+	["item_eagle"] = 0,
+	["item_orb_of_venom"] = 0,
+	["item_silver_edge"] = 0,
 	["item_yasha"] = 0,
-	["item_dragon_lance"] = 0,
+	["item_dragon_lance"] = 4,
+	["item_demon_edge"] = 2,
 	["item_mask_of_madness"] = 0,
 	["item_gloves"] = 0,
-	["item_ethereal_blade"] = 1,
-	["item_tome_of_knowledge"] = 1
+	["item_ethereal_blade"] = 0,
+	["item_tome_of_knowledge"] = 3,
+	["item_blade_mail"] = 0,
 }
 
 --Creep -> Building Damage Multiplier
@@ -145,9 +148,10 @@ local botupgradetimings = {
 	travel1 = {30, 0},
 	aghs = {0, 0},
 	moonshard = {30, 0},
-	travel2 = {30, 0}
+	travel2 = {45, 0}
 }
 
+--Add Particles to the last resort modifier
 local modifierdatatable = {
 	["modifier_vgmar_i_manaregen_aura"] = {radius = 4000, bonusmanaself = 400, bonusmanaallies = 300, regenself = 4.5, regenallies = 2.5},
 	["modifier_vgmar_i_attackrange"] = {range = 140, bonusstr = 12, bonusagi = 12},
@@ -161,9 +165,10 @@ local modifierdatatable = {
 	["modifier_vgmar_i_pulse"] = {stackspercreep = 1, stacksperhero = 8, duration = 4, hpregenperstack = 1, manaregenperstack = 1.5, maxstacks = 20},
 	["modifier_vgmar_i_greatcleave"] = {cleaveperc = 100, cleavestartrad = 150, cleaveendrad = 360, cleaveradius = 700, bonusdamage = 75, manaregen = 3.0},
 	["modifier_vgmar_i_vampiric_aura"] = {radius = 700, lspercent = 20, lspercentranged = 15},
-	["modifier_vgmar_i_multishot"] = {basetargets = 1, mainattrpertarget = 50, bonusdamage = 60, bonusrange = 140},
+	["modifier_vgmar_i_multishot"] = {basetargets = 1, mainattrpertarget = 50, bonusdamage = 60, bonusrange = 140, startradius = 150, endradius = 750, modifierperc = 50},
 	["modifier_vgmar_i_midas_greed"] = {min_bonus_gold = 0, count_per_kill = 1, reduction_per_tick = 2, bonus_gold_cap = 40, stack_duration = 30, reduction_duration = 2.5, killsperstack = 3, midasusestacks = 2},
-	["modifier_vgmar_i_kingsaegis_cooldown"] = {cooldown = 240, reincarnate_time = 5},
+	--["modifier_vgmar_i_kingsaegis_cooldown"] = {cooldown = 240, reincarnate_time = 5},
+	["modifier_vgmar_i_consumed_aegis"] = {reincarnate_time = 5, aegisduration = 300, expireregendur = 10},
 	["modifier_vgmar_i_critical_mastery"] = {critdmgpercentage = 200, finishercritpercentage = 250, critchance = 20},
 	["modifier_vgmar_i_atrophy"] = {radius = 1000, dmgpercreep = 1, dmgperhero = 5, stack_duration = 240, stack_duration_scepter = -1, max_stacks = 1000, initial_stacks = 0},
 	["modifier_vgmar_i_deathskiss"] = {critdmgpercentage = 20000, critchance = 1.0},
@@ -176,7 +181,9 @@ local modifierdatatable = {
 	["modifier_vgmar_i_permafrost"] = {radius = 600, interval = 1.0, attackspeedperstack = -5, movespeedperstack = -5, bonusarmor = 25, bonusint = 60, maxstacks = 20, freezedmg = 150, lingerduration = 3},
 	["modifier_vgmar_i_manashield"] = {minmana = 0.5, lowmana = 0.55, maxtotalmana = 6000, mindmgfraction = 30, maxdmgfraction = 90, stunradius = 600, stunduration = 3, stundamage = 200, rechargetime = 60, bonusarmor = 15, bonusint = 20},
 	["modifier_vgmar_b_fountain_anticamp"] = {radius = 2000, interval = 1.0, strpertick = 4, intpertick = 2, agipertick = 2, disablepassivestick = 20, silencetick = 40, blindnessendtick = 60, blindnessrange = 200, lingerduration = 30.0},
-	["modifier_vgmar_anticreep_protection"] = {radius = 1800, strikeinterval = 2.0, activeduration = 5.0, dmgpercentpercreep = 5.0},
+	["modifier_vgmar_b_last_resort_armor"] = {dur = 120, reductiontick = 1, reductionpertick = 1, armor_per_stack = 2, bonus_regen = 10, start_stacks = 100},
+	["modifier_vgmar_b_ancient_tether"] = {damagereducion = -20, healthregen = 15, manaregen = 7, bonusas = 120},
+	["modifier_vgmar_anticreep_protection"] = {radius = 1800, strikeinterval = 2.0, activeduration = 5.0, dmgpercentpercreep = 5.0, goldbountyperc = 10},
 	["modifier_vgmar_c_cannon_ball"] = {damageperlevel = 20, stunduration = 1.0},
 	["modifier_vgmar_i_ogre_tester"] = {}
 }
@@ -197,7 +204,26 @@ local table_modifier_vgmar_courier_burst_var = {
 	rechargedelayperlvl = 3,
 	maxcharge = 10,
 	ticktime = 0.1,
-	basems = 460
+	basems = 470
+}
+
+--Modifiers added in addition to modifiers applied by the game
+--[[Structure:
+	-originalModifier
+	--addedModifier1
+	---addedModifier1KV1
+	{KVname, baseValue, isBalancedWithAdvantageFormula, AdvantageFormulaOffset, isBalancedWithTime, TimeBalanceData{minMinute, maxMinute, minMult, maxMult}, isCasterOriented}
+	---addedModifier1KV2
+	--addedModifier2
+	---addedModifier2KV1
+	---addedModifier2KV2
+--]]
+local table_bot_modifier_additions = {
+	["modifier_item_blade_mail_reflect"] = {
+		["modifier_vgmar_bam_blade_mail"] = {
+			{"damage_perc", 100, true, -1, true, {15, 70, 0.1, 1}, false}
+		}
+	}
 }
 --///////////////////////////////////////////
 
@@ -249,6 +275,7 @@ function VGMAR:Init()
 	BotSupportLib:Init()
 	self.n_players_radiant = 0
 	self.n_players_dire = 0
+	self.allheroes = {}
 	self.radiantheroes = {}
 	self.direheroes = {}
 	self.botheroes = {}
@@ -291,6 +318,19 @@ function VGMAR:Init()
 	self.gemapplyretrytime = 0
 	self.lastresortboostgiven = false
 	self.botmaxpushtier = 1
+	self.advformulacache = {
+		radiant = {
+			tower = {val = nil, upd = 0},
+			kill = {val = nil, upd = 0},
+			nw = {val = nil, upd = 0}
+		},
+		dire = {
+			tower = {val = nil, upd = 0},
+			kill = {val = nil, upd = 0},
+			nw = {val = nil, upd = 0}
+		}
+	}
+	self.roshandeathtime = -1
 	
 	local itemskvnum = 0
 	local itemscustomkvnum = 0
@@ -337,21 +377,18 @@ function VGMAR:Init()
 	print("Added "..itemskvnum.." Items and "..itemscustomkvnum.." Custom Items to KVTable")
 	if itemskverrornum > 0 or itemscustomkverrornum > 0 then
 		print("Encountered Errors: items.txt: "..itemskverrornum.." item_custom.txt: "..itemscustomkverrornum)
-		LogLib:WriteLog("error", 0, false, "----------------")
-		LogLib:WriteLog("error", 0, true, "Error parsing Item IDs")
-		LogLib:WriteLog("error", 1, false, "Items Missing IDs")
+		LogLib:Log_Error("Items Missing IDs", 1, "Error parsing Item IDs")
 		for i=1,#erroreditems do
-			LogLib:WriteLog("error", 2, false, i..". "..erroreditems[i])
+			LogLib:Log_Error(i..". "..erroreditems[i], 2)
 		end
 	end
 	if #conflictingitems > 0 then
 		print("Encountered "..#conflictingitems.." Conflicting Item IDs")
-		LogLib:WriteLog("error", 0, false, "----------------")
-		LogLib:WriteLog("error", 0, true, "Item KV ID system encountered "..#conflictingitems.." conflicting Item IDs")
+		LogLib:Log_Error("Conflicting Item IDs:", 0, "Item KV ID system encountered "..#conflictingitems.." conflicting Item IDs")
 		for i=1,#conflictingitems do
 			local cidata = conflictingitems[i]
 			print(i..": ID: "..cidata[1].." Items: "..cidata[2].." - "..cidata[3])
-			LogLib:WriteLog("error", 1, false, i..": ID: "..cidata[1].." Items: "..cidata[2].." - "..cidata[3])
+			LogLib:Log_Error(i..": ID: "..cidata[1].." Items: "..cidata[2].." - "..cidata[3], 1)
 		end
 	end
 	
@@ -366,8 +403,7 @@ function VGMAR:Init()
 	LinkLuaModifier("modifier_vgmar_util_all_vision", "abilities/util/modifiers/modifier_vgmar_util_all_vision", LUA_MODIFIER_MOTION_NONE)
 	--Items
 	LinkLuaModifier("modifier_vgmar_i_spellshield", "abilities/modifiers/modifier_vgmar_i_spellshield", LUA_MODIFIER_MOTION_NONE)
-	LinkLuaModifier("modifier_vgmar_i_kingsaegis_cooldown", "abilities/modifiers/modifier_vgmar_i_kingsaegis_cooldown", LUA_MODIFIER_MOTION_NONE)
-	LinkLuaModifier("modifier_vgmar_i_kingsaegis_active", "abilities/modifiers/modifier_vgmar_i_kingsaegis_active", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_consumed_aegis", "abilities/modifiers/modifier_vgmar_i_consumed_aegis", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_purgefield_visual", "abilities/modifiers/modifier_vgmar_i_purgefield_visual", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_truesight", "abilities/modifiers/modifier_vgmar_i_truesight", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_truesight_vision", "abilities/modifiers/modifier_vgmar_i_truesight", LUA_MODIFIER_MOTION_NONE)
@@ -388,12 +424,8 @@ function VGMAR:Init()
 	LinkLuaModifier("modifier_vgmar_i_vampiric_aura", "abilities/modifiers/modifier_vgmar_i_vampiric_aura", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_vampiric_aura_effect", "abilities/modifiers/modifier_vgmar_i_vampiric_aura_effect", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_essence_shift", "abilities/modifiers/modifier_vgmar_i_essence_shift", LUA_MODIFIER_MOTION_NONE)
-	LinkLuaModifier("modifier_vgmar_i_essence_shift_owner_str", "abilities/modifiers/modifier_vgmar_i_essence_shift", LUA_MODIFIER_MOTION_NONE)
-	LinkLuaModifier("modifier_vgmar_i_essence_shift_owner_agi", "abilities/modifiers/modifier_vgmar_i_essence_shift", LUA_MODIFIER_MOTION_NONE)
-	LinkLuaModifier("modifier_vgmar_i_essence_shift_owner_int", "abilities/modifiers/modifier_vgmar_i_essence_shift", LUA_MODIFIER_MOTION_NONE)
-	LinkLuaModifier("modifier_vgmar_i_essence_shift_target_agi", "abilities/modifiers/modifier_vgmar_i_essence_shift_target_agi", LUA_MODIFIER_MOTION_NONE)
-	LinkLuaModifier("modifier_vgmar_i_essence_shift_target_str", "abilities/modifiers/modifier_vgmar_i_essence_shift_target_str", LUA_MODIFIER_MOTION_NONE)
-	LinkLuaModifier("modifier_vgmar_i_essence_shift_target_int", "abilities/modifiers/modifier_vgmar_i_essence_shift_target_int", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_essence_shift_buff", "abilities/modifiers/modifier_vgmar_i_essence_shift", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_essence_shift_debuff", "abilities/modifiers/modifier_vgmar_i_essence_shift", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_deathskiss", "abilities/modifiers/modifier_vgmar_i_deathskiss", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_deathskiss_active", "abilities/modifiers/modifier_vgmar_i_deathskiss", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_critical_mastery", "abilities/modifiers/modifier_vgmar_i_critical_mastery", LUA_MODIFIER_MOTION_NONE)
@@ -424,6 +456,11 @@ function VGMAR:Init()
 	LinkLuaModifier("modifier_vgmar_b_fountain_anticamp_debuff_blindness", "abilities/modifiers/modifier_vgmar_b_fountain_anticamp", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_b_fountain_anticamp_debuff", "abilities/modifiers/modifier_vgmar_b_fountain_anticamp", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_b_fountain_anticamp_debuff_lingering", "abilities/modifiers/modifier_vgmar_b_fountain_anticamp", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_b_last_resort_armor", "abilities/modifiers/modifier_vgmar_b_last_resort_armor", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_b_ancient_tether", "abilities/modifiers/modifier_vgmar_b_ancient_tether", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_b_ancient_tether_counter", "abilities/modifiers/modifier_vgmar_b_ancient_tether", LUA_MODIFIER_MOTION_NONE)
+	--Bot Balance Additional Modifiers
+	LinkLuaModifier("modifier_vgmar_bam_blade_mail", "abilities/modifiers/modifier_vgmar_bam_blade_mail", LUA_MODIFIER_MOTION_NONE)
 	--Unit Specific
 	LinkLuaModifier("modifier_vgmar_courier_burst", "abilities/modifiers/modifier_vgmar_courier_burst.lua", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_courier_burst_effect", "abilities/modifiers/modifier_vgmar_courier_burst.lua", LUA_MODIFIER_MOTION_NONE)
@@ -1295,9 +1332,9 @@ function VGMAR:FilterGoldGained( filterTable )
 	local player = PlayerResource:GetPlayer(filterTable.player_id_const)
 	if filterTable.reliable == 0 then
 		if player:GetTeamNumber() == 2 then
-			filterTable["gold"] = filterTable["gold"] * self:GetTeamAdvantageClamped(false, true, true, true, 0.5, 3.0) --math.min(2.0,math.max(0.5,self:GetTeamAdvantage(false, true, true, true, filterTable["player_id_const"])))
+			filterTable["gold"] = filterTable["gold"] * self:GetTeamAdvantageClamped(false, true, true, true, 0.5, 2.5) --math.min(2.0,math.max(0.5,self:GetTeamAdvantage(false, true, true, true, filterTable["player_id_const"])))
 		elseif player:GetTeamNumber() == 3 then
-			filterTable["gold"] = filterTable["gold"] * self:GetTeamAdvantageClamped(true, true, true, true, 0.5, 3.0) --math.min(2.0,math.max(0.5,self:GetTeamAdvantage(true, true, true, true, filterTable["player_id_const"])))
+			filterTable["gold"] = filterTable["gold"] * self:GetTeamAdvantageClamped(true, true, true, true, 0.5, 2.5) --math.min(2.0,math.max(0.5,self:GetTeamAdvantage(true, true, true, true, filterTable["player_id_const"])))
 		end
 	end
 	--HeroKill
@@ -1305,15 +1342,15 @@ function VGMAR:FilterGoldGained( filterTable )
 		local hero = PlayerResource:GetPlayer(filterTable.player_id_const):GetAssignedHero()
 		local gold = filterTable.gold
 		if player:GetTeamNumber() == 2 then
-			dprint("HeroKill gold modifier: "..math.truncate(self:GetTeamAdvantageClamped(false, false, true, true, 0.5, 2.0), 4))
-			dprint("HeroKill gold: base: "..filterTable.gold.." modified: "..math.truncate(filterTable.gold * self:GetTeamAdvantageClamped(false, false, true, true, 0.5, 2.0), 4))
-			filterTable["gold"] = math.truncate(filterTable["gold"] * self:GetTeamAdvantageClamped(false, false, true, true, 0.5, 2.0), 4)
-			if VGMAR_DEBUG_DRAW == true then DebugDrawText(hero:GetAbsOrigin(), "G "..math.truncate(filterTable["gold"] * self:GetTeamAdvantageClamped(false, false, true, true, 0.5, 2.0), 4)-gold, false, 2.0) end
+			dprint("HeroKill gold modifier: "..math.truncate(self:GetTeamAdvantageClamped(false, false, true, true, 0.01, 2.0), 4))
+			dprint("HeroKill gold: base: "..filterTable.gold.." modified: "..math.truncate(filterTable.gold * self:GetTeamAdvantageClamped(false, false, true, true, 0.01, 2.0), 4))
+			filterTable["gold"] = math.truncate(filterTable["gold"] * self:GetTeamAdvantageClamped(false, false, true, true, 0.01, 2.0), 4)
+			if VGMAR_DEBUG_DRAW == true then Extensions:AddEntText(hero:entindex(), "GoldMod: "..gold.."->"..filterTable["gold"]) end
 		elseif player:GetTeamNumber() == 3 then
-			dprint("HeroKill gold modifier: "..math.truncate(self:GetTeamAdvantageClamped(true, false, true, true, 0.5, 2.0), 4))
-			dprint("HeroKill gold: base: "..filterTable.gold.." modified: "..math.truncate(filterTable.gold * self:GetTeamAdvantageClamped(true, false, true, true, 0.5, 2.0), 4))
-			filterTable["gold"] = math.truncate(filterTable["gold"] * self:GetTeamAdvantageClamped(true, false, true, true, 0.5, 2.0), 4)
-			if VGMAR_DEBUG_DRAW == true then DebugDrawText(hero:GetAbsOrigin(), "G "..math.truncate(filterTable["gold"] * self:GetTeamAdvantageClamped(true, false, true, true, 0.5, 2.0), 4)-gold, false, 2.0) end
+			dprint("HeroKill gold modifier: "..math.truncate(self:GetTeamAdvantageClamped(true, false, true, true, 0.01, 2.0), 4))
+			dprint("HeroKill gold: base: "..filterTable.gold.." modified: "..math.truncate(filterTable.gold * self:GetTeamAdvantageClamped(true, false, true, true, 0.01, 2.0), 4))
+			filterTable["gold"] = math.truncate(filterTable["gold"] * self:GetTeamAdvantageClamped(true, false, true, true, 0.01, 2.0), 4)
+			if VGMAR_DEBUG_DRAW == true then Extensions:AddEntText(hero:entindex(), "GoldMod: "..gold.."->"..filterTable["gold"]) end
 		end
 	end
 	--dprint("PostModification Table: HeroId: ", filterTable["player_id_const"], "Gold: ", filterTable["gold"])
@@ -1343,6 +1380,7 @@ function VGMAR:FilterBountyRunePickup( filterTable )
 	return true
 end
 
+--TODO:Add A Table for bot balance modifier modification(duration)
 function VGMAR:FilterModifierGained( filterTable )
 	--if IsDevMode() then
 		--DeepPrintTable( filterTable )
@@ -1357,13 +1395,71 @@ function VGMAR:FilterModifierGained( filterTable )
 	local modifiername = filterTable["name_const"]
 	local ability = nil
 	local parent = nil
+	local caster = nil
 	if filterTable["entindex_ability_const"] then
 		ability = EntIndexToHScript(filterTable.entindex_ability_const)
 	end
 	if filterTable["entindex_parent_const"] then
 		parent = EntIndexToHScript(filterTable.entindex_parent_const)
 	end
+	if filterTable["entindex_caster_const"] then
+		caster = EntIndexToHScript(filterTable.entindex_caster_const)
+	end
+	if parent:IsHero() or (caster and caster:IsHero()) then
+		self:ApplyBotBalanceModifiers(parent, caster, filterTable)
+	end
 	return true
+end
+
+function VGMAR:ApplyBotBalanceModifiers(parent, caster, filterTable)
+	if parent then
+		local modifiername = filterTable["name_const"]
+		local ability = nil
+		if filterTable["entindex_ability_const"] then
+			ability = EntIndexToHScript(filterTable.entindex_ability_const)
+		end
+		if table_bot_modifier_additions[modifiername] ~= nil then
+			for i,v in pairs(table_bot_modifier_additions[modifiername]) do
+				local kvdata = {}
+				for j,k in ipairs(v) do
+					local AFTarget = parent
+					if v[j][7] then
+						if caster ~= nil then
+							AFTarget = caster
+						else
+							LogLib:Log_Error("KVData has caster oriented flag but caster is nil", 0, "Error in VGMAR:ApplyBotBalanceModifiers()")
+							LogLib:Log_Error("Data: "..v[j][1]..", Parent: "..parent:GetName(), 1)
+						end
+					end
+					local keyname = v[j][1]
+					dprint("Adding keyname: "..keyname)
+					table.insert(kvdata, keyname)
+					local keyvalue = v[j][2]
+					dprint("Keyvalue for "..keyname.." set to: "..keyvalue)
+					if v[j][3] then
+						local mod = math.truncate(self:GetTeamAdvantage(AFTarget:GetTeamNumber() == 3, false, true, true), 4)
+						if v[j][4] ~= nil then
+							mod = math.max(0, mod + v[j][4])
+						end
+						keyvalue = keyvalue * mod
+						dprint("Balance mod is on, Modifying keyvalue to "..keyvalue)
+					end
+					if v[j][5] and v[j][6] ~= nil then
+						local currentminute = math.floor(GameRules:GetDOTATime(false, false)/60)
+						local timemoddata = v[j][6]
+						local timemod = math.max(0, math.mapl(currentminute, timemoddata[1], timemoddata[2], timemoddata[3], timemoddata[4]))
+						keyvalue = keyvalue * timemod
+						dprint("Time mod is on, Modifying keyvalue to "..keyvalue)
+					end
+					kvdata[keyname] = keyvalue
+				end
+				local modifier = parent:AddNewModifier(caster, ability, i, kvdata)
+				if modifier then
+					modifier:SetDuration(filterTable.duration, true)
+				end
+			end
+		end
+	end
 end
 
 function VGMAR:HeroHasUsableItemInInventory( hero, item, mutedallowed, backpackallowed, stashallowed )
@@ -1601,7 +1697,6 @@ function VGMAR:OnTowerKilled( keys )
 		self.botsInLateGameMode = true
 		GameRules:GetGameModeEntity():SetBotsInLateGame(self.botsInLateGameMode)
 	end
-	--TODO:Use GameRules:GetGameModeEntity():SetBotsMaxPushTier(int nMaxTier)
 end
 
 function VGMAR:TeamReward(teamnumber, amount, split)
@@ -1636,16 +1731,62 @@ function VGMAR:TeamReward(teamnumber, amount, split)
 	end
 end
 
+local ADVANTAGE_CACHE_DURATION = 5
 function VGMAR:GetTeamAdvantage( radiant, tower, kill, networth )
-	--//////////////////
-	--Team Balance ##BALANCEDEV##
-	--//////////////////
+	--////////////
+	--Team Balance
+	--////////////
 	--Importance Percentages
 	--!!!Should add up to 100!!!
 	local towerkillimp = 50
 	local killsimp = 20
 	local networthimp = 30
 	--End of Importance Percentages
+	--Return Cache values if present and not older than 5s
+	--TODO: Rework to allow partial use of cache ex. need kill+tower -> kill available in cache -> calculate tower, use kill from cache -> return
+	local function CheckDataUTD(data)
+		return ((data.upd + ADVANTAGE_CACHE_DURATION >= math.floor(GameRules:GetGameTime())) and (data.val ~= nil))
+	end
+	local function StoreInAdvCache(cache, value)
+		cache.val = value
+		cache.upd = math.floor(GameRules:GetGameTime())
+	end
+	local advcache = self.advformulacache.dire
+	if radiant then
+		advcache = self.advformulacache.radiant
+	end
+	local cachedadv = {0, 0, 0, true}
+	if tower then
+		if CheckDataUTD(advcache.tower) then
+			cachedadv[1] = advcache.tower.val
+		else
+			cachedadv[4] = false
+		end
+	else
+		cachedadv[1] = (1/100)*towerkillimp
+	end
+	if kill then
+		if CheckDataUTD(advcache.kill) then
+			cachedadv[2] = advcache.kill.val
+		else
+			cachedadv[4] = false
+		end
+	else
+		cachedadv[2] = (1/100)*killsimp
+	end
+	if networth then
+		if CheckDataUTD(advcache.nw) then
+			cachedadv[3] = advcache.nw.val
+		else
+			cachedadv[4] = false
+		end
+	else
+		cachedadv[3] = (1/100)*networthimp
+	end
+	--If we didnt fail return cached values
+	if cachedadv[4] then
+		return cachedadv[1]+cachedadv[2]+cachedadv[3]
+	end
 	--Calculating Networth
 	local radiantteamnetworth = 0
 	local direteamnetworth = 0
@@ -1717,6 +1858,7 @@ function VGMAR:GetTeamAdvantage( radiant, tower, kill, networth )
 					towerkilladv = (1/100)*towerkillimp
 				end
 			end
+			StoreInAdvCache(advcache.tower, towerkilladv)
 		else
 			towerkilladv = (1/100)*towerkillimp
 		end
@@ -1732,6 +1874,7 @@ function VGMAR:GetTeamAdvantage( radiant, tower, kill, networth )
 					killadv = (1/100)*killsimp
 				end
 			end
+			StoreInAdvCache(advcache.kill, killadv)
 		else
 			killadv = (1/100)*killsimp
 		end
@@ -1741,6 +1884,7 @@ function VGMAR:GetTeamAdvantage( radiant, tower, kill, networth )
 			else
 				networthadv = (1/100)*networthimp
 			end
+			StoreInAdvCache(advcache.nw, networthadv)
 		else
 			networthadv = (1/100)*networthimp
 		end
@@ -1757,6 +1901,7 @@ function VGMAR:GetTeamAdvantage( radiant, tower, kill, networth )
 					towerkilladv = (1/100)*towerkillimp
 				end
 			end
+			StoreInAdvCache(advcache.tower, towerkilladv)
 		else
 			towerkilladv = (1/100)*towerkillimp
 		end
@@ -1772,6 +1917,7 @@ function VGMAR:GetTeamAdvantage( radiant, tower, kill, networth )
 					killadv = (1/100)*killsimp
 				end
 			end
+			StoreInAdvCache(advcache.kill, killadv)
 		else
 			killadv = (1/100)*killsimp
 		end
@@ -1781,6 +1927,7 @@ function VGMAR:GetTeamAdvantage( radiant, tower, kill, networth )
 			else
 				networthadv = (1/100)*networthimp
 			end
+			StoreInAdvCache(advcache.nw, networthadv)
 		else
 			networthadv = (1/100)*networthimp
 		end
@@ -1835,6 +1982,7 @@ function VGMAR:OnThink()
 			local wards = {}
 			for _,ward in ipairs (Entities:FindAllByClassname("npc_dota_ward_base")) do table.insert(wards, ward) end
 			for _,ward in ipairs (Entities:FindAllByClassname("npc_dota_ward_base_truesight")) do table.insert(wards, ward) end
+			for _,courier in ipairs (Entities:FindAllByClassname("npc_dota_courier")) do table.insert(wards, courier) end
 			for _,ent in ipairs(wards) do
 				if not ent:HasModifier("modifier_vgmar_util_all_vision") then
 					ent:AddNewModifier(ent, nil, "modifier_vgmar_util_all_vision", {})
@@ -1869,7 +2017,7 @@ function VGMAR:OnThink()
 				if PlayerResource:GetConnectionState(heroplayerid) == 1 then
 					local closestrune = Entities:FindByClassnameNearest("dota_item_rune", heroent:GetOrigin(), 250.0)
 					heroent:SetBotDifficulty(3)
-					if closestrune then
+					if closestrune and heroent:IsChanneling() == false then
 						heroent:PickupRune(closestrune)
 					end
 					
@@ -1884,6 +2032,21 @@ function VGMAR:OnThink()
 							dprint("Resetting Buyback Cooldown for "..HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()))
 							dprint("Buyback Cost: "..heroent:GetBuybackCost(false).." Gold Remaining: "..(heroent:GetGold() - heroent:GetBuybackCost(false)))
 							self:LogEvent("Resetting Buyback Cooldown for "..HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Buyback Cost: "..heroent:GetBuybackCost(false).." Gold Remaining: "..(heroent:GetGold() - heroent:GetBuybackCost(false)))
+						end
+					end
+					
+					--///////////////////
+					--Dire Ancient Tether
+					--///////////////////
+					if heroent:IsRealHero() then
+						if self.direanc:IsAlive() and heroent:IsAlive() and heroent:GetTeamNumber() == self.direanc:GetTeamNumber() and (heroent:GetAbsOrigin() - self.direanc:GetAbsOrigin()):Length2D() < 2800 then
+							if  heroent:HasModifier("modifier_vgmar_b_ancient_tether") == false then
+								heroent:AddNewModifier(self.direanc, nil, "modifier_vgmar_b_ancient_tether", modifierdatatable["modifier_vgmar_b_ancient_tether"])
+							end
+						else
+							if heroent:HasModifier("modifier_vgmar_b_ancient_tether") then
+								heroent:FindModifierByName("modifier_vgmar_b_ancient_tether"):Destroy()
+							end
 						end
 					end
 					
@@ -2058,12 +2221,17 @@ function VGMAR:OnThink()
 							bloodstone:SetCurrentCharges(bloodstone:GetCurrentCharges() + 24)
 						end
 					end
+					--Aegis
+					if self:HeroHasUsableItemInInventory(heroent, "item_aegis", false, false, false) then
+						self:RemoveNItemsInInventory(heroent, "item_aegis", 1)
+						heroent:AddNewModifier(heroent, nil, "modifier_vgmar_i_consumed_aegis", modifierdatatable["modifier_vgmar_i_consumed_aegis"])
+					end
 				end
 				
 				--//////////////////////
 				--Passive Item Abilities
 				--//////////////////////
-				--Items For Spells Table --vgmar_i_spellshield
+				--Items For Spells Table
 				local itemlistforspell = {
 			{spell = "modifier_vgmar_i_midas_greed",
 				items = {itemnames = {"item_hand_of_midas"}, itemnum = {1}},
@@ -2114,16 +2282,6 @@ function VGMAR:OnThink()
 				usesmultiple = true,
 				backpack = true,
 				preventedhero = "npc_dota_hero_troll_warlord",
-				specificcond = true },
-			{spell = "modifier_vgmar_i_kingsaegis_cooldown",
-				items = {itemnames = {"item_pers", "item_refresher_shard", "item_aegis"}, itemnum = {2, 1, 1}},
-				isconsumable = true,
-				ismodifier = true,
-				usemodifierdatatable = true,
-				modifierdata = {cooldown = 240, reincarnate_time = 5},
-				usesmultiple = false,
-				backpack = true,
-				preventedhero = "npc_target_dummy",
 				specificcond = true },
 			{spell = "modifier_vgmar_i_atrophy",
 				items = {itemnames = {"item_helm_of_the_dominator", "item_satanic"}, itemnum = {2, 1}},
@@ -2457,25 +2615,27 @@ function VGMAR:OnThink()
 					end
 					local function BuyTome()
 						local lxpb = GetLowestXpBot()
-						if lxpb:GetLevel() < 25 and self:GetHeroFreeInventorySlots(lxpb, true, false) > 0 then
-							lxpb:SpendGold(botitemskv.tomeprice, 2)
-							lxpb:AddItemByName("item_tome_of_knowledge")
-							Timers:CreateTimer(5, function()
-								local tome = self:GetItemFromInventoryByName( lxpb, "item_tome_of_knowledge", false, true, false )
-								if tome ~= nil then
-									local slot = self:GetItemSlotFromInventoryByItemName( lxpb, "item_tome_of_knowledge", false, true, false )
-									if slot > 5 and slot < 9 then
-										lxpb:SwapItems(slot, 0)
+						if lxpb ~= nil then
+							if lxpb:GetLevel() < 25 and self:GetHeroFreeInventorySlots(lxpb, true, false) > 0 then
+								lxpb:SpendGold(botitemskv.tomeprice, 2)
+								lxpb:AddItemByName("item_tome_of_knowledge")
+								Timers:CreateTimer(5, function()
+									local tome = self:GetItemFromInventoryByName( lxpb, "item_tome_of_knowledge", false, true, false )
+									if tome ~= nil then
+										local slot = self:GetItemSlotFromInventoryByItemName( lxpb, "item_tome_of_knowledge", false, true, false )
+										if slot > 5 and slot < 9 then
+											lxpb:SwapItems(slot, 0)
+										end
+										lxpb:CastAbilityNoTarget(tome, lxpb:GetPlayerID())
+										return 5.0
 									end
-									lxpb:CastAbilityNoTarget(tome, lxpb:GetPlayerID())
-									return 5.0
-								end
-							end)
-							dprint("Buying item_tome_of_knowledge for "..HeroNamesLib:ConvertInternalToHeroName(lxpb:GetName()))
-							self:LogEvent("Buying item_tome_of_knowledge for "..HeroNamesLib:ConvertInternalToHeroName(lxpb:GetName()))
-							self.bottomepurchausetimestamp = GameRules:GetDOTATime(false, false)
-						elseif lxpb:GetLevel() == 25 then
-							self.tomepurchaseallmaxlvl = true
+								end)
+								dprint("Buying item_tome_of_knowledge for "..HeroNamesLib:ConvertInternalToHeroName(lxpb:GetName()))
+								self:LogEvent("Buying item_tome_of_knowledge for "..HeroNamesLib:ConvertInternalToHeroName(lxpb:GetName()))
+								self.bottomepurchausetimestamp = GameRules:GetDOTATime(false, false)
+							elseif lxpb:GetLevel() == 25 then
+								self.tomepurchaseallmaxlvl = true
+							end
 						end
 					end
 					if self.bottomepurchausetimestamp + botitemskv.tomerestock[1] < GameRules:GetDOTATime(false, false) then
@@ -2503,7 +2663,7 @@ function VGMAR:OnThink()
 								self:LogEvent("Adding modifier_vgmar_i_truesight to "..HeroNamesLib:ConvertInternalToHeroName(fathero[2]:GetName()))
 							else
 								dprint("Failed to attach Gem Modifier to "..HeroNamesLib:ConvertInternalToHeroName(fathero[2]:GetName()))
-								LogLib:WriteLog("error", 0, true, "Failed to attach Gem Modifier to "..HeroNamesLib:ConvertInternalToHeroName(fathero[2]:GetName()))
+								LogLib:Log_Warning("Failed to attach Gem Modifier to "..HeroNamesLib:ConvertInternalToHeroName(fathero[2]:GetName()), 0, "Innate Gem Assignment")
 							end
 						else
 							self.gemapplyretrytime = GameRules:GetDOTATime(false, false) + fathero[2]:GetTimeUntilRespawn() + 1
@@ -2538,7 +2698,9 @@ function VGMAR:OnThink()
 		if self.lastresortboostgiven == false then
 			if self.direanc:GetHealth()/self.direanc:GetMaxHealth() <= botancientlastresort.healththreshold then
 				self:TeamReward(3, {botancientlastresort.gold, botancientlastresort.xp}, {false, false})
+				self:LogEvent("Last Resort Boost Triggered")
 				EmitSoundOn("DOTA_Item.DoE.Activate",self.direanc)
+				self.direanc:AddNewModifier(self.direanc, nil, "modifier_vgmar_b_last_resort_armor", modifierdatatable["modifier_vgmar_b_last_resort_armor"])
 				self.lastresortboostgiven = true
 			end
 		end
@@ -2641,7 +2803,7 @@ function VGMAR:OnBuildingDestroyed(attacker, denied, buildingteamnumber, buildin
 	--Bot Balanced Push
 	if buildingteamnumber == 2 and self.botmaxpushtier ~= -1 then
 		if self:GetAllTierTowersDestroyed(2, self.botmaxpushtier) then
-			if self.botmaxpushtier < 4 then
+			if self.botmaxpushtier < 3 then
 				self.botmaxpushtier = self.botmaxpushtier + 1
 				dprint("Bot Balanced Push: Now Pushing: Tier "..self.botmaxpushtier)
 			else
@@ -2665,7 +2827,7 @@ function VGMAR:GetTierTowersStatus(teamnum, tier, lane)
 		teamname = "badguys"
 	else
 		dprint("GetTierTowersStatus: Error. Incorrect teamnumber specified")
-		LogLib:WriteLog("error", 0, true, "GetTierTowersStatus: Error. Incorrect teamnumber specified")
+		LogLib:Log_Error("Incorrect teamnumber: "..teamnum.." specified", 0, "GetTierTowersStatus(): Error.")
 		return nil
 	end
 	if lane == "bot" or lane == "mid" or lane == "top" and (tier > 0 and tier < 5) then
@@ -2677,11 +2839,9 @@ function VGMAR:GetTierTowersStatus(teamnum, tier, lane)
 		return towerstate
 	else
 		if not (lane == "bot" or lane == "mid" or lane == "top") then
-			dprint("GetTierTowersStatus: Error. Incorrect lane specified")
-			LogLib:WriteLog("error", 0, true, "GetTierTowersStatus: Error. Incorrect lane specified")
+			LogLib:Log_Error("Incorrect lane: "..lane.." specified", 0, "GetTierTowersStatus(): Error.")
 		elseif not (tier > 0 and tier < 5) then
-			dprint("GetTierTowersStatus: Error. Incorrect tier specified")
-			LogLib:WriteLog("error", 0, true, "GetTierTowersStatus: Error. Incorrect tier specified")
+			LogLib:Log_Error("Incorrect tier: "..tier.." specified", 0, "GetTierTowersStatus(): Error.")
 		end
 		return nil
 	end
@@ -2719,8 +2879,7 @@ function VGMAR:GetBarracksStatus(teamnum, lane)
 	elseif teamnum == 3 then
 		teamname = "bad"
 	else
-		dprint("GetBarracksStatus: Error. Incorrect teamnumber specified")
-		LogLib:WriteLog("error", 0, true, "GetBarracksStatus: Error. Incorrect teamnumber specified")
+		LogLib:Log_Error("Incorrect teamnumber"..teamnum.." specified", 0, "GetBarracksStatus(): Error.")
 		return nil
 	end
 	if lane == "bot" or lane == "mid" or lane == "top" then
@@ -2737,8 +2896,7 @@ function VGMAR:GetBarracksStatus(teamnum, lane)
 		local allraxstate = rangeraxstate and meleeraxstate
 		return {meleeraxstate, rangeraxstate, allraxstate}
 	else
-		dprint("GetBarracksStatus: Error. Incorrect lane specified")
-		LogLib:WriteLog("error", 0, true, "GetBarracksStatus: Error. Incorrect lane specified")
+		LogLib:Log_Error("Incorrect lane"..lane.." specified", 0, "GetBarracksStatus(): Error.")
 		return nil
 	end
 end
@@ -2754,11 +2912,14 @@ function VGMAR:OnAllHeroesSpawned()
 	self.pausedn = nil
 	PauseGame(false)
 	-----------------
-	--/////////////////////////
+	--////////////////////////////////////
 	--BotSupportLib Heroes Init
-	--/////////////////////////
+	--Extensions Hero Damage Tracking Init
+	--////////////////////////////////////
 	Extensions:CallWithDelay(2, true, function()
 		BotSupportLib:StartBotInit()
+		Extensions:InitHeroDamageTrackingTable(self.allheroes)
+		Extensions:InitHeroTables(self.radiantheroes, self.direheroes)
 	end)
 	--//////////////////////
 	--Applying Bot Modifiers
@@ -2879,6 +3040,7 @@ function VGMAR:OnNPCSpawned( event )
 			--///////////////
 			--Fill Hero Lists
 			--///////////////
+			table.insert(self.allheroes, spawnedUnit)
 			if spawnedUnit:GetTeamNumber() == 2 then
 				table.insert(self.radiantheroes, spawnedUnit)
 			elseif spawnedUnit:GetTeamNumber() == 3 then
@@ -3438,11 +3600,11 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 				--Bot Action Miss Simulation
 				--//////////////////////////
 				if order_type == 5 or order_type == 6 or order_type == 8 or order_type == 9 then
-					local minidlechance = 5
-					local maxidlechance = 30
-					local minmissclickchance = 5
-					local maxmissclickchance = 30
-					local maxminute = 60
+					local minidlechance = 0
+					local maxidlechance = 25
+					local minmissclickchance = 0
+					local maxmissclickchance = 35
+					local maxminute = 90
 					local currentminute = math.floor(GameRules:GetDOTATime(false, false)/60)
 					local idlechance = math.scale( maxidlechance, math.clamp(0, (currentminute/maxminute), 1), minidlechance)
 					local missclickchance = math.scale( maxmissclickchance, math.clamp(0, (currentminute/maxminute), 1), minmissclickchance)
@@ -3627,6 +3789,7 @@ function VGMAR:OnGameStateChanged( keys )
 		if self.direanc then
 			self.direanc:AddNewModifier(self.direanc, nil, "modifier_vgmar_buildings_destroyed_counter", {})
 			self.direanc:AddNewModifier(self.direanc, nil, "modifier_vgmar_anticreep_protection", modifierdatatable["modifier_vgmar_anticreep_protection"])
+			self.direanc:AddNewModifier(self.direanc, nil, "modifier_vgmar_b_ancient_tether_counter", {})
 		end
 		if self.radiantanc then
 			self.radiantanc:AddNewModifier(self.radiantanc, nil, "modifier_vgmar_buildings_destroyed_counter", {})
@@ -3701,7 +3864,7 @@ function VGMAR:OnGameStateChanged( keys )
 						elseif buildingstobufflist[k].priority == 4 then
 							processedskill:SetLevel(defskills[i].p4)
 						else
-							dprint("Error in defspells assigning mechanism, UNEXPECTED_PRIORITY_FOUND")
+							LogLib:Log_Error("UNEXPECTED_PRIORITY_FOUND", 0, "Error in defspells assigning mechanism")
 						end
 						if processedskill:GetLevel() == 0 then
 							building:RemoveAbility(defskills[i].skill)

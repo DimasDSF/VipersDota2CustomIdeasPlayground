@@ -36,6 +36,7 @@ function modifier_vgmar_i_essence_shift:OnCreated(kv)
 		self.hitsperstackred = kv.hitsperstackred
 		self.duration = kv.duration
 		self.durationtarget = kv.durationtarget
+		self:GetParent():AddNewModifier(self:GetParent(), nil, "modifier_vgmar_i_essence_shift_buff", {increaseprimary = self.increaseprimary, increasesecondary = self.increasesecondary, hitsperstackinc = self.hitsperstackinc, duration = self.duration})
 	else
 		self.clientvalues = CustomNetTables:GetTableValue("client_side_ability_values", "modifier_vgmar_i_essence_shift")
 	end
@@ -51,8 +52,8 @@ end
 function modifier_vgmar_i_essence_shift:OnAttackLanded( event )
 	if IsServer() then
 		if event.attacker == self:GetParent() and not self:GetParent():IsIllusion() and self:GetParent():PassivesDisabled() == false then
-			if event.target:GetTeamNumber() ~= self:GetCaster():GetTeamNumber() and event.target:IsRealHero() then
-				if self:GetParent():GetPrimaryAttribute() == 0 then
+			if event.target:GetTeamNumber() ~= self:GetCaster():GetTeamNumber() and event.target:IsRealHero() and event.target:IsAlive() then
+				--[[if self:GetParent():GetPrimaryAttribute() == 0 then
 					event.target:AddNewModifier(self:GetParent(), nil, "modifier_vgmar_i_essence_shift_target_str", {})
 					self:GetParent():AddNewModifier(self:GetParent(), nil, "modifier_vgmar_i_essence_shift_owner_str", {increaseprimary = self.increaseprimary, increasesecondary = self.increasesecondary, hitsperstackinc = self.hitsperstackinc, duration = self.duration})
 				elseif self:GetParent():GetPrimaryAttribute() == 1 then
@@ -61,7 +62,9 @@ function modifier_vgmar_i_essence_shift:OnAttackLanded( event )
 				else
 					event.target:AddNewModifier(self:GetParent(), nil, "modifier_vgmar_i_essence_shift_target_int", {})
 					self:GetParent():AddNewModifier(self:GetParent(), nil, "modifier_vgmar_i_essence_shift_owner_int", {increaseprimary = self.increaseprimary, increasesecondary = self.increasesecondary, hitsperstackinc = self.hitsperstackinc, duration = self.duration})
-				end
+				end--]]
+				event.target:AddNewModifier(self:GetParent(), nil, "modifier_vgmar_i_essence_shift_debuff", {})
+				self:GetParent():AddNewModifier(self:GetParent(), nil, "modifier_vgmar_i_essence_shift_buff", {increaseprimary = self.increaseprimary, increasesecondary = self.increasesecondary, hitsperstackinc = self.hitsperstackinc, duration = self.duration})
 				local particle_drain_fx = ParticleManager:CreateParticle("particles/econ/items/slark/slark_ti6_blade/slark_ti6_blade_essence_shift.vpcf", PATTACH_ABSORIGIN, event.target)
 				ParticleManager:SetParticleControl(particle_drain_fx, 0, event.target:GetAbsOrigin())
 				ParticleManager:SetParticleControl(particle_drain_fx, 1, self:GetParent():GetAbsOrigin())
@@ -73,44 +76,41 @@ function modifier_vgmar_i_essence_shift:OnAttackLanded( event )
 	end
 end
 
---------------------------------------------------------------------------------
-modifier_vgmar_i_essence_shift_owner_str = class({})
 
-function modifier_vgmar_i_essence_shift_owner_str:GetTexture()
-	return "custom/essenceshift"
+modifier_vgmar_i_essence_shift_buff = class({})
+
+function modifier_vgmar_i_essence_shift_buff:GetTexture()
+	return "custom/essenceshift_agility"
 end
 
---------------------------------------------------------------------------------
-
-function modifier_vgmar_i_essence_shift_owner_str:IsHidden()
-    return self:GetStackCount() == 0
+function modifier_vgmar_i_essence_shift_buff:IsHidden()
+	return self:GetStackCount() == 0
 end
 
-function modifier_vgmar_i_essence_shift_owner_str:IsPurgable()
+function modifier_vgmar_i_essence_shift_buff:IsPurgable()
 	return false
 end
 
-function modifier_vgmar_i_essence_shift_owner_str:IsDebuff()
+function modifier_vgmar_i_essence_shift_buff:IsDebuff()
 	return false
 end
 
-function modifier_vgmar_i_essence_shift_owner_str:RemoveOnDeath()
+function modifier_vgmar_i_essence_shift_buff:RemoveOnDeath()
 	return false
 end
 
-function modifier_vgmar_i_essence_shift_owner_str:DestroyOnExpire()
+function modifier_vgmar_i_essence_shift_buff:DestroyOnExpire()
 	return false
 end
 
-function modifier_vgmar_i_essence_shift_owner_str:OnCreated(kv) 
+function modifier_vgmar_i_essence_shift_buff:OnCreated(kv)
 	if IsServer() then
-		local providerspell = self:GetCaster():FindModifierByName("modifier_vgmar_i_essence_shift")
 		self.increaseprimary = kv.increaseprimary
 		self.increasesecondary = kv.increasesecondary
 		self.hitsperstackinc = kv.hitsperstackinc
 		self.duration = kv.duration
-		self.hitcount = 0
-		self:SetStackCount( math.floor(self.hitcount / self.hitsperstackinc) )
+		self.hittable = {}
+		self:SetStackCount( math.floor(#self.hittable / self.hitsperstackinc) )
 		self:SetDuration( -1, true )
 		self:StartIntervalThink( 1 )
 	else
@@ -118,300 +118,196 @@ function modifier_vgmar_i_essence_shift_owner_str:OnCreated(kv)
 	end
 end
 
-function modifier_vgmar_i_essence_shift_owner_str:OnRefresh(kv)
+function modifier_vgmar_i_essence_shift_buff:OnRefresh(kv)
 	if IsServer() then
-		self.hitcount = self.hitcount + 1
-		self:SetStackCount( math.floor(self.hitcount / self.hitsperstackinc) )
-		self:SetDuration( self.duration, true )
+		table.insert(self.hittable, 1, GameRules:GetGameTime())
 	end
 end
 
-function modifier_vgmar_i_essence_shift_owner_str:DeclareFunctions()
+function modifier_vgmar_i_essence_shift_buff:OnIntervalThink()
+	if IsServer() then
+		if #self.hittable > 0 then
+			--Removing Expired Hit Records
+			local startcount = #self.hittable
+			for i=#self.hittable, 1, -1 do
+				if self.hittable[i] + self.duration > GameRules:GetGameTime() then
+					break
+				else
+					table.remove(self.hittable, i)
+				end
+			end
+			self:SetStackCount(math.floor(#self.hittable/self.hitsperstackinc))
+			
+			local dur = -1
+			if self.hittable[#self.hittable] ~= nil then
+				dur = (self.hittable[#self.hittable] + self.duration - GameRules:GetGameTime())
+			end
+			if startcount ~= #self.hittable then
+				self:SetDuration( dur, true )
+			end
+			self:StartIntervalThink( 0.2 )
+		else
+			self:StartIntervalThink( 1 )
+		end
+	end
+	self:GetParent():CalculateStatBonus()
+end
+
+function modifier_vgmar_i_essence_shift_buff:DeclareFunctions()
 	local funcs = {
 		MODIFIER_PROPERTY_STATS_STRENGTH_BONUS,
 		MODIFIER_PROPERTY_STATS_INTELLECT_BONUS,
-		MODIFIER_PROPERTY_STATS_AGILITY_BONUS,
-		MODIFIER_EVENT_ON_DEATH
+		MODIFIER_PROPERTY_STATS_AGILITY_BONUS
     }
     return funcs
 end
 
-function modifier_vgmar_i_essence_shift_owner_str:OnDeath(event)
+function modifier_vgmar_i_essence_shift_buff:GetModifierBonusStats_Strength()
 	if IsServer() then
-		if event.unit == self:GetParent() then
-			self:SetDuration( -1, true )
-			self.hitcount = 0
-			self:SetStackCount(0)
-		end
-	end
-end
-
-function modifier_vgmar_i_essence_shift_owner_str:GetModifierBonusStats_Agility()
-	if self:GetParent():IsRealHero() then
-		if IsServer() then
-			return self.increasesecondary * self:GetStackCount()
-		else
-			return self.clientvalues.increasesecondary * self:GetStackCount()
-		end
-	end
-end
-
-function modifier_vgmar_i_essence_shift_owner_str:GetModifierBonusStats_Intellect()
-	if self:GetParent():IsRealHero() then
-		if IsServer() then
-			return self.increasesecondary * self:GetStackCount()
-		else
-			return self.clientvalues.increasesecondary * self:GetStackCount()
-		end
-	end
-end
-
-function modifier_vgmar_i_essence_shift_owner_str:GetModifierBonusStats_Strength()
-	if self:GetParent():IsRealHero() then
-		if IsServer() then
+		if self:GetParent():GetPrimaryAttribute() == 0 then
 			return self.increaseprimary * self:GetStackCount()
 		else
-			return self.clientvalues.increaseprimary * self:GetStackCount()
+			return self.increasesecondary * self:GetStackCount()
 		end
 	end
 end
 
-function modifier_vgmar_i_essence_shift_owner_str:OnIntervalThink()
+function modifier_vgmar_i_essence_shift_buff:GetModifierBonusStats_Agility()
 	if IsServer() then
-		if self:GetRemainingTime() < 1 then
-			self:SetDuration( -1, true )
-			self.hitcount = 0
-			self:SetStackCount( 0 )
+		if self:GetParent():GetPrimaryAttribute() == 1 then
+			return self.increaseprimary * self:GetStackCount()
+		else
+			return self.increasesecondary * self:GetStackCount()
+		end
+	end
+end
+
+function modifier_vgmar_i_essence_shift_buff:GetModifierBonusStats_Intellect()
+	if IsServer() then
+		if self:GetParent():GetPrimaryAttribute() == 2 then
+			return self.increaseprimary * self:GetStackCount()
+		else
+			return self.increasesecondary * self:GetStackCount()
+		end
+	end
+end
+
+--------------------------------------------------------------------------------
+
+modifier_vgmar_i_essence_shift_debuff = class({})
+
+function modifier_vgmar_i_essence_shift_debuff:GetTexture()
+	return "custom/essenceshift_strength"
+end
+
+--------------------------------------------------------------------------------
+
+function modifier_vgmar_i_essence_shift_debuff:IsHidden()
+    return false
+end
+
+function modifier_vgmar_i_essence_shift_debuff:IsPurgable()
+	return false
+end
+
+function modifier_vgmar_i_essence_shift_debuff:IsDebuff()
+	return true
+end
+
+function modifier_vgmar_i_essence_shift_debuff:RemoveOnDeath()
+	return true
+end
+
+function modifier_vgmar_i_essence_shift_debuff:DestroyOnExpire()
+	return true
+end
+
+function modifier_vgmar_i_essence_shift_debuff:OnCreated(kv) 
+	if IsServer() then
+		local provider = self:GetCaster()
+		local essenceshift = provider:FindModifierByName("modifier_vgmar_i_essence_shift")
+		self.reductionprimary = essenceshift.reductionprimary
+		self.reductionsecondary = essenceshift.reductionsecondary
+		self.hitsperstackred = essenceshift.hitsperstackred
+		self.hittable = {}
+		self:SetStackCount( math.floor(#self.hittable / self.hitsperstackred) )
+		self.durationtarget = essenceshift.durationtarget
+		self:SetDuration( self.durationtarget, true )
+		self:StartIntervalThink( 0.2 )
+	else
+		self.clientvalues = CustomNetTables:GetTableValue("client_side_ability_values", "modifier_vgmar_i_essence_shift")
+	end
+end
+
+function modifier_vgmar_i_essence_shift_debuff:OnRefresh(kv)
+	if IsServer() then
+		table.insert(self.hittable, 1, GameRules:GetGameTime())
+	end
+end
+
+function modifier_vgmar_i_essence_shift_debuff:OnIntervalThink()
+	if IsServer() then
+		if #self.hittable > 0 then
+			--Removing Expired Hit Records
+			local startcount = #self.hittable
+			for i=#self.hittable, 1, -1 do
+				if self.hittable[i] + self.durationtarget > GameRules:GetGameTime() then
+					break
+				else
+					table.remove(self.hittable, i)
+				end
+			end
+			if #self.hittable < 1 then
+				self:Destroy()
+			end
+			self:SetStackCount(math.floor(#self.hittable/self.hitsperstackred))
+			
+			if startcount ~= #self.hittable then
+				self:SetDuration( (self.hittable[#self.hittable] + self.durationtarget - GameRules:GetGameTime()), true )
+			end
+		end
+	end
+	self:GetParent():CalculateStatBonus()
+end
+
+function modifier_vgmar_i_essence_shift_debuff:DeclareFunctions()
+	local funcs = {
+		MODIFIER_PROPERTY_STATS_STRENGTH_BONUS,
+		MODIFIER_PROPERTY_STATS_INTELLECT_BONUS,
+		MODIFIER_PROPERTY_STATS_AGILITY_BONUS
+    }
+    return funcs
+end
+
+function modifier_vgmar_i_essence_shift_debuff:GetModifierBonusStats_Strength()
+	if IsServer() then
+		if self:GetCaster():GetPrimaryAttribute() == 0 then
+			return -self.reductionprimary * self:GetStackCount()
+		else
+			return -self.reductionsecondary * self:GetStackCount()
+		end
+	end
+end
+
+function modifier_vgmar_i_essence_shift_debuff:GetModifierBonusStats_Agility()
+	if IsServer() then
+		if self:GetCaster():GetPrimaryAttribute() == 1 then
+			return -self.reductionprimary * self:GetStackCount()
+		else
+			return -self.reductionsecondary * self:GetStackCount()
+		end
+	end
+end
+
+function modifier_vgmar_i_essence_shift_debuff:GetModifierBonusStats_Intellect()
+	if IsServer() then
+		if self:GetCaster():GetPrimaryAttribute() == 2 then
+			return -self.reductionprimary * self:GetStackCount()
+		else
+			return -self.reductionsecondary * self:GetStackCount()
 		end
 	end
 end
 
 ---------------------------------------------------------------------------
-
-modifier_vgmar_i_essence_shift_owner_agi = class({})
-
-function modifier_vgmar_i_essence_shift_owner_agi:GetTexture()
-	return "custom/essenceshift"
-end
-
---------------------------------------------------------------------------------
-
-function modifier_vgmar_i_essence_shift_owner_agi:IsHidden()
-    return self:GetStackCount() == 0
-end
-
-function modifier_vgmar_i_essence_shift_owner_agi:IsPurgable()
-	return false
-end
-
-function modifier_vgmar_i_essence_shift_owner_agi:IsDebuff()
-	return false
-end
-
-function modifier_vgmar_i_essence_shift_owner_agi:RemoveOnDeath()
-	return false
-end
-
-function modifier_vgmar_i_essence_shift_owner_agi:DestroyOnExpire()
-	return false
-end
-
-function modifier_vgmar_i_essence_shift_owner_agi:OnCreated(kv) 
-	if IsServer() then
-		local providerspell = self:GetCaster():FindModifierByName("modifier_vgmar_i_essence_shift")
-		self.increaseprimary = kv.increaseprimary
-		self.increasesecondary = kv.increasesecondary
-		self.hitsperstackinc = kv.hitsperstackinc
-		self.duration = kv.duration
-		self.hitcount = 0
-		self:SetStackCount( math.floor(self.hitcount / self.hitsperstackinc) )
-		self:SetDuration( -1, true )
-		self:StartIntervalThink( 1 )
-	else
-		self.clientvalues = CustomNetTables:GetTableValue("client_side_ability_values", "modifier_vgmar_i_essence_shift")
-	end
-end
-
-function modifier_vgmar_i_essence_shift_owner_agi:OnRefresh(kv)
-	if IsServer() then
-		self.hitcount = self.hitcount + 1
-		self:SetStackCount( math.floor(self.hitcount / self.hitsperstackinc) )
-		self:SetDuration( self.duration, true )
-	end
-end
-
-function modifier_vgmar_i_essence_shift_owner_agi:DeclareFunctions()
-	local funcs = {
-		MODIFIER_PROPERTY_STATS_STRENGTH_BONUS,
-		MODIFIER_PROPERTY_STATS_INTELLECT_BONUS,
-		MODIFIER_PROPERTY_STATS_AGILITY_BONUS,
-		MODIFIER_EVENT_ON_DEATH
-    }
-    return funcs
-end
-
-function modifier_vgmar_i_essence_shift_owner_agi:OnDeath(event)
-	if IsServer() then
-		if event.unit == self:GetParent() then
-			self:SetDuration( -1, true )
-			self.hitcount = 0
-			self:SetStackCount(0)
-		end
-	end
-end
-
-function modifier_vgmar_i_essence_shift_owner_agi:GetModifierBonusStats_Agility()
-	if self:GetParent():IsRealHero() then
-		if IsServer() then
-			return self.increaseprimary * self:GetStackCount()
-		else
-			return self.clientvalues.increaseprimary * self:GetStackCount()
-		end
-	end
-end
-
-function modifier_vgmar_i_essence_shift_owner_agi:GetModifierBonusStats_Intellect()
-	if self:GetParent():IsRealHero() then
-		if IsServer() then
-			return self.increasesecondary * self:GetStackCount()
-		else
-			return self.clientvalues.increasesecondary * self:GetStackCount()
-		end
-	end
-end
-
-function modifier_vgmar_i_essence_shift_owner_agi:GetModifierBonusStats_Strength()
-	if self:GetParent():IsRealHero() then
-		if IsServer() then
-			return self.increasesecondary * self:GetStackCount()
-		else
-			return self.clientvalues.increasesecondary * self:GetStackCount()
-		end
-	end
-end
-
-function modifier_vgmar_i_essence_shift_owner_agi:OnIntervalThink()
-	if IsServer() then
-		if self:GetRemainingTime() < 1 then
-			self:SetDuration( -1, true )
-			self.hitcount = 0
-			self:SetStackCount( 0 )
-		end
-	end
-end
-
----------------------------------------------------------------------------
-
-modifier_vgmar_i_essence_shift_owner_int = class({})
-
-function modifier_vgmar_i_essence_shift_owner_int:GetTexture()
-	return "custom/essenceshift"
-end
-
---------------------------------------------------------------------------------
-
-function modifier_vgmar_i_essence_shift_owner_int:IsHidden()
-    return self:GetStackCount() == 0
-end
-
-function modifier_vgmar_i_essence_shift_owner_int:IsPurgable()
-	return false
-end
-
-function modifier_vgmar_i_essence_shift_owner_int:IsDebuff()
-	return false
-end
-
-function modifier_vgmar_i_essence_shift_owner_int:RemoveOnDeath()
-	return false
-end
-
-function modifier_vgmar_i_essence_shift_owner_int:DestroyOnExpire()
-	return false
-end
-
-function modifier_vgmar_i_essence_shift_owner_int:OnCreated(kv) 
-	if IsServer() then
-		local providerspell = self:GetCaster():FindModifierByName("modifier_vgmar_i_essence_shift")
-		self.increaseprimary = kv.increaseprimary
-		self.increasesecondary = kv.increasesecondary
-		self.hitsperstackinc = kv.hitsperstackinc
-		self.duration = kv.duration
-		self.hitcount = 0
-		self:SetStackCount( math.floor(self.hitcount / self.hitsperstackinc) )
-		self:SetDuration( -1, true )
-		self:StartIntervalThink( 1 )
-	else
-		self.clientvalues = CustomNetTables:GetTableValue("client_side_ability_values", "modifier_vgmar_i_essence_shift")
-	end
-end
-
-function modifier_vgmar_i_essence_shift_owner_int:OnRefresh(kv)
-	if IsServer() then
-		self.hitcount = self.hitcount + 1
-		self:SetStackCount( math.floor(self.hitcount / self.hitsperstackinc) )
-		self:SetDuration( self.duration, true )
-	end
-end
-
-function modifier_vgmar_i_essence_shift_owner_int:DeclareFunctions()
-	local funcs = {
-		MODIFIER_PROPERTY_STATS_STRENGTH_BONUS,
-		MODIFIER_PROPERTY_STATS_INTELLECT_BONUS,
-		MODIFIER_PROPERTY_STATS_AGILITY_BONUS,
-		MODIFIER_EVENT_ON_DEATH
-    }
-    return funcs
-end
-
-function modifier_vgmar_i_essence_shift_owner_int:OnDeath(event)
-	if IsServer() then
-		if event.unit == self:GetParent() then
-			self:SetDuration( -1, true )
-			self.hitcount = 0
-			self:SetStackCount(0)
-		end
-	end
-end
-
-function modifier_vgmar_i_essence_shift_owner_int:GetModifierBonusStats_Agility()
-	if self:GetParent():IsRealHero() then
-		if IsServer() then
-			return self.increasesecondary * self:GetStackCount()
-		else
-			return self.clientvalues.increasesecondary * self:GetStackCount()
-		end
-	end
-end
-
-function modifier_vgmar_i_essence_shift_owner_int:GetModifierBonusStats_Intellect()
-	if self:GetParent():IsRealHero() then
-		if IsServer() then
-			return self.increaseprimary * self:GetStackCount()
-		else
-			return self.clientvalues.increaseprimary * self:GetStackCount()
-		end
-	end
-end
-
-function modifier_vgmar_i_essence_shift_owner_int:GetModifierBonusStats_Strength()
-	if self:GetParent():IsRealHero() then
-		if IsServer() then
-			return self.increasesecondary * self:GetStackCount()
-		else
-			return self.clientvalues.increasesecondary * self:GetStackCount()
-		end
-	end
-end
-
-function modifier_vgmar_i_essence_shift_owner_int:OnIntervalThink()
-	if IsServer() then
-		if self:GetRemainingTime() < 1 then
-			self:SetDuration( -1, true )
-			self.hitcount = 0
-			self:SetStackCount( 0 )
-		end
-	end
-end
-
 ---------------------------------------------------------------------------

@@ -42,13 +42,13 @@
 				"item_void_stone"		"ITEM_LUXURY"
 				"item_recipe_aether_lens"	"ITEM_LUXURY"
 				"item_aether_lens"			"ITEM_DERIVED"
-				
-				"item_crown"		"ITEM_CORE"
+
 				"item_boots_of_elves"	"ITEM_CORE"
 				"item_boots_of_elves"	"ITEM_CORE"
 				"item_ogre_axe"			"ITEM_CORE"
 				"item_dragon_lance"		"ITEM_DERIVED"
 				
+				"item_recipe_hurricane_pike"	"ITEM_CORE"
 				"item_hurricane_pike"	"ITEM_DERIVED"
 				
 				"item_ultimate_orb"		"ITEM_EXTENSION"

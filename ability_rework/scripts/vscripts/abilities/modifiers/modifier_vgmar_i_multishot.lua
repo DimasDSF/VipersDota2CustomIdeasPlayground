@@ -38,6 +38,9 @@ function modifier_vgmar_i_multishot:OnCreated( kv )
 		self.attrcapenablemodifiers = kv.attrcapenablemodifiers
 		self.bonusdamage = kv.bonusdamage
 		self.bonusrange = kv.bonusrange
+		self.startradius = kv.startradius
+		self.endradius = kv.endradius
+		self.modifierperc = kv.modifierperc/100
 		self:SetDuration(0.1, true)
 		self:StartIntervalThink(1)
 		self.modifiersstate = false
@@ -100,7 +103,9 @@ function modifier_vgmar_i_multishot:OnAttack( event )
 			if event.attacker:GetTeamNumber() ~= event.target:GetTeamNumber() and event.target == self:GetParent():GetAttackTarget() then
 				if self:GetStackCount() > 0 then
 					local parent = self:GetParent()
-					local targets = FindUnitsInRadius(parent:GetTeamNumber(), parent:GetAbsOrigin(), nil, parent:Script_GetAttackRange() + 150, DOTA_UNIT_TARGET_TEAM_ENEMY, DOTA_UNIT_TARGET_HERO + DOTA_UNIT_TARGET_CREEP + DOTA_UNIT_TARGET_BUILDING, DOTA_UNIT_TARGET_FLAG_FOW_VISIBLE, FIND_CLOSEST, false)
+					local dir = (event.target:GetAbsOrigin() - event.attacker:GetAbsOrigin()):Normalized()
+					local targets = Extensions:FindUnitsInCone(parent:GetTeamNumber(), dir, parent:GetAbsOrigin(), self.startradius, self.endradius, parent:Script_GetAttackRange() + 150, nil, DOTA_UNIT_TARGET_TEAM_ENEMY, DOTA_UNIT_TARGET_HERO + DOTA_UNIT_TARGET_CREEP + DOTA_UNIT_TARGET_BUILDING, DOTA_UNIT_TARGET_FLAG_FOW_VISIBLE, FIND_CLOSEST, false)
+					--local targets = FindUnitsInRadius(parent:GetTeamNumber(), parent:GetAbsOrigin(), nil, parent:Script_GetAttackRange() + 150, DOTA_UNIT_TARGET_TEAM_ENEMY, DOTA_UNIT_TARGET_HERO + DOTA_UNIT_TARGET_CREEP + DOTA_UNIT_TARGET_BUILDING, DOTA_UNIT_TARGET_FLAG_FOW_VISIBLE, FIND_CLOSEST, false)
 					local sortedtargets = {}
 					--Sorting
 					if #targets > 1 then
@@ -119,7 +124,7 @@ function modifier_vgmar_i_multishot:OnAttack( event )
 						end
 						if #sortedtargets > 0 then
 							for j=1,self:GetStackCount() do
-								parent:PerformAttack(sortedtargets[j], self.modifiersstate, self.modifiersstate, true, false, true, false, false)
+								parent:PerformAttack(sortedtargets[j], (self.modifiersstate and j<=math.floor(self:GetStackCount()*self.modifierperc)), (self.modifiersstate and j<=math.floor(self:GetStackCount()*self.modifierperc)), true, false, true, false, false)
 							end
 						end
 					end

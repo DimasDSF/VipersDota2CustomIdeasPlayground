@@ -11,3 +11,10 @@ function class()
 end
 GameRules = {}
 CBaseEntity = {}
+LogLib = {}
+--Fake Functions for testing outputs without including other modules or closed source APIs
+function LogLib:Log_Error() end
+function LogLib:Log_Warning() end
+function FindUnitsInRadius()
+	return {"unit1", "unit2", "unit3"}
+end

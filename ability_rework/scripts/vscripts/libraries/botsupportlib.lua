@@ -124,6 +124,7 @@ function BotSupportLib:Init()
 	LinkLuaModifier("modifier_bsl_execute_order_processor", "abilities/util/modifiers/modifier_bsl_execute_order_processor", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_bsl_eventhandler", "abilities/util/modifiers/modifier_bsl_eventhandler", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_bsl_thinker", "abilities/util/modifiers/modifier_bsl_thinker", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_bsl_disable_control", "abilities/util/modifiers/modifier_bsl_disable_control", LUA_MODIFIER_MOTION_NONE)
 	ListenToGameEvent( "dota_player_learned_ability", Dynamic_Wrap( BotSupportLib, "OnAbilityLearned" ), self)
 	
 	Convars:RegisterCommand('bsl_force_reset_eop', Dynamic_Wrap( BotSupportLib, "ForceResetAllEOPs" ), "Resets all EOPs", 0)
@@ -224,7 +225,25 @@ local affectedheroeslist = {
 		},
 		trackedintrinsicmodifiers = {},
 		logicthinkers = {}
+	},
+	["npc_dota_hero_sven"] = {
+		abilities = {
+			"sven_storm_bolt",
+			"sven_great_cleave",
+			"sven_warcry",
+			"sven_gods_strength"
+		},
+		trackedintrinsicmodifiers = {},
+		logicthinkers = {}
 	}
+}
+
+local linkenmods = {
+	["modifier_item_sphere_target"] = 0,
+	["modifier_antimage_counterspell"] = 0,
+	["modifier_special_bonus_spell_block"] = 0,
+	["modifier_vgmar_i_spellshield"] = 1,
+	["modifier_item_lotus_orb_active"] = 0
 }
 
 --Generic checks
@@ -295,7 +314,7 @@ function BotSupportLib:StartBotInit()
 	--Attach OnAbilityFullyCast Event Handler
 	GameRules.VGMAR.radiantanc:AddNewModifier(GameRules.VGMAR.radiantanc, nil, "modifier_bsl_eventhandler", {})
 	for i=1,HeroList:GetHeroCount() do
-		if self:IsHeroBotControlled(heroes[i]) then
+		if self:IsHeroBotControlled(heroes[i]) and heroes[i]:IsRealHero() then
 			table.insert(self.botheroes, heroes[i])
 		end
 	end
@@ -401,6 +420,18 @@ function BotSupportLib:GetClosestEnemyHero(hero, range)
 		return {enemy[1], (enemy[1]:GetAbsOrigin() - hero:GetAbsOrigin()):Length2D()}
 	end
 	return {nil, 9999999}
+end
+
+function BotSupportLib:CheckReflectModifiers(unit)
+	for i,v in pairs(linkenmods) do
+		if unit:HasModifier(i) then
+			local modifier = unit:FindModifierByName(i)
+			if modifier:GetStackCount() >= v then
+				return true
+			end
+		end
+	end
+	return false
 end
 
 --[[[0] = "DOTA_UNIT_ORDER_NONE",
@@ -527,7 +558,7 @@ function BotSupportLib:GlobalBotThink()
 					--////////////////////
 					if heroent:IsRealHero() and GameRules.VGMAR:HeroHasUsableItemInInventory( heroent, "item_bloodstone", false, false, false ) and heroent:IsAlive() then
 						local bloodstone = GameRules.VGMAR:GetItemFromInventoryByName( heroent, "item_bloodstone", false, false, false )
-						if bloodstone ~= nil and bloodstone:GetCooldownTimeRemaining() <= 0 and heroent:GetHealth()/heroent:GetMaxHealth() < 0.3 and heroent:GetMana()/heroent:GetMaxMana() > 0.6 then
+						if bloodstone ~= nil and bloodstone:IsFullyCastable() and heroent:GetHealth()/heroent:GetMaxHealth() < 0.3 and heroent:GetMana()/heroent:GetMaxMana() > 0.6 then
 							BotSupportLib:CastAbility(heroent, DOTA_UNIT_ORDER_CAST_NO_TARGET, nil, bloodstone, nil, false, true, true)
 						end
 					end
@@ -611,6 +642,10 @@ end
 function BotSupportLib:OnKilledUnit(attacker, unit, event)
 	if attacker and unit and event then
 		local index = attacker:entindex()
+		--TODO:Move roshan deathtime out of bsl
+		if unit and unit:GetName() == "npc_dota_roshan" then
+			GameRules.VGMAR.roshandeathtime = GameRules:GetGameTime()
+		end
 		if self:IsHeroBSLSupported(attacker) then
 			if self.botdata[index] ~= nil then
 				local name = self.botdata[index].name
@@ -624,6 +659,33 @@ function BotSupportLib:OnDamaged(unit, attacker, event)
 	if unit and attacker and event then
 		local aindex = attacker:entindex()
 		local uindex = unit:entindex()
+		--Tracking Damage
+		if unit:IsRealHero() then
+			Extensions:TrackDamage(uindex, event.damage, event.damage_type, (attacker:IsHero() or ((attacker:IsSummoned() or attacker:IsDominated()) and (attacker:GetPlayerOwner() ~= nil))))
+		end
+		if unit:IsRealHero() and self:IsHeroBotControlled(unit) then
+			--/////////////////////////////////////////////
+			--Escape and Defence Logics Fast Response Logic
+			--/////////////////////////////////////////////
+			--Blademail
+			if GameRules.VGMAR:HeroHasUsableItemInInventory( unit, "item_blade_mail", false, false, false ) and unit:IsAlive() and unit:IsInvisible() == false then
+				local blademail = GameRules.VGMAR:GetItemFromInventoryByName( unit, "item_blade_mail", false, false, false )
+				if blademail ~= nil and blademail:IsFullyCastable() and Extensions:QueryHeroDamage(unit:entindex(), 2, 1+4+(2*math.bool(unit:HasModifier("modifier_black_king_bar_immune"))), true, false) >= unit:GetMaxHealth()*0.1 then
+					BotSupportLib:CastAbility(unit, DOTA_UNIT_ORDER_CAST_NO_TARGET, nil, blademail, nil, false, true, true)
+				end
+			--ShadowBlade/SilverEdge
+			elseif unit:IsAlive() and unit:IsInvisible() == false and (GameRules.VGMAR:HeroHasUsableItemInInventory( unit, "item_invis_sword", false, false, false ) or GameRules.VGMAR:HeroHasUsableItemInInventory( unit, "item_silver_edge", false, false, false )) then
+				local invisitem = GameRules.VGMAR:GetItemFromInventoryByName( unit, "item_invis_sword", false, false, false )
+				if invisitem == nil then
+					invisitem = GameRules.VGMAR:GetItemFromInventoryByName( unit, "item_silver_edge", false, false, false )
+				end
+				if invisitem ~= nil and invisitem:IsFullyCastable() then
+					if attacker:IsHero() and (unit:GetHealth()/unit:GetMaxHealth() < 0.35) and Extensions:QueryHeroDamage(unit:entindex(), 2, 1+2+4, true, false) >= unit:GetMaxHealth()*0.1 then
+						BotSupportLib:CastAbility(unit, DOTA_UNIT_ORDER_CAST_NO_TARGET, nil, invisitem, nil, false, true, true)
+					end
+				end
+			end
+		end
 		if self:IsHeroBSLSupported(attacker) then
 			if self.botdata[aindex] ~= nil then
 				local name = self.botdata[aindex].name
@@ -910,6 +972,33 @@ function BotSupportLib:OrderFilter(filterTable)
 			--BotLogic
 			if self.botdata[index] ~= nil then
 				local name = self.botdata[index].name
+				--Sven Stuns units next to the target if target has linken(or substitutes) and nearby units dont
+				if name == "npc_dota_hero_sven" then
+					local stun = self:GetAbilityFromDB( unit, "sven_storm_bolt")
+					if ability and ability == stun and target and target:IsHero() then
+						if GameRules.VGMAR:HeroHasUsableItemInInventory( target, "item_sphere", false, false, false ) or BotSupportLib:CheckReflectModifiers(target) then
+							local stunrange = stun:GetSpecialValueFor("bolt_aoe")
+							local stuntargets = FindUnitsInRadius(unit:GetTeamNumber(), target:GetOrigin(), nil, stunrange*0.8, DOTA_UNIT_TARGET_TEAM_ENEMY, DOTA_UNIT_TARGET_HERO + DOTA_UNIT_TARGET_CREEP, 0, FIND_CLOSEST, false)
+							local filteredstuntargets = {}
+							if #stuntargets > 1 then
+								for i=1,#stuntargets do
+									if stuntargets[i] ~= target then
+										if (stuntargets[i]:IsHero() and ((GameRules.VGMAR:HeroHasUsableItemInInventory( stuntargets[i], "item_sphere", false, false, false ) and BotSupportLib:CheckReflectModifiers(stuntargets[i])) == false)) then
+											table.insert(filteredstuntargets, stuntargets[i])
+										elseif stuntargets[i]:IsHero() == false then
+											table.insert(filteredstuntargets, stuntargets[i])
+										end
+									end
+								end
+							end
+							if #filteredstuntargets > 0 then
+								local newtar = filteredstuntargets[math.random(1,#filteredstuntargets)]
+								unit:CastAbilityOnTarget(newtar, stun, issuer)
+								return false
+							end
+						end
+					end
+				end
 			end
 		end
 	end

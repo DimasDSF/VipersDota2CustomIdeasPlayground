@@ -37,12 +37,12 @@
 				"item_recipe_black_king_bar"		"ITEM_EXTENSION"
 				"item_black_king_bar"		"ITEM_DERIVED"
 
-				"item_crown"		"ITEM_CORE"
 				"item_staff_of_wizardry"		"ITEM_EXTENSION"
 				"item_ring_of_regen"		"ITEM_EXTENSION"
 				"item_recipe_force_staff"		"ITEM_EXTENSION"
 				"item_force_staff"		"ITEM_DERIVED"
-
+				
+				"item_recipe_hurricane_pike"	"ITEM_CORE"
 				"item_hurricane_pike"	"ITEM_DERIVED"
 				
 				"item_shadow_amulet"		"ITEM_CORE"

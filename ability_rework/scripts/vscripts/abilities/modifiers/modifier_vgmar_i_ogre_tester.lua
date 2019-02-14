@@ -150,6 +150,7 @@ function modifier_vgmar_i_ogre_tester:OnIntervalThink()
 		for _,j in ipairs(GridNav:GetAllTreesAroundPoint(self:GetParent():GetAbsOrigin(), 600, true)) do
 			DebugDrawText(j:GetAbsOrigin(), tostring(j:entindex()).."\n"..tostring(GetEntityIndexForTreeId(j:entindex())).."\n"..tostring(GetTreeIdForEntityIndex(j:entindex())), false, 1)
 		end
+		--Extensions:AddEntText(self:GetParent():entindex(), Extensions:QueryHeroDamage(self:GetParent():entindex(), 2, 1+4+(2*math.bool(self:GetParent():HasModifier("modifier_black_king_bar_immune"))), true, false))
 		--print("AttackRange: "..self:GetParent():Script_GetAttackRange())
 		--self:statprint("AttackDMG: "..self:GetParent():GetAttackDamage().."\nAverage AttackDMG: "..self:GetParent():GetAverageTrueAttackDamage(self:GetParent()))
 		--OrientationTest
@@ -218,10 +219,13 @@ end--]]
 	end
 end--]]
 
---[[function modifier_vgmar_i_ogre_tester:OnTakeDamage( event )
+function modifier_vgmar_i_ogre_tester:OnTakeDamage( event )
 	if IsServer() then
+		if event.victim == self:GetParent() or event.attacker == self:GetParent() then
+			debug.PrintTable(event)
+		end
 	end
-end--]]
+end
 
 function modifier_vgmar_i_ogre_tester:OnRemoved()
 	if IsServer() then
@@ -251,7 +255,9 @@ function modifier_vgmar_i_ogre_tester:OnAttackStart(kv)
 		if kv.attacker == self:GetParent() then
 			print("Printing AttackStart kv")
 			debug.PrintTable(kv)
-			print("Predicting "..math.truncate(Extensions:PredictAttackDamage(kv.attacker, kv.target),2).." Damage")
+			if kv.target:IsRealUnit(true) then
+				print("Predicting "..math.truncate(Extensions:PredictAttackDamage(kv.attacker, kv.target),2).." Damage")
+			end
 		end
 	end
 end
@@ -271,7 +277,7 @@ function modifier_vgmar_i_ogre_tester:DeclareFunctions()
 		MODIFIER_EVENT_ON_ATTACK_LANDED,
 		MODIFIER_EVENT_ON_ATTACK_START,
 		--MODIFIER_EVENT_ON_ORDER,
-		--MODIFIER_EVENT_ON_TAKEDAMAGE,
+		MODIFIER_EVENT_ON_TAKEDAMAGE,
 		--MODIFIER_EVENT_ON_SPENT_MANA,
 		MODIFIER_EVENT_ON_ABILITY_EXECUTED,
 		MODIFIER_EVENT_ON_ABILITY_START,

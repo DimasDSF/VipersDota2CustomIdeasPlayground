@@ -41,6 +41,21 @@ function modifier_vgmar_buildings_decay:OnCreated(kv)
 	end
 end
 
+function modifier_vgmar_buildings_decay:DeclareFunctions()
+	local funcs = {
+        MODIFIER_EVENT_ON_TAKEDAMAGE
+    }
+    return funcs
+end
+
+function modifier_vgmar_buildings_decay:OnTakeDamage(event)
+	if IsServer() then
+		if event.unit == self:GetParent() then
+			self.health = math.max(1, self.health - event.damage)
+		end
+	end
+end
+
 function modifier_vgmar_buildings_decay:OnIntervalThink()
 	local health = math.mapl(self:GetRemainingTime()/self:GetDuration(), 0.01, 1, 1, self.health)
 	self:GetParent():EmitSound("Hero_Alchemist.AcidSpray.Damage")

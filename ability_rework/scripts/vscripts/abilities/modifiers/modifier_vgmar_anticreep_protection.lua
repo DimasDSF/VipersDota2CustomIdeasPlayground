@@ -25,6 +25,7 @@ function modifier_vgmar_anticreep_protection:OnCreated(kv)
 		self.strikeinterval = kv.strikeinterval
 		self.activeduration = kv.activeduration
 		self.dmgpercentpercreep = kv.dmgpercentpercreep
+		self.goldbountyperc = kv.goldbountyperc/100
 		--init
 		self.striketimestamp = -1
 		self.particle1 = nil
@@ -42,6 +43,7 @@ function modifier_vgmar_anticreep_protection:DeclareFunctions()
 	local funcs = {
 		MODIFIER_EVENT_ON_ATTACKED,
 		MODIFIER_PROPERTY_PROVIDES_FOW_POSITION,
+		MODIFIER_EVENT_ON_DEATH,
 		MODIFIER_PROPERTY_TOOLTIP
     }
     return funcs
@@ -121,6 +123,18 @@ function modifier_vgmar_anticreep_protection:OnAttacked(kv)
 						self.cpsactive = true
 					end
 				end
+			end
+		end
+	end
+end
+
+function modifier_vgmar_anticreep_protection:OnDeath(kv)
+	if IsServer() then
+		if kv.attacker == self:GetParent() then
+			local direheroes = GameRules.VGMAR.direheroes
+			local endgold = math.ceil((kv.unit:GetGoldBounty() * self.goldbountyperc)/#direheroes)
+			for i,v in ipairs(direheroes) do
+				v:ModifyGold(endgold, false, 0)
 			end
 		end
 	end

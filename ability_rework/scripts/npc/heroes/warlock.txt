@@ -6,7 +6,7 @@
 	"npc_dota_hero_warlock"
 	{
 		"SupportsEasyMode"	"1"
-		"BotImplemented"		"1"
+		"BotImplemented"		"0"
 		"Bot"
 		{
 			"Loadout"
