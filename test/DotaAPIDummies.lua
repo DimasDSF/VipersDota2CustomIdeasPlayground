@@ -15,6 +15,8 @@ LogLib = {}
 --Fake Functions for testing outputs without including other modules or closed source APIs
 function LogLib:Log_Error() end
 function LogLib:Log_Warning() end
+--Fake GetAbsOrigin() for extensions
+function string:GetAbsOrigin() return nil end
 function FindUnitsInRadius()
 	return {"unit1", "unit2", "unit3"}
 end
