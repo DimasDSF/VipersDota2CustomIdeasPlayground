@@ -2,7 +2,7 @@ local RADIANT_TEAM_MAX_PLAYERS = 1
 local DIRE_TEAM_MAX_PLAYERS = 8
 local RUNE_SPAWN_TIME_POWERUP = 2
 local RUNE_SPAWN_TIME_BOUNTY = 5
-local VGMAR_DEBUG = false
+local VGMAR_DEBUG = true
 local VGMAR_DEBUG_DRAW = false
 local VGMAR_DEBUG_ENABLE_VARIABLE_SETTING = true
 local VGMAR_GIVE_DEBUG_ITEMS = false
@@ -183,6 +183,9 @@ local modifierdatatable = {
 	["modifier_vgmar_b_fountain_anticamp"] = {radius = 2000, interval = 1.0, strpertick = 4, intpertick = 2, agipertick = 2, disablepassivestick = 20, silencetick = 40, blindnessendtick = 60, blindnessrange = 200, lingerduration = 30.0},
 	["modifier_vgmar_b_last_resort_armor"] = {dur = 120, reductiontick = 1, reductionpertick = 1, armor_per_stack = 2, bonus_regen = 10, start_stacks = 100},
 	["modifier_vgmar_b_ancient_tether"] = {damagereducion = -20, healthregen = 15, manaregen = 7, bonusas = 120},
+	["modifier_vgmar_b_laser"] = {misschance = 100, laser_damage = 400, laser_miss_duration = 3.0, bounce_range = 400},
+	["modifier_vgmar_b_hsmissile"] = {dmg = 700, dmgsplash = 550, splashradius = 400},
+	["modifier_vgmar_b_turret_ai"] = {minlasertargets = 2, minmissiletargets = 3, maxmissiletargets = 6, maxattackrate = 0.15, minattackrate = 1.3, maxattackstacks = 20, lasercd = 25, hsmcd = 20, maxammo = 400, reloadtime = 15},
 	["modifier_vgmar_anticreep_protection"] = {radius = 1800, strikeinterval = 2.0, activeduration = 5.0, dmgpercentpercreep = 5.0, goldbountyperc = 10},
 	["modifier_vgmar_c_cannon_ball"] = {damageperlevel = 20, stunduration = 1.0},
 	["modifier_vgmar_i_ogre_tester"] = {}
@@ -254,7 +257,8 @@ function Precache( ctx )
 		"zuus",
 		"medusa",
 		"ancient_apparition",
-		"alchemist"
+		"alchemist",
+		"tinker"
 	}
 	
 	for i=1,#herosoundprecachelist do
@@ -331,6 +335,7 @@ function VGMAR:Init()
 		}
 	}
 	self.roshandeathtime = -1
+	self.turrets = {}
 	
 	local itemskvnum = 0
 	local itemscustomkvnum = 0
@@ -459,6 +464,12 @@ function VGMAR:Init()
 	LinkLuaModifier("modifier_vgmar_b_last_resort_armor", "abilities/modifiers/modifier_vgmar_b_last_resort_armor", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_b_ancient_tether", "abilities/modifiers/modifier_vgmar_b_ancient_tether", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_b_ancient_tether_counter", "abilities/modifiers/modifier_vgmar_b_ancient_tether", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_b_laser_miss", "abilities/modifiers/vgmar_turret_modifiers", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_b_turret_ai", "abilities/modifiers/vgmar_turret_modifiers", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_b_turret_ammo", "abilities/modifiers/vgmar_turret_modifiers", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_b_laser_cd", "abilities/modifiers/vgmar_turret_modifiers", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_b_hsm_cd", "abilities/modifiers/vgmar_turret_modifiers", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_b_turret_invulnerability", "abilities/modifiers/vgmar_turret_modifiers", LUA_MODIFIER_MOTION_NONE)
 	--Bot Balance Additional Modifiers
 	LinkLuaModifier("modifier_vgmar_bam_blade_mail", "abilities/modifiers/modifier_vgmar_bam_blade_mail", LUA_MODIFIER_MOTION_NONE)
 	--Unit Specific
@@ -508,6 +519,36 @@ function VGMAR:Init()
 		["good_healer_6"] = 2,
 		["dota_goodguys_tower4_top"] = 4,
 		["dota_goodguys_tower4_bot"] = 4
+	}
+	self.turretpositions = {
+		{groupname = "Throne",
+			coords = {
+				{-5910, -4962},
+				{-5493, -5370}
+			},
+			invuln = {"dota_goodguys_tower4_bot", "dota_goodguys_tower4_top"}
+		},
+		{groupname = "Top",
+			coords = {
+				{-6030, -3233},
+				{-7006, -3251}
+			},
+			invuln = {"good_rax_melee_top", "good_rax_range_top"}
+		},
+		{groupname = "Mid",
+			coords = {
+				{-4107, -4324},
+				{-4831, -3630}
+			},
+			invuln = {"good_rax_melee_mid", "good_rax_range_mid"}
+		},
+		{groupname = "Bot",
+			coords = {
+				{-3712, -5550},
+				{-3725, -6590}
+			},
+			invuln = {"good_rax_melee_bot", "good_rax_range_bot"}
+		}
 	}
 	self.essenceauraignoredabilities = {
 		nyx_assassin_burrow = true,
@@ -870,7 +911,7 @@ function VGMAR:LogBalance()
 		"modifier_lion_finger_of_death_kill_counter",
 		"modifier_abyssal_underlord_atrophy_aura_hero_permanent_buff",
 		"modifier_slark_essence_shift_permanent_buff",
-		"modifier_slark_essence_shift_permanent_debuff"
+		"modifier_slark_essence_shift_permanent_debuff",
 	}
 	LogLib:WriteLog("balance", 1, false, "")
 	LogLib:WriteLog("balance", 1, false, "Hero Data:")
@@ -2800,6 +2841,23 @@ function VGMAR:OnBuildingDestroyed(attacker, denied, buildingteamnumber, buildin
 		end
 		self.shrinedecaystarted = true
 	end
+	--Base Defence Turret Invulnerability Check
+	for _, group in ipairs(self.turretpositions) do
+		local removeinvuln = false
+		for _, def in ipairs(group.invuln) do
+			local building = Entities:FindByName(nil, def)
+			if building == nil or (building and building:IsAlive() == false) then
+				removeinvuln = true
+			elseif building and building:IsAlive() then
+				removeinvuln = false
+			end
+		end
+		if removeinvuln then
+			for n, tur in pairs(self.turrets[group.groupname]) do
+				tur.invulnerability:Destroy()
+			end
+		end
+	end
 	--Bot Balanced Push
 	if buildingteamnumber == 2 and self.botmaxpushtier ~= -1 then
 		if self:GetAllTierTowersDestroyed(2, self.botmaxpushtier) then
@@ -3796,6 +3854,30 @@ function VGMAR:OnGameStateChanged( keys )
 		end
 		if direfountain then
 			direfountain:AddNewModifier(direfountain, nil, "modifier_vgmar_b_fountain_anticamp", modifierdatatable["modifier_vgmar_b_fountain_anticamp"])
+		end
+		--///////////////////////////////
+		--Spawn Turrets
+		--///////////////////////////////
+		for i=1, #self.turretpositions do
+			local gname = self.turretpositions[i].groupname
+			for _, c in ipairs(self.turretpositions[i].coords) do
+				local cx = c[1]
+				local cy = c[2]
+				local turret = CreateUnitByName("npc_dota_vgmar_turret", Vector(cx, cy, GetGroundHeight(Vector(cx,cy,0),nil)), false, self.radiantanc, nil, 2)		
+				if turret ~= nil then
+					local ai = turret:AddNewModifier(turret, nil, "modifier_vgmar_b_turret_ai", modifierdatatable["modifier_vgmar_b_turret_ai"])
+					local inv = turret:AddNewModifier(turret, nil, "modifier_vgmar_b_turret_invulnerability", {})
+					turret:FindModifierByName("modifier_tower_aura"):Destroy()
+					turret:FindModifierByName("modifier_tower_truesight_aura"):Destroy()
+					local index = turret:entindex()
+					if self.turrets[gname] == nil then
+						table.insert(self.turrets, gname)
+						self.turrets[gname] = {}
+					end
+					table.insert(self.turrets[gname], entindex)
+					self.turrets[gname][index] = {turret = turret, ai = ai, invulnerability = inv}
+				end
+			end
 		end
 		--///////////////////////////////
 		--New Implementation of defskills

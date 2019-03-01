@@ -327,6 +327,76 @@
 	
 	//============================
 	//============================
+	// VGMAR:Building Abilities
+	//============================
+	//============================
+	
+	//=================================================================================================================
+	// VGMAR: Turret Laser
+	//=================================================================================================================
+	"ability_vgmar_turret_laser"
+	{
+		// General
+		"BaseClass"						"ability_lua"
+        "ScriptFile"                    "abilities/abilities/ability_vgmar_turret_laser"                                 
+		"AbilityTextureName"			"tinker_laser"
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_UNIT_TARGET"
+		"AbilityUnitTargetTeam"			"DOTA_UNIT_TARGET_TEAM_ENEMY"
+		"AbilityUnitTargetType"			"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
+		"AbilityUnitDamageType"			"DAMAGE_TYPE_PURE"	
+		"SpellImmunityType"				"SPELL_IMMUNITY_ENEMIES_NO"
+        "MaxLevel"                      "1"
+        "AbilityCastAnimation"          "ACT_DOTA_CAST_ABILITY_1"
+		
+		// Casting
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityCastRange"				"2000"
+		"AbilityCastPoint"				"0.3"
+
+		// Time		
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityCooldown"				"0"
+
+
+		// Cost
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityManaCost"				"0"
+	}
+	
+	//=================================================================================================================
+	// VGMAR: Turret Heat Seeking Missile
+	//=================================================================================================================
+	"ability_vgmar_turret_hsm"
+	{
+		// General
+		"BaseClass"						"ability_lua"
+        "ScriptFile"                    "abilities/abilities/ability_vgmar_turret_hsm"                                 
+		"AbilityTextureName"			"tinker_heat_seeking_missile"
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_NO_TARGET"
+		"AbilityUnitDamageType"			"DAMAGE_TYPE_MAGICAL"	
+		"SpellImmunityType"				"SPELL_IMMUNITY_ENEMIES_NO"
+		"AbilityUnitTargetType"			"DOTA_UNIT_TARGET_HERO"
+		"AbilityUnitTargetFlags"		"DOTA_UNIT_TARGET_FLAG_FOW_VISIBLE | DOTA_UNIT_TARGET_FLAG_NOT_CREEP_HERO"
+        "MaxLevel"                      "1"
+        "AbilityCastAnimation"          "ACT_DOTA_CAST_ABILITY_1"
+		
+		// Casting
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityCastRange"				"2000"
+		"AbilityCastPoint"				"0.3"
+
+		// Time		
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityCooldown"				"0"
+
+
+		// Cost
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityManaCost"				"0"
+	}
+	
+	//============================
+	//============================
 	// VGMAR:Custom Util Abilities
 	//============================
 	//============================
