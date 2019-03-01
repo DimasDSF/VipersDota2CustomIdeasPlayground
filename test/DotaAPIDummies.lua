@@ -6,6 +6,7 @@
 |------------------------------------------------------------|
 	Do not include this anywhere except for testing scripts!
 --]]
+--TODO: Implement a Regex powered script to copy functions from script_help2 to DotaAPIDummies
 function class()
 	return {}
 end

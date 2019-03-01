@@ -2,7 +2,7 @@ local RADIANT_TEAM_MAX_PLAYERS = 1
 local DIRE_TEAM_MAX_PLAYERS = 8
 local RUNE_SPAWN_TIME_POWERUP = 2
 local RUNE_SPAWN_TIME_BOUNTY = 5
-local VGMAR_DEBUG = false
+local VGMAR_DEBUG = true
 local VGMAR_DEBUG_DRAW = false
 local VGMAR_DEBUG_ENABLE_VARIABLE_SETTING = true
 local VGMAR_GIVE_DEBUG_ITEMS = false
@@ -870,7 +870,8 @@ function VGMAR:LogBalance()
 		"modifier_lion_finger_of_death_kill_counter",
 		"modifier_abyssal_underlord_atrophy_aura_hero_permanent_buff",
 		"modifier_slark_essence_shift_permanent_buff",
-		"modifier_slark_essence_shift_permanent_debuff"
+		"modifier_slark_essence_shift_permanent_debuff",
+		"modifier_bounty_hunter_jinada"
 	}
 	LogLib:WriteLog("balance", 1, false, "")
 	LogLib:WriteLog("balance", 1, false, "Hero Data:")

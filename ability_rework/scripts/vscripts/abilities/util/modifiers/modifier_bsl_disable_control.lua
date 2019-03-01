@@ -8,6 +8,13 @@ function modifier_bsl_disable_control:CheckState()
   return state
 end
 
+--TODO: Add conditional auto-removal
+--All configured via creation kv
+--On Damaged > 5%HP
+--On Hit by enemy hero
+--On Hit by enemy creep
+--On Enemy hero nearby
+--On Enemy Creep Nearby
 function modifier_bsl_disable_control:IsHidden()
     return true
 end
