@@ -3,20 +3,6 @@
 modifier_bsl_eventhandler = class({})
 
 --------------------------------------------------------------------------------
---[[
-TODO:Add Creep Killed Event Handler
-TODO:Add Hero Killed Event Handler
-TODO:Add OnAttackStart Event Handler
--Check IsHero()
--Send unit, target
-TODO:Add OnAttackLanded Event Handler
--Check IsHero()
--Send unit, target
-TODO:Add OnDeath() Event Handler
--Check IsRealHero()
--Send unit, resurrection status, killer
---]]
---------------------------------------------------------------------------------
 
 function modifier_bsl_eventhandler:IsHidden()
 	return true

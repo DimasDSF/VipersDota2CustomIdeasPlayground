@@ -7,6 +7,7 @@ end
 
 function Extensions:Init()
 	print("[Extensions] : Initiating")
+	LinkLuaModifier("modifier_extensions_eventhandler", "abilities/util/modifiers/modifier_extensions_eventhandler", LUA_MODIFIER_MOTION_NONE)
 	Convars:RegisterConvar('vgmar_ext_debugdraw', "0", "Set to 1 to draw Extensions debug info. Set to 0 to disable.", 0)
 	self.enttexttable = {
 		lasttime = 0,
@@ -18,6 +19,15 @@ function Extensions:Init()
 		dire = {},
 		filled = false
 	}
+	print("[Extensions] : Attaching Event Handler")
+	--Set to a unit present throughout the game
+	local eventhandlerholderentity = "dota_goodguys_fort"
+	local ehhent = Entities:FindByName(nil, eventhandlerholderentity)
+	if ehhent then
+		self.eventhandler = ehhent:AddNewModifier(ehhent, nil, "modifier_extensions_eventhandler", {})
+	else
+		Warning("[Extensions] : Failed to find Event Handler Holder Entity! \nThis will prevent all Extensions based event callbacks from working!\n")
+	end
 	print("[Extensions] : Starting 1s Thinker Timer")
 	Timers:CreateTimer(function()
 		Extensions:ShowEntText()
@@ -39,6 +49,41 @@ function Extensions:DebugDraw()
 	end
 	return false
 end
+
+--Event Callbacks
+function Extensions:Event_OnAttackLanded(attacker, target, event)
+	if event and attacker and target then
+		
+	end
+end
+
+function Extensions:Event_OnAttackStart(attacker, target, event)
+	if event and attacker and target then
+		
+	end
+end
+
+function Extensions:Event_OnDeath(unit, attacker, event)
+	if attacker and unit and event then
+		if unit and unit:GetName() == "npc_dota_roshan" then
+			GameRules.VGMAR.roshandeathtime = GameRules:GetGameTime()
+		end
+	end
+end
+
+function Extensions:Event_OnDamaged(unit, attacker, event)
+	if unit and attacker and event then
+		
+	end
+end
+
+function Extensions:Event_OnAbilityCast(unit, ability, target, event)
+	if event and unit and ability then
+		
+	end
+end
+
+
 
 --Extensions
 function Extensions:FindUnitsInCone(teamNumber, vDirection, vPosition, startRadius, endRadius, flLength, hCacheUnit, teamFilter, typeFilter, flagFilter, findOrder, bCache)
@@ -321,6 +366,13 @@ function Extensions:HeroDamageTrackingLoop()
 			end
 		end
 	end
+end
+
+function Extensions:GetUnitDistance(unit1, unit2)
+	if unit1 and unit2 then
+		return (unit1:GetAbsOrigin() - unit2:GetAbsOrigin()):Length2D()
+	end
+	return nil
 end
 
 --math

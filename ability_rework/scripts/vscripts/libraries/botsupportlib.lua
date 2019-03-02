@@ -148,6 +148,8 @@ end
 
 --TODO:Add events to track for the event response system
 --TODO:Add Think Functions
+--logicthinker structure
+--(thinkerid, fID, endfID, interval, timeout, startability)
 local affectedheroeslist = {
 	["npc_dota_hero_skeleton_king"] = {
 		abilities = {
@@ -224,7 +226,9 @@ local affectedheroeslist = {
 			"lich_chain_frost"
 		},
 		trackedintrinsicmodifiers = {},
-		logicthinkers = {}
+		logicthinkers = {
+			{1, 5, nil, 1.0, nil, "lich_frost_shield"}
+		}
 	},
 	["npc_dota_hero_sven"] = {
 		abilities = {
@@ -232,6 +236,16 @@ local affectedheroeslist = {
 			"sven_great_cleave",
 			"sven_warcry",
 			"sven_gods_strength"
+		},
+		trackedintrinsicmodifiers = {},
+		logicthinkers = {}
+	},
+	["npc_dota_hero_necrolyte"] = {
+		abilities = {
+			"necrolyte_death_pulse",
+			"necrolyte_sadist",
+			"necrolyte_heartstopper_aura",
+			"necrolyte_reapers_scythe"
 		},
 		trackedintrinsicmodifiers = {},
 		logicthinkers = {}
@@ -613,6 +627,15 @@ function BotSupportLib:OnAttackLanded(attacker, target, event)
 								self:CastAbility(attacker, DOTA_UNIT_ORDER_CAST_TARGET, target, gaze, nil, false, true, true, 0.5, 2)
 							end
 						end
+					elseif name == "npc_dota_hero_viper" then
+						local nethertoxin = self:GetAbilityFromDB(attacker, "viper_nethertoxin")
+						if target and target:IsHero() then
+							if target:GetIdealSpeed() <= 300 then
+								if self:GetAbilityCastConditions(attacker, nethertoxin) and self:GetAbilityCastManaConditions(attacker, nethertoxin, {}, 0.1) then
+									self:CastAbility(attacker, DOTA_UNIT_ORDER_CAST_POSITION, nil, nethertoxin, (target:GetAbsOrigin() + target:GetVelocity()), false, true, true)
+								end
+							end
+						end
 					end
 				end
 			end
@@ -633,6 +656,20 @@ function BotSupportLib:OnAttackStart(attacker, target, event)
 							self:CastAbility(attacker, DOTA_UNIT_ORDER_CAST_NO_TARGET, nil, takeaim, nil, false, true, true)
 						end
 					end
+				elseif name == "npc_dota_hero_necrolyte" then
+					local shroud = self:GetAbilityFromDB(attacker, "necrolyte_sadist")
+					local ultimate = self:GetAbilityFromDB(attacker, "necrolyte_reapers_scythe")
+					if target:IsHero() then
+						if self:GetAbilityCastConditions(attacker, ultimate) and self:GetAbilityCastManaConditions(attacker, ultimate, {shroud}, 0.1) then
+							if (target:GetHealth() < (target:GetHealthDeficit()*ultimate:GetSpecialValueFor("damage_per_health"))*0.75) and target:IsMagicImmune() == false then
+								if target:IsRealHero() then
+									self:CastAbility(attacker, DOTA_UNIT_ORDER_CAST_TARGET, target, ultimate, nil, false, true, true, 0.2, 2)
+								elseif target:IsHero() and math.random(1, 100) <= 25 then
+									self:CastAbility(attacker, DOTA_UNIT_ORDER_CAST_TARGET, target, ultimate, nil, false, true, true, 0.2, 2)
+								end
+							end
+						end
+					end
 				end
 			end
 		end
@@ -642,10 +679,6 @@ end
 function BotSupportLib:OnKilledUnit(attacker, unit, event)
 	if attacker and unit and event then
 		local index = attacker:entindex()
-		--TODO:Move roshan deathtime out of bsl
-		if unit and unit:GetName() == "npc_dota_roshan" then
-			GameRules.VGMAR.roshandeathtime = GameRules:GetGameTime()
-		end
 		if self:IsHeroBSLSupported(attacker) then
 			if self.botdata[index] ~= nil then
 				local name = self.botdata[index].name
@@ -706,8 +739,16 @@ function BotSupportLib:OnDamaged(unit, attacker, event)
 					local shield = self:GetAbilityFromDB(unit, "lich_frost_shield")
 					local ultimate = self:GetAbilityFromDB(unit, "lich_chain_frost")
 					if self:GetAbilityCastConditions(unit, shield) and self:GetAbilityCastManaConditions(unit, shield, {ultimate}, 0.6) then
-						if (unit:GetHealth()/unit:GetMaxHealth() < 0.7) then
+						if (unit:GetHealth()/unit:GetMaxHealth() < 0.7) and Extensions:QueryHeroDamage(unit:entindex(), 2, 1+2+4, true, false) >= unit:GetMaxHealth()*0.1 then
 							self:CastAbility(unit, DOTA_UNIT_ORDER_CAST_TARGET, unit, shield, nil, false, true, true, 0.2, 2)
+						end
+					end
+				elseif name == "npc_dota_hero_necrolyte" then
+					local shroud = self:GetAbilityFromDB(unit, "necrolyte_sadist")
+					local ultimate = self:GetAbilityFromDB(unit, "necrolyte_reapers_scythe")
+					if self:GetAbilityCastConditions(unit, shroud) and self:GetAbilityCastManaConditions(unit, shroud, {ultimate}, 0.2) then
+						if Extensions:QueryHeroDamage(unit:entindex(), 2, 1, true, false) >= unit:GetMaxHealth()*0.1 and Extensions:GetUnitDistance(attacker, unit) <= attacker:Script_GetAttackRange()*1.2 then
+							self:CastAbility(unit, DOTA_UNIT_ORDER_CAST_NO_TARGET, nil, shroud, nil, false, true, true)
 						end
 					end
 				end
@@ -786,7 +827,7 @@ function BotSupportLib:OnAbilityCast(unit, ability, target, event)
 				elseif name == "npc_dota_hero_viper" then
 					local nethertoxin = self:GetAbilityFromDB( unit, "viper_nethertoxin" )
 					local ultimate = self:GetAbilityFromDB( unit, "viper_viper_strike" )
-					if ability == ultimate then
+					if ability == ultimate or ability:GetName() == "item_sheepstick" or ability:GetName() == "item_rod_of_atos" then
 						if target and target:IsHero() then
 							if self:GetAbilityCastConditions(unit, nethertoxin) and self:GetAbilityCastManaConditions(unit, nethertoxin, {}, 0.1) then
 								self:CastAbility(unit, DOTA_UNIT_ORDER_CAST_POSITION, nil, nethertoxin, target:GetAbsOrigin(), false, true, true)
@@ -938,6 +979,27 @@ function BotSupportLib:IntervalFunctionCall(unit, fID)
 							timeout = 4
 						})--]]
 						self:CastAbility(unit, DOTA_UNIT_ORDER_CAST_TARGET_TREE, GetTreeIdForEntityIndex(tree), tree_grab, nil, false, true, true, 0.1, 4)
+					end
+				end
+			else
+				return 2
+			end
+		elseif fID == 5 then
+			if name == "npc_dota_hero_lich" then
+				local shield = self:GetAbilityFromDB(unit, "lich_frost_shield")
+				local alliesnearby = FindUnitsInRadius(unit:GetTeamNumber(), unit:GetAbsOrigin(), nil, shield:GetCastRange()+200, DOTA_UNIT_TARGET_TEAM_FRIENDLY, DOTA_UNIT_TARGET_HERO, 0, FIND_CLOSEST, false)
+				local damagedally = {nil, 0}
+				for _, ally in ipairs(alliesnearby) do
+					if ally ~= unit then
+						local dmg = Extensions:QueryHeroDamage(ally:entindex(), 2, 1+2+4, true, false)
+						if dmg > damagedally[2] and ally:GetHealthPercent() > 5 and ally:IsInvulnerable() == false then
+							damagedally = {ally, dmg}
+						end
+					end
+				end
+				if damagedally[1] ~= nil then
+					if damagedally[2] >= damagedally[1]:GetMaxHealth()*0.1 then
+						self:CastAbility(unit, DOTA_UNIT_ORDER_CAST_TARGET, damagedally[1], shield, nil, false, true, true, 0.2, 2)
 					end
 				end
 			else
