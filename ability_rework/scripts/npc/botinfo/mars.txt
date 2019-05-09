@@ -1,0 +1,22 @@
+"DOTAHeroes"
+{
+	//=================================================================================================================
+	// HERO: Mars
+	//=================================================================================================================
+	"npc_dota_hero_mars"
+	{
+		"Bot"
+		{
+			"HeroType"		"DOTA_BOT_TANK | DOTA_BOT_SEMI_CARRY"
+			"LaningInfo"
+			{
+				"SoloDesire"		"0"
+				"RequiresBabysit"		"1"
+				"ProvidesBabysit"		"0"
+				"SurvivalRating"		"2"
+				"RequiresFarm"		"1"
+				"ProvidesSetup"		"2"
+				"RequiresSetup"		"0"
+			}
+		}
+	}

@@ -77,6 +77,7 @@
 #base "heroes/lone_druid.txt"
 #base "heroes/lycan.txt"
 #base "heroes/magnataur.txt"
+#base "heroes/mars.txt"
 #base "heroes/medusa.txt"
 #base "heroes/meepo.txt"
 #base "heroes/monkey_king.txt"
