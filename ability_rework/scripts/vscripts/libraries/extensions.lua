@@ -467,6 +467,17 @@ function table.sub(t2, t1)
     return ret
 end
 
+function table.random(intable)
+	if type(intable) == "table" then
+		if #intable > 1 then
+			return intable[math.random(1, #intable)]
+		else
+			return intable[1]
+		end
+	end
+	return nil
+end
+
 --CBaseEntity
 --Returns true for Creeps, Heroes, Couriers
 --Useful for Crits, Cleave attacks etc.
