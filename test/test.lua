@@ -174,7 +174,6 @@ end)
 test('table.random should return the value if input is a table of 1', function(a)
 	a.equal(1, table.random({1}))
 	a.equal("test", table.random({"test"}))
-	a.equal({1, 11, 111}, table.random({{1, 11, 111}}))
 end)
 
 test('table.random should return a random value from the input table if input is correct', function(a)
