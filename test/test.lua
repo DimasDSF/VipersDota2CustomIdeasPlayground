@@ -165,6 +165,15 @@ test('string.split should return nil if values are nil or not strings', function
 	a.equal(nil, string.split("testing split/split testing")[1])
 end)
 
+function is_in_table(table, key)
+	for _, k in pairs(table) do
+		if k == key then
+			return true
+		end
+	end
+	return false
+end
+
 test('table.random should return nil if input is incorrect', function(a)
 	a.equal(nil, table.random({}))
 	a.equal(nil, table.random("test"))
@@ -187,7 +196,7 @@ test('table.random should return a random value from the input table if input is
 		"test2"
 	}
 	local trand = table.random(testtable)
-	a.equal(true, trand == testtable[1] or trand == testtable[2] or trand == testtable[3])
+	a.ok(is_in_table(testtable, trand), "Failed Random Integer from table")
 	trand = table.random(testtable2)
-	a.equal(true, trand == "test" or trand == "test2")
+	a.ok(is_in_table(testtable2, trand), "Failed Random String from table")
 end)
