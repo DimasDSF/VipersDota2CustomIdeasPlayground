@@ -61,7 +61,7 @@
 				"7"		"zuus_lightning_bolt"
 				"8"		"zuus_arc_lightning"
 				"9"		"zuus_arc_lightning"
-				"10"		"special_bonus_exp_boost_25"
+				"10"		"special_bonus_mp_regen_3"
 				"11"		"zuus_static_field"
 				"12"		"zuus_thundergods_wrath"
 				"13"		"zuus_static_field"

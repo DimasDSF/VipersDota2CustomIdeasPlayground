@@ -223,7 +223,7 @@ function Extensions:PredictAttackDamage(attacker, target)
 	if attacker and target then
 		if attacker:IsNull() == false and target:IsNull() == false then
 			if target:IsAlive() then
-				return attacker:GetAverageTrueAttackDamage(attacker)*Extensions:CalculateArmorDamageReductionMultiplier(target:GetPhysicalArmorValue())
+				return attacker:GetAverageTrueAttackDamage(attacker)*Extensions:CalculateArmorDamageReductionMultiplier(target:GetPhysicalArmorValue(false))
 			end
 		end
 	end

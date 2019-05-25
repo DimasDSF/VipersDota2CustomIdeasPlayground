@@ -77,6 +77,7 @@ local botitemskv = {
 	moonshardcost = 4000,
 	moonshardmindmg = 250,
 	aghanimscost = 4200,
+	aghanimsupgradecost = 2000,
 	aghanimsstats = {bonus_all_stats = 10, bonus_health = 175, bonus_mana = 175},
 	--Heroes that get modified cast mechanics(ex. base:instant cast-> aghs: point target) with aghs
 	--Such interactions disable bots from using the ability
@@ -93,6 +94,7 @@ local botitemskv = {
 		"item_tranquil_boots"
 	},
 	tomerestock = {690.0, 600.0},
+	tomeinitialstack = 2,
 	tomeprice = 150,
 	gemtime = {50, 0}
 }
@@ -2091,18 +2093,18 @@ function VGMAR:OnThink()
 									if botitemskv.noaghsheroes[heroent:GetName()] == true then
 										self.botupgradestatus[heroent:entindex()] = self.botupgradestatus[heroent:entindex()] + 1
 									else
-										if heroent:GetGold() >= heroent:GetBuybackCost(false) + botitemskv.aghanimscost then
+										if heroent:GetGold() >= heroent:GetBuybackCost(false) + botitemskv.aghanimsupgradecost then
 											local aghs = self:GetItemFromInventoryByName( heroent, "item_ultimate_scepter", false, true, false )
-											if aghs ~= nil and heroent:GetGold() >= heroent:GetBuybackCost(false) + botitemskv.aghanimscost then
+											if aghs ~= nil and heroent:GetGold() >= heroent:GetBuybackCost(false) + botitemskv.aghanimsupgradecost then
 												heroent:ModifyGold(aghs:GetCost(), true, 0)
 												heroent:RemoveItem(aghs)
-												heroent:SpendGold(botitemskv.aghanimscost, 2)
+												heroent:SpendGold(botitemskv.aghanimsupgradecost, 2)
 												heroent:AddNewModifier(heroent, nil, "modifier_item_ultimate_scepter_consumed", botitemskv.aghanimsstats)
 												dprint(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Consumed Aghanims replacing inventory Aghanims | Gold Remaining: "..heroent:GetGold())
 												self:LogEvent(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Consumed Aghanims replacing inventory Aghanims | Gold Remaining: "..heroent:GetGold())
 												self.botupgradestatus[heroent:entindex()] = self.botupgradestatus[heroent:entindex()] + 1
-											elseif aghs == nil and heroent:GetGold() >= heroent:GetBuybackCost(false) + botitemskv.aghanimscost * 2 then
-												heroent:SpendGold(botitemskv.aghanimscost * 2, 2)
+											elseif aghs == nil and heroent:GetGold() >= heroent:GetBuybackCost(false) + botitemskv.aghanimscost + botitemskv.aghanimsupgradecost then
+												heroent:SpendGold(botitemskv.aghanimscost + botitemskv.aghanimsupgradecost, 2)
 												heroent:AddNewModifier(heroent, nil, "modifier_item_ultimate_scepter_consumed", botitemskv.aghanimsstats)
 												dprint(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Consumed Aghanims | Gold Remaining: "..heroent:GetGold())
 												self:LogEvent(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Consumed Aghanims | Gold Remaining: "..heroent:GetGold())
@@ -2364,7 +2366,7 @@ function VGMAR:OnThink()
 				backpack = true,
 				preventedhero = "npc_target_dummy",
 				specificcond = true },
-			{spell = "modifier_item_ultimate_scepter_consumed",
+			--[[{spell = "modifier_item_ultimate_scepter_consumed",
 				items = {itemnames = {"item_ultimate_scepter"}, itemnum = {2}},
 				isconsumable = true,
 				ismodifier = true,
@@ -2373,7 +2375,7 @@ function VGMAR:OnThink()
 				usesmultiple = true,
 				backpack = true,
 				preventedhero = "npc_dota_hero_alchemist",
-				specificcond = true },
+				specificcond = true },--]]
 			{spell = "modifier_vgmar_i_spellamp",
 				items = {itemnames = {"item_kaya"}, itemnum = {2}},
 				isconsumable = true,
@@ -2614,35 +2616,39 @@ function VGMAR:OnThink()
 						end
 						return lowestxpbot[2]
 					end
-					local function BuyTome()
-						local lxpb = GetLowestXpBot()
-						if lxpb ~= nil then
-							if lxpb:GetLevel() < 25 and self:GetHeroFreeInventorySlots(lxpb, true, false) > 0 then
-								lxpb:SpendGold(botitemskv.tomeprice, 2)
-								lxpb:AddItemByName("item_tome_of_knowledge")
-								Timers:CreateTimer(5, function()
-									local tome = self:GetItemFromInventoryByName( lxpb, "item_tome_of_knowledge", false, true, false )
-									if tome ~= nil then
-										local slot = self:GetItemSlotFromInventoryByItemName( lxpb, "item_tome_of_knowledge", false, true, false )
-										if slot > 5 and slot < 9 then
-											lxpb:SwapItems(slot, 0)
+					local function BuyTome(tomes)
+						for i=1, tomes do
+							local lxpb = GetLowestXpBot()
+							if lxpb ~= nil then
+								if lxpb:GetLevel() < 25 and self:GetHeroFreeInventorySlots(lxpb, true, false) > 0 then
+									lxpb:SpendGold(botitemskv.tomeprice, 2)
+									lxpb:AddItemByName("item_tome_of_knowledge")
+									Timers:CreateTimer(5, function()
+										local tome = self:GetItemFromInventoryByName( lxpb, "item_tome_of_knowledge", false, true, false )
+										if tome ~= nil then
+											local slot = self:GetItemSlotFromInventoryByItemName( lxpb, "item_tome_of_knowledge", false, true, false )
+											if slot > 5 and slot < 9 then
+												lxpb:SwapItems(slot, 0)
+											end
+											lxpb:CastAbilityNoTarget(tome, lxpb:GetPlayerID())
+											return 5.0
 										end
-										lxpb:CastAbilityNoTarget(tome, lxpb:GetPlayerID())
-										return 5.0
-									end
-								end)
-								dprint("Buying item_tome_of_knowledge for "..HeroNamesLib:ConvertInternalToHeroName(lxpb:GetName()))
-								self:LogEvent("Buying item_tome_of_knowledge for "..HeroNamesLib:ConvertInternalToHeroName(lxpb:GetName()))
-								self.bottomepurchausetimestamp = GameRules:GetDOTATime(false, false)
-							elseif lxpb:GetLevel() == 25 then
-								self.tomepurchaseallmaxlvl = true
+									end)
+									dprint("Buying item_tome_of_knowledge for "..HeroNamesLib:ConvertInternalToHeroName(lxpb:GetName()))
+									self:LogEvent("Buying item_tome_of_knowledge for "..HeroNamesLib:ConvertInternalToHeroName(lxpb:GetName()))
+									self.bottomepurchausetimestamp = GameRules:GetDOTATime(false, false)
+								elseif lxpb:GetLevel() == 25 then
+									self.tomepurchaseallmaxlvl = true
+								end
 							end
 						end
 					end
-					if self.bottomepurchausetimestamp + botitemskv.tomerestock[1] < GameRules:GetDOTATime(false, false) then
-						BuyTome()
+					if GameRules:GetDOTATime(false, false) < botitemskv.tomerestock[1] + 1 then
+						if self.bottomepurchausetimestamp + botitemskv.tomerestock[1] < GameRules:GetDOTATime(false, false) then
+							BuyTome(botitemskv.tomeinitialstack)
+						end
 					elseif self.bottomepurchausetimestamp + botitemskv.tomerestock[2] < GameRules:GetDOTATime(false, false) then
-						BuyTome()
+						BuyTome(1)
 					end
 				end
 				--/////////////////////

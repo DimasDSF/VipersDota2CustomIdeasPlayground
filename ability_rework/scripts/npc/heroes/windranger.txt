@@ -37,6 +37,11 @@
 				"item_recipe_orchid"		"ITEM_EXTENSION"
 				"item_orchid"		"ITEM_DERIVED"
 				
+				"item_ogre_axe"		"ITEM_EXTENSION"
+				"item_mithril_hammer" "ITEM_EXTENSION"
+				"item_recipe_black_king_bar"	"ITEM_EXTENSION"
+				"item_black_king_bar"			"ITEM_DERIVED"
+				
 				"item_hyperstone"		"ITEM_LUXURY"
 				"item_recipe_mjollnir"	"ITEM_LUXURY"
 				"item_mjollnir"			"ITEM_DERIVED"
@@ -46,6 +51,14 @@
 				"item_ogre_axe"		"ITEM_LUXURY"
 				"item_staff_of_wizardry"		"ITEM_LUXURY"
 				"item_ultimate_scepter"		"ITEM_DERIVED"
+				
+				"item_broadsword"			"ITEM_LUXURY"
+				"item_blades_of_attack"		"ITEM_LUXURY"
+				"item_recipe_lesser_crit"	"ITEM_LUXURY"
+				"item_lesser_crit"			"ITEM_DERIVED"
+				"item_demon_edge"			"ITEM_LUXURY"
+				"item_recipe_greater_crit"	"ITEM_LUXURY"
+				"item_greater_crit"			"ITEM_DERIVED"
 				
 				"item_broadsword"			"ITEM_LUXURY"
 				"item_blades_of_attack"		"ITEM_LUXURY"
@@ -65,7 +78,7 @@
 				"7"		"windrunner_powershot"
 				"8"		"windrunner_shackleshot"
 				"9"		"windrunner_shackleshot"
-				"10"		"special_bonus_unique_windranger_2"
+				"10"		"special_bonus_mp_regen_3"
 				"11"		"windrunner_shackleshot"
 				"12"		"windrunner_focusfire"
 				"13"		"windrunner_windrun"
