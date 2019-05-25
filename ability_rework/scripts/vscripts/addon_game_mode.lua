@@ -2617,7 +2617,7 @@ function VGMAR:OnThink()
 						return lowestxpbot[2]
 					end
 					local function BuyTome(tomes)
-						for i=1, tomes do
+						for tomenum=1, tomes do
 							local lxpb = GetLowestXpBot()
 							if lxpb ~= nil then
 								if lxpb:GetLevel() < 25 and self:GetHeroFreeInventorySlots(lxpb, true, false) > 0 then
