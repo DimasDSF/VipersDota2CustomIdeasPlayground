@@ -177,8 +177,17 @@ test('table.random should return the value if input is a table of 1', function(a
 end)
 
 test('table.random should return a random value from the input table if input is correct', function(a)
-	local trand = table.random({1, 2, 3})
-	a.ok(trand == 1 or trand == 2 or trand == 3, 'Failed')
-	trand = table.random({"test", "test2"})
-	a.equal(trand == "test" or trand == "test2", 'Failed')
+	local testtable = {
+		1,
+		2,
+		3
+	}
+	local testtable2 = {
+		"test",
+		"test2"
+	}
+	local trand = table.random(testtable)
+	a.equal(true, trand == testtable[1] or trand == testtable[2] or trand == testtable[3])
+	trand = table.random(testtable2)
+	a.equal(true, trand == "test" or trand == "test2")
 end)
