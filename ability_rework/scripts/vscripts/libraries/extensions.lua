@@ -469,10 +469,14 @@ end
 
 function table.random(intable)
 	if type(intable) == "table" then
-		if #intable > 1 then
-			return intable[math.random(1, #intable)]
-		else
-			return intable[1]
+		local valtable = {}
+		for _, value in pairs(intable) do
+			table.insert(valtable, value)
+		end
+		if #valtable > 1 then
+			return valtable[math.random(1, #valtable)]
+		elseif #valtable > 0 then
+			return valtable[1]
 		end
 	end
 	return nil
