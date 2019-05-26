@@ -195,8 +195,19 @@ test('table.random should return a random value from the input table if input is
 		"test",
 		"test2"
 	}
+	local testtable3 = {
+		{1, 11, 111},
+		{2, 22, 222},
+		{3, 33, 333}
+	}
 	local trand = table.random(testtable)
 	a.ok(is_in_table(testtable, trand), "Failed Random Integer from table")
 	trand = table.random(testtable2)
 	a.ok(is_in_table(testtable2, trand), "Failed Random String from table")
+	trand = table.random(testtable3)
+	local ttest1 = trand[1] == 1 or trand[1] == 2 or trand[1] == 3
+	local ttest2 = trand[2] == 11 or trand[2] == 22 or trand[2] == 33
+	local ttest3 = trand[3] == 111 or trand[3] == 222 or trand[3] == 333
+	local ttests = ttest1 and ttest2 and ttest3
+	a.ok(ttest3, "Failed Random Table from table")
 end)
