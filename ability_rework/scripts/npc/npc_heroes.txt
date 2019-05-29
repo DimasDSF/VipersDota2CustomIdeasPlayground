@@ -8102,7 +8102,7 @@
 		"ProjectileModel"		"particles/units/heroes/hero_clinkz/clinkz_base_attack.vpcf"
 		"ProjectileSpeed"		"900"
 		"AttributePrimary"		"DOTA_ATTRIBUTE_AGILITY"
-		"AttributeBaseStrength"		"12"
+		"AttributeBaseStrength"		"14"
 		"AttributeStrengthGain"		"1.900000"
 		"AttributeBaseAgility"		"22"
 		"AttributeAgilityGain"		"3"
@@ -16765,7 +16765,7 @@
 		"Ability13"		"special_bonus_movement_speed_35"
 		"Ability14"		"special_bonus_spell_lifesteal_10"
 		"Ability15"		"special_bonus_unique_dark_willow_3"
-		"Ability16"		"special_bonus_attack_speed_200"
+		"Ability16"		"special_bonus_attack_speed_175"
 		"Ability17"		"special_bonus_unique_dark_willow_2"
 		"AbilityDraftAbilities"
 		{
@@ -16777,7 +16777,7 @@
 		"AttackCapabilities"		"DOTA_UNIT_CAP_RANGED_ATTACK"
 		"AttackDamageMin"		"27"
 		"AttackDamageMax"		"35"
-		"AttackRate"		"1.300000"
+		"AttackRate"		"1.500000"
 		"AttackSpeedActivityModifiers"
 		{
 			"fast"		"200"
