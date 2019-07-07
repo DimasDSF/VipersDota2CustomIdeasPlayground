@@ -100,7 +100,7 @@ function modifier_bsl_execute_order_processor:OnIntervalThink()
 				if not GridNav:CanFindPath(parent:GetAbsOrigin(), self.gpos) then self:Destroy() end
 			elseif attackorders[self.ordertype] ~= nil then
 				if not targetent:IsAlive() then self:Destroy() end
-				if not parent:CanEntityBeSeenByMyTeam(target) then self:Destroy() end
+				if not parent:CanEntityBeSeenByMyTeam(targetent) then self:Destroy() end
 			end
 		end
 		if self.aindex then

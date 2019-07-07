@@ -245,7 +245,7 @@ test('table.contains should return the correct output', function(a)
 	}
 	a.ok(table.contains(testtable, 1), "Failed Integer Test")
 	a.ok(table.contains(testtable2, 'test2'), "Failed String Test")
-	a.ok(table.contains(testtable3, {3, 33, 333}, "Failed Table Test")
+	a.ok(table.contains(testtable3, {3, 33, 333}), "Failed Table Test")
 end)
 
 test('table.equals should compare values if input is not a table', function(a)

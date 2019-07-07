@@ -158,7 +158,7 @@ function modifier_vgmar_i_ogre_tester:OnIntervalThink()
 				local ward_buff = j:FindModifierByName("modifier_item_buff_ward")
 				local warder = j
 				if ward_buff then
-					local warder = ward_buff:GetCaster()
+					warder = ward_buff:GetCaster()
 				end
 				Extensions:AddEntText(j:entindex(), j:GetOwner():GetAssignedHero():GetName())
 				Extensions:AddEntText(j:entindex(), j:GetOwner():GetClassname())

@@ -883,14 +883,6 @@ function BotSupportLib:GlobalBotThink()
 				break
 			end
 		end
-		if direcour then
-			if direcour:IsAlive() and direcour:IsIdle() and not (Extensions:isPointInsidePolygon(direcour:GetAbsOrigin(), Extensions.locations.fountains.Dire) or Extensions:isPointInsidePolygon(direcour:GetAbsOrigin(), Extensions.locations.secretshops.Dire)) then
-				local courreturnability = direcour:FindAbilityByName("courier_return_to_base")
-				if courreturnability then
-					courreturnability:CastAbility()
-				end
-			end
-		end
 		--Parse Radiant Heroes for innate invisibility conditions
 		for _, h in ipairs(GameRules.VGMAR.radiantheroes) do
 			if invis_settings.innate[h:GetName()] then
@@ -2004,7 +1996,7 @@ function BotSupportLib:FindValidNearbyWardSpot(unit, wardtype)
 						if BotSupportLib:CheckNoWardNearbyCoord(unit:GetTeamNumber(), warddata.coord, KeyValuesManager:GetAbilitySpecialKV(KeyValuesManager:GetItemKV('item_ward_sentry'), 'true_sight_range'))[2] then
 							if Extensions:GetCoordDistance(unit:GetAbsOrigin(), warddata.coord) < 2000 and not Extensions:IsVisibleToTeam(warddata.ward, unit:GetTeamNumber()) then
 								table.insert(dynsentryspots, warddata.coord)
-								print('placing sentry ward against ward #'..tostring(ward)..' from the ward database')
+								if BotSupportLib:DebugDraw() then print('placing sentry ward against ward #'..tostring(wardn)..' from the ward database') end
 							end
 						end
 					end

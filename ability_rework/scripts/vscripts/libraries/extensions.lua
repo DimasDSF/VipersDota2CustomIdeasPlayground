@@ -194,7 +194,7 @@ end
 function Extensions:getPolygonMidPoint(polygon)
 	local midPoint = Vector(0,0,0)
     for i=1,#polygon do
-    	midPoint = midPoint + polygon[i]
+		midPoint = midPoint + polygon[i]
     end
     midPoint = midPoint / #polygon
     return midPoint
@@ -226,10 +226,10 @@ function Extensions:getRandomPointInPolygon( polygon )
 	local maxY = polygon[1].y
 
 	for k,v in pairs(polygon) do
-      	minX = math.min( v.x, minX );
-        maxX = math.max( v.x, maxX );
-        minY = math.min( v.y, minY );
-        maxY = math.max( v.y, maxY );
+		minX = math.min( v.x, minX )
+		maxX = math.max( v.x, maxX )
+		minY = math.min( v.y, minY )
+		maxY = math.max( v.y, maxY )
 	end
 
 	local nextPoint
@@ -246,11 +246,11 @@ end
 
 function Extensions:UnitIsInAABBArea(unit, vstart, vend)
 	if unit and vstart ~= nil and vend ~= nil then
-		vsx = vstart.y
-		vsy = vstart.y
-		vex = vend.x
-		vey = vend.x
-		sortedAABB = {AX = 999999, AY = 999999, BX = -999999, BY = -999999}
+		local vsx = vstart.y
+		local vsy = vstart.y
+		local vex = vend.x
+		local vey = vend.x
+		local sortedAABB = {AX = 999999, AY = 999999, BX = -999999, BY = -999999}
 		if vsx <= vex then
 			sortedAABB.AX = vsx
 			sortedAABB.BX = vex
@@ -666,7 +666,7 @@ function Extensions:GetCreepLaneAtSpawn(unit)
 	if unit and unit:GetTeamNumber() == DOTA_TEAM_BADGUYS or unit:GetTeamNumber() == DOTA_TEAM_GOODGUYS then
 		local shortestdist = 999999
 		local closestlane = nil
-		for spawn, coord in pairs(creepspawn[unit:GetTeamNumber()]) do
+		for spawn, coord in pairs(creepspawns[unit:GetTeamNumber()]) do
 			local dist = (unit:GetAbsOrigin() - coord):Length2D()
 			if dist < shortestdist then
 				shortestdist = dist
