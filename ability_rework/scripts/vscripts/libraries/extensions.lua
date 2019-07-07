@@ -871,17 +871,17 @@ function table.random(intable)
 	return nil
 end
 
-function table.contains(table, key)
-	if table == nil then return nil end
-	if type(table) ~= 'table' then return nil end
+function table.contains(intable, key)
+	if intable == nil then return nil end
+	if type(intable) ~= 'table' then return nil end
 	if key == nil then return false end
-	if #table > 0 then
+	if #intable > 0 then
 		if type(key) ~= 'table' then
-			for _, v in ipairs(table) do
+			for _, v in ipairs(intable) do
 				if v == key then return true end
 			end
 		else
-			for _, v in ipairs(table) do
+			for _, v in ipairs(intable) do
 				if table.equals(v, key) then return true end
 			end
 		end
