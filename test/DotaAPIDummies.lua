@@ -147,6 +147,7 @@ DOTA_UNIT_TARGET_HERO = 1
 DOTA_UNIT_TARGET_NONE = 0
 DOTA_UNIT_TARGET_OTHER = 32
 DOTA_UNIT_TARGET_TREE = 64
+function Vector(xc, yc, zc) return {x = xc, y = yc, z = zc} end
 --Fake Functions for testing outputs without including other modules or closed source APIs
 function LogLib:Log_Error() end
 function LogLib:Log_Warning() end
