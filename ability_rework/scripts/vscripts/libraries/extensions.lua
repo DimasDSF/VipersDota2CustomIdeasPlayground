@@ -894,7 +894,7 @@ function table.equals(table1, table2)
         if #table1 == #table2 then
             for i=1, #table1 do
                 if type(table1[i])==type(table2[i]) and type(table1[i])=='table' then
-                    if table.equal(table1[i], table2[i]) == false then
+                    if table.equals(table1[i], table2[i]) == false then
                        return false 
                     end
                 else
