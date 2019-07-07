@@ -221,7 +221,7 @@ test('table.contains should return nil if input is nil', function(a)
 end)
 
 test('table.contains should return false if key is nil', function(a)
-	a.equal(nil, table.contains({1,2,3}))
+	a.equal(false, table.contains({1,2,3}))
 end)
 
 test('table.contains should return false if table is empty', function(a)
