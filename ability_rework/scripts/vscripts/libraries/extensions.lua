@@ -912,6 +912,7 @@ function table.equals(table1, table2)
 			if table1 ~= table2 then
 				return false
 			end
+			return true
 		else
 			return false
 		end
