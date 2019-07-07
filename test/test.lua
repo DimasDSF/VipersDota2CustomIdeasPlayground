@@ -32,30 +32,30 @@ test('Extensions:CalculateArmorDamageReductionMultiplier should return nil if ar
 	a.equal(nil, Extensions:CalculateArmorDamageReductionMultiplier("test"))
 end)
 
-test('Extensions:IsEntityVisibleToTeam should return false if input entity is nil', function(a)
-	a.equal(false, Extensions:IsEntityVisibleToTeam(nil, 2))
+test('Extensions:IsVisibleToTeam should return false if input entity is nil', function(a)
+	a.equal(false, Extensions:IsVisibleToTeam(nil, 2))
 end)
 
-test('Extensions:IsEntityVisibleToTeam should return nil if team is incorrect', function(a)
-	a.equal(nil, Extensions:IsEntityVisibleToTeam("test", "radnt"))
-	a.equal(nil, Extensions:IsEntityVisibleToTeam("test", "dre"))
-	a.equal(nil, Extensions:IsEntityVisibleToTeam("test", 1))
-	a.equal(nil, Extensions:IsEntityVisibleToTeam("test", -10))
-	a.equal(nil, Extensions:IsEntityVisibleToTeam("test", nil))
-	a.equal(nil, Extensions:IsEntityVisibleToTeam("test"))
+test('Extensions:IsVisibleToTeam should return nil if team is incorrect', function(a)
+	a.equal(nil, Extensions:IsVisibleToTeam("test", "radnt"))
+	a.equal(nil, Extensions:IsVisibleToTeam("test", "dre"))
+	a.equal(nil, Extensions:IsVisibleToTeam("test", 1))
+	a.equal(nil, Extensions:IsVisibleToTeam("test", -10))
+	a.equal(nil, Extensions:IsVisibleToTeam("test", nil))
+	a.equal(nil, Extensions:IsVisibleToTeam("test"))
 end)
 
-test('Extensions:IsEntityVisibleToTeam should return correct output', function(a)
-	a.equal(true, Extensions:IsEntityVisibleToTeam("unit1", 2))
-	a.equal(true, Extensions:IsEntityVisibleToTeam("unit2", 2))
-	a.equal(true, Extensions:IsEntityVisibleToTeam("unit3", 2))
-	a.equal(true, Extensions:IsEntityVisibleToTeam("unit3", 3))
-	a.equal(true, Extensions:IsEntityVisibleToTeam("unit3", "radiant"))
-	a.equal(true, Extensions:IsEntityVisibleToTeam("unit3", "dire"))
-	a.equal(false, Extensions:IsEntityVisibleToTeam("unit4", 2))
-	a.equal(false, Extensions:IsEntityVisibleToTeam("unit4", 3))
-	a.equal(false, Extensions:IsEntityVisibleToTeam("unit4", "radiant"))
-	a.equal(false, Extensions:IsEntityVisibleToTeam("unit4", "dire"))
+test('Extensions:IsVisibleToTeam should return correct output', function(a)
+	a.equal(true, Extensions:IsVisibleToTeam("unit1", 2))
+	a.equal(true, Extensions:IsVisibleToTeam("unit2", 2))
+	a.equal(true, Extensions:IsVisibleToTeam("unit3", 2))
+	a.equal(true, Extensions:IsVisibleToTeam("unit3", 3))
+	a.equal(true, Extensions:IsVisibleToTeam("unit3", "radiant"))
+	a.equal(true, Extensions:IsVisibleToTeam("unit3", "dire"))
+	a.equal(false, Extensions:IsVisibleToTeam("unit4", 2))
+	a.equal(false, Extensions:IsVisibleToTeam("unit4", 3))
+	a.equal(false, Extensions:IsVisibleToTeam("unit4", "radiant"))
+	a.equal(false, Extensions:IsVisibleToTeam("unit4", "dire"))
 end)
 
 test('math.scale calc test', function(a)
@@ -209,5 +209,82 @@ test('table.random should return a random value from the input table if input is
 	local ttest2 = trand[2] == 11 or trand[2] == 22 or trand[2] == 33
 	local ttest3 = trand[3] == 111 or trand[3] == 222 or trand[3] == 333
 	local ttests = ttest1 and ttest2 and ttest3
-	a.ok(ttest3, "Failed Random Table from table")
+	a.ok(ttests, "Failed Random Table from table")
+end)
+
+test('table.contains should return nil if input is not a table', function(a)
+	a.equal(nil, table.contains(1, 2))
+end)
+
+test('table.contains should return nil if input is nil', function(a)
+	a.equal(nil, table.contains())
+end)
+
+test('table.contains should return false if key is nil', function(a)
+	a.equal(nil, table.contains({1,2,3}))
+end)
+
+test('table.contains should return false if table is empty', function(a)
+	a.equal(nil, table.contains({}, 2))
+end)
+
+test('table.contains should return the correct output', function(a)
+	local testtable = {
+		1,
+		2,
+		3
+	}
+	local testtable2 = {
+		"test",
+		"test2"
+	}
+	local testtable3 = {
+		{1, 11, 111},
+		{2, 22, 222},
+		{3, 33, 333}
+	}
+	a.ok(table.contains(testtable, 1), "Failed Integer Test")
+	a.ok(table.contains(testtable2, 'test2'), "Failed String Test")
+	a.ok(table.contains(testtable3, {3, 33, 333}, "Failed Table Test")
+end)
+
+test('table.equals should compare values if input is not a table', function(a)
+	a.ok(table.equals(1,1), "Failed Integer not in a table Test")
+	a.ok(table.equals("test","test"), "Failed String not in a table Test")
+	a.ok(table.equals("test","test1")==false, "Failed not equal String not in a table Test")
+end)
+
+test('table.equals should return false if input is not a table and type is not the same', function(a)
+	a.ok(table.equals(1,"test")==false, "Failed Type Mismatch Test")
+end)
+
+test('table.equals should return false if input table contents quantity does not match', function(a)
+	a.ok(table.equals({1, 2},{1, 2, 3})==false, "Failed contents quantity mismatch Test")
+end)
+
+test('table.equals should return correct output', function(a)
+	local testtable = {
+		1,
+		2,
+		3
+	}
+	local testtable2 = {
+		"test",
+		"test2"
+	}
+	local testtable3 = {
+		{1, 11, 111},
+		{2, 22, 222},
+		{3, 33, 333}
+	}
+	local testtable4 = {
+		{1, 11, 111},
+		{2, {22, 22}, 222},
+		{3, 33, 333}
+	}
+	a.ok(table.equals(testtable, {1,2,3}), "Failed Integer Table Test")
+	a.ok(table.equals(testtable2, {'test','test2'}), "Failed String Table Test")
+	a.ok(table.equals(testtable3, {{1, 11, 111},{2, 22, 222},{3, 33, 333}}), "Failed Nested Table Test")
+	a.ok(table.equals(testtable4, {{1, 11, 111},{2, {22, 22}, 222},{3, 33, 333}}), "Failed Nested Table Test 2")
+	a.ok(table.equals(testtable4, {{1, 11, 111},{2, {22, 11}, 222},{3, 33, 333}}) == false, "Failed Nested Table Test 3")
 end)

@@ -178,6 +178,7 @@ function modifier_vgmar_i_spellshield_active:GetAbsorbSpell(kv)
 				ParticleManager:ReleaseParticleIndex(pfx2)
 				EmitSoundOn("Item.LotusOrb.Target", self:GetParent())
 				EmitSoundOn("Hero_Antimage.Counterspell.Target", self:GetParent())
+				Extensions:CastAbilityThroughADummy(kv.ability, self:GetParent(), kv.ability:GetCaster())
 				self:GetParent():FindModifierByName("modifier_vgmar_i_spellshield"):SetStackCount( self:GetParent():FindModifierByName("modifier_vgmar_i_spellshield"):GetStackCount() - 1 )
 				if self:GetParent():FindModifierByName("modifier_vgmar_i_spellshield"):GetRemainingTime() <= 0 then
 					self:GetParent():FindModifierByName("modifier_vgmar_i_spellshield"):SetDuration( self.cooldown, true )

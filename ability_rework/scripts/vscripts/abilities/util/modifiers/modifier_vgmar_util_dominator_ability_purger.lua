@@ -57,24 +57,26 @@ end
 function modifier_vgmar_util_dominator_ability_purger:OnDominated( kv )
 	local parent = self:GetParent()
 	
-	if parent:FindModifierByName("modifier_vgmar_util_creep_ability_updater") then
-		parent:FindModifierByName("modifier_vgmar_util_creep_ability_updater"):Destroy()
-	end
-	for i=1,#self.abilitiesforremoval do
-		if parent:FindAbilityByName(self.abilitiesforremoval[i]) then
-			if self.removemode == 1 then
-				parent:RemoveAbility(self.abilitiesforremoval[i])
-			else
-				parent:FindAbilityByName(self.abilitiesforremoval[i]):SetLevel( 0 )
+	if kv.unit == parent then
+		if parent:FindModifierByName("modifier_vgmar_util_creep_ability_updater") then
+			parent:FindModifierByName("modifier_vgmar_util_creep_ability_updater"):Destroy()
+		end
+		for i=1,#self.abilitiesforremoval do
+			if parent:FindAbilityByName(self.abilitiesforremoval[i]) then
+				if self.removemode == 1 then
+					parent:RemoveAbility(self.abilitiesforremoval[i])
+				else
+					parent:FindAbilityByName(self.abilitiesforremoval[i]):SetLevel( 0 )
+				end
 			end
 		end
-	end
-	for i=1,#self.modifiersforremoval do
-		if parent:FindModifierByName(self.modifiersforremoval[i]) then
-			parent:FindModifierByName(self.modifiersforremoval[i]):Destroy()
+		for i=1,#self.modifiersforremoval do
+			if parent:FindModifierByName(self.modifiersforremoval[i]) then
+				parent:FindModifierByName(self.modifiersforremoval[i]):Destroy()
+			end
 		end
-	end
 
-	self:Destroy()
+		self:Destroy()
+	end
 	
 end

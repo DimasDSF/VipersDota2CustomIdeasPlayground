@@ -93,6 +93,7 @@ function modifier_vgmar_i_ogre_tester:OnIntervalThink()
 		for i=1,#modifiers do
 			print(modifiers[i]:GetName())
 		end--]]
+		local parent = self:GetParent()
 		if self.oldmana == nil then
 			self.oldmana = self:GetParent():GetMana()
 		end
@@ -149,6 +150,29 @@ function modifier_vgmar_i_ogre_tester:OnIntervalThink()
 		end
 		for _,j in ipairs(GridNav:GetAllTreesAroundPoint(self:GetParent():GetAbsOrigin(), 600, true)) do
 			DebugDrawText(j:GetAbsOrigin(), tostring(j:entindex()).."\n"..tostring(GetEntityIndexForTreeId(j:entindex())).."\n"..tostring(GetTreeIdForEntityIndex(j:entindex())), false, 1)
+		end
+		local wards = Entities:FindAllByClassname("npc_dota_ward_base")
+		for _,ward in ipairs (Entities:FindAllByClassname("npc_dota_ward_base_truesight")) do table.insert(wards, ward) end
+		for _,j in ipairs(wards) do
+			if j:GetClassname() == "npc_dota_ward_base" or j:GetClassname() == "npc_dota_ward_base_truesight" then
+				local ward_buff = j:FindModifierByName("modifier_item_buff_ward")
+				local warder = j
+				if ward_buff then
+					local warder = ward_buff:GetCaster()
+				end
+				Extensions:AddEntText(j:entindex(), j:GetOwner():GetAssignedHero():GetName())
+				Extensions:AddEntText(j:entindex(), j:GetOwner():GetClassname())
+				Extensions:AddEntText(j:entindex(), warder:GetName())
+			end
+		end
+		local fowenemies = FindUnitsInRadius(parent:GetTeamNumber(), parent:GetAbsOrigin(), nil, parent:GetCurrentVisionRange(), DOTA_UNIT_TARGET_TEAM_ENEMY, DOTA_UNIT_TARGET_HERO, DOTA_UNIT_TARGET_FLAG_FOW_VISIBLE + DOTA_UNIT_TARGET_FLAG_INVULNERABLE, FIND_CLOSEST, false)
+		local allenemies = FindUnitsInRadius(parent:GetTeamNumber(), parent:GetAbsOrigin(), nil, parent:GetCurrentVisionRange(), DOTA_UNIT_TARGET_TEAM_ENEMY, DOTA_UNIT_TARGET_HERO, DOTA_UNIT_TARGET_FLAG_INVULNERABLE, FIND_CLOSEST, false)
+		for _,j in ipairs(allenemies) do
+			local dummy = CreateModifierThinker(j, nil, "modifier_extensions_dummy_timer", {}, j:GetAbsOrigin(), j:GetTeamNumber(), false)
+			Extensions:AddEntText(j:entindex(), "FoW Visible: "..tostring(parent:CanEntityBeSeenByMyTeam(dummy)))
+			Extensions:AddEntText(j:entindex(), "Ext FoW Visible: "..tostring(Extensions:IsPositionFoWVisible(j:GetAbsOrigin(), parent)))
+			Extensions:AddEntText(j:entindex(), "Is Invisible: "..tostring(j:IsInvisible()))
+			UTIL_Remove(dummy)
 		end
 		--Extensions:AddEntText(self:GetParent():entindex(), Extensions:QueryHeroDamage(self:GetParent():entindex(), 2, 1+4+(2*math.bool(self:GetParent():HasModifier("modifier_black_king_bar_immune"))), true, false))
 		--print("AttackRange: "..self:GetParent():Script_GetAttackRange())

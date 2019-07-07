@@ -39,7 +39,7 @@ function modifier_vgmar_b_ancient_tether:OnCreated( kv )
 		self.ancient = self:GetCaster()
 		self.ancientsoundmod = self.ancient:FindModifierByName("modifier_vgmar_b_ancient_tether_counter")
 		self.ancientsoundmod:IncrementStackCount()
-		if Extensions:IsEntityVisibleToTeam(self:GetParent(), "radiant") then
+		if Extensions:IsVisibleToTeam(self:GetParent(), "radiant") then
 			EmitSoundOn("Hero_Wisp.Tether.Target", self:GetParent())
 		end
 		self.particle = ParticleManager:CreateParticle("particles/econ/items/wisp/wisp_tether_ti7.vpcf", PATTACH_POINT, self.ancient)
@@ -54,7 +54,7 @@ end
 function modifier_vgmar_b_ancient_tether:OnRemoved()
 	if IsServer() then
 		self.ancientsoundmod:DecrementStackCount()
-		if Extensions:IsEntityVisibleToTeam(self:GetParent(), "radiant") then
+		if Extensions:IsVisibleToTeam(self:GetParent(), "radiant") then
 			EmitSoundOn("Hero_Wisp.Tether.Stop", self:GetParent())
 		end
 	end

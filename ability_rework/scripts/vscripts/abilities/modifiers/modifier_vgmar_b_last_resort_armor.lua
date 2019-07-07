@@ -51,6 +51,14 @@ function modifier_vgmar_b_last_resort_armor:DeclareFunctions()
     return funcs
 end
 
+function modifier_vgmar_b_last_resort_armor:CheckState()
+	local state = {
+	[MODIFIER_STATE_MAGIC_IMMUNE] = true,
+	}
+
+	return state
+end
+
 function modifier_vgmar_b_last_resort_armor:GetEffectName()
 	return "particles/econ/items/winter_wyvern/winter_wyvern_ti7/wyvern_cold_embrace_ti7buff.vpcf"
 end

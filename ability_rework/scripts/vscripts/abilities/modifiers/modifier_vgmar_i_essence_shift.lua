@@ -219,7 +219,7 @@ function modifier_vgmar_i_essence_shift_debuff:RemoveOnDeath()
 end
 
 function modifier_vgmar_i_essence_shift_debuff:DestroyOnExpire()
-	return true
+	return false
 end
 
 function modifier_vgmar_i_essence_shift_debuff:OnCreated(kv) 
@@ -230,6 +230,7 @@ function modifier_vgmar_i_essence_shift_debuff:OnCreated(kv)
 		self.reductionsecondary = essenceshift.reductionsecondary
 		self.hitsperstackred = essenceshift.hitsperstackred
 		self.hittable = {}
+		table.insert(self.hittable, 1, GameRules:GetGameTime())
 		self:SetStackCount( math.floor(#self.hittable / self.hitsperstackred) )
 		self.durationtarget = essenceshift.durationtarget
 		self:SetDuration( self.durationtarget, true )
@@ -242,6 +243,7 @@ end
 function modifier_vgmar_i_essence_shift_debuff:OnRefresh(kv)
 	if IsServer() then
 		table.insert(self.hittable, 1, GameRules:GetGameTime())
+		self:SetDuration( self.durationtarget, true )
 	end
 end
 
@@ -262,7 +264,7 @@ function modifier_vgmar_i_essence_shift_debuff:OnIntervalThink()
 			end
 			self:SetStackCount(math.floor(#self.hittable/self.hitsperstackred))
 			
-			if startcount ~= #self.hittable then
+			if startcount ~= #self.hittable and self.hittable[#self.hittable] ~= nil then
 				self:SetDuration( (self.hittable[#self.hittable] + self.durationtarget - GameRules:GetGameTime()), true )
 			end
 		end

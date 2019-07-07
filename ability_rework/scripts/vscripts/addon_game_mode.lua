@@ -2,14 +2,14 @@ local RADIANT_TEAM_MAX_PLAYERS = 1
 local DIRE_TEAM_MAX_PLAYERS = 8
 local RUNE_SPAWN_TIME_POWERUP = 2
 local RUNE_SPAWN_TIME_BOUNTY = 5
-local VGMAR_DEBUG = true
+local VGMAR_DEBUG = false
 local VGMAR_DEBUG_DRAW = false
 local VGMAR_DEBUG_ENABLE_VARIABLE_SETTING = true
 local VGMAR_GIVE_DEBUG_ITEMS = false
 local VGMAR_BOT_FILL = true
 local VGMAR_LOG_BALANCE_PERIODIC = false
-local VGMAR_LOG_BALANCE_EVENTS = true
-local VGMAR_LOG_BALANCE_GAMEEND = true
+local VGMAR_LOG_BALANCE_EVENTS = false
+local VGMAR_LOG_BALANCE_GAMEEND = false
 local VGMAR_LOG_BALANCE_INTERVAL = 120
 local MAX_COURIER_LVL = 5
 local COURIER_UPGRADE_TIME = 3
@@ -18,6 +18,18 @@ local BOT_COURIER_UPGRADE_INTERVAL = 10
 -- Think Function Interval
 --/////////////////////////
 local VGMAR_GTHINK_TIME = 1
+--/////////////////////////
+
+require('libraries/timers')
+require('libraries/extensions')
+require('libraries/heronames')
+require('libraries/heroabilityslots')
+require('libraries/loglib')
+require('libraries/keyvaluesmanager')
+require('libraries/inventorymanager')
+require('libraries/botroleslib')
+require('libraries/botsupportlib')
+
 --/////////////////////////
 
 local debugitems = {
@@ -66,37 +78,6 @@ local botancientlastresort = {
 	healththreshold = 0.4,
 	gold = 10000,
 	xp = 3000
-}
-
---TODO:Replace static prices in this table with KV read
-local botitemskv = {
-	maxbotupgradestatus = 4,
-	travelbootscost = 2500,
-	travelbootsrecipecost = 2000,
-	moonshardvalues = {consumed_bonus = 60, consumed_bonus_night_vision = 200},
-	moonshardcost = 4000,
-	moonshardmindmg = 250,
-	aghanimscost = 4200,
-	aghanimsupgradecost = 2000,
-	aghanimsstats = {bonus_all_stats = 10, bonus_health = 175, bonus_mana = 175},
-	--Heroes that get modified cast mechanics(ex. base:instant cast-> aghs: point target) with aghs
-	--Such interactions disable bots from using the ability
-	noaghsheroes = {
-		["npc_dota_hero_chaos_knight"] = true,
-		["npc_dota_hero_riki"] = true,
-		["npc_dota_hero_sniper"] = true,
-		["npc_dota_hero_bristleback"] = true
-	},
-	cheapboots = {
-		"item_phase_boots",
-		"item_power_treads",
-		"item_arcane_boots",
-		"item_tranquil_boots"
-	},
-	tomerestock = {690.0, 600.0},
-	tomeinitialstack = 2,
-	tomeprice = 150,
-	gemtime = {50, 0}
 }
 
 local botmodifiers = {
@@ -233,13 +214,6 @@ if VGMAR == nil then
 	VGMAR = class({})
 end
 
-require('libraries/timers')
-require('libraries/extensions')
-require('libraries/heronames')
-require('libraries/heroabilityslots')
-require('libraries/loglib')
-require('libraries/botsupportlib')
-
 function Precache( ctx )
 	--Precaching Custom Ability sounds (and all used heros' sounds :fp:)
 	
@@ -275,6 +249,8 @@ function VGMAR:Init()
 	LogLib:Init()
 	Extensions:Init()
 	BotSupportLib:Init()
+	KeyValuesManager:Init()
+	BotRolesLib:Init()
 	self.n_players_radiant = 0
 	self.n_players_dire = 0
 	self.allheroes = {}
@@ -303,7 +279,6 @@ function VGMAR:Init()
 	self.backdoorstatustable = {}
 	self.backdoortimertable = {}
 	self.customitemsreminderfinished = false
-	self.ItemKVs = {}
 	self.balancelogprinttimestamp = 0
 	self.towerskilleddire = 0
 	self.towerskilledrad = 0
@@ -333,66 +308,6 @@ function VGMAR:Init()
 		}
 	}
 	self.roshandeathtime = -1
-	
-	local itemskvnum = 0
-	local itemscustomkvnum = 0
-	local itemskverrornum = 0
-	local itemscustomkverrornum = 0
-	local erroreditems = {}
-	local conflictingitems = {}
-	for k,v in pairs(LoadKeyValues("scripts/npc/items.txt")) do
-		if k and v and k~="Version" then
-			if v["ID"] then
-				--print("Adding Item: "..k.." With ID: "..v["ID"].." from items.txt")
-				itemskvnum = itemskvnum + 1
-				if self.ItemKVs[v["ID"]] == nil then
-					self.ItemKVs[v["ID"]] = k
-				else
-					--print("Item: "..k.." Has a conflicting item ID "..v["ID"].." with "..self.ItemKVs[v["ID"]])
-					table.insert(conflictingitems, {v["ID"], k, self.ItemKVs[v["ID"]]})
-				end
-			else
-				itemskverrornum = itemskverrornum + 1
-				print("Item: "..k.." Has no ID!!!")
-				table.insert(erroreditems, k)
-			end
-		end
-	end
-	for k,v in pairs(LoadKeyValues("scripts/npc/npc_items_custom.txt")) do
-		if k and v and k~="Version" then
-			if v["ID"] then
-				--print("Adding Item: "..k.." With ID: "..v["ID"].." from items_custom.txt")
-				itemscustomkvnum = itemscustomkvnum + 1
-				if self.ItemKVs[v["ID"]] == nil then
-					self.ItemKVs[v["ID"]] = k
-				else
-					--print("Item: "..k.." Has a conflicting item ID "..v["ID"].." with "..self.ItemKVs[v["ID"]])
-					table.insert(conflictingitems, {v["ID"], k, self.ItemKVs[v["ID"]]})
-				end
-			else
-				itemscustomkverrornum = itemscustomkverrornum + 1
-				print("Item: "..k.." Has no ID!!!")
-				table.insert(erroreditems, k)
-			end
-		end
-	end
-	print("Added "..itemskvnum.." Items and "..itemscustomkvnum.." Custom Items to KVTable")
-	if itemskverrornum > 0 or itemscustomkverrornum > 0 then
-		print("Encountered Errors: items.txt: "..itemskverrornum.." item_custom.txt: "..itemscustomkverrornum)
-		LogLib:Log_Error("Items Missing IDs", 1, "Error parsing Item IDs")
-		for i=1,#erroreditems do
-			LogLib:Log_Error(i..". "..erroreditems[i], 2)
-		end
-	end
-	if #conflictingitems > 0 then
-		print("Encountered "..#conflictingitems.." Conflicting Item IDs")
-		LogLib:Log_Error("Conflicting Item IDs:", 0, "Item KV ID system encountered "..#conflictingitems.." conflicting Item IDs")
-		for i=1,#conflictingitems do
-			local cidata = conflictingitems[i]
-			print(i..": ID: "..cidata[1].." Items: "..cidata[2].." - "..cidata[3])
-			LogLib:Log_Error(i..": ID: "..cidata[1].." Items: "..cidata[2].." - "..cidata[3], 1)
-		end
-	end
 	
 	--CustomAbilitiesValues
 	--For ClientSide
@@ -651,9 +566,43 @@ function VGMAR:Init()
 		["modifier_vgmar_b_fountain_anticamp_debuff_silence"] = {silence = true, stun = false, root = false}
 	}
 	
+	self.botitemskv = {
+		maxbotupgradestatus = 4,
+		travelbootscost = KeyValuesManager:GetItemPrice('item_travel_boots'),
+		travelbootsrecipecost = KeyValuesManager:GetItemPrice('item_recipe_travel_boots'),
+		moonshardvalues = {consumed_bonus = 60, consumed_bonus_night_vision = 200},
+		moonshardcost = KeyValuesManager:GetItemPrice('item_moon_shard'),
+		moonshardmindmg = 250,
+		aghanimscost = KeyValuesManager:GetItemPrice('item_ultimate_scepter'),
+		aghanimsupgradecost = KeyValuesManager:GetItemPrice('item_recipe_ultimate_scepter_2'),
+		aghanimsstats = {bonus_all_stats = 10, bonus_health = 175, bonus_mana = 175},
+		--Heroes that get modified cast mechanics(ex. base:instant cast-> aghs: point target) with aghs
+		--Such interactions disable bots from using the ability
+		noaghsheroes = {
+			["npc_dota_hero_chaos_knight"] = true,
+			["npc_dota_hero_riki"] = true,
+			["npc_dota_hero_sniper"] = true,
+			["npc_dota_hero_bristleback"] = true
+		},
+		cheapboots = {
+			"item_phase_boots",
+			"item_power_treads",
+			"item_arcane_boots",
+			"item_tranquil_boots"
+		},
+		tomerestock = {690.0, 600.0},
+		tomeinitialstack = 2,
+		tomeprice = KeyValuesManager:GetItemPrice('item_tome_of_knowledge'),
+		gemtime = {50, 0}
+	}
+	
 	self.mode = GameRules:GetGameModeEntity()
 	GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_GOODGUYS, RADIANT_TEAM_MAX_PLAYERS)
-    GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_BADGUYS, DIRE_TEAM_MAX_PLAYERS)
+    if VGMAR_BOT_FILL == true then
+		GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_BADGUYS, DIRE_TEAM_MAX_PLAYERS)
+	else
+		GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_BADGUYS, 10)
+	end
 	GameRules:SetStrategyTime( 0.0 )
 	GameRules:SetShowcaseTime( 0.0 )
 	GameRules:SetCustomGameSetupAutoLaunchDelay( 5 )
@@ -681,6 +630,7 @@ function VGMAR:Init()
 	self.mode:SetModifyGoldFilter(Dynamic_Wrap( VGMAR, "FilterGoldGained" ), self)
 	self.mode:SetModifyExperienceFilter( Dynamic_Wrap( VGMAR, "FilterExperienceGained" ), self)
 	self.mode:SetBountyRunePickupFilter( Dynamic_Wrap( VGMAR, "FilterBountyRunePickup" ), self)
+	self.mode:SetItemAddedToInventoryFilter( Dynamic_Wrap(VGMAR, "FilterItemAddedToInventory" ), self)
 	self.mode:SetBotsMaxPushTier(self.botmaxpushtier)
 
 	ListenToGameEvent( "npc_spawned", Dynamic_Wrap( VGMAR, "OnNPCSpawned" ), self )
@@ -710,6 +660,8 @@ end
 function VGMAR:CallRestartCommand()
 	if IsDevMode() then
 		SendToServerConsole("dota_launch_custom_game var dota")
+	else
+		print('Restart is only available in DevMode.')
 	end
 end
 
@@ -815,10 +767,6 @@ function VGMAR:TestWriteVar(var, val)
 	else
 		print("Variable Setting is disabled.\nTo enable turn VGMAR_DEBUG_ENABLE_VARIABLE_SETTING to true")
 	end
-end
-
-function VGMAR:GetItemByID(id)
-	return self.ItemKVs[id]
 end
 
 function VGMAR:ReloadTestModifier()
@@ -1408,6 +1356,9 @@ function VGMAR:FilterModifierGained( filterTable )
 	if filterTable["entindex_caster_const"] then
 		caster = EntIndexToHScript(filterTable.entindex_caster_const)
 	end
+	if parent:IsHero() then
+		BotSupportLib:Event_ModifierApplied(parent, caster, modifiername, ability)
+	end
 	if parent:IsHero() or (caster and caster:IsHero()) then
 		self:ApplyBotBalanceModifiers(parent, caster, filterTable)
 	end
@@ -1465,176 +1416,14 @@ function VGMAR:ApplyBotBalanceModifiers(parent, caster, filterTable)
 	end
 end
 
-function VGMAR:HeroHasUsableItemInInventory( hero, item, mutedallowed, backpackallowed, stashallowed )
-	if stashallowed ~= true and not hero:HasItemInInventory(item) then
-		return false
+function VGMAR:FilterItemAddedToInventory( filterTable )
+	local item = EntIndexToHScript(filterTable.item_entindex_const)
+	local unit = EntIndexToHScript(filterTable.inventory_parent_entindex_const)
+	if item.suggestedSlot then
+		filterTable.suggested_slot = item.suggestedSlot
+		item.suggestedSlot = nil
 	end
-	local endslot = 8
-	if stashallowed == true then
-		endslot = 14
-	end
-	for i = 0, endslot do
-		local slotitem = hero:GetItemInSlot(i);
-		if slotitem then
-			if slotitem:GetName() == item then
-				if slotitem:IsMuted() and mutedallowed == true then
-					if i <= 5 then
-						return true
-					elseif i >= 6 and i <= 8 and backpackallowed == true then
-						return true
-					elseif i >= 9 and stashallowed == true then
-						return true
-					else 
-						return false
-					end
-				elseif not slotitem:IsMuted() then
-					if i <= 5 then
-						return true
-					elseif i >= 6 and i <= 8 and backpackallowed == true then
-						return true
-					elseif i >= 9 and stashallowed == true then
-						return true
-					else 
-						return false
-					end
-				else
-					return false
-				end
-			end
-		end
-	end
-end
-
-function VGMAR:GetItemFromInventoryByName( hero, item, mutedallowed, backpackallowed, stashallowed )
-	if stashallowed ~= true and not hero:HasItemInInventory(item) then
-		return nil
-	end
-	local endslot = 8
-	if stashallowed == true then
-		endslot = 14
-	end
-	for i = 0, endslot do
-		local slotitem = hero:GetItemInSlot(i);
-		if slotitem then
-			if slotitem:GetName() == item then
-				if slotitem:IsMuted() and mutedallowed == true then
-					if i <= 5 then
-						return slotitem
-					elseif i >= 6 and i <= 8 and backpackallowed == true then
-						return slotitem
-					elseif i >= 9 and stashallowed == true then
-						return slotitem
-					else 
-						return nil
-					end
-				elseif not slotitem:IsMuted() then
-					if i <= 5 then
-						return slotitem
-					elseif i >= 6 and i <= 8 and backpackallowed == true then
-						return slotitem
-					elseif i >= 9 and stashallowed == true then
-						return slotitem
-					else 
-						return nil
-					end
-				else
-					return nil
-				end
-			end
-		end
-	end
-end
-
-function VGMAR:GetItemSlotFromInventoryByItemName( hero, item, mutedallowed, backpackallowed, stashallowed )
-	if stashallowed ~= true and not hero:HasItemInInventory(item) then
-		return -1
-	end
-	local endslot = 8
-	if stashallowed == true then
-		endslot = 14
-	end
-	for i = 0, endslot do
-		local slotitem = hero:GetItemInSlot(i);
-		if slotitem then
-			if slotitem:GetName() == item then
-				if slotitem:IsMuted() and mutedallowed == true then
-					if i <= 5 then
-						return i
-					elseif i >= 6 and i <= 8 and backpackallowed == true then
-						return i
-					elseif i >= 9 and stashallowed == true then
-						return i
-					else 
-						return -1
-					end
-				elseif not slotitem:IsMuted() then
-					if i <= 5 then
-						return i
-					elseif i >= 6 and i <= 8 and backpackallowed == true then
-						return i
-					elseif i >= 9 and stashallowed == true then
-						return i
-					else 
-						return -1
-					end
-				else
-					return -1
-				end
-			end
-		end
-	end
-end
-
-function VGMAR:CountUsableItemsInHeroInventory( hero, item, mutedallowed, backpackallowed, stashallowed )
-	if stashallowed ~= true and not hero:HasItemInInventory(item) then
-		return 0
-	end
-	local itemcount = 0
-	local endslot = 8
-	if stashallowed == true then
-		endslot = 14
-	end
-	for i = 0, endslot do
-		local slotitem = hero:GetItemInSlot(i);
-		if slotitem then
-			if slotitem:GetName() == item then
-				if slotitem:IsMuted() and mutedallowed == true then
-					if i <= 5 then
-						itemcount = itemcount + 1
-					elseif i >= 6 and i <= 8 and backpackallowed == true then
-						itemcount = itemcount + 1
-					elseif i >= 9 and stashallowed == true then
-						itemcount = itemcount + 1
-					end
-				elseif not slotitem:IsMuted() then
-					if i <= 5 then
-						itemcount = itemcount + 1
-					elseif i >= 6 and i <= 8 and backpackallowed == true then
-						itemcount = itemcount + 1
-					elseif i >= 9 and stashallowed == true then
-						itemcount = itemcount + 1
-					end
-				end
-			end
-		end
-	end
-	return itemcount
-end
-
-function VGMAR:RemoveNItemsInInventory( hero, item, num )
-	local removeditemsnum = 0
-	for i = 0, 14 do
-		local slotitem = hero:GetItemInSlot(i);
-		if slotitem then
-			if slotitem:GetName() == item and removeditemsnum < num then
-				hero:RemoveItem(slotitem)
-				removeditemsnum = removeditemsnum + 1
-			elseif removeditemsnum >= num then
-				break
-			end
-		end
-	end
-	return
+	return true
 end
 
 function VGMAR:TimeIsLaterThan( minute, second )
@@ -1644,35 +1433,6 @@ function VGMAR:TimeIsLaterThan( minute, second )
 	else
 		return false
 	end
-end
-
-function VGMAR:HeroHasAllItemsFromListWMultiple( hero, itemlist, backpack )
-	for i=1,#itemlist.itemnames do
-		if self:CountUsableItemsInHeroInventory( hero, itemlist.itemnames[i], false, backpack, false) < itemlist.itemnum[i] then
-			return false
-		end
-	end
-	return true
-end
-
-function VGMAR:GetHeroFreeInventorySlots( hero, backpackallowed, stashallowed )
-	local slotcount = 0
-	local endslot = 8
-	if stashallowed == true then
-		endslot = 14
-	end
-	for i = 0, endslot, 1 do
-		if hero:GetItemInSlot(i) == nil then
-			if i <= 5 then
-				slotcount = slotcount + 1
-			elseif i >= 6 and i <= 8 and backpackallowed == true then
-				slotcount = slotcount + 1
-			elseif i >= 9 and stashallowed == true then
-				slotcount = slotcount + 1
-			end
-		end
-	end
-	return slotcount
 end
 
 --[[
@@ -1967,6 +1727,9 @@ function VGMAR:GetTeamAdvantageClamped(radiant, tower, kill, networth, min, max)
 end
 
 function VGMAR:OnThink()
+	if GameRules:State_Get() == DOTA_GAMERULES_STATE_WAIT_FOR_PLAYERS_TO_LOAD then
+		GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_GOODGUYS, PlayerResource:GetPlayerCount())
+	end
 	if GameRules:State_Get() == DOTA_GAMERULES_STATE_CUSTOM_GAME_SETUP then
 		GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_GOODGUYS, PlayerResource:GetPlayerCount())
 		for playerID=0,PlayerResource:GetPlayerCount() do
@@ -1987,7 +1750,7 @@ function VGMAR:OnThink()
 			for _,ward in ipairs (Entities:FindAllByClassname("npc_dota_ward_base_truesight")) do table.insert(wards, ward) end
 			for _,courier in ipairs (Entities:FindAllByClassname("npc_dota_courier")) do table.insert(wards, courier) end
 			for _,ent in ipairs(wards) do
-				if not ent:HasModifier("modifier_vgmar_util_all_vision") then
+				if ent:GetTeamNumber() == 3 and not ent:HasModifier("modifier_vgmar_util_all_vision") then
 					ent:AddNewModifier(ent, nil, "modifier_vgmar_util_all_vision", {})
 				end
 			end
@@ -2061,52 +1824,51 @@ function VGMAR:OnThink()
 							table.insert(self.botupgradestatus, heroent:entindex())
 							self.botupgradestatus[heroent:entindex()] = 1
 						else
-							if self.botupgradestatus[heroent:entindex()] <= botitemskv.maxbotupgradestatus then
+							if self.botupgradestatus[heroent:entindex()] <= self.botitemskv.maxbotupgradestatus then
 								local bus = self.botupgradestatus[heroent:entindex()]
 								local uppriolist = botupgradepriorities[heroent:GetName()]
 								local bup = uppriolist[bus]
 								if bup == "travel1" and self:TimeIsLaterThan(botupgradetimings.travel1[1], botupgradetimings.travel1[2]) then
-									if heroent:GetGold() >= heroent:GetBuybackCost(false) + botitemskv.travelbootscost then
-										for j=1,#botitemskv.cheapboots do
-											local boots = self:GetItemFromInventoryByName( heroent, botitemskv.cheapboots[j], false, true, false )
+									if heroent:GetGold() >= heroent:GetBuybackCost(false) + self.botitemskv.travelbootscost then
+										for j=1,#self.botitemskv.cheapboots do
+											local boots = InvManager:GetItemFromInventoryByName( heroent, self.botitemskv.cheapboots[j], false, true, false )
 											if boots ~= nil then
 												local bootsname = boots:GetName()
 												heroent:ModifyGold(boots:GetCost(), true, 0)
 												heroent:RemoveItem(boots)
-												heroent:SpendGold(botitemskv.travelbootscost, 2)
+												heroent:SpendGold(self.botitemskv.travelbootscost, 2)
 												heroent:AddItemByName("item_travel_boots")
-												dprint(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Upgraded "..bootsname.." to Travel Boots | Gold Remaining: "..heroent:GetGold())
+												dprint(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Spent "..tostring(self.botitemskv.travelbootscost).." Upgraded "..bootsname.." to Travel Boots | Gold Remaining: "..heroent:GetGold())
 												self:LogEvent(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Upgraded "..bootsname.." to Travel Boots | Gold Remaining: "..heroent:GetGold())
 												self.botupgradestatus[heroent:entindex()] = self.botupgradestatus[heroent:entindex()] + 1
 											end
 										end
 									end
 								elseif bup == "travel2" and self:TimeIsLaterThan(botupgradetimings.travel2[1], botupgradetimings.travel2[2]) then
-									if heroent:GetGold() >= heroent:GetBuybackCost(false) + botitemskv.travelbootsrecipecost then
-										heroent:SpendGold(botitemskv.travelbootsrecipecost, 2)
+									if heroent:GetGold() >= heroent:GetBuybackCost(false) + self.botitemskv.travelbootsrecipecost then
+										heroent:SpendGold(self.botitemskv.travelbootsrecipecost, 2)
 										heroent:AddItemByName("item_recipe_travel_boots")
-										dprint(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Upgraded Travel Boots to level 2 | Gold Remaining: "..heroent:GetGold())
+										dprint(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Spent "..tostring(self.botitemskv.travelbootsrecipecost).." Upgraded Travel Boots to level 2 | Gold Remaining: "..heroent:GetGold())
 										self:LogEvent(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Upgraded Travel Boots to level 2 | Gold Remaining: "..heroent:GetGold())
 										self.botupgradestatus[heroent:entindex()] = self.botupgradestatus[heroent:entindex()] + 1
 									end
 								elseif bup == "aghs" and self:TimeIsLaterThan(botupgradetimings.aghs[1], botupgradetimings.aghs[2]) then
-									if botitemskv.noaghsheroes[heroent:GetName()] == true then
+									if self.botitemskv.noaghsheroes[heroent:GetName()] == true then
 										self.botupgradestatus[heroent:entindex()] = self.botupgradestatus[heroent:entindex()] + 1
 									else
-										if heroent:GetGold() >= heroent:GetBuybackCost(false) + botitemskv.aghanimsupgradecost then
-											local aghs = self:GetItemFromInventoryByName( heroent, "item_ultimate_scepter", false, true, false )
-											if aghs ~= nil and heroent:GetGold() >= heroent:GetBuybackCost(false) + botitemskv.aghanimsupgradecost then
-												heroent:ModifyGold(aghs:GetCost(), true, 0)
+										if heroent:GetGold() >= heroent:GetBuybackCost(false) + self.botitemskv.aghanimsupgradecost then
+											local aghs = InvManager:GetItemFromInventoryByName( heroent, "item_ultimate_scepter", false, true, false )
+											if aghs ~= nil and heroent:GetGold() >= heroent:GetBuybackCost(false) + self.botitemskv.aghanimsupgradecost then
 												heroent:RemoveItem(aghs)
-												heroent:SpendGold(botitemskv.aghanimsupgradecost, 2)
-												heroent:AddNewModifier(heroent, nil, "modifier_item_ultimate_scepter_consumed", botitemskv.aghanimsstats)
-												dprint(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Consumed Aghanims replacing inventory Aghanims | Gold Remaining: "..heroent:GetGold())
+												heroent:SpendGold(self.botitemskv.aghanimsupgradecost, 2)
+												heroent:AddNewModifier(heroent, nil, "modifier_item_ultimate_scepter_consumed", self.botitemskv.aghanimsstats)
+												dprint(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Spent "..tostring(self.botitemskv.aghanimsupgradecost).." Consumed Aghanims replacing inventory Aghanims | Gold Remaining: "..heroent:GetGold())
 												self:LogEvent(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Consumed Aghanims replacing inventory Aghanims | Gold Remaining: "..heroent:GetGold())
 												self.botupgradestatus[heroent:entindex()] = self.botupgradestatus[heroent:entindex()] + 1
-											elseif aghs == nil and heroent:GetGold() >= heroent:GetBuybackCost(false) + botitemskv.aghanimscost + botitemskv.aghanimsupgradecost then
-												heroent:SpendGold(botitemskv.aghanimscost + botitemskv.aghanimsupgradecost, 2)
-												heroent:AddNewModifier(heroent, nil, "modifier_item_ultimate_scepter_consumed", botitemskv.aghanimsstats)
-												dprint(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Consumed Aghanims | Gold Remaining: "..heroent:GetGold())
+											elseif aghs == nil and heroent:GetGold() >= heroent:GetBuybackCost(false) + self.botitemskv.aghanimscost + self.botitemskv.aghanimsupgradecost then
+												heroent:SpendGold(self.botitemskv.aghanimscost + self.botitemskv.aghanimsupgradecost, 2)
+												heroent:AddNewModifier(heroent, nil, "modifier_item_ultimate_scepter_consumed", self.botitemskv.aghanimsstats)
+												dprint(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Spent "..tostring(self.botitemskv.aghanimscost + self.botitemskv.aghanimsupgradecost).." Consumed Aghanims | Gold Remaining: "..heroent:GetGold())
 												self:LogEvent(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Consumed Aghanims | Gold Remaining: "..heroent:GetGold())
 												self.botupgradestatus[heroent:entindex()] = self.botupgradestatus[heroent:entindex()] + 1
 											end
@@ -2114,10 +1876,10 @@ function VGMAR:OnThink()
 									end
 								elseif bup == "moonshard" and self:TimeIsLaterThan(botupgradetimings.moonshard[1], botupgradetimings.moonshard[2]) then
 									--TODO:??Make Supports Give Carries moonshards
-									if (heroent:GetGold() >= heroent:GetBuybackCost(false) + botitemskv.moonshardcost and heroent:GetAverageTrueAttackDamage(heroent) > botitemskv.moonshardmindmg) or (heroent:GetGold() >= heroent:GetBuybackCost(false) + botitemskv.moonshardcost * 2) then
-										heroent:SpendGold(botitemskv.moonshardcost, 2)
-										heroent:AddNewModifier(heroent, nil, "modifier_item_moon_shard_consumed", botitemskv.moonshardvalues)
-										dprint(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Consumed Moonshard | Gold Remaining: "..heroent:GetGold())
+									if (heroent:GetGold() >= heroent:GetBuybackCost(false) + self.botitemskv.moonshardcost and heroent:GetAverageTrueAttackDamage(heroent) > self.botitemskv.moonshardmindmg) or (heroent:GetGold() >= heroent:GetBuybackCost(false) + self.botitemskv.moonshardcost * 2) then
+										heroent:SpendGold(self.botitemskv.moonshardcost, 2)
+										heroent:AddNewModifier(heroent, nil, "modifier_item_moon_shard_consumed", self.botitemskv.moonshardvalues)
+										dprint(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Spent "..tostring(self.botitemskv.moonshardcost).." Consumed Moonshard | Gold Remaining: "..heroent:GetGold())
 										self:LogEvent(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Consumed Moonshard | Gold Remaining: "..heroent:GetGold())
 										self.botupgradestatus[heroent:entindex()] = self.botupgradestatus[heroent:entindex()] + 1
 									end
@@ -2131,7 +1893,7 @@ function VGMAR:OnThink()
 						--//////////////////////////////////////////
 						if self.botitemaghsremoved[heroent:entindex()] == nil then
 							if heroent:HasModifier("modifier_item_ultimate_scepter_consumed") and heroent:HasItemInInventory("item_ultimate_scepter") then
-								local aghs = self:GetItemFromInventoryByName( heroent, "item_ultimate_scepter", false, true, false )
+								local aghs = InvManager:GetItemFromInventoryByName( heroent, "item_ultimate_scepter", false, true, false )
 								if aghs ~= nil then
 									heroent:ModifyGold(aghs:GetCost(), true, 0)
 									heroent:RemoveItem(aghs)
@@ -2197,17 +1959,17 @@ function VGMAR:OnThink()
 				
 				if heroent:IsRealHero() and not heroent:IsCourier() then
 					--Shrines Fill Bottles --modifier_filler_heal_aura
-					if self:HeroHasUsableItemInInventory( heroent, "item_bottle", false, true, false) and heroent:FindModifierByName("modifier_filler_heal") ~= nil then
-						local bottle = self:GetItemFromInventoryByName( heroent, "item_bottle", false, true, false )
+					if InvManager:HeroHasUsableItemInInventory( heroent, "item_bottle", false, true, false) and heroent:FindModifierByName("modifier_filler_heal") ~= nil then
+						local bottle = InvManager:GetItemFromInventoryByName( heroent, "item_bottle", false, true, false )
 						if bottle:GetCurrentCharges() < bottle:GetInitialCharges() then
 							bottle:SetCurrentCharges( bottle:GetInitialCharges() )
 						end
 					end
 					--##Obsolete707
 					--Diffusal Blade 2+ Upgrade
-					--[[if self:HeroHasUsableItemInInventory( heroent, "item_recipe_diffusal_blade", false, false, false) and self:HeroHasUsableItemInInventory( heroent, "item_diffusal_blade_2", false, false, false)  then
-						local diffbladeitem = self:GetItemFromInventoryByName( heroent, "item_diffusal_blade_2", false, false, false )
-						local diffbladerecipe = self:GetItemFromInventoryByName( heroent, "item_recipe_diffusal_blade", false, false, false )
+					--[[if InvManager:HeroHasUsableItemInInventory( heroent, "item_recipe_diffusal_blade", false, false, false) and InvManager:HeroHasUsableItemInInventory( heroent, "item_diffusal_blade_2", false, false, false)  then
+						local diffbladeitem = InvManager:GetItemFromInventoryByName( heroent, "item_diffusal_blade_2", false, false, false )
+						local diffbladerecipe = InvManager:GetItemFromInventoryByName( heroent, "item_recipe_diffusal_blade", false, false, false )
 						if diffbladeitem ~= nil and diffbladeitem:GetCurrentCharges() < diffbladeitem:GetInitialCharges() then
 							heroent:RemoveItem(diffbladerecipe)
 							diffbladeitem:SetCurrentCharges(diffbladeitem:GetInitialCharges())
@@ -2217,16 +1979,16 @@ function VGMAR:OnThink()
 					--Consumable Items System
 					--//////////////////////////////
 					--Bloodstone recharge
-					if self:HeroHasUsableItemInInventory(heroent, "item_bloodstone", false, false, false) and self:CountUsableItemsInHeroInventory(heroent, "item_pers", false, true, false) >= 2 then
-						self:RemoveNItemsInInventory(heroent, "item_pers", 2)
-						local bloodstone = self:GetItemFromInventoryByName( heroent, "item_bloodstone", false, false, false )
+					if InvManager:HeroHasUsableItemInInventory(heroent, "item_bloodstone", false, false, false) and InvManager:CountUsableItemsInHeroInventory(heroent, "item_pers", false, true, false) >= 2 then
+						InvManager:RemoveNItemsInInventory(heroent, "item_pers", 2)
+						local bloodstone = InvManager:GetItemFromInventoryByName( heroent, "item_bloodstone", false, false, false )
 						if bloodstone ~= nil then
 							bloodstone:SetCurrentCharges(bloodstone:GetCurrentCharges() + 24)
 						end
 					end
 					--Aegis
-					if self:HeroHasUsableItemInInventory(heroent, "item_aegis", false, false, false) then
-						self:RemoveNItemsInInventory(heroent, "item_aegis", 1)
+					if InvManager:HeroHasUsableItemInInventory(heroent, "item_aegis", false, false, false) then
+						InvManager:RemoveNItemsInInventory(heroent, "item_aegis", 1)
 						heroent:AddNewModifier(heroent, nil, "modifier_vgmar_i_consumed_aegis", modifierdatatable["modifier_vgmar_i_consumed_aegis"])
 					end
 				end
@@ -2506,9 +2268,9 @@ function VGMAR:OnThink()
 							if itemlistforspell[k].specificcond == true then
 								if itemlistforspell[k].isconsumable == true then
 									if itemlistforspell[k].ismodifier == true then
-										if self:HeroHasAllItemsFromListWMultiple( heroent, itemlistforspell[k].items, itemlistforspell[k].backpack) and heroent:IsAlive() and not heroent:HasModifier(itemlistforspell[k].spell) then
+										if InvManager:HeroHasAllItemsFromListWMultiple( heroent, itemlistforspell[k].items, itemlistforspell[k].backpack) and heroent:IsAlive() and not heroent:HasModifier(itemlistforspell[k].spell) then
 											for j=1,#itemlistforspell[k].items.itemnames do
-												self:RemoveNItemsInInventory( heroent, itemlistforspell[k].items.itemnames[j], itemlistforspell[k].items.itemnum[j])
+												InvManager:RemoveNItemsInInventory( heroent, itemlistforspell[k].items.itemnames[j], itemlistforspell[k].items.itemnum[j])
 											end
 											if itemlistforspell[k].usemodifierdatatable == true then
 												heroent:AddNewModifier(heroent, nil, itemlistforspell[k].spell, modifierdatatable[itemlistforspell[k].spell])
@@ -2518,11 +2280,11 @@ function VGMAR:OnThink()
 										end
 									else
 										if AbilitySlotsLib:GetFreeAbilitySlotsForSpecificHero( heroent, true ) > 0 then
-											if self:HeroHasAllItemsFromListWMultiple( heroent, itemlistforspell[k].items, itemlistforspell[k].backpack) and heroent:IsAlive() and not heroent:FindAbilityByName(itemlistforspell[k].spell) then
+											if InvManager:HeroHasAllItemsFromListWMultiple( heroent, itemlistforspell[k].items, itemlistforspell[k].backpack) and heroent:IsAlive() and not heroent:FindAbilityByName(itemlistforspell[k].spell) then
 												local itemability = heroent:FindAbilityByName(itemlistforspell[k].spell)
 												if itemability == nil then
 													for j=1,#itemlistforspell[k].items.itemnames do
-														self:RemoveNItemsInInventory( heroent, itemlistforspell[k].items.itemnames[j], itemlistforspell[k].items.itemnum[j])
+														InvManager:RemoveNItemsInInventory( heroent, itemlistforspell[k].items.itemnames[j], itemlistforspell[k].items.itemnum[j])
 													end
 													AbilitySlotsLib:SafeAddAbility( heroent, itemlistforspell[k].spell, 1 )
 												end
@@ -2530,7 +2292,7 @@ function VGMAR:OnThink()
 										end
 									end
 								else
-									if self:HeroHasAllItemsFromListWMultiple( heroent, itemlistforspell[k].items, itemlistforspell[k].backpack) then
+									if InvManager:HeroHasAllItemsFromListWMultiple( heroent, itemlistforspell[k].items, itemlistforspell[k].backpack) then
 										if heroent:IsAlive() then
 											if itemlistforspell[k].ismodifier == true then
 												if not heroent:HasModifier(itemlistforspell[k].spell) then
@@ -2572,18 +2334,18 @@ function VGMAR:OnThink()
 				--///////////////////
 				--CourierBurstUpgrade
 				--///////////////////
-				if self:HeroHasUsableItemInInventory(heroent, "item_flying_courier_upgrade", false, true, true) then
+				if InvManager:HeroHasUsableItemInInventory(heroent, "item_flying_courier_upgrade", false, true, true) then
 					local couriers = Entities:FindAllByClassname("npc_dota_courier")
 					for j=1,#couriers do
 						if couriers[j]:GetTeamNumber() == heroent:GetTeamNumber() then
 							local courierburstmod = couriers[j]:FindModifierByName("modifier_vgmar_courier_burst")
 							if courierburstmod and courierburstmod:GetStackCount() >= 1 then
 								if couriers[j]:GetTeamNumber() == 2 and self.radiantcourieruplevel < MAX_COURIER_LVL then
-									self:RemoveNItemsInInventory(heroent, "item_flying_courier_upgrade", 1)
+									InvManager:RemoveNItemsInInventory(heroent, "item_flying_courier_upgrade", 1)
 									couriers[j]:AddNewModifier(couriers[j], nil, "modifier_vgmar_courier_burst", {level = self.radiantcourieruplevel + 1})
 									self.radiantcourieruplevel = courierburstmod:GetStackCount()
 								elseif couriers[j]:GetTeamNumber() == 3 and self.direcourieruplevel < MAX_COURIER_LVL then
-									self:RemoveNItemsInInventory(heroent, "item_flying_courier_upgrade", 1)
+									InvManager:RemoveNItemsInInventory(heroent, "item_flying_courier_upgrade", 1)
 									couriers[j]:AddNewModifier(couriers[j], nil, "modifier_vgmar_courier_burst", {level = self.direcourieruplevel + 1})
 									self.direcourieruplevel = courierburstmod:GetStackCount()
 								end
@@ -2596,8 +2358,8 @@ function VGMAR:OnThink()
 				--/////////////////
 				for k,v in ipairs(self.direcourieruptable) do
 					if v.done == false and self:TimeIsLaterThan(v.upgradetime, 0) and self:GetCourierBurstLevel( nil, 3 ) >= v.lvl then
-						if heroent:GetTeamNumber() == 3 and self:GetHeroFreeInventorySlots(heroent, true, false) > 0 then
-							dprint("Giving ".. HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." having "..self:GetHeroFreeInventorySlots(heroent, true, false).." empty slots lvl "..v.lvl.." courier upgrade")
+						if heroent:GetTeamNumber() == 3 and InvManager:GetHeroFreeInventorySlots(heroent, true, true, false) > 0 then
+							dprint("Giving ".. HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." having "..InvManager:GetHeroFreeInventorySlots(heroent, true, true, false).." empty slots lvl "..v.lvl.." courier upgrade")
 							heroent:AddItemByName("item_flying_courier_upgrade")
 							v.done = true
 						end
@@ -2606,11 +2368,11 @@ function VGMAR:OnThink()
 				--/////////////
 				--Tome Purchase
 				--/////////////
-				if self:TimeIsLaterThan( math.floor(botitemskv.tomerestock[1]/60), botitemskv.tomerestock[1] % 60 ) and self.tomepurchaseallmaxlvl == false and #self.direheroes > 0 then
+				if self:TimeIsLaterThan( math.floor(self.botitemskv.tomerestock[1]/60), self.botitemskv.tomerestock[1] % 60 ) and self.tomepurchaseallmaxlvl == false and #self.direheroes > 0 then
 					local function GetLowestXpBot()
 						local lowestxpbot = {99999, nil}
 						for k,v in ipairs(self.direheroes) do
-							if v:GetCurrentXP() < lowestxpbot[1] and v:GetGold() >= botitemskv.tomeprice then
+							if v:GetCurrentXP() < lowestxpbot[1] and v:GetGold() >= self.botitemskv.tomeprice then
 								lowestxpbot = {v:GetCurrentXP(), v}
 							end
 						end
@@ -2620,13 +2382,13 @@ function VGMAR:OnThink()
 						for tomenum=1, tomes do
 							local lxpb = GetLowestXpBot()
 							if lxpb ~= nil then
-								if lxpb:GetLevel() < 25 and self:GetHeroFreeInventorySlots(lxpb, true, false) > 0 then
-									lxpb:SpendGold(botitemskv.tomeprice, 2)
+								if lxpb:GetLevel() < 25 and InvManager:GetHeroFreeInventorySlots(lxpb, true, true, false) > 0 then
+									lxpb:SpendGold(self.botitemskv.tomeprice, 2)
 									lxpb:AddItemByName("item_tome_of_knowledge")
 									Timers:CreateTimer(5, function()
-										local tome = self:GetItemFromInventoryByName( lxpb, "item_tome_of_knowledge", false, true, false )
+										local tome = InvManager:GetItemFromInventoryByName( lxpb, "item_tome_of_knowledge", false, true, false )
 										if tome ~= nil then
-											local slot = self:GetItemSlotFromInventoryByItemName( lxpb, "item_tome_of_knowledge", false, true, false )
+											local slot = InvManager:GetItemSlotFromInventoryByItemName( lxpb, "item_tome_of_knowledge", false, true, false )
 											if slot > 5 and slot < 9 then
 												lxpb:SwapItems(slot, 0)
 											end
@@ -2643,18 +2405,18 @@ function VGMAR:OnThink()
 							end
 						end
 					end
-					if GameRules:GetDOTATime(false, false) < botitemskv.tomerestock[1] + 1 then
-						if self.bottomepurchausetimestamp + botitemskv.tomerestock[1] < GameRules:GetDOTATime(false, false) then
-							BuyTome(botitemskv.tomeinitialstack)
+					if GameRules:GetDOTATime(false, false) < self.botitemskv.tomerestock[1] + 1 then
+						if self.bottomepurchausetimestamp + self.botitemskv.tomerestock[1] < GameRules:GetDOTATime(false, false) then
+							BuyTome(self.botitemskv.tomeinitialstack)
 						end
-					elseif self.bottomepurchausetimestamp + botitemskv.tomerestock[2] < GameRules:GetDOTATime(false, false) then
+					elseif self.bottomepurchausetimestamp + self.botitemskv.tomerestock[2] < GameRules:GetDOTATime(false, false) then
 						BuyTome(1)
 					end
 				end
 				--/////////////////////
 				--Innate Gem Assignment
 				--/////////////////////
-				if self:TimeIsLaterThan( botitemskv.gemtime[1], botitemskv.gemtime[2] ) and GameRules:GetDOTATime(false, false) > self.gemapplyretrytime and self.botinnategemapplied == false and #self.direheroes > 0 then
+				if self:TimeIsLaterThan( self.botitemskv.gemtime[1], self.botitemskv.gemtime[2] ) and GameRules:GetDOTATime(false, false) > self.gemapplyretrytime and self.botinnategemapplied == false and #self.direheroes > 0 then
 					local fathero = {-1, nil}
 					for _, fatso in ipairs(self.direheroes) do
 						if fatso:GetMaxHealth() > fathero[1] then
@@ -2927,6 +2689,7 @@ function VGMAR:OnAllHeroesSpawned()
 		BotSupportLib:StartBotInit()
 		Extensions:InitHeroDamageTrackingTable(self.allheroes)
 		Extensions:InitHeroTables(self.radiantheroes, self.direheroes)
+		BotRolesLib:ParseHeroList(self.botheroes)
 	end)
 	--//////////////////////
 	--Applying Bot Modifiers
@@ -3358,6 +3121,13 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 		return false
 	end
 	
+	--///////////////////////////
+	--Extensions Order Event Hook
+	--///////////////////////////
+	local ext_order_event_return = Extensions:Event_OnOrder(unit, ability, target, filterTable)
+	if ext_order_event_return ~= nil then
+		return ext_order_event_return
+	end
 	--//////////
 	--Buy Orders
 	--//////////
@@ -3407,7 +3177,7 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 	if order_type == 16 then
 		--dprint("Purchase Order Detected.")
 		--dprint("Item ID: ", filterTable["entindex_ability"])
-		local itemname = self:GetItemByID(filterTable["entindex_ability"])
+		local itemname = KeyValuesManager:GetItemByID(filterTable["entindex_ability"])
 		--dprint("Item: "..itemname)
 		if itempurchaseblocklist[itemname] ~= nil then
 			if PlayerResource:GetTeam(issuer) == 2 then
@@ -3430,7 +3200,7 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 	
 	--Buyback Cooldown Reset
 	if order_type == 16 then
-		if self:GetItemByID(filterTable["entindex_ability"]) == "item_buyback_cooldown_reset" then
+		if KeyValuesManager:GetItemByID(filterTable["entindex_ability"]) == "item_buyback_cooldown_reset" then
 			local hero = PlayerResource:GetPlayer(issuer):GetAssignedHero()
 			dprint("Buyback Cooldown: "..hero:GetBuybackCooldownTime().." Cost: "..hero:GetBuybackCost(true).." Cost(f): "..hero:GetBuybackCost(false))
 			dprint("GameTime: "..GameRules:GetGameTime())
@@ -3447,6 +3217,12 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 				end
 			end
 			return false
+		end
+	end
+	
+	if order_type == DOTA_UNIT_ORDER_SET_ITEM_COMBINE_LOCK then
+		if ability and ability:IsItem() then
+			ability.isLocked = not ability.isLocked
 		end
 	end
 	
@@ -3533,7 +3309,7 @@ function VGMAR:ExecuteOrderFilter( filterTable )
 		--[[if unit:IsRealHero() then
 			if ability and ability:GetName() == "item_courier" then
 				if self:GetHerosCourier(unit) ~= nil then
-					self:RemoveNItemsInInventory(unit, "item_courier", 1)
+					InvManager:RemoveNItemsInInventory(unit, "item_courier", 1)
 					SendOverheadEventMessage( nil, 0, unit, 100, nil )
 					self:DisplayClientError(issuer, "Second Courier is not allowed")
 					unit:ModifyGold(100, false, 6)
@@ -3569,7 +3345,7 @@ function VGMAR:ExecuteOrderFilter( filterTable )
                 elseif unit:GetAbsOrigin() == unit.OldPosition then
                     unit.StuckCounter = unit.StuckCounter + 1
 
-                    -- Stuck at observer ward fix
+                    --[[-- Stuck at observer ward fix
                     if unit.StuckCounter > 50 then
                         for i=0,11 do
                             local item = unit:GetItemInSlot(i)
@@ -3579,7 +3355,7 @@ function VGMAR:ExecuteOrderFilter( filterTable )
                                 return true
                             end
                         end
-                    end
+                    end--]]
 					
                     --[[-- Stuck at shop trying to get stash items, remove stash items. THIS IS A BAND-AID FIX. IMPROVE AT SOME POINT
                     if unit.StuckCounter > 150 and fixed == false then
@@ -3746,6 +3522,8 @@ function VGMAR:OnGameStateChanged( keys )
 			SendToServerConsole("dota_bot_set_difficulty 3")
 		end
 		Convars:SetBool("dota_bot_disable", false)
+		Convars:SetInt("dota_max_physical_items_purchase_limit", 999)
+		Convars:SetInt("dota_max_physical_items_drop_limit", 999)
 		
 	elseif state == DOTA_GAMERULES_STATE_TEAM_SHOWCASE then
 		if IsServer() then
@@ -3917,6 +3695,10 @@ function VGMAR:OnGameStateChanged( keys )
 			end
 		end
 	elseif state == DOTA_GAMERULES_STATE_GAME_IN_PROGRESS then
+		if BotRolesLib.DBReady then
+			print('Midlaner: '..BotRolesLib:GetMidLaner():GetName())
+			print('Pure Support: '..BotRolesLib:GetPureSupport():GetName())
+		end
 		--///////////////
 		--Reset Timescale
 		--///////////////

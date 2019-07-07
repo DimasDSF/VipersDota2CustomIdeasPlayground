@@ -30,13 +30,6 @@
 				"item_oblivion_staff"	"ITEM_CORE | ITEM_DERIVED"
 				"item_echo_sabre"		"ITEM_DERIVED"
 
-				"item_ogre_axe"		"ITEM_EXTENSION"
-				"item_belt_of_strength"		"ITEM_EXTENSION"
-				"item_recipe_sange"		"ITEM_EXTENSION"
-				"item_sange"		"ITEM_DERIVED"
-				"item_talisman_of_evasion"		"ITEM_EXTENSION"
-				"item_heavens_halberd"		"ITEM_DERIVED | ITEM_SELLABLE"
-
 				"item_blade_of_alacrity"		"ITEM_EXTENSION"
 				"item_boots_of_elves"		"ITEM_EXTENSION"
 				"item_recipe_yasha"		"ITEM_EXTENSION"
@@ -44,6 +37,13 @@
 				"item_ultimate_orb"		"ITEM_EXTENSION"
 				"item_recipe_manta"		"ITEM_EXTENSION"
 				"item_manta"		"ITEM_DERIVED"
+				
+				"item_ogre_axe"		"ITEM_EXTENSION"
+				"item_belt_of_strength"		"ITEM_EXTENSION"
+				"item_recipe_sange"		"ITEM_EXTENSION"
+				"item_sange"		"ITEM_DERIVED"
+				"item_talisman_of_evasion"		"ITEM_EXTENSION"
+				"item_heavens_halberd"		"ITEM_DERIVED | ITEM_SELLABLE"
 
 				"item_reaver"		"ITEM_LUXURY"
 				"item_ring_of_tarrasque"		"ITEM_LUXURY"

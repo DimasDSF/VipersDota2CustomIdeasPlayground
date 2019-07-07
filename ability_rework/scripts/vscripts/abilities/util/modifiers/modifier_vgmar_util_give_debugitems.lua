@@ -205,7 +205,7 @@ function modifier_vgmar_util_give_debugitems:OnIntervalThink()
 			end
 			self:Destroy()
 		end
-		if GameRules.VGMAR:GetHeroFreeInventorySlots( parent, true, false ) > 0 then
+		if InvManager:GetHeroFreeInventorySlots( parent, true, true, false ) > 0 then
 			if self.items[1] ~= nil then
 				local item = parent:AddItemByName(self.items[1])
 				if item ~= nil then

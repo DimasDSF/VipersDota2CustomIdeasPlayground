@@ -62,7 +62,7 @@ end
 function modifier_bsl_eventhandler:OnDeath(kv)
 	if IsServer() then
 		if kv.attacker then
-			if kv.attacker:IsRealHero() then
+			if kv.attacker:IsRealHero() or kv.unit:GetClassname() == "npc_dota_ward_base" or kv.unit:GetClassname() == "npc_dota_ward_base_truesight" then
 				BotSupportLib:OnKilledUnit(kv.attacker, kv.unit, kv)
 			end
 		end

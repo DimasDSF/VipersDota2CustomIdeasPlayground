@@ -72,4 +72,16 @@
 		//----------------------------------------------------------------
 		"AttackDesire"				"1.1"		// How much bots want to attack them vs other non-hero things
 	}
+	"npc_dota_observer_wards"
+	{
+		// Bots
+		//----------------------------------------------------------------
+		"AttackDesire"				"20.0"		// How much bots want to attack them vs other non-hero things
+	}
+	"npc_dota_sentry_wards"
+	{
+		// Bots
+		//----------------------------------------------------------------
+		"AttackDesire"				"15.0"		// How much bots want to attack them vs other non-hero things
+	}
 }

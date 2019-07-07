@@ -85,7 +85,7 @@
 				"24"		""
 				"25"		"special_bonus_unique_death_prophet_4"
 			}
-			"HeroType"		"DOTA_BOT_PUSH_SUPPORT"
+			"HeroType"		"DOTA_BOT_PUSH_SUPPORT | DOTA_BOT_NUKER"
 			"LaningInfo"
 			{
 				"SoloDesire"		"2"
