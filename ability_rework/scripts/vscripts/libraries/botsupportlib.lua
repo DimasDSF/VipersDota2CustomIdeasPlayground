@@ -147,7 +147,7 @@ function BotSupportLib:Init()
 		idlepurchaseinterval = 30,
 		wardsavailable = 10,
 		maxwards = 10,
-		desiredwardnum = 2
+		desiredwardnum = 1 + math.bool(#BotSupportLib.heroeswithinviscapabilities>0) + math.bool(GameRules:GetDOTATime(false,false)>30*60)
 	}
 	self.midwardgiven = false
 end
@@ -2133,14 +2133,26 @@ function BotSupportLib:OnDamaged(unit, attacker, event)
 			--/////////////////////////////////////////////
 			--Escape and Defence Fast Response Logic
 			--/////////////////////////////////////////////
-			if unit:IsAlive() then
-				if unit:IsInvisible() == false and InvManager:HeroHasReadyItemInInventory( unit, "item_black_king_bar", false, false, false ) then
+			if unit:IsAlive() and unit:IsInvisible() == false then
+				if InvManager:HeroHasReadyItemInInventory( unit, "item_black_king_bar", false, false, false ) then
 					local bkb = InvManager:GetItemFromInventoryByName( unit, "item_black_king_bar", false, false, false )
 					if bkb ~= nil and bkb:IsFullyCastable() and Extensions:QueryHeroDamage(unit:entindex(), 2, 2, true, false) >= unit:GetMaxHealth()*0.1 then
 						BotSupportLib:CastAbility(unit, DOTA_UNIT_ORDER_CAST_NO_TARGET, nil, bkb, nil, false, true, true)
 					end
+				--Blademail
+				elseif InvManager:HeroHasReadyItemInInventory( unit, "item_blade_mail", false, false, false ) then
+					local blademail = InvManager:GetItemFromInventoryByName( unit, "item_blade_mail", false, false, false )
+					if blademail ~= nil and blademail:IsFullyCastable() and Extensions:QueryHeroDamage(unit:entindex(), 2, 1+4+(2*math.bool(unit:HasModifier("modifier_black_king_bar_immune") == false)), true, false) >= unit:GetMaxHealth()*0.1 then
+						BotSupportLib:CastAbility(unit, DOTA_UNIT_ORDER_CAST_NO_TARGET, nil, blademail, nil, false, true, true)
+					end
+				--Ghost Scepter
+				elseif InvManager:HeroHasReadyItemInInventory( unit, "item_ghost", false, false, false ) then
+					local ghost = InvManager:GetItemFromInventoryByName( unit, "item_ghost", false, false, false )
+					if ghost ~= nil and ghost:IsFullyCastable() and Extensions:QueryHeroDamage(unit:entindex(), 2, 1, true, false) >= unit:GetMaxHealth()*0.1 then
+						BotSupportLib:CastAbility(unit, DOTA_UNIT_ORDER_CAST_NO_TARGET, nil, ghost, nil, false, true, true)
+					end
 				--ShadowBlade/SilverEdge
-				elseif unit:IsInvisible() == false and (InvManager:HeroHasReadyItemInInventory( unit, "item_invis_sword", false, false, false ) or InvManager:HeroHasReadyItemInInventory( unit, "item_silver_edge", false, false, false )) then
+				elseif (InvManager:HeroHasReadyItemInInventory( unit, "item_invis_sword", false, false, false ) or InvManager:HeroHasReadyItemInInventory( unit, "item_silver_edge", false, false, false )) then
 					local invisitem = InvManager:GetItemFromInventoryByName( unit, "item_invis_sword", false, false, false )
 					if invisitem == nil then
 						invisitem = InvManager:GetItemFromInventoryByName( unit, "item_silver_edge", false, false, false )
@@ -2149,12 +2161,6 @@ function BotSupportLib:OnDamaged(unit, attacker, event)
 						if attacker:IsHero() and (unit:GetHealth()/unit:GetMaxHealth() < 0.35) and Extensions:QueryHeroDamage(unit:entindex(), 2, 1+2+4, true, false) >= unit:GetMaxHealth()*0.1 then
 							BotSupportLib:CastAbility(unit, DOTA_UNIT_ORDER_CAST_NO_TARGET, nil, invisitem, nil, false, true, true)
 						end
-					end
-				--Blademail
-				elseif InvManager:HeroHasReadyItemInInventory( unit, "item_blade_mail", false, false, false ) and unit:IsInvisible() == false then
-					local blademail = InvManager:GetItemFromInventoryByName( unit, "item_blade_mail", false, false, false )
-					if blademail ~= nil and blademail:IsFullyCastable() and Extensions:QueryHeroDamage(unit:entindex(), 2, 1+4+(2*math.bool(unit:HasModifier("modifier_black_king_bar_immune") == false)), true, false) >= unit:GetMaxHealth()*0.1 then
-						BotSupportLib:CastAbility(unit, DOTA_UNIT_ORDER_CAST_NO_TARGET, nil, blademail, nil, false, true, true)
 					end
 				end
 			end
