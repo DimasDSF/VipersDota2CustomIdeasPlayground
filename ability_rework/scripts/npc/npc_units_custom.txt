@@ -84,4 +84,172 @@
 		//----------------------------------------------------------------
 		"AttackDesire"				"15.0"		// How much bots want to attack them vs other non-hero things
 	}
+	"npc_dota_goodguys_tower2_top"
+	{
+		"Ability1"					""			// Ability 1.
+	}
+	"npc_dota_goodguys_tower2_mid"
+	{
+		"Ability1"					""			// Ability 1.
+	}
+	"npc_dota_goodguys_tower2_bot"
+	{
+		"Ability1"					""			// Ability 1.
+	}
+	"npc_dota_goodguys_tower3_top"
+	{
+		"Ability1"					""			// Ability 1.
+	}
+	"npc_dota_goodguys_tower3_mid"
+	{
+		"Ability1"					""			// Ability 1.
+	}
+	"npc_dota_goodguys_tower3_bot"
+	{
+		"Ability1"					""			// Ability 1.
+	}
+	"npc_dota_badguys_tower4"
+	{
+		"Ability1"					""			// Ability 1.
+	}
+	"npc_dota_badguys_tower2_top"
+	{
+		"Ability1"					""			// Ability 1.
+	}
+	"npc_dota_badguys_tower2_mid"
+	{
+		"Ability1"					""			// Ability 1.
+	}
+	"npc_dota_badguys_tower2_bot"
+	{
+		"Ability1"					""			// Ability 1.
+	}
+	"npc_dota_badguys_tower3_top"
+	{
+		"Ability1"					""			// Ability 1.
+	}
+	"npc_dota_badguys_tower3_mid"
+	{
+		"Ability1"					""			// Ability 1.
+	}
+	"npc_dota_badguys_tower3_bot"
+	{
+		"Ability1"					""			// Ability 1.
+	}
+	"npc_dota_badguys_tower4"
+	{
+		"Ability1"					""			// Ability 1.
+	}
+	"npc_dota_goodguys_fillers"
+	{
+		"Ability1"					""			// Ability 1.
+	}
+	"npc_dota_goodguys_healers"
+	{
+		"Ability1"					""			// Ability 1.
+	}
+	"npc_dota_badguys_fillers"
+	{
+		"Ability1"					""			// Ability 1.
+	}
+	"npc_dota_badguys_healers"
+	{
+		"Ability1"					""			// Ability 1.
+	}
+	"npc_dota_goodguys_melee_rax_top"
+	{
+		"Ability1"					""			// Ability 1.
+	}
+	"npc_dota_goodguys_melee_rax_mid"
+	{
+		"Ability1"					""			// Ability 1.
+	}
+	"npc_dota_goodguys_melee_rax_bot"
+	{
+		"Ability1"					""			// Ability 1.
+	}
+	"npc_dota_goodguys_range_rax_top"
+	{
+		"Ability1"					""			// Ability 1.
+	}
+	"npc_dota_goodguys_range_rax_mid"
+	{
+		"Ability1"					""			// Ability 1.
+	}
+	"npc_dota_goodguys_range_rax_bot"
+	{
+		"Ability1"					""			// Ability 1.
+	}
+	"npc_dota_badguys_melee_rax_top"
+	{
+		"Ability1"					""			// Ability 1.
+	}
+	"npc_dota_badguys_melee_rax_mid"
+	{
+		"Ability1"					""			// Ability 1.
+	}
+	"npc_dota_badguys_melee_rax_bot"
+	{
+		"Ability1"					""			// Ability 1.
+	}
+	"npc_dota_badguys_range_rax_top"
+	{
+		"Ability1"					""			// Ability 1.
+	}
+	"npc_dota_badguys_range_rax_mid"
+	{
+		"Ability1"					""			// Ability 1.
+	}
+	"npc_dota_badguys_range_rax_bot"
+	{
+		"Ability1"					""			// Ability 1.
+	}
+	"npc_dota_goodguys_fort"
+	{
+		"Ability1"					""			// Ability 1.
+	}
+	"npc_dota_badguys_fort"
+	{
+		"Ability1"					""			// Ability 1.
+	}
+	"npc_dota_goodguys_siege"
+	{
+		"Level"						"1"
+	}
+	"npc_dota_goodguys_siege_upgraded"
+	{
+		"Level"						"2"
+	}
+	"npc_dota_goodguys_siege_upgraded_mega"
+	{
+		"Level"						"3"
+	}
+	"npc_dota_badguys_siege"
+	{
+		"Level"						"1"
+	}
+	"npc_dota_badguys_siege_upgraded"
+	{
+		"Level"						"2"
+	}
+	"npc_dota_badguys_siege_upgraded_mega"
+	{
+		"Level"						"3"
+	}
+	"npc_dota_venomancer_plague_ward_1"
+	{
+		"Ability1"					"vgmar_util_plague_ward_destroy"			// Ability 1.
+	}
+	"npc_dota_venomancer_plague_ward_2"
+	{
+		"Ability1"					"vgmar_util_plague_ward_destroy"			// Ability 1.
+	}
+	"npc_dota_venomancer_plague_ward_3"
+	{
+		"Ability1"					"vgmar_util_plague_ward_destroy"			// Ability 1.
+	}
+	"npc_dota_venomancer_plague_ward_4"
+	{
+		"Ability1"					"vgmar_util_plague_ward_destroy"			// Ability 1.
+	}
 }

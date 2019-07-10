@@ -60,7 +60,7 @@
 				"7"		"luna_moon_glaive"
 				"8"		"luna_moon_glaive"
 				"9"		"luna_moon_glaive"
-				"10"		"special_bonus_attack_speed_15"
+				"10"		"special_bonus_cast_range_400"
 				"11"		"luna_lucent_beam"
 				"12"		"luna_eclipse"
 				"13"		"luna_lunar_blessing"
@@ -75,7 +75,7 @@
 				"22"		""
 				"23"		""
 				"24"		""
-				"25"		"special_bonus_lifesteal_25"
+				"25"		"special_bonus_lifesteal_30"
 			}
 			"HeroType"		"DOTA_BOT_HARD_CARRY"
 			"LaningInfo"

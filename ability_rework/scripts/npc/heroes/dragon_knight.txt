@@ -70,7 +70,7 @@
 				"12"		"dragon_knight_elder_dragon_form"
 				"13"		"dragon_knight_dragon_tail"
 				"14"		"dragon_knight_dragon_tail"
-				"15"		"special_bonus_attack_damage_30"
+				"15"		"special_bonus_hp_400"
 				"16"		"dragon_knight_dragon_tail"
 				"17"		""
 				"18"		"dragon_knight_elder_dragon_form"
