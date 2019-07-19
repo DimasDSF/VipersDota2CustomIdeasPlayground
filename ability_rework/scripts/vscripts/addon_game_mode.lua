@@ -1836,11 +1836,15 @@ function VGMAR:OnThink()
 												local bootsname = boots:GetName()
 												heroent:ModifyGold(boots:GetCost(), true, 0)
 												heroent:RemoveItem(boots)
+												heroent:SpendGold(self.botitemskv.travelbootscost, 2)
+												heroent:AddItemByName("item_travel_boots")
+												dprint(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Spent "..tostring(self.botitemskv.travelbootscost).." Upgraded "..bootsname.." to Travel Boots | Gold Remaining: "..heroent:GetGold())
+												self:LogEvent(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Upgraded "..bootsname.." to Travel Boots | Gold Remaining: "..heroent:GetGold())
+											else
+												Extensions:SimulateItemPurchase(heroent, "item_travel_boots")
+												dprint(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Spent "..tostring(self.botitemskv.travelbootscost).." Purchased Travel Boots | Gold Remaining: "..heroent:GetGold())
+												self:LogEvent(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Purchased Travel Boots | Gold Remaining: "..heroent:GetGold())
 											end
-											heroent:SpendGold(self.botitemskv.travelbootscost, 2)
-											heroent:AddItemByName("item_travel_boots")
-											dprint(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Spent "..tostring(self.botitemskv.travelbootscost).." Upgraded "..bootsname.." to Travel Boots | Gold Remaining: "..heroent:GetGold())
-											self:LogEvent(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Upgraded "..bootsname.." to Travel Boots | Gold Remaining: "..heroent:GetGold())
 											self.botupgradestatus[heroent:entindex()] = self.botupgradestatus[heroent:entindex()] + 1
 										end
 									end

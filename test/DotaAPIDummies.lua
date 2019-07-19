@@ -12,6 +12,7 @@ function class()
 end
 GameRules = {}
 CBaseEntity = {}
+CDOTA_BaseNPC = {}
 LogLib = {}
 --DotaAPI Global Variables
 -- Enum DAMAGE_TYPES
