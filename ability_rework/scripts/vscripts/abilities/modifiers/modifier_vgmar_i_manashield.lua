@@ -134,7 +134,7 @@ function modifier_vgmar_i_manashield:OnTakeDamage( event )
 					local oompfx3 = ParticleManager:CreateParticle("particles/econ/items/antimage/antimage_weapon_basher_ti5/antimage_manavoid_ti_5.vpcf", PATTACH_ROOTBONE_FOLLOW, self:GetParent())
 					StartSoundEvent("Hero_Antimage.ManaVoid", parent)
 					parent:Purge(false, true, false, true, false)
-					purgeparticle = ParticleManager:CreateParticle("particles/econ/items/abaddon/abaddon_alliance/abaddon_aphotic_shield_alliance_explosion.vpcf", PATTACH_ABSORIGIN, self:GetParent())
+					local purgeparticle = ParticleManager:CreateParticle("particles/econ/items/abaddon/abaddon_alliance/abaddon_aphotic_shield_alliance_explosion.vpcf", PATTACH_ABSORIGIN, self:GetParent())
 					ParticleManager:ReleaseParticleIndex(purgeparticle)
 					local enemiesnearby = FindUnitsInRadius(parent:GetTeamNumber(), parent:GetAbsOrigin(), nil, self.stunradius, DOTA_UNIT_TARGET_TEAM_ENEMY, DOTA_UNIT_TARGET_HERO + DOTA_UNIT_TARGET_CREEP, DOTA_UNIT_TARGET_FLAG_FOW_VISIBLE, 1, false)
 					if #enemiesnearby > 0 then
