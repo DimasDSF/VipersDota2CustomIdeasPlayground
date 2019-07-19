@@ -108,7 +108,7 @@
 	{
 		"Ability1"					""			// Ability 1.
 	}
-	"npc_dota_badguys_tower4"
+	"npc_dota_goodguys_tower4"
 	{
 		"Ability1"					""			// Ability 1.
 	}

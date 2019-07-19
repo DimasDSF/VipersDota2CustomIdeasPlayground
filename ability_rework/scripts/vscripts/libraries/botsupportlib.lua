@@ -2404,10 +2404,12 @@ function BotSupportLib:IntervalFunctionCall(unit, fID)
 				if unit:GetHealth()/unit:GetMaxHealth() > 0.6 and self:GetAbilityCastConditions(unit, tree_grab) and self:GetAbilityCastManaConditions(unit, tree_grab, {}, 0.2) then
 					local tree = {nil,99999}
 					for i,v in ipairs(GridNav:GetAllTreesAroundPoint(unit:GetAbsOrigin(), 600, true)) do
-						if v:IsStanding() and GridNav:CanFindPath(v:GetAbsOrigin() + (v:GetAbsOrigin()-unit:GetAbsOrigin()):Normalized()*100, unit:GetAbsOrigin()) then
-							local distance = (v:GetAbsOrigin() - unit:GetAbsOrigin()):Length2D()
-							if tree[2] > (v:GetAbsOrigin() - unit:GetAbsOrigin()):Length2D() then
-								tree = {v, distance}
+						if v then
+							if v:IsStanding() and GridNav:CanFindPath(v:GetAbsOrigin() + (v:GetAbsOrigin()-unit:GetAbsOrigin()):Normalized()*100, unit:GetAbsOrigin()) then
+								local distance = (v:GetAbsOrigin() - unit:GetAbsOrigin()):Length2D()
+								if tree[2] > (v:GetAbsOrigin() - unit:GetAbsOrigin()):Length2D() then
+									tree = {v, distance}
+								end
 							end
 						end
 					end

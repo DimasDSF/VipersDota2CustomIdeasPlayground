@@ -1836,12 +1836,12 @@ function VGMAR:OnThink()
 												local bootsname = boots:GetName()
 												heroent:ModifyGold(boots:GetCost(), true, 0)
 												heroent:RemoveItem(boots)
-												heroent:SpendGold(self.botitemskv.travelbootscost, 2)
-												heroent:AddItemByName("item_travel_boots")
-												dprint(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Spent "..tostring(self.botitemskv.travelbootscost).." Upgraded "..bootsname.." to Travel Boots | Gold Remaining: "..heroent:GetGold())
-												self:LogEvent(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Upgraded "..bootsname.." to Travel Boots | Gold Remaining: "..heroent:GetGold())
-												self.botupgradestatus[heroent:entindex()] = self.botupgradestatus[heroent:entindex()] + 1
 											end
+											heroent:SpendGold(self.botitemskv.travelbootscost, 2)
+											heroent:AddItemByName("item_travel_boots")
+											dprint(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Spent "..tostring(self.botitemskv.travelbootscost).." Upgraded "..bootsname.." to Travel Boots | Gold Remaining: "..heroent:GetGold())
+											self:LogEvent(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Upgraded "..bootsname.." to Travel Boots | Gold Remaining: "..heroent:GetGold())
+											self.botupgradestatus[heroent:entindex()] = self.botupgradestatus[heroent:entindex()] + 1
 										end
 									end
 								elseif bup == "travel2" and self:TimeIsLaterThan(botupgradetimings.travel2[1], botupgradetimings.travel2[2]) then
@@ -3581,6 +3581,47 @@ function VGMAR:OnGameStateChanged( keys )
 		end
 		if direfountain then
 			direfountain:AddNewModifier(direfountain, nil, "modifier_vgmar_b_fountain_anticamp", modifierdatatable["modifier_vgmar_b_fountain_anticamp"])
+		end
+		--///////////////////////////////
+		--Tower Model Manipulation
+		--///////////////////////////////
+		local towerlist = {
+			{tn = "dota_goodguys_tower1_top", proj = "particles/econ/world/towers/rock_golem/radiant_rock_golem_attack.vpcf"},
+			{tn = "dota_goodguys_tower1_mid", proj = "particles/econ/world/towers/rock_golem/radiant_rock_golem_attack.vpcf"},
+			{tn = "dota_goodguys_tower1_bot", proj = "particles/econ/world/towers/rock_golem/radiant_rock_golem_attack.vpcf"},
+			{tn = "dota_badguys_tower1_top", proj = "particles/econ/world/towers/rock_golem/dire_rock_golem_attack.vpcf"},
+			{tn = "dota_badguys_tower1_mid", proj = "particles/econ/world/towers/rock_golem/dire_rock_golem_attack.vpcf"},
+			{tn = "dota_badguys_tower1_bot", proj = "particles/econ/world/towers/rock_golem/dire_rock_golem_attack.vpcf"},
+			{tn = "dota_goodguys_tower2_top", proj = "particles/econ/world/towers/rock_golem/radiant_rock_golem_attack.vpcf"},
+			{tn = "dota_goodguys_tower2_mid", proj = "particles/econ/world/towers/rock_golem/radiant_rock_golem_attack.vpcf"},
+			{tn = "dota_goodguys_tower2_bot", proj = "particles/econ/world/towers/rock_golem/radiant_rock_golem_attack.vpcf"},
+			{tn = "dota_badguys_tower2_bot", proj = "particles/econ/world/towers/rock_golem/dire_rock_golem_attack.vpcf"},
+			{tn = "dota_badguys_tower2_mid", proj = "particles/econ/world/towers/rock_golem/dire_rock_golem_attack.vpcf"},
+			{tn = "dota_badguys_tower2_top", proj = "particles/econ/world/towers/rock_golem/dire_rock_golem_attack.vpcf"},
+			{tn = "dota_goodguys_tower3_top", proj = "particles/econ/world/towers/rock_golem/radiant_rock_golem_attack.vpcf"},
+			{tn = "dota_goodguys_tower3_mid", proj = "particles/econ/world/towers/rock_golem/radiant_rock_golem_attack.vpcf"},
+			{tn = "dota_goodguys_tower3_bot", proj = "particles/econ/world/towers/rock_golem/radiant_rock_golem_attack.vpcf"},
+			{tn = "dota_badguys_tower3_bot", proj = "particles/econ/world/towers/rock_golem/dire_rock_golem_attack.vpcf"},
+			{tn = "dota_badguys_tower3_mid", proj = "particles/econ/world/towers/rock_golem/dire_rock_golem_attack.vpcf"},
+			{tn = "dota_badguys_tower3_top", proj = "particles/econ/world/towers/rock_golem/dire_rock_golem_attack.vpcf"},
+			{tn = "dota_goodguys_tower4_top", proj = "particles/econ/world/towers/rock_golem/radiant_rock_golem_attack.vpcf"},
+			{tn = "dota_goodguys_tower4_bot", proj = "particles/econ/world/towers/rock_golem/radiant_rock_golem_attack.vpcf"},
+			{tn = "dota_badguys_tower4_bot", proj = "particles/econ/world/towers/rock_golem/dire_rock_golem_attack.vpcf"},
+			{tn = "dota_badguys_tower4_top", proj = "particles/econ/world/towers/rock_golem/dire_rock_golem_attack.vpcf"}
+		}
+		for _,k in ipairs(towerlist) do
+			local building = Entities:FindByName(nil, k.tn)
+			if building then
+				if k.matgroup then
+					building:SetMaterialGroup(k.matgroup)
+				end
+				if k.model then
+					building:SetModel(k.model)
+				end
+				if k.proj then
+					building:SetRangedProjectileName(k.proj)
+				end
+			end
 		end
 		--///////////////////////////////
 		--New Implementation of defskills

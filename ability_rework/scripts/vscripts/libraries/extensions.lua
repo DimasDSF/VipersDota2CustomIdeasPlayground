@@ -932,6 +932,10 @@ function CBaseEntity:IsRealUnit(buildings)
 	return false
 end
 
+function CDOTA_BaseNPC:GetName()
+	return self:GetUnitName()
+end
+
 --debug
 function debug.PrintTable(debugOver, prefix)
 	prefix = prefix or ""

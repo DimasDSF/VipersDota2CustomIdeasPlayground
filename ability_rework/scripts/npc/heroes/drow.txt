@@ -82,7 +82,7 @@
 				"12"		"drow_ranger_marksmanship"
 				"13"		"drow_ranger_wave_of_silence"
 				"14"		"drow_ranger_wave_of_silence"
-				"15"		"special_bonus_agility_10"
+				"15"		"special_bonus_unique_drow_ranger_5"
 				"16"		"drow_ranger_wave_of_silence"
 				"17"		""
 				"18"		"drow_ranger_marksmanship"
