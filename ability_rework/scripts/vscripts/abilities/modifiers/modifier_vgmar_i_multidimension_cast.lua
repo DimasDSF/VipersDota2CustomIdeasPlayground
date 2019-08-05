@@ -75,7 +75,7 @@ function modifier_vgmar_i_multidimension_cast:OnOrder(event)
 	end
 end
 
-function getmcastnum(unit)
+function modifier_vgmar_i_multidimension_cast:getmcastnum(unit)
 	local intellect = unit:GetIntellect()
 	if unit:PassivesDisabled() == false then
 		local chance = math.random(0, 100)

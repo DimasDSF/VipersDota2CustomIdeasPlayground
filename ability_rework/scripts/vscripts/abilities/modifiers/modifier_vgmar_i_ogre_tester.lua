@@ -73,7 +73,7 @@ function modifier_vgmar_i_ogre_tester:OnCreated(kv)
 			"modifier_vgmar_i_multidimension_cast"
 		}
 		for _, mod in ipairs(destroy_mods) do
-			modif = self:GetParent():FindModifierByName(mod)
+			local modif = self:GetParent():FindModifierByName(mod)
 			if modif then
 				modif:Destroy()
 			end
