@@ -99,7 +99,7 @@ function modifier_vgmar_i_multidimension_cast:OnAbilityExecuted(kv)
 		local parent = self:GetParent()
 		if kv.unit == parent and parent:PassivesDisabled() == false then
 			if kv.ability and kv.ability:IsToggle() == false and kv.ability:IsItem() == false and (GameRules.VGMAR.md_cast_ignored_abilities[kv.ability:GetName()] == nil or GameRules.VGMAR.md_cast_ignored_abilities[kv.ability:GetName()] ~= true) then
-				local mcast = getmcastnum(parent)
+				local mcast = self:getmcastnum(parent)
 				if mcast > 0 then
 					local ability = kv.ability
 					local behavior = ability:GetBehavior()
@@ -141,7 +141,7 @@ function modifier_vgmar_i_multidimension_cast:OnIntervalThink()
 	if IsServer() then
 		local parent = self:GetParent()
 		local cast = self.spellcasts[1]
-		local mcasts = getmcastnum(parent)
+		local mcasts = self:getmcastnum(parent)
 		if self:GetStackCount() ~= mcasts then
 			self:SetStackCount(mcasts)
 		end
