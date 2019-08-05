@@ -79,13 +79,15 @@ function modifier_bsl_eventhandler:OnAbilityFullyCast(kv)
 		local unit = kv.unit
 		if unit then
 			if unit:IsHero() then
+				local ability = kv.ability
+				local target = nil
+				if kv.target then
+					target = kv.target
+				end
 				if BotSupportLib:IsHeroBotControlled(unit) then
-					local ability = kv.ability
-					local target = nil
-					if kv.target then
-						target = kv.target
-					end
 					BotSupportLib:OnAbilityCast(unit, ability, target, kv)
+				else
+					BotSupportLib:OnPlayerAbilityCast(unit, ability, target, kv)
 				end
 			end
 		end

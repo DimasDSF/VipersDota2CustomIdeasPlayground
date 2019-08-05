@@ -5,6 +5,7 @@
 	//=================================================================================================================
 	"npc_dota_hero_brewmaster"
 	{
+		"BaseClass"		"npc_dota_hero_brewmaster"
 		"Bot"
 		{
 			"HeroType"		"DOTA_BOT_TANK | DOTA_BOT_SEMI_CARRY"

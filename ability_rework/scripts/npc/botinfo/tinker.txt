@@ -5,17 +5,18 @@
 	//=================================================================================================================
 	"npc_dota_hero_tinker"
 	{
+		"BaseClass"		"npc_dota_hero_tinker"
 		"Bot"
 		{
 
 			"HeroType"		"DOTA_BOT_GANKER | DOTA_BOT_PUSH_SUPPORT"
 			"LaningInfo"
 			{
-				"SoloDesire"		"1"
+				"SoloDesire"		"2"
 				"RequiresBabysit"		"0"
 				"ProvidesBabysit"		"2"
 				"SurvivalRating"		"1"
-				"RequiresFarm"		"1"
+				"RequiresFarm"		"2"
 				"ProvidesSetup"		"0"
 				"RequiresSetup"		"1"
 			}

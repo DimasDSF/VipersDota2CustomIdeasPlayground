@@ -5,6 +5,7 @@
 	//=================================================================================================================
 	"npc_dota_hero_nyx_assassin"
 	{
+		"BaseClass"		"npc_dota_hero_nyx_assassin"
 		"Bot"
 		{
 			"HeroType"		"DOTA_BOT_GANKER | DOTA_BOT_NUKER"

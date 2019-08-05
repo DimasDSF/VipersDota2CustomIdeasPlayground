@@ -5,6 +5,7 @@
 	//=================================================================================================================
 	"npc_dota_hero_viper"
 	{
+		"BaseClass"		"npc_dota_hero_viper"
 		"SupportsEasyMode"	"1"
 		"BotImplemented"		"1"
 		"Bot"
@@ -94,7 +95,7 @@
 				"22"		""
 				"23"		""
 				"24"		""
-				"25"		"special_bonus_attack_damage_120"
+				"25"		"special_bonus_attack_damage_160"
 			}
 			"HeroType"		"DOTA_BOT_HARD_CARRY"
 			"LaningInfo"

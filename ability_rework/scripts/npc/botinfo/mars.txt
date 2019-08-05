@@ -5,13 +5,14 @@
 	//=================================================================================================================
 	"npc_dota_hero_mars"
 	{
+		"BaseClass"		"npc_dota_hero_mars"
 		"Bot"
 		{
 			"HeroType"		"DOTA_BOT_TANK | DOTA_BOT_SEMI_CARRY"
 			"LaningInfo"
 			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"1"
+				"SoloDesire"		"1"
+				"RequiresBabysit"		"0"
 				"ProvidesBabysit"		"0"
 				"SurvivalRating"		"2"
 				"RequiresFarm"		"1"

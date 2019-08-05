@@ -5,6 +5,7 @@
 	//=================================================================================================================
 	"npc_dota_hero_life_stealer"
 	{
+		"BaseClass"		"npc_dota_hero_life_stealer"
 		"Bot"
 		{
 			"HeroType"		"DOTA_BOT_TANK | DOTA_BOT_HARD_CARRY | DOTA_BOT_GANKER"

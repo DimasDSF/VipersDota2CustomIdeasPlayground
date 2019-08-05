@@ -1,21 +1,21 @@
 "DOTAHeroes"
 {
 	//=================================================================================================================
-	// HERO: Pugna
+	// HERO: Huskar
 	//=================================================================================================================
-	"npc_dota_hero_pugna"
+	"npc_dota_hero_huskar"
 	{
-		"BaseClass"		"npc_dota_hero_pugna"
+		"BaseClass"		"npc_dota_hero_huskar"
 		"Bot"
 		{
-			"HeroType"		"DOTA_BOT_PUSH_SUPPORT"
+			"HeroType"		"DOTA_BOT_SEMI_CARRY | DOTA_BOT_GANKER"
 			"LaningInfo"
 			{
-				"SoloDesire"		"2"
-				"RequiresBabysit"		"0"
-				"ProvidesBabysit"		"2"
-				"SurvivalRating"		"1"
-				"RequiresFarm"		"1"
+				"SoloDesire"		"1"
+				"RequiresBabysit"		"1"
+				"ProvidesBabysit"		"0"
+				"SurvivalRating"		"2"
+				"RequiresFarm"		"2"
 				"ProvidesSetup"		"0"
 				"RequiresSetup"		"1"
 			}

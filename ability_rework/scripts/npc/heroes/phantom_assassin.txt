@@ -5,6 +5,7 @@
 	//=================================================================================================================
 	"npc_dota_hero_phantom_assassin"
 	{
+		"BaseClass"		"npc_dota_hero_phantom_assassin"
 		"BotImplemented"		"1"
 		"Bot"
 		{

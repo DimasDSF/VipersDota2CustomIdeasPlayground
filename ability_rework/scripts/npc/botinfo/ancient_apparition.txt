@@ -5,6 +5,7 @@
 	//=================================================================================================================
 	"npc_dota_hero_ancient_apparition"
 	{
+		"BaseClass"		"npc_dota_hero_ancient_apparition"
 		"Bot"
 		{
 			"HeroType"		"DOTA_BOT_PURE_SUPPORT"

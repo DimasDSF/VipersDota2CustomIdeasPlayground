@@ -5,6 +5,7 @@
 	//=================================================================================================================
 	"npc_dota_hero_bounty_hunter"
 	{
+		"BaseClass"		"npc_dota_hero_bounty_hunter"
 		"BotImplemented"		"1"
 		"Bot"
 		{

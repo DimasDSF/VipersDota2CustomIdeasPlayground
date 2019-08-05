@@ -5,6 +5,7 @@
 	//=================================================================================================================
 	"npc_dota_hero_bloodseeker"
 	{
+		"BaseClass"		"npc_dota_hero_bloodseeker"
 		"BotImplemented"		"1"
 		"Bot"
 		{

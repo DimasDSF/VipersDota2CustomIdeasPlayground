@@ -5,6 +5,7 @@
 	//=================================================================================================================
 	"npc_dota_hero_terrorblade"
 	{
+		"BaseClass"		"npc_dota_hero_terrorblade"
 		"Bot"
 		{
 			"HeroType"		"DOTA_BOT_HARD_CARRY"
@@ -15,8 +16,8 @@
 				"ProvidesBabysit"		"0"
 				"SurvivalRating"		"0"
 				"RequiresFarm"		"2"
-				"ProvidesSetup"		"0"
-				"RequiresSetup"		"1"
+				"ProvidesSetup"		"1"
+				"RequiresSetup"		"2"
 			}
 		}
 	}

@@ -5,9 +5,10 @@
 	//=================================================================================================================
 	"npc_dota_hero_techies"
 	{
+		"BaseClass"		"npc_dota_hero_techies"
 		"Bot"
 		{
-			"HeroType"		"DOTA_BOT_GANKER"
+			"HeroType"		"DOTA_BOT_GANKER | DOTA_BOT_STUN_SUPPORT"
 			"LaningInfo"
 			{
 				"SoloDesire"		"0"

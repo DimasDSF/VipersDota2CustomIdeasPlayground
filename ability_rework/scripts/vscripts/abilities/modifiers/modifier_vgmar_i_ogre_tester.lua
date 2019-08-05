@@ -69,6 +69,15 @@ end
 function modifier_vgmar_i_ogre_tester:OnCreated(kv) 
 	if IsServer() then
 		self:StartIntervalThink( 1 )
+		local destroy_mods = {
+			"modifier_vgmar_i_multidimension_cast"
+		}
+		for _, mod in ipairs(destroy_mods) do
+			modif = self:GetParent():FindModifierByName(mod)
+			if modif then
+				modif:Destroy()
+			end
+		end
 		--self.mci = 0.5
 		--self.p1 = nil
 		--self.p2 = nil
@@ -315,10 +324,13 @@ function modifier_vgmar_i_ogre_tester:GetActivityTranslationModifiers()
 	return "injured"
 end
 
---[[function modifier_vgmar_i_ogre_tester:OnOrder(event)
-	if event.order_type == 7 then
+function modifier_vgmar_i_ogre_tester:OnOrder(event)
+	if IsServer() then
+		if event.unit == self:GetParent() then
+			debug.PrintTable(event)
+		end
 	end
-end--]]
+end
 
 --[[ManaCost Modification
 function modifier_vgmar_i_ogre_tester:OnAbilityExecuted(kv)

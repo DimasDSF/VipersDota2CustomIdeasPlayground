@@ -5,6 +5,7 @@
 	//=================================================================================================================
 	"npc_dota_hero_elder_titan"
 	{
+		"BaseClass"		"npc_dota_hero_elder_titan"
 		"Bot"
 		{
 			"HeroType"		"DOTA_BOT_GANKER | DOTA_BOT_TANK"

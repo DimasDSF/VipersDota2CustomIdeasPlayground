@@ -5,6 +5,7 @@
 	//=================================================================================================================
 	"npc_dota_hero_spectre"
 	{
+		"BaseClass"		"npc_dota_hero_spectre"
 		"Bot"
 		{
 			"HeroType"		"DOTA_BOT_HARD_CARRY"

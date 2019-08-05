@@ -5,16 +5,17 @@
 	//=================================================================================================================
 	"npc_dota_hero_grimstroke"
 	{
+		"BaseClass"		"npc_dota_hero_grimstroke"
 		"Bot"
 		{
 			"HeroType"		"DOTA_BOT_STUN_SUPPORT | DOTA_BOT_GANKER"
 			"LaningInfo"
 			{
-				"SoloDesire"		"1"
+				"SoloDesire"		"0"
 				"RequiresBabysit"	"0"
 				"ProvidesBabysit"	"2"
-				"SurvivalRating"	"2"
-				"RequiresFarm"		"1"
+				"SurvivalRating"	"0"
+				"RequiresFarm"		"0"
 				"ProvidesSetup"		"2"
 				"RequiresSetup"		"0"
 			}

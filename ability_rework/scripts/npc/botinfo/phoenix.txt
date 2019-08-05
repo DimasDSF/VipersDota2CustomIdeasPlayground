@@ -5,6 +5,7 @@
 	//=================================================================================================================
 	"npc_dota_hero_phoenix"
 	{
+		"BaseClass"		"npc_dota_hero_phoenix"
 		"Bot"
 		{
 			"HeroType"		"DOTA_BOT_SUPPORT"

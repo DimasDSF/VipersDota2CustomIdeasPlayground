@@ -5,6 +5,7 @@
 	//=================================================================================================================
 	"npc_dota_hero_puck"
 	{
+		"BaseClass"		"npc_dota_hero_puck"
 		"Bot"
 		{
 			"HeroType"		"DOTA_BOT_GANKER | DOTA_BOT_STUN_SUPPORT"

@@ -5,6 +5,7 @@
 	//=================================================================================================================
 	"npc_dota_hero_gyrocopter"
 	{
+		"BaseClass"		"npc_dota_hero_gyrocopter"
 		"Bot"
 		{
 			"HeroType"		"DOTA_BOT_HARD_CARRY | DOTA_BOT_GANKER"

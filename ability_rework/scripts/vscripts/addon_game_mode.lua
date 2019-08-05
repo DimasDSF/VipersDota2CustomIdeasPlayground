@@ -158,13 +158,14 @@ local modifierdatatable = {
 	["modifier_vgmar_i_truesight"] = {maxrange = 1300, minrange = 200, maxtime = 180},
 	["modifier_item_ultimate_scepter_consumed"] = {bonus_all_stats = 10, bonus_health = 175, bonus_mana = 175},
 	["modifier_vgmar_i_arcane_intellect"] = {percentage = 10, multpercast = 0.2, bonusint = 25, csmaxmana = 6000, csminmana = 0, minimalcooldown = 1},
+	["modifier_vgmar_i_multidimension_cast"] = {multicastchance1 = 50, multicastchance2 = 40, multicastchance3 = 30, multicastchance4 = 20, multicastchance5 = 10, multicastminint1 = 50, multicastminint2 = 70, multicastminint3 = 90, multicastminint4 = 110, multicastminint5 = 130, multicastinterval = 0.2, multicastpointrange = 200, multicastunitrange = 400},
 	["modifier_vgmar_i_thirst"] = {threshold = 75, visionthreshold = 50, damagethreshold = 75, visionrange = 10, visionduration = 0.2, giverealvision = 0, givemodelvision = 1, damageperstack = 3, radius = 5000},
 	["modifier_vgmar_i_poison_dagger"] = {cooldown = 60, potencycooldown = 10, agiperpotency = 20, maxdistance = 1400, hitdamageperc = 70, manaloss = 25, durationperpot = 10, manacostperc = 10, dmgpermana = 0.2, ticktime = 2, nomanadmgmult = 1, bonusagi = 45, bonusmisschance = 30, daggerspeed = 1000},
 	["modifier_vgmar_i_scorching_light"] = {radius = 700, interval = 1.0, visioninterval = 5.0, initialdamage = 60, damageincpertick = 2, maxdamage = 300, missrate = 17, visiondelay = 3, maxillusionstacks = 3, lingerduration = 3.0},
 	["modifier_vgmar_i_permafrost"] = {radius = 600, interval = 1.0, attackspeedperstack = -5, movespeedperstack = -5, bonusarmor = 25, bonusint = 60, maxstacks = 20, freezedmg = 150, lingerduration = 3},
 	["modifier_vgmar_i_manashield"] = {minmana = 0.5, lowmana = 0.55, maxtotalmana = 6000, mindmgfraction = 30, maxdmgfraction = 90, stunradius = 600, stunduration = 3, stundamage = 200, rechargetime = 60, bonusarmor = 15, bonusint = 20},
 	["modifier_vgmar_b_fountain_anticamp"] = {radius = 2000, interval = 1.0, strpertick = 4, intpertick = 2, agipertick = 2, disablepassivestick = 20, silencetick = 40, blindnessendtick = 60, blindnessrange = 200, lingerduration = 30.0},
-	["modifier_vgmar_b_last_resort_armor"] = {dur = 120, reductiontick = 1, reductionpertick = 1, armor_per_stack = 2, bonus_regen = 10, start_stacks = 100},
+	["modifier_vgmar_b_last_resort_armor"] = {dur = 120, reductiontick = 1, reductionpertick = 1, armor_per_stack = 3, bonus_regen = 15, start_stacks = 100},
 	["modifier_vgmar_b_ancient_tether"] = {damagereducion = -20, healthregen = 15, manaregen = 7, bonusas = 120},
 	["modifier_vgmar_anticreep_protection"] = {radius = 1800, strikeinterval = 2.0, activeduration = 5.0, dmgpercentpercreep = 5.0, goldbountyperc = 10},
 	["modifier_vgmar_c_cannon_ball"] = {damageperlevel = 20, stunduration = 1.0},
@@ -352,6 +353,7 @@ function VGMAR:Init()
 	LinkLuaModifier("modifier_vgmar_i_thirst_debuff", "abilities/modifiers/modifier_vgmar_i_thirst", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_multishot", "abilities/modifiers/modifier_vgmar_i_multishot", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_arcane_intellect", "abilities/modifiers/modifier_vgmar_i_arcane_intellect", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_vgmar_i_multidimension_cast", "abilities/modifiers/modifier_vgmar_i_multidimension_cast", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_poison_dagger", "abilities/modifiers/modifier_vgmar_i_poison_dagger", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_poison_dagger_debuff", "abilities/modifiers/modifier_vgmar_i_poison_dagger", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_vgmar_i_scorching_light", "abilities/modifiers/modifier_vgmar_i_scorching_light", LUA_MODIFIER_MOTION_NONE)
@@ -547,6 +549,61 @@ function VGMAR:Init()
 		shadow_demon_demonic_purge = false,
 		morphling_waveform = false,
 		shadow_demon_disruption = false
+	}
+	
+	self.md_cast_ignored_abilities = {
+		nyx_assassin_burrow = true,
+		nyx_assassin_unburrow = true,
+		spectre_reality = true,
+		techies_focused_detonate = true,
+		furion_teleportation = true,
+		life_stealer_consume = true,
+		life_stealer_assimilate_eject = true,
+		winter_wyvern_arctic_burn = true,
+		invoker_quas = true,
+		invoker_wex = true,
+		invoker_exort = true,
+		invoker_invoke = true,
+		shadow_demon_shadow_poison_release = true,
+		alchemist_unstable_concoction_throw = true,
+		ancient_apparition_ice_blast_release = true,
+		bane_nightmare_end = true,
+		bloodseeker_bloodrage = true,
+		centaur_double_edge = true,
+		clinkz_searing_arrows = true,
+		doom_bringer_infernal_blade = true,
+		drow_ranger_trueshot = true,
+		earth_spirit_stone_caller = true,
+		elder_titan_return_spirit = true,
+		ember_spirit_fire_remnant = true,
+		enchantress_impetus = true,
+		huskar_burning_spear = true,
+		huskar_life_break = true,
+		jakiro_liquid_fire = true,
+		kunkka_tidebringer = true,
+		keeper_of_the_light_illuminate_end = true,
+		keeper_of_the_light_spirit_form_illuminate_end = true,
+		lone_druid_true_form = true,
+		lone_druid_true_form_druid = true,
+		monkey_king_tree_dance = true,
+		monkey_king_mischief = true,
+		monkey_king_untransform = true,
+		monkey_king_primal_spring_early = true,
+		phoenix_sun_ray_toggle_move = true,
+		phoenix_icarus_dive_stop = true,
+		phoenix_launch_fire_spirit = true,
+		phoenix_sun_ray_stop = true,
+		puck_phase_shift = true,
+		puck_ethereal_jaunt = true,
+		rubick_telekinesis_land = true,
+		silencer_glaives_of_wisdom = true,
+		slardar_sprint = true,
+		spirit_breaker_empowering_haste = true,
+		techies_minefield_sign = true,
+		templar_assassin_trap = true,
+		life_stealer_control = true,
+		broodmother_spin_web = true,
+		morphling_waveform = true
 	}
 	
 	self.spellshieldpurgeignore = {
@@ -1831,16 +1888,16 @@ function VGMAR:OnThink()
 								if bup == "travel1" and self:TimeIsLaterThan(botupgradetimings.travel1[1], botupgradetimings.travel1[2]) then
 									if heroent:GetGold() >= heroent:GetBuybackCost(false) + self.botitemskv.travelbootscost then
 										for j=1,#self.botitemskv.cheapboots do
-											local boots = InvManager:GetItemFromInventoryByName( heroent, self.botitemskv.cheapboots[j], false, true, false )
-											if boots ~= nil then
-												local bootsname = boots:GetName()
-												heroent:ModifyGold(boots:GetCost(), true, 0)
-												heroent:RemoveItem(boots)
+											local cheapboots = InvManager:GetItemFromInventoryByName( heroent, self.botitemskv.cheapboots[j], false, true, false )
+											if cheapboots ~= nil then
+												local bootsname = cheapboots:GetName()
+												heroent:ModifyGold(cheapboots:GetCost(), true, 0)
+												heroent:RemoveItem(cheapboots)
 												heroent:SpendGold(self.botitemskv.travelbootscost, 2)
 												heroent:AddItemByName("item_travel_boots")
 												dprint(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Spent "..tostring(self.botitemskv.travelbootscost).." Upgraded "..bootsname.." to Travel Boots | Gold Remaining: "..heroent:GetGold())
 												self:LogEvent(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Upgraded "..bootsname.." to Travel Boots | Gold Remaining: "..heroent:GetGold())
-											else
+											elseif (heroent:HasItemInInventory("item_travel_boots") or heroent:HasItemInInventory("item_travel_boots_2")) == false then
 												Extensions:SimulateItemPurchase(heroent, "item_travel_boots")
 												dprint(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Spent "..tostring(self.botitemskv.travelbootscost).." Purchased Travel Boots | Gold Remaining: "..heroent:GetGold())
 												self:LogEvent(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Purchased Travel Boots | Gold Remaining: "..heroent:GetGold())
@@ -2208,6 +2265,16 @@ function VGMAR:OnThink()
 				ismodifier = true,
 				usemodifierdatatable = true,
 				modifierdata = { percentage = 10, multperhit = 0.5, stack_duration = 30 },
+				usesmultiple = true,
+				backpack = true,
+				preventedhero = "npc_target_dummy",
+				specificcond = true	},
+			{spell = "modifier_vgmar_i_multidimension_cast",
+				items = {itemnames = {"item_mystic_staff", "item_refresher"}, itemnum = {1, 2}},
+				isconsumable = true,
+				ismodifier = true,
+				usemodifierdatatable = true,
+				modifierdata = {},
 				usesmultiple = true,
 				backpack = true,
 				preventedhero = "npc_target_dummy",

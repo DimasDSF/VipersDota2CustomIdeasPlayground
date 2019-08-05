@@ -5,6 +5,7 @@
 	//=================================================================================================================
 	"npc_dota_hero_drow_ranger"
 	{
+		"BaseClass"		"npc_dota_hero_drow_ranger"
 		"BotImplemented"		"1"
 		"Bot"
 		{

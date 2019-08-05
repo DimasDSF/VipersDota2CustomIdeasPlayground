@@ -5,6 +5,7 @@
 	//=================================================================================================================
 	"npc_dota_hero_nevermore"
 	{
+		"BaseClass"		"npc_dota_hero_nevermore"
 		"BotImplemented"		"1"
 		"Bot"
 		{

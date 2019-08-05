@@ -5,6 +5,7 @@
 	//=================================================================================================================
 	"npc_dota_hero_windrunner"
 	{
+		"BaseClass"		"npc_dota_hero_windrunner"
 		"BotImplemented"		"1"
 		"Bot"
 		{

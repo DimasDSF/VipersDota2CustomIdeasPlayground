@@ -5,6 +5,7 @@
 	//=================================================================================================================
 	"npc_dota_hero_wisp"
 	{
+		"BaseClass"		"npc_dota_hero_wisp"
 		"Bot"
 		{
 			"HeroType"		"DOTA_BOT_PURE_SUPPORT"
@@ -13,8 +14,8 @@
 				"SoloDesire"		"0"
 				"RequiresBabysit"		"0"
 				"ProvidesBabysit"		"2"
-				"SurvivalRating"		"2"
-				"RequiresFarm"		"1"
+				"SurvivalRating"		"0"
+				"RequiresFarm"		"0"
 				"ProvidesSetup"		"0"
 				"RequiresSetup"		"2"
 			}

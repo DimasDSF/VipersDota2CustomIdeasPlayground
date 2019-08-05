@@ -5,6 +5,7 @@
 	//=================================================================================================================
 	"npc_dota_hero_morphling"
 	{
+		"BaseClass"		"npc_dota_hero_morphling"
 		"Bot"
 		{
 			"HeroType"		"DOTA_BOT_HARD_CARRY"

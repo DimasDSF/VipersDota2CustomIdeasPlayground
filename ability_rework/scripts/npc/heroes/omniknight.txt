@@ -5,6 +5,7 @@
 	//=================================================================================================================
 	"npc_dota_hero_omniknight"
 	{
+		"BaseClass"		"npc_dota_hero_omniknight"
 		"BotImplemented"		"1"
 		"Bot"
 		{
@@ -82,7 +83,7 @@
 				"17"		""
 				"18"		"omniknight_guardian_angel"
 				"19"		""
-				"20"		"special_bonus_mp_regen_5"
+				"20"		"special_bonus_mp_regen_4"
 				"21"		""
 				"22"		""
 				"23"		""

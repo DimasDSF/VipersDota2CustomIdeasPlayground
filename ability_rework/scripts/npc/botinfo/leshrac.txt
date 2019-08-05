@@ -5,6 +5,7 @@
 	//=================================================================================================================
 	"npc_dota_hero_leshrac"
 	{
+		"BaseClass"		"npc_dota_hero_leshrac"
 		"Bot"
 		{
 			"HeroType"		"DOTA_BOT_GANKER | DOTA_BOT_PUSH_SUPPORT"

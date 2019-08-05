@@ -5,6 +5,7 @@
 	//=================================================================================================================
 	"npc_dota_hero_earth_spirit"
 	{
+		"BaseClass"		"npc_dota_hero_earth_spirit"
 		"Bot"
 		{
 			"HeroType"		"DOTA_BOT_GANKER"

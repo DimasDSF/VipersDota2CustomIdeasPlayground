@@ -5,6 +5,7 @@
 	//=================================================================================================================
 	"npc_dota_hero_venomancer"
 	{
+		"BaseClass"		"npc_dota_hero_venomancer"
 		"Bot"
 		{
 
@@ -14,7 +15,7 @@
 				"SoloDesire"		"0"
 				"RequiresBabysit"		"0"
 				"ProvidesBabysit"		"2"
-				"SurvivalRating"		"1"
+				"SurvivalRating"		"0"
 				"RequiresFarm"		"1"
 				"ProvidesSetup"		"2"
 				"RequiresSetup"		"0"

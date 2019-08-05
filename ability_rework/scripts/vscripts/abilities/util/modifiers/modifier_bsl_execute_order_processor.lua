@@ -114,7 +114,7 @@ function modifier_bsl_execute_order_processor:OnIntervalThink()
 			OrderType = self.ordertype,
 			TargetIndex = self.tindex,
 			AbilityIndex = self.aindex,
-			Position = self.gpos,
+			Position = self.gpos or self.pos,
 			Queue = self.queue
 		}
 		if attackorders[self.ordertype] ~= nil and targetent then
@@ -128,7 +128,7 @@ function modifier_bsl_execute_order_processor:OnIntervalThink()
 		else
 			parent:MoveToPosition(self.gpos)
 		end
-		print(parent:GetName()..' Executing '..self.ordertype..' Vector: '..tostring(self.gpos))
+		print(parent:GetName()..' Executing '..self.ordertype..' Vector: '..tostring(self.gpos or self.pos))
 		
 		if not self.force then self:Destroy() end
 	end

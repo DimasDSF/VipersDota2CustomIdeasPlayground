@@ -5,6 +5,7 @@
 	//=================================================================================================================
 	"npc_dota_hero_dark_seer"
 	{
+		"BaseClass"		"npc_dota_hero_dark_seer"
 		"Bot"
 		{
 			"HeroType"		"DOTA_BOT_PURE_SUPPORT"

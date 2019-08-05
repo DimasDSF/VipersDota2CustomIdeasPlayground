@@ -5,6 +5,7 @@
 	//=================================================================================================================
 	"npc_dota_hero_phantom_lancer"
 	{
+		"BaseClass"		"npc_dota_hero_phantom_lancer"
 		"Bot"
 		{
 			"HeroType"		"DOTA_BOT_HARD_CARRY"

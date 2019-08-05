@@ -5,6 +5,7 @@
 	//=================================================================================================================
 	"npc_dota_hero_storm_spirit"
 	{
+		"BaseClass"		"npc_dota_hero_storm_spirit"
 		"Bot"
 		{
 			"HeroType"		"DOTA_BOT_GANKER | DOTA_BOT_SEMI_CARRY"

@@ -5,6 +5,7 @@
 	//=================================================================================================================
 	"npc_dota_hero_bristleback"
 	{
+		"BaseClass"		"npc_dota_hero_bristleback"
 		"BotImplemented"		"1"
 		"Bot"
 		{

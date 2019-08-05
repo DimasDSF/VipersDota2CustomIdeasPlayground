@@ -172,6 +172,100 @@ function BotSupportLib:DebugDraw()
 	return false
 end
 
+local anti_np_abilities = {
+	["npc_dota_hero_bloodseeker"] = {
+		["bloodseeker_blood_bath"] = {pt = true, range = -1, importance = 0}
+	},
+	["npc_dota_hero_crystal_maiden"] = {
+		["crystal_maiden_crystal_nova"] = {pt = true, range = -1, importance = 0},
+		["crystal_maiden_freezing_field"] = {pt = false, range = 600, importance = 2}
+	},
+	["npc_dota_hero_drow_ranger"] = {
+		["drow_ranger_wave_of_silence"] = {pt = true, range = -1, importance = 0}
+	},
+	["npc_dota_hero_earthshaker"] = {
+		["earthshaker_fissure"] = {pt = true, range = -1, importance = 0},
+		["earthshaker_enchant_totem"] = {pt = false, range = 250, importance = 0},
+		["earthshaker_echo_slam"] = {pt = false, range = 550, importance = 2}
+	},
+	["npc_dota_hero_pudge"] = {
+		["pudge_meat_hook"] = {pt = true, range = -1, importance = 0}
+	},
+	["npc_dota_hero_razor"] = {
+		["razor_plasma_field"] = {pt = false, range = 650, importance = 0}
+	},
+	["npc_dota_hero_sand_king"] = {
+		["sandking_burrowstrike"] = {pt = true, range = -1, importance = 0}
+	},
+	["npc_dota_hero_tiny"] = {
+		["tiny_avalanche"] = {pt = true, range = -1, importance = 0}
+	},
+	["npc_dota_hero_vengefulspirit"] = {
+		["vengefulspirit_wave_of_terror"] = {pt = true, range = -1, importance = 0}
+	},
+	["npc_dota_hero_windrunner"] = {
+		["windrunner_powershot"] = {pt = true, range = -1, importance = 0}
+	},
+	["npc_dota_hero_zuus"] = {
+		["zuus_lightning_bolt"] = {pt = true, range = -1, importance = 0},
+		["zuus_cloud"] = {pt = true, range = -1, importance = 1},
+		["zuus_thundergods_wrath"] = {pt = false, range = 999999, importance = 1}
+	},
+	["npc_dota_hero_kunkka"] = {
+		["kunkka_torrent"] = {pt = true, range = -1, importance = 0},
+		["kunkka_ghostship"] = {pt = true, range = -1, importance = 2}
+	},
+	["npc_dota_hero_lina"] = {
+		["lina_light_strike_array"] = {pt = true, range = -1, importance = 0},
+		["lina_dragon_slave"] = {pt = true, range = -1, importance = 0}
+	},
+	["npc_dota_hero_lion"] = {
+		["lion_impale"] = {pt = true, range = -1, importance = 0}
+	},
+	["npc_dota_hero_tidehunter"] = {
+		["tidehunter_anchor_smash"] = {pt = false, range = 350, importance = 0},
+		["tidehunter_ravage"] = {pt = false, range = 700, importance = 2}
+	},
+	["npc_dota_hero_witch_doctor"] = {
+		["witch_doctor_maledict"] = {pt = true, range = -1, importance = 1},
+		["witch_doctor_death_ward"] = {pt = true, range = -1, importance = 2}
+	},
+	["npc_dota_hero_riki"] = {
+		["riki_smoke_screen"] = {pt = true, range = -1, importance = 0},
+		["riki_tricks_of_the_trade"] = {pt = false, range = 425, importance = 2}
+	},
+	["npc_dota_hero_sniper"] = {
+		["sniper_shrapnel"] = {pt = true, range = -1, importance = 0}
+	},
+	["npc_dota_hero_necrolyte"] = {
+		["necrolyte_death_pulse"] = {pt = false, range = 450, importance = 0}
+	},
+	["npc_dota_hero_warlock"] = {
+		["warlock_rain_of_chaos"] = {pt = true, range = -1, importance = 2}
+	},
+	["npc_dota_hero_death_prophet"] = {
+		["death_prophet_carrion_swarm"] = {pt = true, range = -1, importance = 0},
+		["death_prophet_silence"] = {pt = true, range = -1, importance = 0}
+	},
+	["npc_dota_hero_viper"] = {
+		["viper_nethertoxin"] = {pt = true, range = -1, importance = 0}
+	},
+	["npc_dota_hero_dragon_knight"] = {
+		["dragon_knight_breathe_fire"] = {pt = true, range = -1, importance = 0}
+	},
+	["npc_dota_hero_jakiro"] = {
+		["jakiro_ice_path"] = {pt = true, range = -1, importance = 0},
+		["jakiro_macropyre"] = {pt = true, range = -1, importance = 2},
+		["jakiro_dual_breath"] = {pt = true, range = -1, importance = 0}
+	},
+	["npc_dota_hero_bristleback"] = {
+		["bristleback_quill_spray"] = {pt = false, range = 600, importance = 0}
+	},
+	["npc_dota_hero_skywrath_mage"] = {
+		["skywrath_mage_mystic_flare"] = {pt = true, range = -1, importance = 1}
+	}
+}
+
 --TODO:Add events to track for the event response system
 --TODO:Add Think Functions
 --logicthinker structure
@@ -2121,6 +2215,90 @@ function BotSupportLib:OnKilledUnit(attacker, unit, event)
 	end
 end
 
+function BotSupportLib:OnPlayerAbilityCast(unit, ability, target, event)
+	if unit and ability and event then
+		if ability:GetName() == "furion_sprout" then
+			BotSupportLib:OnNaturesProphetSproutCast(ability:GetCursorPosition(), unit, event)
+		end
+	end
+end
+
+function BotSupportLib:OnNaturesProphetSproutCast(vector, caster, event)
+	local sprout_radius = 150
+	local enemy_radius = 1000
+	local iFactor = 0
+	local nearby_enemies = FindUnitsInRadius(caster:GetTeamNumber(), vector, nil, enemy_radius, DOTA_UNIT_TARGET_TEAM_ENEMY, DOTA_UNIT_TARGET_HERO, DOTA_UNIT_TARGET_FLAG_NONE, FIND_CLOSEST, false)
+	if #nearby_enemies > 0 then
+		local is_visible = false
+		local visible_pos = nil
+		for _, enemy in ipairs(nearby_enemies) do
+			local visible_position = enemy:GetAbsOrigin() + (Extensions:GetPtoPDirectionVector(enemy:GetAbsOrigin(), vector) * ((enemy:GetAbsOrigin() - vector):Length2D() - (sprout_radius * 1.2)))
+			if BotSupportLib:DebugDraw() then
+				DebugDrawLine(enemy:GetAbsOrigin(), visible_position, 200, 200, 255, true, 5)
+			end
+			if Extensions:IsPositionFoWVisible(visible_position, enemy) then
+				is_visible = true
+				visible_pos = visible_position
+				break
+			end
+		end
+		if is_visible then
+			if BotSupportLib:DebugDraw() then
+				DebugDrawBox(visible_pos, Vector(-3, -3, 0), Vector(3, 3, 0), 255, 255, 255, 180, 5)
+			end
+			local captured_units = FindUnitsInRadius(caster:GetTeamNumber(), vector, nil, sprout_radius, DOTA_UNIT_TARGET_TEAM_FRIENDLY, DOTA_UNIT_TARGET_HERO, DOTA_UNIT_TARGET_FLAG_NONE, FIND_CLOSEST, false)
+			--TODO: Rework to somehow query bots memory for enemy hero position data and see if anyone is inside instead of cheating
+			if #captured_units > 0 then
+				iFactor = 2
+			else
+				iFactor = math.random(0,1)
+			end
+			for _, enemy in ipairs(nearby_enemies) do
+				if enemy:GetHealthPercent() > 0.5 then
+					local best_spell = nil
+					local dist = Extensions:GetPtoPDistance(enemy:GetAbsOrigin(), vector)
+					if anti_np_abilities[enemy:GetName()] ~= nil then
+						for spellname, usagedata in pairs(anti_np_abilities[enemy:GetName()]) do
+							local spell = enemy:FindAbilityByName(spellname)
+							if spell then
+								local range = usagedata.range
+								if range == -1 then
+									range = KeyValuesManager:GetAbilityKV(spellname)["AbilityCastRange"]
+								end
+								if dist <= range and iFactor >= usagedata.importance then
+									if BotSupportLib:GetAbilityCastConditions(enemy, spell) and BotSupportLib:GetAbilityCastManaConditions(enemy, spell, {}, 0.2) then
+										if BotSupportLib:DebugDraw() then print(enemy:GetName().." selected "..spellname.." for use against "..caster:GetName()) end
+										best_spell = {spell, usagedata.pt, range}
+										break
+									end
+								end
+							end
+						end
+					end
+					if best_spell ~= nil then
+						if best_spell[2] then
+							if BotSupportLib:DebugDraw() then
+								print(enemy:GetName().." casting "..best_spell[1]:GetName().." on vector ("..vector.x..","..vector.y..","..vector.z..")")
+								DebugDrawLine(enemy:GetOrigin(), vector, 128, 255, 255, true, 2)
+								DebugDrawCircle(vector, Vector(128, 255, 255), 100, sprout_radius, true, 2)
+								DebugDrawCircle(enemy:GetOrigin(), Vector(128, 255, 128), 255, 15, true, 2)
+							end
+							BotSupportLib:CastAbility(enemy, DOTA_UNIT_ORDER_CAST_POSITION, nil, best_spell[1], vector, false, true, true)
+						else
+							if BotSupportLib:DebugDraw() then
+								print(enemy:GetName().." casting "..best_spell[1]:GetName())
+								DebugDrawCircle(enemy:GetOrigin(), Vector(128, 255, 128), 255, best_spell[3], true, 2)
+								DebugDrawLine(enemy:GetOrigin(), vector, 128, 255, 255, true, 2)
+							end
+							BotSupportLib:CastAbility(enemy, DOTA_UNIT_ORDER_CAST_NO_TARGET, nil, best_spell[1], nil, false, true, true)
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
 function BotSupportLib:OnDamaged(unit, attacker, event)
 	if unit and attacker and event then
 		local aindex = attacker:entindex()
@@ -2404,7 +2582,7 @@ function BotSupportLib:IntervalFunctionCall(unit, fID)
 				if unit:GetHealth()/unit:GetMaxHealth() > 0.6 and self:GetAbilityCastConditions(unit, tree_grab) and self:GetAbilityCastManaConditions(unit, tree_grab, {}, 0.2) then
 					local tree = {nil,99999}
 					for i,v in ipairs(GridNav:GetAllTreesAroundPoint(unit:GetAbsOrigin(), 600, true)) do
-						if v then
+						if v and v:IsNull() == false then
 							if v:IsStanding() and GridNav:CanFindPath(v:GetAbsOrigin() + (v:GetAbsOrigin()-unit:GetAbsOrigin()):Normalized()*100, unit:GetAbsOrigin()) then
 								local distance = (v:GetAbsOrigin() - unit:GetAbsOrigin()):Length2D()
 								if tree[2] > (v:GetAbsOrigin() - unit:GetAbsOrigin()):Length2D() then

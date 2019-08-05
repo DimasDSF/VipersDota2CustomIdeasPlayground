@@ -5,6 +5,7 @@
 	//=================================================================================================================
 	"npc_dota_hero_crystal_maiden"
 	{
+		"BaseClass"		"npc_dota_hero_crystal_maiden"
 		"BotImplemented"		"1"
 		"Bot"
 		{

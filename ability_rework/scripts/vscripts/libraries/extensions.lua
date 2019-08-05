@@ -569,6 +569,13 @@ function Extensions:GetUnitDistance(unit1, unit2)
 	return nil
 end
 
+function Extensions:GetPtoPDistance(point1, point2)
+	if point1 and point2 then
+		return (point1 - point2):Length2D()
+	end
+	return nil
+end
+
 function Extensions:GetUtoTDirectionVector(unit, target)
 	if unit and target then
 		if Extensions:DebugDraw() then

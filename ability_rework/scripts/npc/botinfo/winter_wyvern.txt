@@ -5,6 +5,7 @@
 	//=================================================================================================================
 	"npc_dota_hero_winter_wyvern"
 	{
+		"BaseClass"		"npc_dota_hero_winter_wyvern"
 		"Bot"
 		{
 			"HeroType"		"DOTA_BOT_PURE_SUPPORT"
@@ -12,10 +13,10 @@
 			{
 				"SoloDesire"		"0"
 				"RequiresBabysit"		"0"
-				"ProvidesBabysit"		"1"
+				"ProvidesBabysit"		"2"
 				"SurvivalRating"		"0"
 				"RequiresFarm"		"0"
-				"ProvidesSetup"		"1"
+				"ProvidesSetup"		"2"
 				"RequiresSetup"		"0"
 			}
 		}

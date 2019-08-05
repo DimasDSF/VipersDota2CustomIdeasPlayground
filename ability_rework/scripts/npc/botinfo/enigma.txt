@@ -5,19 +5,20 @@
 	//=================================================================================================================
 	"npc_dota_hero_enigma"
 	{
+		"BaseClass"		"npc_dota_hero_enigma"
 		"Bot"
 		{
 
-			"HeroType"		"DOTA_BOT_PUSH_SUPPORT"
+			"HeroType"		"DOTA_BOT_PUSH_SUPPORT | DOTA_BOT_STUN_SUPPORT"
 			"LaningInfo"
 			{
 				"SoloDesire"		"0"
 				"RequiresBabysit"		"0"
 				"ProvidesBabysit"		"2"
-				"SurvivalRating"		"1"
+				"SurvivalRating"		"0"
 				"RequiresFarm"		"1"
 				"ProvidesSetup"		"1"
-				"RequiresSetup"		"0"
+				"RequiresSetup"		"1"
 			}
 		}
 	}

@@ -5,6 +5,7 @@
 	//=================================================================================================================
 	"npc_dota_hero_shredder"
 	{
+		"BaseClass"		"npc_dota_hero_shredder"
 		"Bot"
 		{
 			"HeroType"		"DOTA_BOT_GANKER | DOTA_BOT_TANK"

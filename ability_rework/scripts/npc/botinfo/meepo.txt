@@ -5,16 +5,17 @@
 	//=================================================================================================================
 	"npc_dota_hero_meepo"
 	{
+		"BaseClass"		"npc_dota_hero_meepo"
 		"Bot"
 		{
 			"HeroType"		"DOTA_BOT_GANKER | DOTA_BOT_SEMI_CARRY"
 			"LaningInfo"
 			{
-				"SoloDesire"		"0"
+				"SoloDesire"		"2"
 				"RequiresBabysit"		"1"
 				"ProvidesBabysit"		"0"
 				"SurvivalRating"		"1"
-				"RequiresFarm"		"0"
+				"RequiresFarm"		"2"
 				"ProvidesSetup"		"0"
 				"RequiresSetup"		"2"
 			}

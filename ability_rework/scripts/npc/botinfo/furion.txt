@@ -5,6 +5,7 @@
 	//=================================================================================================================
 	"npc_dota_hero_furion"
 	{
+		"BaseClass"		"npc_dota_hero_furion"
 		"Bot"
 		{
 			"HeroType"		"DOTA_BOT_PUSH_SUPPORT | DOTA_BOT_SEMI_CARRY | DOTA_BOT_GANKER"

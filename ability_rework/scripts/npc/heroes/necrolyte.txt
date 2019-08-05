@@ -5,6 +5,7 @@
 	//=================================================================================================================
 	"npc_dota_hero_necrolyte"
 	{
+		"BaseClass"		"npc_dota_hero_necrolyte"
 		"SupportsEasyMode"	"1"
 		"BotImplemented"		"1"
 		"Bot"

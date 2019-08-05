@@ -5,6 +5,7 @@
 	//=================================================================================================================
 	"npc_dota_hero_beastmaster"
 	{
+		"BaseClass"		"npc_dota_hero_beastmaster"
 		"Bot"
 		{
 
@@ -16,7 +17,7 @@
 				"ProvidesBabysit"		"1"
 				"SurvivalRating"		"1"
 				"RequiresFarm"		"1"
-				"ProvidesSetup"		"0"
+				"ProvidesSetup"		"1"
 				"RequiresSetup"		"1"
 			}
 		}

@@ -5,6 +5,7 @@
 	//=================================================================================================================
 	"npc_dota_hero_disruptor"
 	{
+		"BaseClass"		"npc_dota_hero_disruptor"
 		"Bot"
 		{
 			"HeroType"		"DOTA_BOT_PURE_SUPPORT | DOTA_BOT_GANKER"

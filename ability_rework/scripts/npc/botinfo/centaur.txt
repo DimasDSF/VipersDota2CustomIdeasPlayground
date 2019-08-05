@@ -5,6 +5,7 @@
 	//=================================================================================================================
 	"npc_dota_hero_centaur"
 	{
+		"BaseClass"		"npc_dota_hero_centaur"
 		"Bot"
 		{
 			"HeroType"		"DOTA_BOT_SEMI_CARRY | DOTA_BOT_TANK"

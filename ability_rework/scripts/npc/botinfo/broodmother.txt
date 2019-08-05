@@ -5,6 +5,7 @@
 	//=================================================================================================================
 	"npc_dota_hero_broodmother"
 	{
+		"BaseClass"		"npc_dota_hero_broodmother"
 		"Bot"
 		{
 			"HeroType"		"DOTA_BOT_PUSH_SUPPORT | DOTA_BOT_SEMI_CARRY"

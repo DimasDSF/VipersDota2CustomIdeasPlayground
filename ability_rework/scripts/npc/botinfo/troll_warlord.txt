@@ -5,6 +5,7 @@
 	//=================================================================================================================
 	"npc_dota_hero_troll_warlord"
 	{
+		"BaseClass"		"npc_dota_hero_troll_warlord"
 		"Bot"
 		{
 			"HeroType"		"DOTA_BOT_HARD_CARRY"

@@ -5,6 +5,7 @@
 	//=================================================================================================================
 	"npc_dota_hero_visage"
 	{
+		"BaseClass"		"npc_dota_hero_visage"
 		"Bot"
 		{
 			"HeroType"		"DOTA_BOT_SEMI_CARRY | DOTA_BOT_STUN_SUPPORT"

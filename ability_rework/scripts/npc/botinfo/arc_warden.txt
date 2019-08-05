@@ -5,13 +5,14 @@
 	//=================================================================================================================
 	"npc_dota_hero_arc_warden"
 	{
+		"BaseClass"		"npc_dota_hero_arc_warden"
 		"Bot"
 		{
 			"HeroType"		"DOTA_BOT_HARD_CARRY"
 			"LaningInfo"
 			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"2"
+				"SoloDesire"		"2"
+				"RequiresBabysit"		"1"
 				"ProvidesBabysit"		"0"
 				"SurvivalRating"		"0"
 				"RequiresFarm"		"2"

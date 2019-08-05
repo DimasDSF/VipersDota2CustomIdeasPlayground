@@ -1,23 +1,23 @@
 "DOTAHeroes"
 {
 	//=================================================================================================================
-	// HERO: Pugna
+	// HERO: Shadow Shaman
 	//=================================================================================================================
-	"npc_dota_hero_pugna"
+	"npc_dota_hero_shadow_shaman"
 	{
-		"BaseClass"		"npc_dota_hero_pugna"
+		"BaseClass"		"npc_dota_hero_shadow_shaman"
 		"Bot"
 		{
-			"HeroType"		"DOTA_BOT_PUSH_SUPPORT"
+			"HeroType"		"DOTA_BOT_STUN_SUPPORT | DOTA_BOT_PUSH_SUPPORT | DOTA_BOT_GANKER"
 			"LaningInfo"
 			{
-				"SoloDesire"		"2"
+				"SoloDesire"		"1"
 				"RequiresBabysit"		"0"
 				"ProvidesBabysit"		"2"
-				"SurvivalRating"		"1"
+				"SurvivalRating"		"2"
 				"RequiresFarm"		"1"
-				"ProvidesSetup"		"0"
-				"RequiresSetup"		"1"
+				"ProvidesSetup"		"2"
+				"RequiresSetup"		"0"
 			}
 		}
 	}

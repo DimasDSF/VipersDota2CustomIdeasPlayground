@@ -5,6 +5,7 @@
 	//=================================================================================================================
 	"npc_dota_hero_rubick"
 	{
+		"BaseClass"		"npc_dota_hero_rubick"
 		"Bot"
 		{
 			"HeroType"		"DOTA_BOT_GANKER | DOTA_BOT_PURE_SUPPORT"
@@ -15,7 +16,7 @@
 				"ProvidesBabysit"		"2"
 				"SurvivalRating"		"0"
 				"RequiresFarm"		"2"
-				"ProvidesSetup"		"1"
+				"ProvidesSetup"		"2"
 				"RequiresSetup"		"1"
 			}
 		}

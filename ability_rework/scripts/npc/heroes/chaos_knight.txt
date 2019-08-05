@@ -5,6 +5,7 @@
 	//=================================================================================================================
 	"npc_dota_hero_chaos_knight"
 	{
+		"BaseClass"		"npc_dota_hero_chaos_knight"
 		"BotImplemented"		"1"
 		"Bot"
 		{

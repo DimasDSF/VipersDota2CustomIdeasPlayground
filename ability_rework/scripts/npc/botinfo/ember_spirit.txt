@@ -5,15 +5,16 @@
 	//=================================================================================================================
 	"npc_dota_hero_ember_spirit"
 	{
+		"BaseClass"		"npc_dota_hero_ember_spirit"
 		"Bot"
 		{
-			"HeroType"		"DOTA_BOT_HARD_CARRY"
+			"HeroType"		"DOTA_BOT_SEMI_CARRY | DOTA_BOT_GANKER"
 			"LaningInfo"
 			{
-				"SoloDesire"		"0"
-				"RequiresBabysit"		"2"
+				"SoloDesire"		"2"
+				"RequiresBabysit"		"1"
 				"ProvidesBabysit"		"0"
-				"SurvivalRating"		"2"
+				"SurvivalRating"		"1"
 				"RequiresFarm"		"2"
 				"ProvidesSetup"		"0"
 				"RequiresSetup"		"1"

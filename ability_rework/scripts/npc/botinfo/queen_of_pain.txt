@@ -5,6 +5,7 @@
 	//=================================================================================================================
 	"npc_dota_hero_queenofpain"
 	{
+		"BaseClass"		"npc_dota_hero_queenofpain"
 		"Bot"
 		{
 			"HeroType"		"DOTA_BOT_GANKER | DOTA_BOT_SEMI_CARRY"
