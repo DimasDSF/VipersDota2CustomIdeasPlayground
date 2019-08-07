@@ -2189,16 +2189,6 @@ function VGMAR:OnThink()
 				backpack = true,
 				preventedhero = "npc_target_dummy",
 				specificcond = true },
-			--[[{spell = "modifier_item_ultimate_scepter_consumed",
-				items = {itemnames = {"item_ultimate_scepter"}, itemnum = {2}},
-				isconsumable = true,
-				ismodifier = true,
-				usemodifierdatatable = true,
-				modifierdata = { bonus_all_stats = 10, bonus_health = 175, bonus_mana = 175 },
-				usesmultiple = true,
-				backpack = true,
-				preventedhero = "npc_dota_hero_alchemist",
-				specificcond = true },--]]
 			{spell = "modifier_vgmar_i_spellamp",
 				items = {itemnames = {"item_kaya"}, itemnum = {2}},
 				isconsumable = true,
@@ -2549,7 +2539,7 @@ function VGMAR:OnThink()
 		--//////////////////
 		for j=1,#bdplist do
 			for k=1,#bdplist[j].buildinglist do
-				local buildingname = bdplist[j].buildinglist[k]
+				local buildingname = "npc_"..bdplist[j].buildinglist[k]
 				if self.backdoorstatustable[buildingname] == nil then
 					table.insert(self.backdoorstatustable, buildingname)
 					self.backdoorstatustable[buildingname] = true
@@ -2993,7 +2983,7 @@ end
 function GetBuildingGroupFromName( name )
 	for i=1,#bdplist do
 		for k=1,#bdplist[i].buildinglist do
-			if bdplist[i].buildinglist[k] == name then
+			if "npc_"..bdplist[i].buildinglist[k] == name then
 				return bdplist[i].group
 			end
 		end
@@ -3022,7 +3012,7 @@ function VGMAR:UpdateBackdoorGroupTimer(group)
 	for i=1,#bdplist do
 		if bdplist[i].group == group then
 			for k=1,#bdplist[i].buildinglist do
-			local buildingname = bdplist[i].buildinglist[k]
+			local buildingname = "npc_"..bdplist[i].buildinglist[k]
 				if self.backdoortimertable[buildingname] == nil then
 					table.insert(self.backdoortimertable, buildingname)
 					self.backdoortimertable[buildingname] = GameRules:GetDOTATime(false, false)
@@ -3116,7 +3106,7 @@ function VGMAR:FilterDamage( filterTable )
 	for i=1,#bdplist do
 		for k=1,#bdplist[i].buildinglist do
 			if victim:GetName() == bdplist[i].buildinglist[k] then
-				local buildingname = bdplist[i].buildinglist[k]
+				local buildingname = "npc_"..bdplist[i].buildinglist[k]
 				local protent = Entities:FindByName(nil, bdplist[i].protectionholder)
 				local protorigin = protent:GetOrigin()
 				if GetEnemyCreepsInRadius(victim:GetTeamNumber(), protorigin, bdplist[i].protectionrange, false) then

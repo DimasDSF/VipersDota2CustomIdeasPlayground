@@ -298,6 +298,9 @@ end
 function modifier_vgmar_i_ogre_tester:OnAttackLanded(kv)
 	if IsServer() then
 		if kv.attacker == self:GetParent() then
+			if kv.target:IsRealUnit(true) then
+				print("Hit Target Name: "..tostring(kv.target:GetName()))
+			end
 			print("Printing AttackLanded kv")
 			debug.PrintTable(kv)
 		end
