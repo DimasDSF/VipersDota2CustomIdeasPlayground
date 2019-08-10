@@ -39,6 +39,7 @@ function modifier_vgmar_i_multidimension_cast:OnCreated(kv)
 		self.multicastunitrange = kv.multicastunitrange
 		self.spellcasts = {}
 		self.lastcastordertype = -1
+		self:StartIntervalThink(1)
 	else
 		self.clientvalues = CustomNetTables:GetTableValue("client_side_ability_values", "modifier_vgmar_i_multidimension_cast")
 	end
@@ -75,10 +76,13 @@ function modifier_vgmar_i_multidimension_cast:OnOrder(event)
 	end
 end
 
-function modifier_vgmar_i_multidimension_cast:getmcastnum(unit)
+function modifier_vgmar_i_multidimension_cast:getmcastnum(unit, show_max)
 	local intellect = unit:GetIntellect()
 	if unit:PassivesDisabled() == false then
 		local chance = math.random(0, 100)
+		if show_max then
+			chance = 0
+		end
 		if chance < self.multicastchance5 and intellect >= self.multicastminint5 then
 			return 5
 		elseif chance < self.multicastchance4 and intellect >= self.multicastminint4 then
@@ -99,7 +103,7 @@ function modifier_vgmar_i_multidimension_cast:OnAbilityExecuted(kv)
 		local parent = self:GetParent()
 		if kv.unit == parent and parent:PassivesDisabled() == false then
 			if kv.ability and kv.ability:IsToggle() == false and kv.ability:IsItem() == false and (GameRules.VGMAR.md_cast_ignored_abilities[kv.ability:GetName()] == nil or GameRules.VGMAR.md_cast_ignored_abilities[kv.ability:GetName()] ~= true) then
-				local mcast = self:getmcastnum(parent)
+				local mcast = self:getmcastnum(parent, false)
 				if mcast > 0 then
 					local ability = kv.ability
 					local behavior = ability:GetBehavior()
@@ -140,27 +144,31 @@ end
 function modifier_vgmar_i_multidimension_cast:OnIntervalThink()
 	if IsServer() then
 		local parent = self:GetParent()
-		local cast = self.spellcasts[1]
-		local mcasts = self:getmcastnum(parent)
+		local mcasts = self:getmcastnum(parent, true)
 		if self:GetStackCount() ~= mcasts then
 			self:SetStackCount(mcasts)
 		end
-		if parent:IsStunned() == false and parent:IsHexed() == false and parent:IsSilenced() == false then
-			if cast.ctype == 2 then
-				local tar = cast.target + RandomVector(math.random(0, self.multicastpointrange))
-				parent:SetCursorPosition(tar)
-				cast.ability:OnSpellStart()
-			elseif cast.ctype == 1 then
-				if cast.target:IsAlive() then
-					parent:SetCursorCastTarget(cast.target)
-					cast.ability:OnSpellStart()
+		if #self.spellcasts > 0 then
+			if parent:IsStunned() == false and parent:IsHexed() == false and parent:IsSilenced() == false then
+				if parent:IsAlive() then
+					local cast = self.spellcasts[1]
+					if cast.ctype == 2 then
+						local tar = cast.target + RandomVector(math.random(0, self.multicastpointrange))
+						parent:SetCursorPosition(tar)
+						cast.ability:OnSpellStart()
+					elseif cast.ctype == 1 then
+						if cast.target:IsAlive() then
+							parent:SetCursorCastTarget(cast.target)
+							cast.ability:OnSpellStart()
+						end
+					else
+						cast.ability:OnSpellStart()
+					end
 				end
-			else
-				cast.ability:OnSpellStart()
-			end
-			table.remove(self.spellcasts, 1)
-			if #self.spellcasts < 1 then
-				self:StartIntervalThink(-1)
+				table.remove(self.spellcasts, 1)
+				if #self.spellcasts < 1 then
+					self:StartIntervalThink(1)
+				end
 			end
 		end
 	end

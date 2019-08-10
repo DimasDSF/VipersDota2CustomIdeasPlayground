@@ -171,6 +171,39 @@ function InvManager:GetItemSlotFromInventoryByItemName( hero, item, mutedallowed
 	end
 end
 
+function InvManager:GetItemNameListFromUnit( hero, inventoryallowed, backpackallowed, stashallowed )
+	if not hero then return {} end
+	local endslot = 8
+	local ret = {}
+	if stashallowed == true then
+		endslot = 14
+	end
+	for i = 0, endslot do
+		local slotitem = hero:GetItemInSlot(i)
+		if slotitem then
+			if not ret[slotitem:GetName()] then
+				table.insert(ret, slotitem:GetName())
+			end
+			ret[slotitem:GetName()] = {item = slotitem, slotid = i}
+		end
+	end
+	return ret
+end
+
+function InvManager:GetFirstItemFromListInUnitInventory( hero, itemlist, inventoryallowed, backpackallowed, stashallowed )
+	if not hero then return nil end
+	local items = InvManager:GetItemNameListFromUnit( hero, inventoryallowed, backpackallowed, stashallowed )
+	if #items > 0 then
+		local itemkeys = table.getkeys(items)
+		for _, itemname in ipairs( itemlist ) do
+			if table.contains(itemkeys, itemname) then
+				return items[itemname].item
+			end
+		end
+	end
+	return nil
+end
+
 function InvManager:CountUsableItemsInHeroInventory( hero, item, mutedallowed, backpackallowed, stashallowed )
 	if not hero then return 0 end
 	if stashallowed ~= true and not hero:HasItemInInventory(item) then

@@ -2015,7 +2015,7 @@ function BotSupportLib:FindValidNearbyWardSpot(unit, wardtype)
 				range = 1500,
 				wtypes = 1
 			},
-			{condition = BotSupportLib:TimeIsLaterThan(20, 0),
+			{condition = BotSupportLib:TimeIsLaterThan(5, 0) and (GameRules.VGMAR:GetTierTowersStatus(DOTA_TEAM_BADGUYS, 1, "bot") and GameRules.VGMAR:GetTierTowersStatus(DOTA_TEAM_BADGUYS, 1, "mid")),
 				spot = {
 					WardSpots.DireSide.DireBotPowerUpRune1,
 					WardSpots.DireSide.DireBotPowerUpRune2,
@@ -2041,12 +2041,20 @@ function BotSupportLib:FindValidNearbyWardSpot(unit, wardtype)
 				range = 1500,
 				wtypes = 1
 			},
+			{condition = BotSupportLib:TimeIsLaterThan(20, 0) and not (GameRules.VGMAR:GetTierTowersStatus(DOTA_TEAM_BADGUYS, 1, "bot") and GameRules.VGMAR:GetTierTowersStatus(DOTA_TEAM_BADGUYS, 1, "mid")),
+				spot = {
+					WardSpots.DireSide.DireBotShrine
+				},
+				id = 24,
+				range = 1500,
+				wtypes = 1
+			},
 			--LaneSentry
 			{condition = not BotSupportLib:TimeIsLaterThan(15, 0) and #BotSupportLib.heroeswithinviscapabilities > 0,
 				spot = {
 					WardSpots.LaneSentry.BottomLane
 				},
-				id = 24,
+				id = 80,
 				range = 1500,
 				wtypes = 2
 			},
@@ -2054,7 +2062,7 @@ function BotSupportLib:FindValidNearbyWardSpot(unit, wardtype)
 				spot = {
 					WardSpots.LaneSentry.MidLane
 				},
-				id = 25,
+				id = 81,
 				range = 1500,
 				wtypes = 2
 			},
@@ -2062,7 +2070,7 @@ function BotSupportLib:FindValidNearbyWardSpot(unit, wardtype)
 				spot = {
 					WardSpots.LaneSentry.TopLane
 				},
-				id = 26,
+				id = 82,
 				range = 1500,
 				wtypes = 2
 			}

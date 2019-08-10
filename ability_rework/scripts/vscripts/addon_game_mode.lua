@@ -251,7 +251,9 @@ function VGMAR:Init()
 	Extensions:Init()
 	BotSupportLib:Init()
 	KeyValuesManager:Init()
-	BotRolesLib:Init()
+	if VGMAR_BOT_FILL then
+		BotRolesLib:Init()
+	end
 	self.n_players_radiant = 0
 	self.n_players_dire = 0
 	self.allheroes = {}
@@ -642,6 +644,7 @@ function VGMAR:Init()
 			["npc_dota_hero_bristleback"] = true
 		},
 		cheapboots = {
+			"item_boots",
 			"item_phase_boots",
 			"item_power_treads",
 			"item_arcane_boots",
@@ -1887,21 +1890,18 @@ function VGMAR:OnThink()
 								local bup = uppriolist[bus]
 								if bup == "travel1" and self:TimeIsLaterThan(botupgradetimings.travel1[1], botupgradetimings.travel1[2]) then
 									if heroent:GetGold() >= heroent:GetBuybackCost(false) + self.botitemskv.travelbootscost then
-										for j=1,#self.botitemskv.cheapboots do
-											local cheapboots = InvManager:GetItemFromInventoryByName( heroent, self.botitemskv.cheapboots[j], false, true, false )
-											if cheapboots ~= nil then
-												local bootsname = cheapboots:GetName()
-												heroent:ModifyGold(cheapboots:GetCost(), true, 0)
-												heroent:RemoveItem(cheapboots)
-												heroent:SpendGold(self.botitemskv.travelbootscost, 2)
-												heroent:AddItemByName("item_travel_boots")
-												dprint(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Spent "..tostring(self.botitemskv.travelbootscost).." Upgraded "..bootsname.." to Travel Boots | Gold Remaining: "..heroent:GetGold())
-												self:LogEvent(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Upgraded "..bootsname.." to Travel Boots | Gold Remaining: "..heroent:GetGold())
-											elseif (heroent:HasItemInInventory("item_travel_boots") or heroent:HasItemInInventory("item_travel_boots_2")) == false then
-												Extensions:SimulateItemPurchase(heroent, "item_travel_boots")
-												dprint(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Spent "..tostring(self.botitemskv.travelbootscost).." Purchased Travel Boots | Gold Remaining: "..heroent:GetGold())
-												self:LogEvent(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Purchased Travel Boots | Gold Remaining: "..heroent:GetGold())
+										local cboot = InvManager:GetFirstItemFromListInUnitInventory( heroent, self.botitemskv.cheapboots, true, true, true )
+										if cboot or (cboot == nil and InvManager:GetFirstItemFromListInUnitInventory( heroent, {"item_travel_boots", "item_travel_boots_2"}, true, true, true ) == nil) then
+											if cboot then
+												local bootsname = cboot:GetName()
+												heroent:ModifyGold(cboot:GetCost(), true, 0)
+												heroent:RemoveItem(cboot)
+												dprint(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Sold CheapBoot "..bootsname)
 											end
+											heroent:SpendGold(self.botitemskv.travelbootscost, 2)
+											heroent:AddItemByName("item_travel_boots")
+											dprint(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Spent "..tostring(self.botitemskv.travelbootscost).." Purchased Travel Boots | Gold Remaining: "..heroent:GetGold())
+											self:LogEvent(HeroNamesLib:ConvertInternalToHeroName(heroent:GetName()).." Upgraded to Travel Boots | Gold Remaining: "..heroent:GetGold())
 											self.botupgradestatus[heroent:entindex()] = self.botupgradestatus[heroent:entindex()] + 1
 										end
 									end
@@ -2539,7 +2539,7 @@ function VGMAR:OnThink()
 		--//////////////////
 		for j=1,#bdplist do
 			for k=1,#bdplist[j].buildinglist do
-				local buildingname = "npc_"..bdplist[j].buildinglist[k]
+				local buildingname = bdplist[j].buildinglist[k]
 				if self.backdoorstatustable[buildingname] == nil then
 					table.insert(self.backdoorstatustable, buildingname)
 					self.backdoorstatustable[buildingname] = true
@@ -2745,12 +2745,16 @@ function VGMAR:OnAllHeroesSpawned()
 	--////////////////////////////////////
 	--BotSupportLib Heroes Init
 	--Extensions Hero Damage Tracking Init
+	--Extensions Hero Tables
+	--BotRolesLib HeroList Parsing
 	--////////////////////////////////////
 	Extensions:CallWithDelay(2, true, function()
 		BotSupportLib:StartBotInit()
 		Extensions:InitHeroDamageTrackingTable(self.allheroes)
 		Extensions:InitHeroTables(self.radiantheroes, self.direheroes)
-		BotRolesLib:ParseHeroList(self.botheroes)
+		if VGMAR_BOT_FILL then
+			BotRolesLib:ParseHeroList(self.botheroes)
+		end
 	end)
 	--//////////////////////
 	--Applying Bot Modifiers
@@ -2983,7 +2987,7 @@ end
 function GetBuildingGroupFromName( name )
 	for i=1,#bdplist do
 		for k=1,#bdplist[i].buildinglist do
-			if "npc_"..bdplist[i].buildinglist[k] == name then
+			if bdplist[i].buildinglist[k] == name then
 				return bdplist[i].group
 			end
 		end
@@ -3012,7 +3016,7 @@ function VGMAR:UpdateBackdoorGroupTimer(group)
 	for i=1,#bdplist do
 		if bdplist[i].group == group then
 			for k=1,#bdplist[i].buildinglist do
-			local buildingname = "npc_"..bdplist[i].buildinglist[k]
+			local buildingname = bdplist[i].buildinglist[k]
 				if self.backdoortimertable[buildingname] == nil then
 					table.insert(self.backdoortimertable, buildingname)
 					self.backdoortimertable[buildingname] = GameRules:GetDOTATime(false, false)
@@ -3106,7 +3110,7 @@ function VGMAR:FilterDamage( filterTable )
 	for i=1,#bdplist do
 		for k=1,#bdplist[i].buildinglist do
 			if victim:GetName() == bdplist[i].buildinglist[k] then
-				local buildingname = "npc_"..bdplist[i].buildinglist[k]
+				local buildingname = bdplist[i].buildinglist[k]
 				local protent = Entities:FindByName(nil, bdplist[i].protectionholder)
 				local protorigin = protent:GetOrigin()
 				if GetEnemyCreepsInRadius(victim:GetTeamNumber(), protorigin, bdplist[i].protectionrange, false) then
@@ -3797,7 +3801,7 @@ function VGMAR:OnGameStateChanged( keys )
 			end
 		end
 	elseif state == DOTA_GAMERULES_STATE_GAME_IN_PROGRESS then
-		if BotRolesLib.DBReady then
+		if BotRolesLib.DBReady and VGMAR_BOT_FILL then
 			print('Midlaner: '..BotRolesLib:GetMidLaner():GetName())
 			print('Pure Support: '..BotRolesLib:GetPureSupport():GetName())
 		end

@@ -878,6 +878,17 @@ function table.random(intable)
 	return nil
 end
 
+--TODO:UTests
+function table.getkeys(intable)
+	if intable == nil then return nil end
+	if type(intable) ~= 'table' then return {} end
+	local ret = {}
+	for k,_ in pairs(intable) do
+		table.insert(ret, k)
+	end
+	return ret
+end
+
 function table.contains(intable, key)
 	if intable == nil then return nil end
 	if type(intable) ~= 'table' then return nil end
@@ -939,8 +950,13 @@ function CBaseEntity:IsRealUnit(buildings)
 	return false
 end
 
+local BaseNPC_GetName = CDOTA_BaseNPC.GetName
 function CDOTA_BaseNPC:GetName()
-	return self:GetUnitName()
+	if self:IsBuilding() then
+		return BaseNPC_GetName(self)
+	else
+		return self:GetUnitName()
+	end
 end
 
 --debug
