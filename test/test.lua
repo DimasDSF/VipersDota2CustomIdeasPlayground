@@ -289,6 +289,22 @@ test('table.equals should return correct output', function(a)
 	a.ok(table.equals(testtable4, {{1, 11, 111},{2, {22, 11}, 222},{3, 33, 333}}) == false, "Failed Nested Table Test 3")
 end)
 
+test('table.getunique should return nil if input is nil', function(a)
+	a.equal(nil, table.getunique(nil))
+end)
+
+test('table.getunique should return nil if input is not a table', function(a)
+	a.equal(nil, table.getunique("test"))
+end)
+
+test('table.getunique should return the correct output', function(a)
+	local testtable1 = {"test1", "test1", "test2", "test3", 4, 4, 5, 6, 7, 4, 5}
+	local testtable1r = {"test1", "test2", "test3", 4, 5, 6, 7}
+	local testtable2 = {}
+	a.ok(table.equals(table.getunique(testtable1), testtable1r), "Failed testtable1 return test")
+	a.ok(table.equals(table.getunique(testtable2), {}), "Failed testtable1 return test")
+end)
+
 test('table.getkeys should return nil if input is nil', function(a)
 	a.equal(nil, table.getkeys())
 end)
@@ -310,6 +326,21 @@ test('table.getkeys should return the correct output', function(a)
 		"t3"
 	}
 	local testtable2 = {}
-	a.ok(table.equals(table.getkeys(testtable1), testtable1r), "Failed testtable1 return test.")
-	a.ok(table.equals(table.getkeys(testtable2), {}), "Failed empty table return test.")
+	local function hasallkeys(intable, rettable)
+		intable = table.getunique(intable)
+		rettable = table.getunique(rettable)
+		if #rettable == #intable then
+			local allfound = true
+			for _, k in ipairs(rettable) do
+				if not table.contains(intable, k) then
+				   allfound = false
+				   break
+				end
+			end
+			return allfound
+		end
+		return false    
+	end
+	a.ok(hasallkeys(table.getkeys(testtable1), testtable1r), "Failed testtable1 return test.")
+	a.ok(hasallkeys(table.getkeys(testtable2), {}), "Failed empty table return test.")
 end)

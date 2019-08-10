@@ -878,7 +878,6 @@ function table.random(intable)
 	return nil
 end
 
---TODO:UTests
 function table.getkeys(intable)
 	if intable == nil then return nil end
 	if type(intable) ~= 'table' then return nil end
@@ -887,6 +886,21 @@ function table.getkeys(intable)
 		table.insert(ret, k)
 	end
 	return ret
+end
+
+--Works for plain key tables only {1, 2, 3} not {a={1,2},b={3,4}, c={5,6}}
+function table.getunique(intable)
+    if intable == nil then return nil end
+    if type(intable) ~= 'table' then return nil end
+    local h = {}
+    local ret = {}
+    for _,k in ipairs(intable) do
+        if not h[k] then
+            table.insert(ret, k)
+            h[k] = true
+        end
+    end
+    return ret
 end
 
 function table.contains(intable, key)
