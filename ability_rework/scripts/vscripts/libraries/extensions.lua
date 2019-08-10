@@ -881,7 +881,7 @@ end
 --TODO:UTests
 function table.getkeys(intable)
 	if intable == nil then return nil end
-	if type(intable) ~= 'table' then return {} end
+	if type(intable) ~= 'table' then return nil end
 	local ret = {}
 	for k,_ in pairs(intable) do
 		table.insert(ret, k)
